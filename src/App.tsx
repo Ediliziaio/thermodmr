@@ -9,6 +9,7 @@ import Orders from "./pages/Orders";
 import OrderDetail from "./pages/OrderDetail";
 import Dealers from "./pages/Dealers";
 import Placeholder from "./pages/Placeholder";
+import Provvigioni from "./pages/Provvigioni";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,7 +28,7 @@ const App = () => (
             <Route path="/rivenditori" element={<Dealers />} />
             <Route path="/commerciali" element={<Placeholder title="Commerciali" description="Gestione dei commerciali e assegnazioni" />} />
             <Route path="/pagamenti" element={<Placeholder title="Pagamenti" description="Storico e gestione pagamenti" />} />
-            <Route path="/provvigioni" element={<Placeholder title="Provvigioni" description="Calcolo e liquidazione provvigioni" />} />
+            <Route path="/provvigioni" element={<Provvigioni />} />
             <Route path="/kpi" element={<Placeholder title="KPI & Statistiche" description="Analisi delle performance" />} />
             <Route path="/audit" element={<Placeholder title="Audit Log" description="Storico modifiche e attività" />} />
             <Route path="/impostazioni" element={<Placeholder title="Impostazioni" description="Configurazione sistema" />} />

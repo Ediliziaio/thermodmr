@@ -1,4 +1,4 @@
-import { User, UserRole, Dealer, Order, OrderStatus, Payment, PaymentType } from "@/types";
+import { User, UserRole, Dealer, Order, OrderStatus, Payment, PaymentType, Commission } from "@/types";
 
 export const mockCurrentUser: User = {
   id: "user-1",
@@ -115,6 +115,37 @@ export const mockPayments: Payment[] = [
     dataPagamento: new Date("2024-03-21"),
     metodo: "Bonifico",
     riferimento: "BNF-20240321-005",
+  },
+];
+
+export const mockCommissions: Commission[] = [
+  {
+    id: "comm-prov-1",
+    ordineId: "ORD-2024-0001",
+    commercialeId: "comm-1",
+    baseCalcolo: "TOTALE",
+    percentuale: 3.0,
+    importoCalcolato: 450, // 15000 * 3%
+    statoLiquidazione: "DOVUTA",
+  },
+  {
+    id: "comm-prov-2",
+    ordineId: "ORD-2024-0002",
+    commercialeId: "comm-1",
+    baseCalcolo: "TOTALE",
+    percentuale: 3.5, // personalizzata per dealer-2
+    importoCalcolato: 297.5, // 8500 * 3.5%
+    statoLiquidazione: "DOVUTA",
+  },
+  {
+    id: "comm-prov-3",
+    ordineId: "ORD-2024-0003",
+    commercialeId: "comm-1",
+    baseCalcolo: "TOTALE",
+    percentuale: 3.0,
+    importoCalcolato: 360, // 12000 * 3%
+    statoLiquidazione: "LIQUIDATA",
+    dataLiquidazione: new Date("2024-03-25"),
   },
 ];
 
