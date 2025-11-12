@@ -1,10 +1,36 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { mockDealers, mockOrders } from "@/lib/mock-data";
-import { Plus, Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, Loader2 } from "lucide-react";
+import { useDealers } from "@/hooks/useDealers";
+import NewDealerDialog from "@/components/dealers/NewDealerDialog";
 
 export default function Dealers() {
+  const { data: dealers, isLoading, error } = useDealers();
+
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat("it-IT", {
+      style: "currency",
+      currency: "EUR",
+      maximumFractionDigits: 0,
+    }).format(value);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-destructive">Errore nel caricamento dei rivenditori</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -15,31 +41,25 @@ export default function Dealers() {
             Gestisci i rivenditori e le loro informazioni
           </p>
         </div>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Nuovo Rivenditore
-        </Button>
+        <NewDealerDialog />
       </div>
 
       {/* Dealers Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {mockDealers.map((dealer) => {
-          const dealerOrders = mockOrders.filter(o => o.dealerId === dealer.id);
-          const totalRevenue = dealerOrders.reduce((sum, o) => sum + o.importoTotale, 0);
-
-          return (
+      {dealers && dealers.length > 0 ? (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {dealers.map((dealer) => (
             <Card key={dealer.id} className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div>
-                    <CardTitle className="text-lg">{dealer.ragioneSociale}</CardTitle>
+                    <CardTitle className="text-lg">{dealer.ragione_sociale}</CardTitle>
                     <p className="text-sm text-muted-foreground mt-1">
-                      P.IVA: {dealer.pIva}
+                      P.IVA: {dealer.p_iva}
                     </p>
                   </div>
-                  {dealer.commissionePersonalizzata && (
+                  {dealer.commissione_personalizzata && (
                     <Badge variant="secondary">
-                      {dealer.commissionePersonalizzata}%
+                      {dealer.commissione_personalizzata}%
                     </Badge>
                   )}
                 </div>
@@ -65,30 +85,31 @@ export default function Dealers() {
                 <div className="pt-4 border-t">
                   <div className="grid grid-cols-2 gap-4 text-center">
                     <div>
-                      <p className="text-2xl font-bold">{dealerOrders.length}</p>
+                      <p className="text-2xl font-bold">{dealer.ordersCount || 0}</p>
                       <p className="text-xs text-muted-foreground">Ordini</p>
                     </div>
                     <div>
                       <p className="text-2xl font-bold">
-                        {new Intl.NumberFormat("it-IT", {
-                          style: "currency",
-                          currency: "EUR",
-                          maximumFractionDigits: 0,
-                        }).format(totalRevenue)}
+                        {formatCurrency(dealer.totalRevenue || 0)}
                       </p>
                       <p className="text-xs text-muted-foreground">Fatturato</p>
                     </div>
                   </div>
                 </div>
-
-                <Button className="w-full" variant="outline">
-                  Visualizza Dettagli
-                </Button>
               </CardContent>
             </Card>
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <Card>
+          <CardContent className="py-12 text-center">
+            <p className="text-muted-foreground">Nessun rivenditore trovato</p>
+            <p className="text-sm text-muted-foreground mt-2">
+              Crea il tuo primo rivenditore per iniziare
+            </p>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
