@@ -11,9 +11,11 @@ import {
   BarChart3,
   Settings,
   FileText,
+  LogOut,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { mockCurrentUser } from "@/lib/mock-data";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface LayoutProps {
   children: ReactNode;
@@ -33,6 +35,24 @@ const navigation = [
 
 export function Layout({ children }: LayoutProps) {
   const location = useLocation();
+  const { user, userRole, signOut } = useAuth();
+
+  const getRoleLabel = (role: string | null) => {
+    switch (role) {
+      case "super_admin":
+        return "Super Admin";
+      case "commerciale":
+        return "Commerciale";
+      case "rivenditore":
+        return "Rivenditore";
+      default:
+        return "Utente";
+    }
+  };
+
+  const getInitials = (email: string) => {
+    return email.substring(0, 2).toUpperCase();
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -68,18 +88,31 @@ export function Layout({ children }: LayoutProps) {
 
           {/* User Profile */}
           <div className="border-t p-4">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 mb-3">
               <Avatar>
                 <AvatarImage src="" />
                 <AvatarFallback className="bg-primary text-primary-foreground">
-                  {mockCurrentUser.displayName.substring(0, 2).toUpperCase()}
+                  {user?.email ? getInitials(user.email) : "??"}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 overflow-hidden">
-                <p className="truncate text-sm font-medium">{mockCurrentUser.displayName}</p>
-                <p className="truncate text-xs text-muted-foreground">{mockCurrentUser.role}</p>
+                <p className="truncate text-sm font-medium">
+                  {user?.user_metadata?.display_name || user?.email || "Utente"}
+                </p>
+                <p className="truncate text-xs text-muted-foreground">
+                  {getRoleLabel(userRole)}
+                </p>
               </div>
             </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start"
+              onClick={signOut}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              Esci
+            </Button>
           </div>
         </div>
       </aside>
