@@ -1,11 +1,14 @@
+import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { mockOrders, getOrderSaldo } from "@/lib/mock-data";
 import { OrderStatus } from "@/types";
-import { Plus, FileText, Paperclip } from "lucide-react";
+import { Plus, Eye } from "lucide-react";
 
 export default function Orders() {
+  const navigate = useNavigate();
+  
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("it-IT", {
       style: "currency",
@@ -115,14 +118,14 @@ export default function Orders() {
                         : "N/A"}
                     </td>
                     <td className="py-4">
-                      <div className="flex gap-2">
-                        <Button variant="ghost" size="icon">
-                          <FileText className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon">
-                          <Paperclip className="h-4 w-4" />
-                        </Button>
-                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => navigate(`/ordini/${order.id}`)}
+                      >
+                        <Eye className="h-4 w-4 mr-2" />
+                        Dettagli
+                      </Button>
                     </td>
                   </tr>
                 ))}
