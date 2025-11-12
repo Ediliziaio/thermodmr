@@ -1,9 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Eye, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Eye, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useOrders } from "@/hooks/useOrders";
+import { NewOrderDialog } from "@/components/orders/NewOrderDialog";
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat("it-IT", {
@@ -72,10 +73,7 @@ export default function Orders() {
             Gestisci tutti gli ordini dei rivenditori
           </p>
         </div>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Nuovo Ordine
-        </Button>
+        <NewOrderDialog />
       </div>
 
       {/* Orders Table */}

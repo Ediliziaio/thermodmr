@@ -205,3 +205,144 @@ export const useUpdateOrderNotes = () => {
     },
   });
 };
+
+const generateOrderId = () => {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const random = Math.floor(Math.random() * 1000)
+    .toString()
+    .padStart(3, "0");
+  return `ORD-${year}${month}${day}-${random}`;
+};
+
+export const useCreateOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (orderData: {
+      dealer_id: string;
+      cliente_nome?: string;
+      cliente_cognome?: string;
+      cliente_email?: string;
+      cliente_telefono?: string;
+      cliente_indirizzo?: string;
+      data_consegna_prevista?: string;
+      importo_acconto: number;
+      note_rivenditore?: string;
+      note_interna?: string;
+      order_lines: Array<{
+        categoria: string;
+        descrizione: string;
+        quantita: number;
+        prezzo_unitario: number;
+        sconto: number;
+        iva: number;
+      }>;
+    }) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Non autenticato");
+
+      // Get dealer's commerciale_id
+      const { data: dealer, error: dealerError } = await supabase
+        .from("dealers")
+        .select("commerciale_owner_id")
+        .eq("id", orderData.dealer_id)
+        .single();
+
+      if (dealerError) throw dealerError;
+
+      // Create client if provided
+      let clienteFinaleId: string | null = null;
+      if (orderData.cliente_nome && orderData.cliente_cognome) {
+        const { data: client, error: clientError } = await supabase
+          .from("clients")
+          .insert([
+            {
+              dealer_id: orderData.dealer_id,
+              nome: orderData.cliente_nome,
+              cognome: orderData.cliente_cognome,
+              email: orderData.cliente_email || null,
+              telefono: orderData.cliente_telefono || null,
+              indirizzo: orderData.cliente_indirizzo || null,
+            },
+          ])
+          .select()
+          .single();
+
+        if (clientError) throw clientError;
+        clienteFinaleId = client.id;
+      }
+
+      // Calculate total
+      const importoTotale = orderData.order_lines.reduce((sum, line) => {
+        const subtotal = line.quantita * line.prezzo_unitario;
+        const afterDiscount = subtotal * (1 - line.sconto / 100);
+        const total = afterDiscount * (1 + line.iva / 100);
+        return sum + total;
+      }, 0);
+
+      // Create order
+      const orderId = generateOrderId();
+      const { error: orderError } = await supabase.from("orders").insert([
+        {
+          id: orderId,
+          dealer_id: orderData.dealer_id,
+          cliente_finale_id: clienteFinaleId,
+          commerciale_id: dealer.commerciale_owner_id,
+          creato_da_user_id: user.id,
+          stato: "da_confermare",
+          data_consegna_prevista: orderData.data_consegna_prevista || null,
+          importo_totale: importoTotale,
+          importo_acconto: orderData.importo_acconto,
+          note_rivenditore: orderData.note_rivenditore || null,
+          note_interna: orderData.note_interna || null,
+        },
+      ]);
+
+      if (orderError) throw orderError;
+
+      // Create order lines
+      const orderLines = orderData.order_lines.map((line) => {
+        const subtotal = line.quantita * line.prezzo_unitario;
+        const afterDiscount = subtotal * (1 - line.sconto / 100);
+        const totaleRiga = afterDiscount * (1 + line.iva / 100);
+
+        return {
+          ordine_id: orderId,
+          categoria: line.categoria,
+          descrizione: line.descrizione,
+          quantita: line.quantita,
+          prezzo_unitario: line.prezzo_unitario,
+          sconto: line.sconto,
+          iva: line.iva,
+          totale_riga: totaleRiga,
+        };
+      });
+
+      const { error: linesError } = await supabase
+        .from("order_lines")
+        .insert(orderLines);
+
+      if (linesError) throw linesError;
+
+      return orderId;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      toast({
+        title: "Ordine creato",
+        description: "L'ordine è stato creato con successo",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Errore",
+        description: "Impossibile creare l'ordine",
+        variant: "destructive",
+      });
+      console.error("Error creating order:", error);
+    },
+  });
+};
