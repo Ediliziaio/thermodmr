@@ -12,6 +12,7 @@ import OrderDetail from "./pages/OrderDetail";
 import Dealers from "./pages/Dealers";
 import Placeholder from "./pages/Placeholder";
 import Provvigioni from "./pages/Provvigioni";
+import Analytics from "./pages/Analytics";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -101,7 +102,7 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Layout>
-                    <Placeholder title="KPI & Statistiche" description="Analisi delle performance" />
+                    <Analytics />
                   </Layout>
                 </ProtectedRoute>
               }
