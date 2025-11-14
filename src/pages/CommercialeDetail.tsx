@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Users, ShoppingCart, Euro, TrendingUp } from "lucide-react";
+import { ArrowLeft, Users, ShoppingCart, Euro, TrendingUp, ArrowRightLeft } from "lucide-react";
+import { AssignDealersDialog } from "@/components/commerciali/AssignDealersDialog";
 import { useCommercialeById } from "@/hooks/useCommerciali";
 import { useDealers } from "@/hooks/useDealers";
 import { useCommissionsByCommerciale } from "@/hooks/useCommissions";
@@ -15,6 +17,12 @@ import { it } from "date-fns/locale";
 
 const CommercialeDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const [assignDialogOpen, setAssignDialogOpen] = useState(false);
+  const [selectedDealer, setSelectedDealer] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  
   const { data: commerciale, isLoading: isLoadingCommerciale } = useCommercialeById(id);
   const { data: dealers = [], isLoading: isLoadingDealers } = useDealers();
   const { data: commissions = [], isLoading: isLoadingCommissions } = useCommissionsByCommerciale(id || "");
@@ -182,6 +190,7 @@ const CommercialeDetail = () => {
                       <TableHead>Email</TableHead>
                       <TableHead>Ordini</TableHead>
                       <TableHead className="text-right">Fatturato</TableHead>
+                      <TableHead className="text-right">Azioni</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -200,6 +209,22 @@ const CommercialeDetail = () => {
                         <TableCell>{dealer.ordersCount || 0}</TableCell>
                         <TableCell className="text-right">
                           {formatCurrency(dealer.totalRevenue || 0)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedDealer({
+                                id: dealer.id,
+                                name: dealer.ragione_sociale,
+                              });
+                              setAssignDialogOpen(true);
+                            }}
+                          >
+                            <ArrowRightLeft className="h-4 w-4 mr-1" />
+                            Riassegna
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -326,6 +351,17 @@ const CommercialeDetail = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {selectedDealer && commerciale && (
+        <AssignDealersDialog
+          dealerId={selectedDealer.id}
+          dealerName={selectedDealer.name}
+          currentCommercialeId={id || ""}
+          currentCommercialeName={commerciale.display_name}
+          open={assignDialogOpen}
+          onOpenChange={setAssignDialogOpen}
+        />
+      )}
     </div>
   );
 };
