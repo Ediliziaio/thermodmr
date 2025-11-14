@@ -3,10 +3,30 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useCommerciali } from "@/hooks/useCommerciali";
 import { CommercialeCard } from "@/components/commerciali/CommercialeCard";
 import { NewCommercialeDialog } from "@/components/commerciali/NewCommercialeDialog";
+import { CommercialFilters } from "@/components/commerciali/CommercialFilters";
 import { Users, Euro, TrendingUp } from "lucide-react";
+import { useState, useMemo } from "react";
 
 const Commerciali = () => {
   const { data: commerciali = [], isLoading } = useCommerciali();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
+
+  const filteredCommerciali = useMemo(() => {
+    return commerciali.filter((commerciale) => {
+      const matchesSearch =
+        searchTerm === "" ||
+        commerciale.display_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        commerciale.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesStatus =
+        statusFilter === "all" ||
+        (statusFilter === "active" && commerciale.is_active) ||
+        (statusFilter === "inactive" && !commerciale.is_active);
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [commerciali, searchTerm, statusFilter]);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("it-IT", {
@@ -15,10 +35,10 @@ const Commerciali = () => {
     }).format(value);
   };
 
-  const totaleCommerciali = commerciali.length;
-  const commercialiAttivi = commerciali.filter((c) => c.is_active).length;
-  const fatturatoTotale = commerciali.reduce((sum, c) => sum + c.fatturato_totale, 0);
-  const provvigioniTotali = commerciali.reduce(
+  const totaleCommerciali = filteredCommerciali.length;
+  const commercialiAttivi = filteredCommerciali.filter((c) => c.is_active).length;
+  const fatturatoTotale = filteredCommerciali.reduce((sum, c) => sum + c.fatturato_totale, 0);
+  const provvigioniTotali = filteredCommerciali.reduce(
     (sum, c) => sum + c.provvigioni_dovute + c.provvigioni_liquidate,
     0
   );
@@ -100,9 +120,17 @@ const Commerciali = () => {
         </Card>
       </div>
 
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Lista Commerciali</h2>
-        {isLoading ? (
+      <div className="space-y-4">
+        <CommercialFilters
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          statusFilter={statusFilter}
+          onStatusChange={setStatusFilter}
+        />
+
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Lista Commerciali</h2>
+          {isLoading ? (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3].map((i) => (
               <Card key={i}>
@@ -119,22 +147,25 @@ const Commerciali = () => {
               </Card>
             ))}
           </div>
-        ) : commerciali.length === 0 ? (
-          <Card>
-            <CardContent className="py-8 text-center">
-              <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <p className="text-muted-foreground">
-                Nessun commerciale trovato
-              </p>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {commerciali.map((commerciale) => (
-              <CommercialeCard key={commerciale.id} commerciale={commerciale} />
-            ))}
-          </div>
-        )}
+          ) : filteredCommerciali.length === 0 ? (
+            <Card>
+              <CardContent className="py-8 text-center">
+                <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <p className="text-muted-foreground">
+                  {searchTerm || statusFilter !== "all"
+                    ? "Nessun commerciale trovato con i filtri selezionati"
+                    : "Nessun commerciale trovato"}
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {filteredCommerciali.map((commerciale) => (
+                <CommercialeCard key={commerciale.id} commerciale={commerciale} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
