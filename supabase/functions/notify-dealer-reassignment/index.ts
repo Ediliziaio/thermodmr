@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.81.1";
 import { Resend } from "https://esm.sh/resend@2.0.0";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -36,6 +37,24 @@ const handler = async (req: Request): Promise<Response> => {
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+    // Validate input using Zod schema
+    const inputSchema = z.object({
+      dealerId: z.string().uuid("Invalid dealerId format"),
+      dealerName: z.string().trim().min(1, "Dealer name required").max(200, "Dealer name too long"),
+      oldCommercialeId: z.string().uuid("Invalid oldCommercialeId format"),
+      oldCommercialeName: z.string().trim().min(1, "Old commerciale name required").max(200, "Old commerciale name too long"),
+      newCommercialeId: z.string().uuid("Invalid newCommercialeId format"),
+      newCommercialeName: z.string().trim().min(1, "New commerciale name required").max(200, "New commerciale name too long"),
+      motivazione: z.string().trim().min(1, "Motivazione required").max(1000, "Motivazione too long"),
+    });
+
+    const requestBody = await req.json();
+    const validationResult = inputSchema.safeParse(requestBody);
+    
+    if (!validationResult.success) {
+      throw new Error(`Validation failed: ${validationResult.error.errors.map(e => e.message).join(", ")}`);
+    }
+
     const {
       dealerName,
       oldCommercialeId,
@@ -43,7 +62,7 @@ const handler = async (req: Request): Promise<Response> => {
       newCommercialeId,
       newCommercialeName,
       motivazione,
-    }: ReassignmentRequest = await req.json();
+    } = validationResult.data;
 
     // Fetch email addresses
     const { data: oldCommercialeProfile } = await supabase

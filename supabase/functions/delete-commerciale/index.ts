@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.81.1';
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -49,14 +50,23 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { commerciale_id, transfer_to_commerciale_id } = await req.json();
+    // Validate input using Zod schema
+    const inputSchema = z.object({
+      commerciale_id: z.string().uuid("Invalid commerciale_id format"),
+      transfer_to_commerciale_id: z.string().uuid("Invalid transfer_to_commerciale_id format"),
+    });
 
-    if (!commerciale_id || !transfer_to_commerciale_id) {
+    const requestBody = await req.json();
+    const validationResult = inputSchema.safeParse(requestBody);
+    
+    if (!validationResult.success) {
       return new Response(
-        JSON.stringify({ error: 'commerciale_id e transfer_to_commerciale_id sono richiesti' }),
+        JSON.stringify({ error: `Validation failed: ${validationResult.error.errors.map(e => e.message).join(", ")}` }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+
+    const { commerciale_id, transfer_to_commerciale_id } = validationResult.data;
 
     if (commerciale_id === transfer_to_commerciale_id) {
       return new Response(
