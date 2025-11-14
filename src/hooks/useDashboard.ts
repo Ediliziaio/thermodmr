@@ -22,71 +22,72 @@ interface DashboardKPIs {
   }>;
 }
 
-export const useDashboardKPIs = () => {
+export const useDashboardKPIs = (startDate?: Date, endDate?: Date) => {
   return useQuery({
-    queryKey: ["dashboard-kpis"],
+    queryKey: ["dashboard-kpis", startDate, endDate],
     queryFn: async (): Promise<DashboardKPIs> => {
-      // Ottieni tutti gli ordini
-      const { data: orders, error: ordersError } = await supabase
-        .from("orders")
-        .select("*, dealers(id, ragione_sociale)");
-
-      if (ordersError) throw ordersError;
-
-      // Ottieni tutti i pagamenti
-      const { data: payments, error: paymentsError } = await supabase
-        .from("payments")
-        .select("importo");
-
-      if (paymentsError) throw paymentsError;
-
-      const totalOrders = orders?.length || 0;
-      const totalRevenue = orders?.reduce((sum, order) => sum + (order.importo_totale || 0), 0) || 0;
-      const totalAcconti = orders?.reduce((sum, order) => sum + (order.importo_acconto || 0), 0) || 0;
-      const totalIncassato = payments?.reduce((sum, payment) => sum + (payment.importo || 0), 0) || 0;
-      const daSaldare = totalRevenue - totalIncassato;
-
-      // Conta ordini per stato
-      const ordersByStatus = {
-        da_confermare: orders?.filter(o => o.stato === 'da_confermare').length || 0,
-        da_pagare_acconto: orders?.filter(o => o.stato === 'da_pagare_acconto').length || 0,
-        in_lavorazione: orders?.filter(o => o.stato === 'in_lavorazione').length || 0,
-        da_consegnare: orders?.filter(o => o.stato === 'da_consegnare').length || 0,
-        consegnato: orders?.filter(o => o.stato === 'consegnato').length || 0,
-      };
-
-      // Calcola top dealers
-      const dealerStats = new Map<string, { ragione_sociale: string; totalRevenue: number; ordersCount: number }>();
-      
-      orders?.forEach(order => {
-        if (order.dealers) {
-          const dealerId = order.dealers.id;
-          const existing = dealerStats.get(dealerId) || {
-            ragione_sociale: order.dealers.ragione_sociale,
-            totalRevenue: 0,
-            ordersCount: 0,
-          };
-          
-          existing.totalRevenue += order.importo_totale || 0;
-          existing.ordersCount += 1;
-          dealerStats.set(dealerId, existing);
+      // Chiama la funzione SQL ottimizzata per KPI
+      const { data: kpisData, error: kpisError } = await supabase.rpc(
+        "get_dashboard_kpis",
+        {
+          p_start_date: startDate?.toISOString(),
+          p_end_date: endDate?.toISOString(),
+          p_commerciale_id: null,
         }
-      });
+      );
 
-      const topDealers = Array.from(dealerStats.entries())
-        .map(([id, stats]) => ({ id, ...stats }))
-        .sort((a, b) => b.totalRevenue - a.totalRevenue)
-        .slice(0, 5);
+      if (kpisError) throw kpisError;
+
+      // Chiama la funzione per top dealers
+      const { data: dealersData, error: dealersError } = await supabase.rpc(
+        "get_top_dealers",
+        {
+          p_limit: 5,
+          p_commerciale_id: null,
+          p_start_date: startDate?.toISOString(),
+          p_end_date: endDate?.toISOString(),
+        }
+      );
+
+      if (dealersError) throw dealersError;
+
+      const kpis = kpisData as any;
+      const daSaldare = kpis.totalRevenue - kpis.totalIncassato;
 
       return {
-        totalOrders,
-        totalRevenue,
-        totalAcconti,
-        totalIncassato,
+        totalOrders: kpis.totalOrders,
+        totalRevenue: kpis.totalRevenue,
+        totalAcconti: kpis.totalAcconti,
+        totalIncassato: kpis.totalIncassato,
         daSaldare,
-        ordersByStatus,
-        topDealers,
+        ordersByStatus: kpis.ordersByStatus,
+        topDealers: (dealersData || []) as any[],
       };
     },
+    staleTime: 5 * 60 * 1000, // 5 minuti
+    gcTime: 10 * 60 * 1000, // 10 minuti
+  });
+};
+
+export const useRevenueData = (months: number = 6) => {
+  return useQuery({
+    queryKey: ["revenue-data", months],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_revenue_by_month", {
+        p_months: months,
+        p_commerciale_id: null,
+      });
+
+      if (error) throw error;
+
+      return (data || []) as Array<{
+        month: string;
+        ricavi: number;
+        acconti: number;
+        incassato: number;
+      }>;
+    },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 };

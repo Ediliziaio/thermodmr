@@ -30,20 +30,20 @@ import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
 const COLORS = {
-  primary: "hsl(var(--primary))",
-  secondary: "hsl(var(--secondary))",
-  accent: "hsl(var(--accent))",
+  primary: "hsl(var(--chart-1))",
+  secondary: "hsl(var(--chart-2))",
+  accent: "hsl(var(--chart-3))",
   muted: "hsl(var(--muted))",
-  success: "#10b981",
-  warning: "#f59e0b",
-  error: "#ef4444",
+  success: "hsl(var(--chart-2))",
+  warning: "hsl(142 76% 36%)",
+  error: "hsl(0 84% 60%)",
 };
 
 const STATUS_COLORS: Record<string, string> = {
   da_confermare: COLORS.warning,
   confermato: COLORS.primary,
-  da_pagare_acconto: COLORS.secondary,
-  in_lavorazione: COLORS.accent,
+  da_pagare_acconto: COLORS.accent,
+  in_lavorazione: COLORS.secondary,
   pronto: COLORS.success,
   consegnato: COLORS.success,
   annullato: COLORS.error,
