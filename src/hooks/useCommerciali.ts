@@ -284,3 +284,57 @@ export const useUpdateCommerciale = () => {
     },
   });
 };
+
+export const useDeleteCommerciale = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      commerciale_id,
+      transfer_to_commerciale_id,
+    }: {
+      commerciale_id: string;
+      transfer_to_commerciale_id: string;
+    }) => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        throw new Error("Non autenticato");
+      }
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/delete-commerciale`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({ commerciale_id, transfer_to_commerciale_id }),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Errore durante l'eliminazione del commerciale");
+      }
+
+      return response.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["commerciali"] });
+      queryClient.invalidateQueries({ queryKey: ["dealers"] });
+      toast({
+        title: "Commerciale eliminato",
+        description: `Il commerciale è stato eliminato e ${data.dealers_transferred} dealer${data.dealers_transferred !== 1 ? 's' : ''} sono stati trasferiti con successo.`,
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Errore",
+        description: `Impossibile eliminare il commerciale: ${error.message}`,
+        variant: "destructive",
+      });
+    },
+  });
+};

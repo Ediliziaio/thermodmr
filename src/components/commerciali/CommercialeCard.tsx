@@ -4,6 +4,7 @@ import { Users, ShoppingCart, Euro, TrendingUp } from "lucide-react";
 import { CommercialeStats } from "@/hooks/useCommerciali";
 import { useNavigate } from "react-router-dom";
 import { EditCommercialeDialog } from "./EditCommercialeDialog";
+import { DeleteCommercialeDialog } from "./DeleteCommercialeDialog";
 
 interface CommercialeCardProps {
   commerciale: CommercialeStats;
@@ -40,6 +41,7 @@ export const CommercialeCard = ({ commerciale }: CommercialeCardProps) => {
               currentDisplayName={commerciale.display_name}
               currentIsActive={commerciale.is_active}
             />
+            <DeleteCommercialeDialog commerciale={commerciale} />
           </div>
         </div>
       </CardHeader>
