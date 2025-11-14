@@ -13,6 +13,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signUp: (email: string, password: string, displayName: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
+  hasRole: (role: UserRole) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -117,6 +118,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     navigate("/auth");
   };
 
+  const hasRole = (role: UserRole): boolean => {
+    return userRole === role;
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -127,6 +132,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         signIn,
         signUp,
         signOut,
+        hasRole,
       }}
     >
       {children}

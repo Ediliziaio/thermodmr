@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/select";
 import { Plus } from "lucide-react";
 import { Payment, PaymentType } from "@/types";
+import { useCreatePayment } from "@/hooks/usePayments";
+import { toast } from "@/hooks/use-toast";
 
 interface PaymentsSectionProps {
   orderId: string;
@@ -37,6 +39,7 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
     metodo: "Bonifico",
     riferimento: "",
   });
+  const createPayment = useCreatePayment();
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("it-IT", {
@@ -75,8 +78,47 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
   };
 
   const handleAddPayment = () => {
-    // In real app, this would call an API
-    console.log("Adding payment:", newPayment);
+    const importo = Number(newPayment.importo);
+
+    // Validazioni
+    if (!importo || importo <= 0) {
+      toast({
+        title: "Errore",
+        description: "L'importo deve essere maggiore di zero.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!newPayment.metodo) {
+      toast({
+        title: "Errore",
+        description: "Seleziona un metodo di pagamento.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Verifica che la somma dei pagamenti non superi il totale
+    if (totalPaid + importo > totalAmount) {
+      toast({
+        title: "Errore",
+        description: `L'importo totale dei pagamenti (${formatCurrency(totalPaid + importo)}) supererebbe il totale dell'ordine (${formatCurrency(totalAmount)}).`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Crea il pagamento
+    createPayment.mutate({
+      ordineId: orderId,
+      tipo: newPayment.tipo === PaymentType.ACCONTO ? "acconto" : newPayment.tipo === PaymentType.SALDO ? "saldo" : "parziale",
+      importo,
+      dataPagamento: newPayment.dataPagamento,
+      metodo: newPayment.metodo,
+      riferimento: newPayment.riferimento || undefined,
+    });
+
     setIsDialogOpen(false);
     // Reset form
     setNewPayment({
@@ -185,8 +227,12 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
                 />
               </div>
 
-              <Button onClick={handleAddPayment} className="w-full">
-                Conferma Pagamento
+              <Button 
+                onClick={handleAddPayment} 
+                className="w-full"
+                disabled={createPayment.isPending}
+              >
+                {createPayment.isPending ? "Registrazione..." : "Conferma Pagamento"}
               </Button>
             </div>
           </DialogContent>

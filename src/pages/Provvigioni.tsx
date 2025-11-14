@@ -1,36 +1,50 @@
 import { useState } from "react";
-import { mockCommissions, mockOrders } from "@/lib/mock-data";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CheckCircle2, Clock, Euro } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
+import { useCommissions, useCommissionsSummary } from "@/hooks/useCommissions";
+import { CommissionStatusBadge } from "@/components/commissions/CommissionStatusBadge";
+import { LiquidateCommissionDialog } from "@/components/commissions/LiquidateCommissionDialog";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Provvigioni = () => {
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [periodFilter, setPeriodFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "dovuta" | "liquidata">("all");
+  const [periodFilter, setPeriodFilter] = useState<"all" | "mese" | "trimestre" | "anno">("all");
+  const { user, hasRole } = useAuth();
 
-  const filteredCommissions = mockCommissions.filter((commission) => {
-    if (statusFilter !== "all" && commission.statoLiquidazione !== statusFilter) {
-      return false;
-    }
-    // Period filter would normally check dates, simplified for mock data
-    return true;
-  });
+  const filters = {
+    stato: statusFilter === "all" ? undefined : statusFilter,
+    periodo: periodFilter === "all" ? undefined : (periodFilter as "mese" | "trimestre" | "anno"),
+    commercialeId: hasRole("commerciale") ? user?.id : undefined,
+  };
 
-  const totalMaturate = filteredCommissions
-    .filter((c) => c.statoLiquidazione === "DOVUTA")
-    .reduce((sum, c) => sum + c.importoCalcolato, 0);
+  const { data: commissions = [], isLoading } = useCommissions(filters);
+  const { data: summary } = useCommissionsSummary(
+    hasRole("commerciale") ? user?.id : undefined
+  );
 
-  const totalLiquidate = filteredCommissions
-    .filter((c) => c.statoLiquidazione === "LIQUIDATA")
-    .reduce((sum, c) => sum + c.importoCalcolato, 0);
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat("it-IT", {
+      style: "currency",
+      currency: "EUR",
+    }).format(value);
+  };
 
-  const getOrder = (orderId: string) => {
-    return mockOrders.find((o) => o.id === orderId);
+  const formatDate = (dateString: string) => {
+    return format(new Date(dateString), "dd MMM yyyy", { locale: it });
+  };
+
+  const getBaseCalcoloLabel = (base: string) => {
+    const labels: Record<string, string> = {
+      totale: "Totale",
+      margine: "Margine",
+      personalizzata: "Personalizzata",
+    };
+    return labels[base] || base;
   };
 
   return (
@@ -50,10 +64,10 @@ const Provvigioni = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              € {totalMaturate.toLocaleString("it-IT", { minimumFractionDigits: 2 })}
+              {formatCurrency(summary?.totaleMaturate || 0)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              {filteredCommissions.filter((c) => c.statoLiquidazione === "DOVUTA").length} provvigioni
+              {commissions.filter((c) => c.stato_liquidazione === "dovuta").length} provvigioni
             </p>
           </CardContent>
         </Card>
@@ -65,10 +79,10 @@ const Provvigioni = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              € {totalLiquidate.toLocaleString("it-IT", { minimumFractionDigits: 2 })}
+              {formatCurrency(summary?.totaleLiquidate || 0)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              {filteredCommissions.filter((c) => c.statoLiquidazione === "LIQUIDATA").length} provvigioni
+              {commissions.filter((c) => c.stato_liquidazione === "liquidata").length} provvigioni
             </p>
           </CardContent>
         </Card>
@@ -80,10 +94,10 @@ const Provvigioni = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              € {(totalMaturate + totalLiquidate).toLocaleString("it-IT", { minimumFractionDigits: 2 })}
+              {formatCurrency(summary?.totaleGenerale || 0)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              {filteredCommissions.length} provvigioni totali
+              {commissions.length} provvigioni totali
             </p>
           </CardContent>
         </Card>
@@ -94,26 +108,32 @@ const Provvigioni = () => {
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <CardTitle>Elenco Provvigioni</CardTitle>
             <div className="flex gap-2">
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <Select 
+                value={statusFilter} 
+                onValueChange={(v) => setStatusFilter(v as "all" | "dovuta" | "liquidata")}
+              >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Stato" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Tutti gli stati</SelectItem>
-                  <SelectItem value="DOVUTA">Maturate</SelectItem>
-                  <SelectItem value="LIQUIDATA">Liquidate</SelectItem>
+                  <SelectItem value="dovuta">Maturate</SelectItem>
+                  <SelectItem value="liquidata">Liquidate</SelectItem>
                 </SelectContent>
               </Select>
 
-              <Select value={periodFilter} onValueChange={setPeriodFilter}>
+              <Select 
+                value={periodFilter} 
+                onValueChange={(v) => setPeriodFilter(v as "all" | "mese" | "trimestre" | "anno")}
+              >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Periodo" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Tutti i periodi</SelectItem>
-                  <SelectItem value="current-month">Mese corrente</SelectItem>
-                  <SelectItem value="current-quarter">Trimestre corrente</SelectItem>
-                  <SelectItem value="current-year">Anno corrente</SelectItem>
+                  <SelectItem value="mese">Mese corrente</SelectItem>
+                  <SelectItem value="trimestre">Trimestre corrente</SelectItem>
+                  <SelectItem value="anno">Anno corrente</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -132,63 +152,61 @@ const Provvigioni = () => {
                   <TableHead>Provvigione</TableHead>
                   <TableHead>Stato</TableHead>
                   <TableHead>Data Liquidazione</TableHead>
-                  <TableHead className="text-right">Azioni</TableHead>
+                  {hasRole("super_admin") && <TableHead className="text-right">Azioni</TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredCommissions.length === 0 ? (
+                {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={9} className="text-center text-muted-foreground">
+                    <TableCell colSpan={hasRole("super_admin") ? 9 : 8} className="text-center text-muted-foreground">
+                      Caricamento...
+                    </TableCell>
+                  </TableRow>
+                ) : commissions.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={hasRole("super_admin") ? 9 : 8} className="text-center text-muted-foreground">
                       Nessuna provvigione trovata
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredCommissions.map((commission) => {
-                    const order = getOrder(commission.ordineId);
-                    return (
-                      <TableRow key={commission.id}>
-                        <TableCell className="font-medium">{commission.ordineId}</TableCell>
-                        <TableCell>
-                          {order?.dealer?.ragioneSociale || "N/A"}
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline">{commission.baseCalcolo}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          € {order?.importoTotale.toLocaleString("it-IT", { minimumFractionDigits: 2 })}
-                        </TableCell>
-                        <TableCell>{commission.percentuale}%</TableCell>
-                        <TableCell className="font-semibold">
-                          € {commission.importoCalcolato.toLocaleString("it-IT", { minimumFractionDigits: 2 })}
-                        </TableCell>
-                        <TableCell>
-                          {commission.statoLiquidazione === "LIQUIDATA" ? (
-                            <Badge className="bg-green-500/10 text-green-700 hover:bg-green-500/20">
-                              <CheckCircle2 className="mr-1 h-3 w-3" />
-                              Liquidata
-                            </Badge>
-                          ) : (
-                            <Badge className="bg-yellow-500/10 text-yellow-700 hover:bg-yellow-500/20">
-                              <Clock className="mr-1 h-3 w-3" />
-                              Maturata
-                            </Badge>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {commission.dataLiquidazione
-                            ? format(commission.dataLiquidazione, "dd MMM yyyy", { locale: it })
-                            : "-"}
-                        </TableCell>
+                  commissions.map((commission) => (
+                    <TableRow key={commission.id}>
+                      <TableCell className="font-medium">{commission.ordine_id}</TableCell>
+                      <TableCell>
+                        {commission.orders.dealers.ragione_sociale}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">
+                          {getBaseCalcoloLabel(commission.base_calcolo)}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {formatCurrency(commission.orders.importo_totale)}
+                      </TableCell>
+                      <TableCell>{commission.percentuale}%</TableCell>
+                      <TableCell className="font-semibold">
+                        {formatCurrency(commission.importo_calcolato)}
+                      </TableCell>
+                      <TableCell>
+                        <CommissionStatusBadge status={commission.stato_liquidazione} />
+                      </TableCell>
+                      <TableCell>
+                        {commission.data_liquidazione
+                          ? formatDate(commission.data_liquidazione)
+                          : "-"}
+                      </TableCell>
+                      {hasRole("super_admin") && (
                         <TableCell className="text-right">
-                          {commission.statoLiquidazione === "DOVUTA" && (
-                            <Button size="sm" variant="outline">
-                              Liquida
-                            </Button>
+                          {commission.stato_liquidazione === "dovuta" && (
+                            <LiquidateCommissionDialog
+                              commissionId={commission.id}
+                              importo={commission.importo_calcolato}
+                            />
                           )}
                         </TableCell>
-                      </TableRow>
-                    );
-                  })
+                      )}
+                    </TableRow>
+                  ))
                 )}
               </TableBody>
             </Table>

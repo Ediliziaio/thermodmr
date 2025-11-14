@@ -2,6 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Euro, TrendingUp, Package, Clock, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
 import { useDashboardKPIs } from "@/hooks/useDashboard";
+import { RevenueChart } from "@/components/dashboard/RevenueChart";
+import { OrderStatusPieChart } from "@/components/dashboard/OrderStatusPieChart";
 
 export default function Dashboard() {
   const { data: kpis, isLoading, error } = useDashboardKPIs();
@@ -114,6 +116,31 @@ export default function Dashboard() {
             </p>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Charts Section */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <RevenueChart
+          data={[
+            { month: "Lug", ricavi: 45000, acconti: 15000, incassato: 12000 },
+            { month: "Ago", ricavi: 52000, acconti: 18000, incassato: 16000 },
+            { month: "Set", ricavi: 61000, acconti: 22000, incassato: 19000 },
+            { month: "Ott", ricavi: 68000, acconti: 24000, incassato: 22000 },
+            { month: "Nov", ricavi: 75000, acconti: 28000, incassato: 25000 },
+            { month: "Dic", ricavi: kpis.totalRevenue, acconti: kpis.totalAcconti, incassato: kpis.totalIncassato },
+          ]}
+        />
+        <OrderStatusPieChart
+          data={Object.entries(kpis.ordersByStatus).map(([status, count]) => ({
+            name: getStatusLabel(status),
+            value: count,
+            color: getStatusColor(status).includes('yellow') ? 'hsl(var(--chart-1))' :
+                   getStatusColor(status).includes('orange') ? 'hsl(var(--chart-2))' :
+                   getStatusColor(status).includes('blue') ? 'hsl(var(--chart-3))' :
+                   getStatusColor(status).includes('purple') ? 'hsl(var(--chart-4))' :
+                   'hsl(var(--chart-5))',
+          }))}
+        />
       </div>
 
       {/* Orders by Status */}
