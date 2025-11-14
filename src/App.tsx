@@ -18,6 +18,7 @@ import NotFound from "./pages/NotFound";
 import Commerciali from "./pages/Commerciali";
 import CommercialeDetail from "./pages/CommercialeDetail";
 import Pagamenti from "./pages/Pagamenti";
+import CommercialeDashboard from "./pages/CommercialeDashboard";
 
 const queryClient = new QueryClient();
 
@@ -86,6 +87,16 @@ const App = () => (
                 <ProtectedRoute>
                   <Layout>
                     <CommercialeDetail />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard-commerciale"
+              element={
+                <ProtectedRoute requiredRole="commerciale">
+                  <Layout>
+                    <CommercialeDashboard />
                   </Layout>
                 </ProtectedRoute>
               }
