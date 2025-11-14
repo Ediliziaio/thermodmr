@@ -5,3 +5,6 @@ verify_jwt = true
 
 [functions.create-commerciale]
 verify_jwt = true
+
+[functions.update-commerciale]
+verify_jwt = true

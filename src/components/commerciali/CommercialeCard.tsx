@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Users, ShoppingCart, Euro, TrendingUp } from "lucide-react";
 import { CommercialeStats } from "@/hooks/useCommerciali";
 import { useNavigate } from "react-router-dom";
+import { EditCommercialeDialog } from "./EditCommercialeDialog";
 
 interface CommercialeCardProps {
   commerciale: CommercialeStats;
@@ -19,22 +20,33 @@ export const CommercialeCard = ({ commerciale }: CommercialeCardProps) => {
   };
 
   return (
-    <Card 
-      className="cursor-pointer hover:shadow-lg transition-shadow"
-      onClick={() => navigate(`/commerciali/${commerciale.id}`)}
-    >
+    <Card className="hover:shadow-lg transition-shadow">
       <CardHeader>
         <div className="flex items-start justify-between">
-          <div>
+          <div 
+            className="flex-1 cursor-pointer"
+            onClick={() => navigate(`/commerciali/${commerciale.id}`)}
+          >
             <CardTitle className="text-lg">{commerciale.display_name}</CardTitle>
             <p className="text-sm text-muted-foreground mt-1">{commerciale.email}</p>
           </div>
-          <Badge variant={commerciale.is_active ? "default" : "secondary"}>
-            {commerciale.is_active ? "Attivo" : "Inattivo"}
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant={commerciale.is_active ? "default" : "secondary"}>
+              {commerciale.is_active ? "Attivo" : "Inattivo"}
+            </Badge>
+            <EditCommercialeDialog
+              commercialeId={commerciale.id}
+              currentEmail={commerciale.email}
+              currentDisplayName={commerciale.display_name}
+              currentIsActive={commerciale.is_active}
+            />
+          </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent 
+        className="cursor-pointer"
+        onClick={() => navigate(`/commerciali/${commerciale.id}`)}
+      >
         <div className="grid grid-cols-2 gap-4">
           <div className="flex items-center gap-2">
             <Users className="h-4 w-4 text-muted-foreground" />
