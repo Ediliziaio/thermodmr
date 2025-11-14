@@ -4,6 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PaymentFilters } from "@/components/payments/PaymentFilters";
+import { NewPaymentDialog } from "@/components/payments/NewPaymentDialog";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
@@ -114,11 +115,14 @@ const Pagamenti = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-semibold text-foreground">Pagamenti</h1>
-        <p className="text-muted-foreground mt-1">
-          Storico e gestione di tutti i pagamenti
-        </p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-3xl font-semibold text-foreground">Pagamenti</h1>
+          <p className="text-muted-foreground mt-1">
+            Storico e gestione di tutti i pagamenti
+          </p>
+        </div>
+        <NewPaymentDialog />
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">

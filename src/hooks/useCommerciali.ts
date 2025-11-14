@@ -172,3 +172,58 @@ export const useAssignDealerToCommerciale = () => {
     },
   });
 };
+
+export const useCreateCommerciale = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      email,
+      password,
+      display_name,
+    }: {
+      email: string;
+      password: string;
+      display_name: string;
+    }) => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        throw new Error("Non autenticato");
+      }
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-commerciale`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({ email, password, display_name }),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Errore durante la creazione del commerciale");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["commerciali"] });
+      toast({
+        title: "Commerciale creato",
+        description: "Il nuovo commerciale è stato creato con successo.",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Errore",
+        description: `Impossibile creare il commerciale: ${error.message}`,
+        variant: "destructive",
+      });
+    },
+  });
+};
