@@ -530,6 +530,78 @@ export type Database = {
         }
         Relationships: []
       }
+      rls_test_results: {
+        Row: {
+          created_at: string
+          details: string | null
+          id: string
+          message: string
+          role: string
+          status: string
+          table_name: string
+          test_name: string
+          test_run_id: string
+        }
+        Insert: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          message: string
+          role: string
+          status: string
+          table_name: string
+          test_name: string
+          test_run_id: string
+        }
+        Update: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          message?: string
+          role?: string
+          status?: string
+          table_name?: string
+          test_name?: string
+          test_run_id?: string
+        }
+        Relationships: []
+      }
+      rls_test_runs: {
+        Row: {
+          completed_at: string | null
+          error_message: string | null
+          failed_tests: number
+          id: string
+          passed_tests: number
+          skipped_tests: number
+          started_at: string
+          status: string
+          total_tests: number
+        }
+        Insert: {
+          completed_at?: string | null
+          error_message?: string | null
+          failed_tests?: number
+          id?: string
+          passed_tests?: number
+          skipped_tests?: number
+          started_at?: string
+          status?: string
+          total_tests?: number
+        }
+        Update: {
+          completed_at?: string | null
+          error_message?: string | null
+          failed_tests?: number
+          id?: string
+          passed_tests?: number
+          skipped_tests?: number
+          started_at?: string
+          status?: string
+          total_tests?: number
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
