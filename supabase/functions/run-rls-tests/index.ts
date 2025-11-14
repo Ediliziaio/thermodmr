@@ -181,7 +181,7 @@ Deno.serve(async (req) => {
         .update({
           status: 'failed',
           completed_at: new Date().toISOString(),
-          error_message: error.message,
+          error_message: error instanceof Error ? error.message : String(error),
         })
         .eq('id', testRunId);
 
@@ -190,7 +190,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error('Error:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error instanceof Error ? error.message : String(error) }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
     );
   }
@@ -273,7 +273,7 @@ async function testTableAccess(
       table,
       role,
       status: 'fail',
-      message: `Error testing ${table}: ${error.message}`,
+      message: `Error testing ${table}: ${error instanceof Error ? error.message : String(error)}`,
       details: JSON.stringify(error, null, 2),
     };
   }
