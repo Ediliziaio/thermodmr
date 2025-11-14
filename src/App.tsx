@@ -15,6 +15,9 @@ import Provvigioni from "./pages/Provvigioni";
 import Analytics from "./pages/Analytics";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import Commerciali from "./pages/Commerciali";
+import CommercialeDetail from "./pages/CommercialeDetail";
+import Pagamenti from "./pages/Pagamenti";
 
 const queryClient = new QueryClient();
 
@@ -72,7 +75,17 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Layout>
-                    <Placeholder title="Commerciali" description="Gestione dei commerciali e assegnazioni" />
+                    <Commerciali />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/commerciali/:id"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <CommercialeDetail />
                   </Layout>
                 </ProtectedRoute>
               }
@@ -82,7 +95,7 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Layout>
-                    <Placeholder title="Pagamenti" description="Storico e gestione pagamenti" />
+                    <Pagamenti />
                   </Layout>
                 </ProtectedRoute>
               }
