@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.81.1";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -44,11 +45,21 @@ serve(async (req) => {
       throw new Error("Only super admins can create commerciali");
     }
 
-    const { email, password, display_name } = await req.json();
+    // Validate input using Zod schema
+    const inputSchema = z.object({
+      email: z.string().email("Invalid email format").max(255, "Email too long"),
+      password: z.string().min(8, "Password must be at least 8 characters").max(72, "Password too long"),
+      display_name: z.string().trim().min(1, "Display name required").max(100, "Display name too long"),
+    });
 
-    if (!email || !password || !display_name) {
-      throw new Error("Email, password, and display_name are required");
+    const requestBody = await req.json();
+    const validationResult = inputSchema.safeParse(requestBody);
+    
+    if (!validationResult.success) {
+      throw new Error(`Validation failed: ${validationResult.error.errors.map(e => e.message).join(", ")}`);
     }
+
+    const { email, password, display_name } = validationResult.data;
 
     // Create the user
     const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({

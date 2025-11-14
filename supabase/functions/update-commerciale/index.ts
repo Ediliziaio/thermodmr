@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.81.1";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -44,11 +45,22 @@ serve(async (req) => {
       throw new Error("Only super admins can update commerciali");
     }
 
-    const { user_id, email, display_name, is_active } = await req.json();
+    // Validate input using Zod schema
+    const inputSchema = z.object({
+      user_id: z.string().uuid("Invalid user_id format"),
+      email: z.string().email("Invalid email format").max(255, "Email too long").optional(),
+      display_name: z.string().trim().min(1, "Display name cannot be empty").max(100, "Display name too long").optional(),
+      is_active: z.boolean().optional(),
+    });
 
-    if (!user_id) {
-      throw new Error("user_id is required");
+    const requestBody = await req.json();
+    const validationResult = inputSchema.safeParse(requestBody);
+    
+    if (!validationResult.success) {
+      throw new Error(`Validation failed: ${validationResult.error.errors.map(e => e.message).join(", ")}`);
     }
+
+    const { user_id, email, display_name, is_active } = validationResult.data;
 
     // Update email if provided
     if (email) {
