@@ -5,6 +5,9 @@ import { Eye, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useOrders } from "@/hooks/useOrders";
 import { NewOrderDialog } from "@/components/orders/NewOrderDialog";
+import { OrderFilters, OrderFiltersState } from "@/components/orders/OrderFilters";
+import { useDealers } from "@/hooks/useDealers";
+import { useMemo, useState } from "react";
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat("it-IT", {
@@ -46,6 +49,73 @@ const getStatusLabel = (status: string) => {
 export default function Orders() {
   const navigate = useNavigate();
   const { data: orders, isLoading, error } = useOrders();
+  const { data: dealers } = useDealers();
+  const [filters, setFilters] = useState<OrderFiltersState>({});
+
+  const filteredOrders = useMemo(() => {
+    if (!orders) return [];
+
+    return orders.filter((order) => {
+      // Filtro per stato
+      if (filters.stato && order.stato !== filters.stato) {
+        return false;
+      }
+
+      // Filtro per rivenditore
+      if (filters.dealerId && order.dealer_id !== filters.dealerId) {
+        return false;
+      }
+
+      // Filtro per data inserimento (da)
+      if (filters.dataInserimentoFrom) {
+        const orderDate = new Date(order.data_inserimento);
+        const filterDate = new Date(filters.dataInserimentoFrom);
+        if (orderDate < filterDate) {
+          return false;
+        }
+      }
+
+      // Filtro per data inserimento (a)
+      if (filters.dataInserimentoTo) {
+        const orderDate = new Date(order.data_inserimento);
+        const filterDate = new Date(filters.dataInserimentoTo);
+        filterDate.setHours(23, 59, 59, 999);
+        if (orderDate > filterDate) {
+          return false;
+        }
+      }
+
+      // Filtro per importo minimo
+      if (filters.importoMin && order.importo_totale < filters.importoMin) {
+        return false;
+      }
+
+      // Filtro per importo massimo
+      if (filters.importoMax && order.importo_totale > filters.importoMax) {
+        return false;
+      }
+
+      // Filtro per ricerca generale
+      if (filters.searchTerm) {
+        const searchLower = filters.searchTerm.toLowerCase();
+        const matchesId = order.id.toLowerCase().includes(searchLower);
+        const matchesDealer = order.dealers?.ragione_sociale
+          ?.toLowerCase()
+          .includes(searchLower);
+        const matchesClient = order.clients
+          ? `${order.clients.nome} ${order.clients.cognome}`
+              .toLowerCase()
+              .includes(searchLower)
+          : false;
+
+        if (!matchesId && !matchesDealer && !matchesClient) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }, [orders, filters]);
 
   if (isLoading) {
     return (
@@ -76,13 +146,20 @@ export default function Orders() {
         <NewOrderDialog />
       </div>
 
+      {/* Filtri */}
+      <OrderFilters
+        filters={filters}
+        onFiltersChange={setFilters}
+        dealers={dealers || []}
+      />
+
       {/* Orders Table */}
       <Card>
         <CardHeader>
           <CardTitle>Lista Ordini</CardTitle>
         </CardHeader>
         <CardContent>
-          {orders && orders.length > 0 ? (
+          {filteredOrders.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -99,7 +176,7 @@ export default function Orders() {
                   </tr>
                 </thead>
                 <tbody>
-                  {orders.map((order) => (
+                  {filteredOrders.map((order) => (
                     <tr key={order.id} className="border-b last:border-0">
                       <td className="py-4 pr-4">
                         <p className="font-medium">{order.id}</p>
@@ -151,9 +228,15 @@ export default function Orders() {
             </div>
           ) : (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">Nessun ordine trovato</p>
+              <p className="text-muted-foreground">
+                {orders && orders.length > 0
+                  ? "Nessun ordine corrisponde ai filtri selezionati"
+                  : "Nessun ordine trovato"}
+              </p>
               <p className="text-sm text-muted-foreground mt-2">
-                Crea il tuo primo ordine per iniziare
+                {orders && orders.length > 0
+                  ? "Prova a modificare i filtri di ricerca"
+                  : "Crea il tuo primo ordine per iniziare"}
               </p>
             </div>
           )}
