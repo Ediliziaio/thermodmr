@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCommerciali } from "@/hooks/useCommerciali";
 import { CommercialeCard } from "@/components/commerciali/CommercialeCard";
+import { NewCommercialeDialog } from "@/components/commerciali/NewCommercialeDialog";
 import { Users, Euro, TrendingUp } from "lucide-react";
 
 const Commerciali = () => {
@@ -24,11 +25,14 @@ const Commerciali = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-semibold text-foreground">Commerciali</h1>
-        <p className="text-muted-foreground mt-1">
-          Gestione dei commerciali e loro performance
-        </p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="text-3xl font-semibold text-foreground">Commerciali</h1>
+          <p className="text-muted-foreground mt-1">
+            Gestione dei commerciali e loro performance
+          </p>
+        </div>
+        <NewCommercialeDialog />
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
