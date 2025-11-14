@@ -12,6 +12,7 @@ import {
   Settings,
   FileText,
   LogOut,
+  Shield,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ const navigation = [
   { name: "Provvigioni", href: "/provvigioni", icon: TrendingUp, roles: ["super_admin", "commerciale"] },
   { name: "KPI", href: "/kpi", icon: BarChart3, roles: ["super_admin"] },
   { name: "Audit", href: "/audit", icon: FileText, roles: ["super_admin"] },
+  { name: "RLS Test", href: "/rls-test", icon: Shield, roles: ["super_admin"] },
   { name: "Impostazioni", href: "/impostazioni", icon: Settings, roles: ["super_admin", "commerciale", "rivenditore"] },
 ];
 

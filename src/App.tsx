@@ -19,6 +19,7 @@ import Commerciali from "./pages/Commerciali";
 import CommercialeDetail from "./pages/CommercialeDetail";
 import Pagamenti from "./pages/Pagamenti";
 import CommercialeDashboard from "./pages/CommercialeDashboard";
+import RLSTest from "./pages/RLSTest";
 
 const queryClient = new QueryClient();
 
@@ -148,6 +149,14 @@ const App = () => (
                   <Layout>
                     <Placeholder title="Impostazioni" description="Configurazione sistema" />
                   </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/rls-test"
+              element={
+                <ProtectedRoute requiredRole="super_admin">
+                  <RLSTest />
                 </ProtectedRoute>
               }
             />
