@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 import { toast } from "@/hooks/use-toast";
 
 export interface OrderWithDetails {
@@ -138,7 +139,7 @@ export const useUpdateOrderStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ orderId, status }: { orderId: string; status: string }) => {
+    mutationFn: async ({ orderId, status }: { orderId: string; status: Database["public"]["Tables"]["orders"]["Row"]["stato"] }) => {
       const { error } = await supabase
         .from("orders")
         .update({ stato: status })

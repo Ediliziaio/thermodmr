@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft, FileDown, Send, Loader2 } from "lucide-react";
 import { StatusStepper } from "@/components/orders/StatusStepper";
+import type { Database } from "@/integrations/supabase/types";
 import { OrderLinesEditor } from "@/components/orders/OrderLinesEditor";
 import { PaymentsSection } from "@/components/orders/PaymentsSection";
 import { AttachmentsSection } from "@/components/orders/AttachmentsSection";
@@ -53,7 +54,7 @@ export default function OrderDetail() {
 
   const isSuperAdmin = userRole === "super_admin";
 
-  const handleStatusChange = (newStatus: string) => {
+  const handleStatusChange = (newStatus: Database["public"]["Tables"]["orders"]["Row"]["stato"]) => {
     if (id && isSuperAdmin) {
       updateStatusMutation.mutate({ orderId: id, status: newStatus });
     }
