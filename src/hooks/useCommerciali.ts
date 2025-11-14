@@ -227,3 +227,60 @@ export const useCreateCommerciale = () => {
     },
   });
 };
+
+export const useUpdateCommerciale = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      user_id,
+      email,
+      display_name,
+      is_active,
+    }: {
+      user_id: string;
+      email?: string;
+      display_name?: string;
+      is_active?: boolean;
+    }) => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        throw new Error("Non autenticato");
+      }
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/update-commerciale`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({ user_id, email, display_name, is_active }),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Errore durante l'aggiornamento del commerciale");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["commerciali"] });
+      toast({
+        title: "Commerciale aggiornato",
+        description: "I dati del commerciale sono stati aggiornati con successo.",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Errore",
+        description: `Impossibile aggiornare il commerciale: ${error.message}`,
+        variant: "destructive",
+      });
+    },
+  });
+};
