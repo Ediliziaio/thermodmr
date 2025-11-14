@@ -101,7 +101,7 @@ export const useCommercialeDashboard = (commercialeId?: string) => {
 
       // Top dealers by revenue
       const dealerRevenue = orders?.reduce((acc, order) => {
-        const dealerName = (order.dealers as any)?.[0]?.ragione_sociale || "Sconosciuto";
+        const dealerName = (order.dealers as any)?.ragione_sociale || "Sconosciuto";
         if (!acc[dealerName]) {
           acc[dealerName] = 0;
         }

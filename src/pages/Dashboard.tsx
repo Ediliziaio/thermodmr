@@ -1,51 +1,37 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Euro, TrendingUp, Package, Clock, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
-import { useDashboardKPIs } from "@/hooks/useDashboard";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Euro, TrendingUp, CheckCircle, AlertCircle } from "lucide-react";
+import { useDashboardKPIs, useRevenueData } from "@/hooks/useDashboard";
 import { RevenueChart } from "@/components/dashboard/RevenueChart";
 import { OrderStatusPieChart } from "@/components/dashboard/OrderStatusPieChart";
+import { formatCurrency, getStatusColor, getStatusLabel } from "@/lib/utils";
 
 export default function Dashboard() {
-  const { data: kpis, isLoading, error } = useDashboardKPIs();
+  const { data: kpis, isLoading: kpisLoading, error: kpisError } = useDashboardKPIs();
+  const { data: revenueData, isLoading: revenueLoading } = useRevenueData(6);
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("it-IT", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  };
-
-  const getStatusColor = (status: string) => {
-    const colors: Record<string, string> = {
-      da_confermare: "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400",
-      da_pagare_acconto: "bg-orange-500/10 text-orange-700 dark:text-orange-400",
-      in_lavorazione: "bg-blue-500/10 text-blue-700 dark:text-blue-400",
-      da_consegnare: "bg-purple-500/10 text-purple-700 dark:text-purple-400",
-      consegnato: "bg-green-500/10 text-green-700 dark:text-green-400",
-    };
-    return colors[status] || "bg-gray-500/10 text-gray-700 dark:text-gray-400";
-  };
-
-  const getStatusLabel = (status: string) => {
-    const labels: Record<string, string> = {
-      da_confermare: "Da Confermare",
-      da_pagare_acconto: "Da Pagare Acconto",
-      in_lavorazione: "In Lavorazione",
-      da_consegnare: "Da Consegnare",
-      consegnato: "Consegnato",
-    };
-    return labels[status] || status;
-  };
-
-  if (isLoading) {
+  if (kpisLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="space-y-8">
+        <div>
+          <Skeleton className="h-10 w-64" />
+          <Skeleton className="h-4 w-96 mt-2" />
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[...Array(4)].map((_, i) => (
+            <Skeleton key={i} className="h-32" />
+          ))}
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Skeleton className="h-[400px]" />
+          <Skeleton className="h-[400px]" />
+        </div>
       </div>
     );
   }
 
-  if (error || !kpis) {
+  if (kpisError || !kpis) {
     return (
       <div className="text-center py-12">
         <p className="text-destructive">Errore nel caricamento dei dati</p>
@@ -120,16 +106,11 @@ export default function Dashboard() {
 
       {/* Charts Section */}
       <div className="grid gap-4 md:grid-cols-2">
-        <RevenueChart
-          data={[
-            { month: "Lug", ricavi: 45000, acconti: 15000, incassato: 12000 },
-            { month: "Ago", ricavi: 52000, acconti: 18000, incassato: 16000 },
-            { month: "Set", ricavi: 61000, acconti: 22000, incassato: 19000 },
-            { month: "Ott", ricavi: 68000, acconti: 24000, incassato: 22000 },
-            { month: "Nov", ricavi: 75000, acconti: 28000, incassato: 25000 },
-            { month: "Dic", ricavi: kpis.totalRevenue, acconti: kpis.totalAcconti, incassato: kpis.totalIncassato },
-          ]}
-        />
+        {revenueLoading ? (
+          <Skeleton className="h-[400px]" />
+        ) : (
+          <RevenueChart data={revenueData || []} />
+        )}
         <OrderStatusPieChart
           data={Object.entries(kpis.ordersByStatus).map(([status, count]) => ({
             name: getStatusLabel(status),
