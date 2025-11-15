@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -11,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, FileDown, Send, Loader2 } from "lucide-react";
+import { ArrowLeft, FileDown, Send, Loader2, Edit2, Check, X } from "lucide-react";
 import { StatusStepper } from "@/components/orders/StatusStepper";
 import type { Database } from "@/integrations/supabase/types";
 import { OrderLinesEditor } from "@/components/orders/OrderLinesEditor";
@@ -26,6 +27,7 @@ import {
   useOrderAttachments,
   useUpdateOrderStatus,
   useUpdateOrderNotes,
+  useUpdateOrderId,
 } from "@/hooks/useOrders";
 
 export default function OrderDetail() {
@@ -40,15 +42,19 @@ export default function OrderDetail() {
 
   const updateStatusMutation = useUpdateOrderStatus();
   const updateNotesMutation = useUpdateOrderNotes();
+  const updateOrderIdMutation = useUpdateOrderId();
 
   const [noteInterna, setNoteInterna] = useState("");
   const [noteRivenditore, setNoteRivenditore] = useState("");
+  const [isEditingOrderId, setIsEditingOrderId] = useState(false);
+  const [editedOrderId, setEditedOrderId] = useState("");
 
   // Update local state when order data loads
   useEffect(() => {
     if (order) {
       setNoteInterna(order.note_interna || "");
       setNoteRivenditore(order.note_rivenditore || "");
+      setEditedOrderId(order.id);
     }
   }, [order]);
 
@@ -68,6 +74,27 @@ export default function OrderDetail() {
     } else {
       updateNotesMutation.mutate({ orderId: id, noteRivenditore });
     }
+  };
+
+  const handleOrderIdSave = () => {
+    if (!id || !editedOrderId || editedOrderId === id) {
+      setIsEditingOrderId(false);
+      return;
+    }
+
+    updateOrderIdMutation.mutate(
+      { oldId: id, newId: editedOrderId },
+      {
+        onSuccess: (data) => {
+          setIsEditingOrderId(false);
+          // Navigate to new order ID
+          navigate(`/ordini/${data.newId}`, { replace: true });
+        },
+        onError: () => {
+          setEditedOrderId(id); // Reset on error
+        },
+      }
+    );
   };
 
   const formatCurrency = (value: number) => {
@@ -144,7 +171,60 @@ export default function OrderDetail() {
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <div className="flex items-center gap-4">
-            <h1 className="text-3xl font-bold text-foreground">Ordine #{order.id}</h1>
+            {isEditingOrderId ? (
+              <div className="flex items-center gap-2">
+                <h1 className="text-3xl font-bold text-foreground">Ordine #</h1>
+                <Input
+                  value={editedOrderId}
+                  onChange={(e) => setEditedOrderId(e.target.value)}
+                  className="w-64 h-10 text-xl font-bold"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleOrderIdSave();
+                    if (e.key === "Escape") {
+                      setEditedOrderId(order.id);
+                      setIsEditingOrderId(false);
+                    }
+                  }}
+                  autoFocus
+                />
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={handleOrderIdSave}
+                  disabled={updateOrderIdMutation.isPending}
+                >
+                  {updateOrderIdMutation.isPending ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Check className="h-4 w-4" />
+                  )}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => {
+                    setEditedOrderId(order.id);
+                    setIsEditingOrderId(false);
+                  }}
+                  disabled={updateOrderIdMutation.isPending}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <h1 className="text-3xl font-bold text-foreground">Ordine #{order.id}</h1>
+                {isSuperAdmin && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setIsEditingOrderId(true)}
+                  >
+                    <Edit2 className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            )}
             <Badge className={getStatusColor(order.stato)}>
               {getStatusLabel(order.stato)}
             </Badge>

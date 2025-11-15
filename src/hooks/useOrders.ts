@@ -207,6 +207,57 @@ export const useUpdateOrderNotes = () => {
   });
 };
 
+export const useUpdateOrderId = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ oldId, newId }: { oldId: string; newId: string }) => {
+      // Check if new ID already exists
+      const { data: existing } = await supabase
+        .from("orders")
+        .select("id")
+        .eq("id", newId)
+        .maybeSingle();
+
+      if (existing) {
+        throw new Error("ID ordine già esistente");
+      }
+
+      // Validate format (optional - can be customized)
+      if (!newId || newId.trim().length === 0) {
+        throw new Error("ID ordine non può essere vuoto");
+      }
+
+      // Update order ID (CASCADE will handle related tables)
+      const { error } = await supabase
+        .from("orders")
+        .update({ id: newId })
+        .eq("id", oldId);
+
+      if (error) throw error;
+      
+      return { oldId, newId };
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      queryClient.invalidateQueries({ queryKey: ["orders", data.oldId] });
+      queryClient.invalidateQueries({ queryKey: ["orders", data.newId] });
+      toast({
+        title: "ID aggiornato",
+        description: "L'ID dell'ordine è stato modificato con successo",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Errore",
+        description: error.message || "Impossibile aggiornare l'ID dell'ordine",
+        variant: "destructive",
+      });
+      console.error("Error updating order ID:", error);
+    },
+  });
+};
+
 const generateOrderId = () => {
   const date = new Date();
   const year = date.getFullYear();
