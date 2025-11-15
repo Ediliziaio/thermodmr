@@ -136,7 +136,7 @@ export default function Commerciali() {
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         statusFilter={statusFilter}
-        onStatusFilterChange={setStatusFilter}
+        onStatusChange={setStatusFilter}
       />
 
       <div className="text-sm text-muted-foreground">
