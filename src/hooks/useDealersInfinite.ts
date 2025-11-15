@@ -11,37 +11,25 @@ export const useDealersInfinite = () => {
       const from = pageParam * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
 
+      // Query ottimizzata: usa la view con statistiche pre-aggregate
       const { data: dealers, error, count } = await supabase
-        .from("dealers")
+        .from("dealers_with_stats")
         .select("*", { count: "exact" })
         .order("ragione_sociale", { ascending: true })
         .range(from, to);
 
       if (error) throw error;
 
-      // Ottieni statistiche per i dealers di questa pagina
-      const dealersWithStats = await Promise.all(
-        (dealers || []).map(async (dealer) => {
-          const { data: orders } = await supabase
-            .from("orders")
-            .select("importo_totale")
-            .eq("dealer_id", dealer.id);
-
-          const ordersCount = orders?.length || 0;
-          const totalRevenue =
-            orders?.reduce((sum, order) => sum + (order.importo_totale || 0), 0) || 0;
-
-          return {
-            ...dealer,
-            ordersCount,
-            totalRevenue,
-          };
-        })
-      );
+      // La view contiene già orders_count e total_revenue
+      const dealersWithStats = (dealers || []).map((dealer) => ({
+        ...dealer,
+        ordersCount: dealer.orders_count,
+        totalRevenue: dealer.total_revenue,
+      }));
 
       return {
         data: dealersWithStats as DealerWithStats[],
-        nextPage: dealers.length === PAGE_SIZE ? pageParam + 1 : undefined,
+        nextPage: dealers && dealers.length === PAGE_SIZE ? pageParam + 1 : undefined,
         totalCount: count || 0,
       };
     },
