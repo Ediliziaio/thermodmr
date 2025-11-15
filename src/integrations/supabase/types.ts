@@ -57,6 +57,13 @@ export type Database = {
             foreignKeyName: "attachments_uploaded_by_user_id_fkey"
             columns: ["uploaded_by_user_id"]
             isOneToOne: false
+            referencedRelation: "commerciali_with_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attachments_uploaded_by_user_id_fkey"
+            columns: ["uploaded_by_user_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -94,6 +101,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "audit_log_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "commerciali_with_stats"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "audit_log_user_id_fkey"
             columns: ["user_id"]
@@ -148,6 +162,13 @@ export type Database = {
             referencedRelation: "dealers"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "clients_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers_with_stats"
+            referencedColumns: ["id"]
+          },
         ]
       }
       commissions: {
@@ -188,6 +209,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "commissions_commerciale_id_fkey"
+            columns: ["commerciale_id"]
+            isOneToOne: false
+            referencedRelation: "commerciali_with_stats"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "commissions_commerciale_id_fkey"
             columns: ["commerciale_id"]
@@ -261,6 +289,13 @@ export type Database = {
             foreignKeyName: "dealers_commerciale_owner_id_fkey"
             columns: ["commerciale_owner_id"]
             isOneToOne: false
+            referencedRelation: "commerciali_with_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealers_commerciale_owner_id_fkey"
+            columns: ["commerciale_owner_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -317,6 +352,13 @@ export type Database = {
             foreignKeyName: "kpi_snapshots_commerciale_id_fkey"
             columns: ["commerciale_id"]
             isOneToOne: false
+            referencedRelation: "commerciali_with_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kpi_snapshots_commerciale_id_fkey"
+            columns: ["commerciale_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -325,6 +367,13 @@ export type Database = {
             columns: ["dealer_id"]
             isOneToOne: false
             referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kpi_snapshots_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers_with_stats"
             referencedColumns: ["id"]
           },
         ]
@@ -440,7 +489,21 @@ export type Database = {
             foreignKeyName: "orders_commerciale_id_fkey"
             columns: ["commerciale_id"]
             isOneToOne: false
+            referencedRelation: "commerciali_with_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_commerciale_id_fkey"
+            columns: ["commerciale_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_creato_da_user_id_fkey"
+            columns: ["creato_da_user_id"]
+            isOneToOne: false
+            referencedRelation: "commerciali_with_stats"
             referencedColumns: ["id"]
           },
           {
@@ -455,6 +518,13 @@ export type Database = {
             columns: ["dealer_id"]
             isOneToOne: false
             referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers_with_stats"
             referencedColumns: ["id"]
           },
         ]
@@ -626,6 +696,13 @@ export type Database = {
             foreignKeyName: "user_roles_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "commerciali_with_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_roles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -633,7 +710,57 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      commerciali_with_stats: {
+        Row: {
+          dealers_count: number | null
+          display_name: string | null
+          email: string | null
+          fatturato_totale: number | null
+          id: string | null
+          is_active: boolean | null
+          ordini_count: number | null
+          provvigioni_dovute: number | null
+          provvigioni_liquidate: number | null
+        }
+        Relationships: []
+      }
+      dealers_with_stats: {
+        Row: {
+          cap: string | null
+          citta: string | null
+          codice_fiscale: string | null
+          commerciale_owner_id: string | null
+          commissione_personalizzata: number | null
+          created_at: string | null
+          email: string | null
+          id: string | null
+          indirizzo: string | null
+          note: string | null
+          orders_count: number | null
+          p_iva: string | null
+          provincia: string | null
+          ragione_sociale: string | null
+          telefono: string | null
+          total_revenue: number | null
+          updated_at: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dealers_commerciale_owner_id_fkey"
+            columns: ["commerciale_owner_id"]
+            isOneToOne: false
+            referencedRelation: "commerciali_with_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dealers_commerciale_owner_id_fkey"
+            columns: ["commerciale_owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       get_dashboard_kpis: {
