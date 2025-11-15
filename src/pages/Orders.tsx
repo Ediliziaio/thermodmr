@@ -3,11 +3,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Eye, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useOrders } from "@/hooks/useOrders";
+import { useOrdersInfinite } from "@/hooks/useOrdersInfinite";
 import { NewOrderDialog } from "@/components/orders/NewOrderDialog";
 import { OrderFilters, OrderFiltersState } from "@/components/orders/OrderFilters";
 import { useDealers } from "@/hooks/useDealers";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat("it-IT", {
@@ -48,14 +49,25 @@ const getStatusLabel = (status: string) => {
 
 export default function Orders() {
   const navigate = useNavigate();
-  const { data: orders, isLoading, error } = useOrders();
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useOrdersInfinite();
   const { data: dealers } = useDealers();
   const [filters, setFilters] = useState<OrderFiltersState>({});
+  const { ref, inView } = useInView();
+
+  // Carica automaticamente la prossima pagina quando l'utente scorre fino in fondo
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // Unisci tutte le pagine in un unico array
+  const allOrders = useMemo(() => {
+    return data?.pages.flatMap((page) => page.data) || [];
+  }, [data]);
 
   const filteredOrders = useMemo(() => {
-    if (!orders) return [];
-
-    return orders.filter((order) => {
+    return allOrders.filter((order) => {
       // Filtro per stato
       if (filters.stato && order.stato !== filters.stato) {
         return false;
@@ -115,7 +127,25 @@ export default function Orders() {
 
       return true;
     });
-  }, [orders, filters]);
+  }, [allOrders, filters]);
+
+  if (isLoading && !data) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-destructive">Errore nel caricamento degli ordini</p>
+      </div>
+    );
+  }
+
+  const totalCount = data?.pages[0]?.totalCount || 0;
 
   if (isLoading) {
     return (
@@ -229,15 +259,22 @@ export default function Orders() {
           ) : (
             <div className="text-center py-12">
               <p className="text-muted-foreground">
-                {orders && orders.length > 0
+                {allOrders && allOrders.length > 0
                   ? "Nessun ordine corrisponde ai filtri selezionati"
                   : "Nessun ordine trovato"}
               </p>
               <p className="text-sm text-muted-foreground mt-2">
-                {orders && orders.length > 0
+                {allOrders && allOrders.length > 0
                   ? "Prova a modificare i filtri di ricerca"
                   : "Crea il tuo primo ordine per iniziare"}
               </p>
+            </div>
+          )}
+
+          {/* Infinite scroll trigger */}
+          {hasNextPage && (
+            <div ref={ref} className="flex justify-center py-4">
+              {isFetchingNextPage && <Loader2 className="h-6 w-6 animate-spin text-primary" />}
             </div>
           )}
         </CardContent>
