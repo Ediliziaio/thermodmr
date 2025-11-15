@@ -1,114 +1,121 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Mail, Phone, MapPin, Loader2 } from "lucide-react";
-import { useDealers } from "@/hooks/useDealers";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
+import { useDealersInfinite } from "@/hooks/useDealersInfinite";
 import NewDealerDialog from "@/components/dealers/NewDealerDialog";
+import { useInView } from "react-intersection-observer";
+import { useEffect, useMemo } from "react";
+
+const formatCurrency = (value: number) => {
+  return new Intl.NumberFormat("it-IT", {
+    style: "currency",
+    currency: "EUR",
+  }).format(value);
+};
 
 export default function Dealers() {
-  const { data: dealers, isLoading, error } = useDealers();
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useDealersInfinite();
+  const { ref, inView } = useInView();
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("it-IT", {
-      style: "currency",
-      currency: "EUR",
-      maximumFractionDigits: 0,
-    }).format(value);
-  };
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  if (isLoading) {
+  const allDealers = useMemo(() => {
+    return data?.pages.flatMap((page) => page.data) || [];
+  }, [data]);
+
+  if (isLoading && !data) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="text-center py-12">
+      <div className="flex items-center justify-center min-h-screen">
         <p className="text-destructive">Errore nel caricamento dei rivenditori</p>
       </div>
     );
   }
 
+  const totalCount = data?.pages[0]?.totalCount || 0;
+
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Rivenditori</h1>
-          <p className="text-muted-foreground mt-1">
-            Gestisci i rivenditori e le loro informazioni
-          </p>
-        </div>
+        <h1 className="text-3xl font-bold">Rivenditori</h1>
         <NewDealerDialog />
       </div>
 
-      {/* Dealers Grid */}
-      {dealers && dealers.length > 0 ? (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {dealers.map((dealer) => (
-            <Card key={dealer.id} className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <CardTitle className="text-lg">{dealer.ragione_sociale}</CardTitle>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      P.IVA: {dealer.p_iva}
-                    </p>
-                  </div>
-                  {dealer.commissione_personalizzata && (
-                    <Badge variant="secondary">
-                      {dealer.commissione_personalizzata}%
-                    </Badge>
-                  )}
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Mail className="h-4 w-4" />
-                    <span className="truncate">{dealer.email}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Phone className="h-4 w-4" />
-                    <span>{dealer.telefono}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <MapPin className="h-4 w-4" />
-                    <span>
-                      {dealer.indirizzo}, {dealer.citta} ({dealer.provincia})
-                    </span>
-                  </div>
-                </div>
+      <div className="text-sm text-muted-foreground">
+        Mostrando {allDealers.length} di {totalCount} rivenditori
+      </div>
 
-                <div className="pt-4 border-t">
-                  <div className="grid grid-cols-2 gap-4 text-center">
-                    <div>
-                      <p className="text-2xl font-bold">{dealer.ordersCount || 0}</p>
-                      <p className="text-xs text-muted-foreground">Ordini</p>
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold">
-                        {formatCurrency(dealer.totalRevenue || 0)}
-                      </p>
-                      <p className="text-xs text-muted-foreground">Fatturato</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      ) : (
+      {allDealers.length === 0 ? (
         <Card>
-          <CardContent className="py-12 text-center">
-            <p className="text-muted-foreground">Nessun rivenditore trovato</p>
-            <p className="text-sm text-muted-foreground mt-2">
-              Crea il tuo primo rivenditore per iniziare
+          <CardContent className="p-8">
+            <p className="text-center text-muted-foreground">
+              Nessun rivenditore trovato. Aggiungi il primo rivenditore.
             </p>
           </CardContent>
         </Card>
+      ) : (
+        <>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {allDealers.map((dealer) => (
+              <Card key={dealer.id}>
+                <CardHeader>
+                  <CardTitle>{dealer.ragione_sociale}</CardTitle>
+                  <CardDescription>P.IVA: {dealer.p_iva}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground">Contatti</p>
+                    <p className="text-sm">{dealer.email}</p>
+                    <p className="text-sm">{dealer.telefono}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground">Indirizzo</p>
+                    <p className="text-sm">
+                      {dealer.indirizzo}, {dealer.cap}
+                    </p>
+                    <p className="text-sm">
+                      {dealer.citta} ({dealer.provincia})
+                    </p>
+                  </div>
+                  <div className="pt-4 border-t space-y-1">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Ordini:</span>
+                      <span className="font-medium">{dealer.ordersCount || 0}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Fatturato totale:</span>
+                      <span className="font-semibold">
+                        {formatCurrency(dealer.totalRevenue || 0)}
+                      </span>
+                    </div>
+                    {dealer.commissione_personalizzata && (
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">Commissione:</span>
+                        <span>{dealer.commissione_personalizzata}%</span>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {hasNextPage && (
+            <div ref={ref} className="flex justify-center py-8">
+              {isFetchingNextPage && <Loader2 className="h-8 w-8 animate-spin text-primary" />}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

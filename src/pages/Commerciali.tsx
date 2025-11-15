@@ -1,21 +1,38 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useCommerciali } from "@/hooks/useCommerciali";
+import { useState, useMemo, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Users, TrendingUp, Euro, Award, Loader2 } from "lucide-react";
+import { useCommercialiInfinite } from "@/hooks/useCommercialiInfinite";
 import { CommercialeCard } from "@/components/commerciali/CommercialeCard";
 import { NewCommercialeDialog } from "@/components/commerciali/NewCommercialeDialog";
 import { CommercialFilters } from "@/components/commerciali/CommercialFilters";
-import { Users, Euro, TrendingUp } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useInView } from "react-intersection-observer";
 
-const Commerciali = () => {
-  const { data: commerciali = [], isLoading } = useCommerciali();
+const formatCurrency = (value: number) => {
+  return new Intl.NumberFormat("it-IT", {
+    style: "currency",
+    currency: "EUR",
+  }).format(value);
+};
+
+export default function Commerciali() {
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useCommercialiInfinite();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const allCommerciali = useMemo(() => {
+    return data?.pages.flatMap((page) => page.data) || [];
+  }, [data]);
 
   const filteredCommerciali = useMemo(() => {
-    return commerciali.filter((commerciale) => {
+    return allCommerciali.filter((commerciale) => {
       const matchesSearch =
-        searchTerm === "" ||
         commerciale.display_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         commerciale.email.toLowerCase().includes(searchTerm.toLowerCase());
 
@@ -26,149 +43,127 @@ const Commerciali = () => {
 
       return matchesSearch && matchesStatus;
     });
-  }, [commerciali, searchTerm, statusFilter]);
+  }, [allCommerciali, searchTerm, statusFilter]);
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("it-IT", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  };
+  const stats = useMemo(() => {
+    return {
+      totalCommerciali: allCommerciali.length,
+      activeCommerciali: allCommerciali.filter((c) => c.is_active).length,
+      totalRevenue: allCommerciali.reduce((sum, c) => sum + c.fatturato_totale, 0),
+      totalCommissions: allCommerciali.reduce(
+        (sum, c) => sum + c.provvigioni_dovute + c.provvigioni_liquidate,
+        0
+      ),
+    };
+  }, [allCommerciali]);
 
-  const totaleCommerciali = filteredCommerciali.length;
-  const commercialiAttivi = filteredCommerciali.filter((c) => c.is_active).length;
-  const fatturatoTotale = filteredCommerciali.reduce((sum, c) => sum + c.fatturato_totale, 0);
-  const provvigioniTotali = filteredCommerciali.reduce(
-    (sum, c) => sum + c.provvigioni_dovute + c.provvigioni_liquidate,
-    0
-  );
+  if (isLoading && !data) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-destructive">Errore nel caricamento dei commerciali</p>
+      </div>
+    );
+  }
+
+  const totalCount = data?.pages[0]?.totalCount || 0;
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-start">
-        <div>
-          <h1 className="text-3xl font-semibold text-foreground">Commerciali</h1>
-          <p className="text-muted-foreground mt-1">
-            Gestione dei commerciali e loro performance
-          </p>
-        </div>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Commerciali</h1>
         <NewCommercialeDialog />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Totale Commerciali</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <Skeleton className="h-8 w-16" />
-            ) : (
-              <>
-                <div className="text-2xl font-bold">{totaleCommerciali}</div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {commercialiAttivi} attivi
-                </p>
-              </>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Dealers Totali</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <Skeleton className="h-8 w-16" />
-            ) : (
-              <div className="text-2xl font-bold">
-                {commerciali.reduce((sum, c) => sum + c.dealers_count, 0)}
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Totale Commerciali</p>
+                <p className="text-2xl font-bold">{stats.totalCommerciali}</p>
               </div>
-            )}
+              <Users className="h-8 w-8 text-muted-foreground" />
+            </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Fatturato Totale</CardTitle>
-            <Euro className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <Skeleton className="h-8 w-24" />
-            ) : (
-              <div className="text-2xl font-bold">{formatCurrency(fatturatoTotale)}</div>
-            )}
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Attivi</p>
+                <p className="text-2xl font-bold">{stats.activeCommerciali}</p>
+              </div>
+              <TrendingUp className="h-8 w-8 text-green-500" />
+            </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Provvigioni Totali</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <Skeleton className="h-8 w-24" />
-            ) : (
-              <div className="text-2xl font-bold">{formatCurrency(provvigioniTotali)}</div>
-            )}
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Fatturato Totale</p>
+                <p className="text-2xl font-bold">{formatCurrency(stats.totalRevenue)}</p>
+              </div>
+              <Euro className="h-8 w-8 text-blue-500" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Provvigioni Totali</p>
+                <p className="text-2xl font-bold">{formatCurrency(stats.totalCommissions)}</p>
+              </div>
+              <Award className="h-8 w-8 text-purple-500" />
+            </div>
           </CardContent>
         </Card>
       </div>
 
-      <div className="space-y-4">
-        <CommercialFilters
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          statusFilter={statusFilter}
-          onStatusChange={setStatusFilter}
-        />
+      <CommercialFilters
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        statusFilter={statusFilter}
+        onStatusFilterChange={setStatusFilter}
+      />
 
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Lista Commerciali</h2>
-          {isLoading ? (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3].map((i) => (
-              <Card key={i}>
-                <CardHeader>
-                  <Skeleton className="h-6 w-32" />
-                  <Skeleton className="h-4 w-48 mt-2" />
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-full" />
-                  </div>
-                </CardContent>
-              </Card>
+      <div className="text-sm text-muted-foreground">
+        Mostrando {filteredCommerciali.length} di {totalCount} commerciali
+      </div>
+
+      {filteredCommerciali.length === 0 ? (
+        <Card>
+          <CardContent className="p-8">
+            <p className="text-center text-muted-foreground">Nessun commerciale trovato</p>
+          </CardContent>
+        </Card>
+      ) : (
+        <>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {filteredCommerciali.map((commerciale) => (
+              <CommercialeCard key={commerciale.id} commerciale={commerciale} />
             ))}
           </div>
-          ) : filteredCommerciali.length === 0 ? (
-            <Card>
-              <CardContent className="py-8 text-center">
-                <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">
-                  {searchTerm || statusFilter !== "all"
-                    ? "Nessun commerciale trovato con i filtri selezionati"
-                    : "Nessun commerciale trovato"}
-                </p>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {filteredCommerciali.map((commerciale) => (
-                <CommercialeCard key={commerciale.id} commerciale={commerciale} />
-              ))}
+
+          {hasNextPage && (
+            <div ref={ref} className="flex justify-center py-8">
+              {isFetchingNextPage && <Loader2 className="h-8 w-8 animate-spin text-primary" />}
             </div>
           )}
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
-};
-
-export default Commerciali;
+}
