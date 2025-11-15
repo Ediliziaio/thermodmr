@@ -20,7 +20,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Trash2 } from "lucide-react";
-import { useCommerciali, useDeleteCommerciale, CommercialeStats } from "@/hooks/useCommerciali";
+import { useCommercialiInfinite } from "@/hooks/useCommercialiInfinite";
+import { useDeleteCommerciale, CommercialeStats } from "@/hooks/useCommerciali";
+import { useMemo } from "react";
 
 interface DeleteCommercialeDialogProps {
   commerciale: CommercialeStats;
@@ -29,7 +31,8 @@ interface DeleteCommercialeDialogProps {
 export const DeleteCommercialeDialog = ({ commerciale }: DeleteCommercialeDialogProps) => {
   const [open, setOpen] = useState(false);
   const [transferToId, setTransferToId] = useState<string>("");
-  const { data: commerciali = [] } = useCommerciali();
+  const { data: commercialiData } = useCommercialiInfinite();
+  const commerciali = useMemo(() => commercialiData?.pages.flatMap(p => p.data) || [], [commercialiData]);
   const deleteCommerciale = useDeleteCommerciale();
 
   const availableCommerciali = commerciali.filter(

@@ -62,7 +62,7 @@ export default function OrderDetail() {
 
   const handleStatusChange = (newStatus: Database["public"]["Tables"]["orders"]["Row"]["stato"]) => {
     if (id && isSuperAdmin) {
-      updateStatusMutation.mutate({ orderId: id, status: newStatus });
+      updateStatusMutation.mutate({ orderId: id, stato: newStatus });
     }
   };
 
@@ -88,7 +88,7 @@ export default function OrderDetail() {
         onSuccess: (data) => {
           setIsEditingOrderId(false);
           // Navigate to new order ID
-          navigate(`/ordini/${data.newId}`, { replace: true });
+          navigate(`/ordini/${data.id}`, { replace: true });
         },
         onError: () => {
           setEditedOrderId(id); // Reset on error

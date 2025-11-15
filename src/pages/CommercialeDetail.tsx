@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 import { useParams, Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,10 +8,12 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Users, ShoppingCart, Euro, TrendingUp, ArrowRightLeft } from "lucide-react";
 import { AssignDealersDialog } from "@/components/commerciali/AssignDealersDialog";
 import { useCommercialeById } from "@/hooks/useCommerciali";
-import { useDealers } from "@/hooks/useDealers";
+import { useDealersInfinite } from "@/hooks/useDealersInfinite";
 import { useCommissionsByCommerciale } from "@/hooks/useCommissions";
-import { useOrders } from "@/hooks/useOrders";
+import { useOrdersInfinite } from "@/hooks/useOrdersInfinite";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useMemo } from "react";
+import { formatCurrency } from "@/lib/utils";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
@@ -24,19 +27,25 @@ const CommercialeDetail = () => {
   } | null>(null);
   
   const { data: commerciale, isLoading: isLoadingCommerciale } = useCommercialeById(id);
-  const { data: dealers = [], isLoading: isLoadingDealers } = useDealers();
+  const { data: dealersData, isLoading: isLoadingDealers, fetchNextPage: fetchNextDealers, hasNextPage: hasNextDealers } = useDealersInfinite();
   const { data: commissions = [], isLoading: isLoadingCommissions } = useCommissionsByCommerciale(id || "");
-  const { data: orders = [], isLoading: isLoadingOrders } = useOrders();
+  const { data: ordersData, isLoading: isLoadingOrders, fetchNextPage: fetchNextOrders, hasNextPage: hasNextOrders } = useOrdersInfinite();
+  const { ref: dealersRef, inView: dealersInView } = useInView();
+  const { ref: ordersRef, inView: ordersInView } = useInView();
+
+  useEffect(() => {
+    if (dealersInView && hasNextDealers) fetchNextDealers();
+  }, [dealersInView, hasNextDealers, fetchNextDealers]);
+
+  useEffect(() => {
+    if (ordersInView && hasNextOrders) fetchNextOrders();
+  }, [ordersInView, hasNextOrders, fetchNextOrders]);
+
+  const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
+  const orders = useMemo(() => ordersData?.pages.flatMap(p => p.data) || [], [ordersData]);
 
   const commercialeDealers = dealers.filter((d) => d.commerciale_owner_id === id);
   const commercialeOrders = orders.filter((o) => o.commerciale_id === id);
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("it-IT", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  };
 
   const formatDate = (dateString: string) => {
     return format(new Date(dateString), "dd MMM yyyy", { locale: it });

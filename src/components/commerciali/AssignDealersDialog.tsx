@@ -18,10 +18,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAssignDealerToCommerciale } from "@/hooks/useCommerciali";
-import { useCommerciali } from "@/hooks/useCommerciali";
+import { useCommercialiInfinite } from "@/hooks/useCommercialiInfinite";
 import { useCreateAuditLog } from "@/hooks/useAuditLog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { useMemo } from "react";
 
 interface AssignDealersDialogProps {
   dealerId: string;
@@ -44,7 +45,8 @@ export const AssignDealersDialog = ({
   const [motivazione, setMotivazione] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { data: commerciali = [] } = useCommerciali();
+  const { data: commercialiData } = useCommercialiInfinite();
+  const commerciali = useMemo(() => commercialiData?.pages.flatMap(p => p.data) || [], [commercialiData]);
   const assignMutation = useAssignDealerToCommerciale();
   const createAuditLog = useCreateAuditLog();
 

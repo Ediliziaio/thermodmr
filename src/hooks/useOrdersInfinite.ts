@@ -1,8 +1,14 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { OrderWithDetails } from "./useOrders";
+import { toast } from "@/hooks/use-toast";
+import type { Tables } from "@/integrations/supabase/types";
 
 const PAGE_SIZE = 50;
+
+export interface OrderWithDetails extends Tables<"orders"> {
+  dealers: { ragione_sociale: string; email: string } | null;
+  clients: { nome: string; cognome: string } | null;
+}
 
 export const useOrdersInfinite = () => {
   return useInfiniteQuery({
