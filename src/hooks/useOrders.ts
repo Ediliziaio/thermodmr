@@ -1,81 +1,27 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Database } from "@/integrations/supabase/types";
 import { toast } from "@/hooks/use-toast";
+import type { Tables, TablesInsert } from "@/integrations/supabase/types";
+import { useAuth } from "@/contexts/AuthContext";
 
-export interface OrderWithDetails {
-  id: string;
-  dealer_id: string;
-  cliente_finale_id: string | null;
-  commerciale_id: string;
-  creato_da_user_id: string;
-  stato: string;
-  data_inserimento: string;
-  data_consegna_prevista: string | null;
-  importo_totale: number;
-  importo_acconto: number;
-  note_rivenditore: string | null;
-  note_interna: string | null;
-  created_at: string;
-  updated_at: string;
-  dealers: {
-    ragione_sociale: string;
-    email: string;
-  } | null;
-  clients: {
-    nome: string;
-    cognome: string;
-  } | null;
+export interface OrderWithDetails extends Tables<"orders"> {
+  dealers: { ragione_sociale: string; email: string } | null;
+  clients: { nome: string; cognome: string } | null;
 }
-
-export const useOrders = () => {
-  return useQuery({
-    queryKey: ["orders"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("orders")
-        .select(`
-          *,
-          dealers (ragione_sociale, email),
-          clients (nome, cognome)
-        `)
-        .order("data_inserimento", { ascending: false });
-
-      if (error) throw error;
-      return data as OrderWithDetails[];
-    },
-  });
-};
 
 export const useOrderById = (orderId: string) => {
   return useQuery({
-    queryKey: ["orders", orderId],
+    queryKey: ["order", orderId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("orders")
         .select(`
           *,
-          dealers (
-            id,
-            ragione_sociale,
-            p_iva,
-            email,
-            telefono,
-            indirizzo,
-            citta,
-            provincia
-          ),
-          clients (
-            id,
-            nome,
-            cognome,
-            email,
-            telefono,
-            indirizzo
-          )
+          dealers (ragione_sociale, email, p_iva, telefono, indirizzo, citta, provincia, cap),
+          clients (nome, cognome, email, telefono, indirizzo)
         `)
         .eq("id", orderId)
-        .maybeSingle();
+        .single();
 
       if (error) throw error;
       return data;
@@ -103,7 +49,7 @@ export const useOrderLines = (orderId: string) => {
 
 export const useOrderPayments = (orderId: string) => {
   return useQuery({
-    queryKey: ["payments", orderId],
+    queryKey: ["order-payments", orderId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("payments")
@@ -120,7 +66,7 @@ export const useOrderPayments = (orderId: string) => {
 
 export const useOrderAttachments = (orderId: string) => {
   return useQuery({
-    queryKey: ["attachments", orderId],
+    queryKey: ["order-attachments", orderId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("attachments")
@@ -139,25 +85,29 @@ export const useUpdateOrderStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ orderId, status }: { orderId: string; status: Database["public"]["Tables"]["orders"]["Row"]["stato"] }) => {
-      const { error } = await supabase
+    mutationFn: async ({ orderId, stato }: { orderId: string; stato: string }) => {
+      const { data, error } = await supabase
         .from("orders")
-        .update({ stato: status })
-        .eq("id", orderId);
+        .update({ stato: stato as any })
+        .eq("id", orderId)
+        .select()
+        .single();
 
       if (error) throw error;
+      return data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["order", variables.orderId] });
+      queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
       toast({
         title: "Stato aggiornato",
-        description: "Lo stato dell'ordine è stato aggiornato con successo",
+        description: "Lo stato dell'ordine è stato aggiornato con successo.",
       });
     },
     onError: (error) => {
       toast({
         title: "Errore",
-        description: "Impossibile aggiornare lo stato dell'ordine",
+        description: "Impossibile aggiornare lo stato dell'ordine.",
         variant: "destructive",
       });
       console.error("Error updating order status:", error);
@@ -178,28 +128,30 @@ export const useUpdateOrderNotes = () => {
       noteInterna?: string;
       noteRivenditore?: string;
     }) => {
-      const updates: any = {};
-      if (noteInterna !== undefined) updates.note_interna = noteInterna;
-      if (noteRivenditore !== undefined) updates.note_rivenditore = noteRivenditore;
-
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("orders")
-        .update(updates)
-        .eq("id", orderId);
+        .update({
+          note_interna: noteInterna,
+          note_rivenditore: noteRivenditore,
+        })
+        .eq("id", orderId)
+        .select()
+        .single();
 
       if (error) throw error;
+      return data;
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["orders", variables.orderId] });
+      queryClient.invalidateQueries({ queryKey: ["order", variables.orderId] });
       toast({
         title: "Note aggiornate",
-        description: "Le note sono state salvate con successo",
+        description: "Le note dell'ordine sono state aggiornate con successo.",
       });
     },
     onError: (error) => {
       toast({
         title: "Errore",
-        description: "Impossibile salvare le note",
+        description: "Impossibile aggiornare le note dell'ordine.",
         variant: "destructive",
       });
       console.error("Error updating order notes:", error);
@@ -212,180 +164,168 @@ export const useUpdateOrderId = () => {
 
   return useMutation({
     mutationFn: async ({ oldId, newId }: { oldId: string; newId: string }) => {
-      // Check if new ID already exists
+      const idRegex = /^ORD-\d{4}-\d{4}$/;
+      if (!idRegex.test(newId)) {
+        throw new Error("Formato ID non valido. Usa: ORD-YYYY-NNNN");
+      }
+
       const { data: existing } = await supabase
         .from("orders")
         .select("id")
         .eq("id", newId)
-        .maybeSingle();
+        .single();
 
       if (existing) {
-        throw new Error("ID ordine già esistente");
+        throw new Error("Questo ID ordine esiste già");
       }
 
-      // Validate format (optional - can be customized)
-      if (!newId || newId.trim().length === 0) {
-        throw new Error("ID ordine non può essere vuoto");
-      }
-
-      // Update order ID (CASCADE will handle related tables)
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("orders")
         .update({ id: newId })
-        .eq("id", oldId);
+        .eq("id", oldId)
+        .select()
+        .single();
 
       if (error) throw error;
-      
-      return { oldId, newId };
+      return data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["orders"] });
-      queryClient.invalidateQueries({ queryKey: ["orders", data.oldId] });
-      queryClient.invalidateQueries({ queryKey: ["orders", data.newId] });
+      queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["order"] });
       toast({
         title: "ID aggiornato",
-        description: "L'ID dell'ordine è stato modificato con successo",
+        description: `ID ordine aggiornato con successo a ${data.id}`,
       });
     },
     onError: (error: Error) => {
       toast({
         title: "Errore",
-        description: error.message || "Impossibile aggiornare l'ID dell'ordine",
+        description: error.message,
         variant: "destructive",
       });
-      console.error("Error updating order ID:", error);
     },
   });
 };
 
-const generateOrderId = () => {
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const random = Math.floor(Math.random() * 1000)
-    .toString()
-    .padStart(3, "0");
-  return `ORD-${year}${month}${day}-${random}`;
+const generateOrderId = async (): Promise<string> => {
+  const year = new Date().getFullYear();
+  const { data: lastOrder } = await supabase
+    .from("orders")
+    .select("id")
+    .ilike("id", `ORD-${year}-%`)
+    .order("id", { ascending: false })
+    .limit(1)
+    .single();
+
+  let nextNumber = 1;
+  if (lastOrder?.id) {
+    const match = lastOrder.id.match(/ORD-\d{4}-(\d{4})/);
+    if (match) {
+      nextNumber = parseInt(match[1], 10) + 1;
+    }
+  }
+
+  return `ORD-${year}-${nextNumber.toString().padStart(4, "0")}`;
 };
 
 export const useCreateOrder = () => {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   return useMutation({
-    mutationFn: async (orderData: {
-      dealer_id: string;
-      cliente_nome?: string;
-      cliente_cognome?: string;
-      cliente_email?: string;
-      cliente_telefono?: string;
-      cliente_indirizzo?: string;
-      data_consegna_prevista?: string;
-      importo_acconto: number;
-      note_rivenditore?: string;
-      note_interna?: string;
-      order_lines: Array<{
-        categoria: string;
-        descrizione: string;
-        quantita: number;
-        prezzo_unitario: number;
-        sconto: number;
-        iva: number;
-      }>;
-    }) => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Non autenticato");
+    mutationFn: async (values: any) => {
+      if (!user?.id) throw new Error("User not authenticated");
 
-      // Get dealer's commerciale_id
-      const { data: dealer, error: dealerError } = await supabase
+      const { data: dealer } = await supabase
         .from("dealers")
         .select("commerciale_owner_id")
-        .eq("id", orderData.dealer_id)
+        .eq("id", values.dealer_id)
         .single();
 
-      if (dealerError) throw dealerError;
+      if (!dealer) throw new Error("Dealer not found");
 
-      // Create client if provided
       let clienteFinaleId: string | null = null;
-      if (orderData.cliente_nome && orderData.cliente_cognome) {
-        const { data: client, error: clientError } = await supabase
+      if (values.cliente_nome && values.cliente_cognome) {
+        const { data: newClient, error: clientError } = await supabase
           .from("clients")
-          .insert([
-            {
-              dealer_id: orderData.dealer_id,
-              nome: orderData.cliente_nome,
-              cognome: orderData.cliente_cognome,
-              email: orderData.cliente_email || null,
-              telefono: orderData.cliente_telefono || null,
-              indirizzo: orderData.cliente_indirizzo || null,
-            },
-          ])
+          .insert({
+            dealer_id: values.dealer_id,
+            nome: values.cliente_nome,
+            cognome: values.cliente_cognome,
+            email: values.cliente_email || null,
+            telefono: values.cliente_telefono || null,
+            indirizzo: values.cliente_indirizzo || null,
+          })
           .select()
           .single();
 
         if (clientError) throw clientError;
-        clienteFinaleId = client.id;
+        clienteFinaleId = newClient.id;
       }
 
-      // Calculate total
-      const importoTotale = orderData.order_lines.reduce((sum, line) => {
-        const subtotal = line.quantita * line.prezzo_unitario;
-        const afterDiscount = subtotal * (1 - line.sconto / 100);
-        const total = afterDiscount * (1 + line.iva / 100);
-        return sum + total;
-      }, 0);
-
-      // Create order
-      const orderId = generateOrderId();
-      const { error: orderError } = await supabase.from("orders").insert([
-        {
-          id: orderId,
-          dealer_id: orderData.dealer_id,
-          cliente_finale_id: clienteFinaleId,
-          commerciale_id: dealer.commerciale_owner_id,
-          creato_da_user_id: user.id,
-          stato: "da_confermare",
-          data_consegna_prevista: orderData.data_consegna_prevista || null,
-          importo_totale: importoTotale,
-          importo_acconto: orderData.importo_acconto,
-          note_rivenditore: orderData.note_rivenditore || null,
-          note_interna: orderData.note_interna || null,
+      const orderId = await generateOrderId();
+      const importoTotale = values.order_lines.reduce(
+        (sum: number, line: any) => {
+          const subtotal = line.quantita * line.prezzo_unitario;
+          const afterDiscount = subtotal * (1 - line.sconto / 100);
+          const total = afterDiscount * (1 + line.iva / 100);
+          return sum + total;
         },
-      ]);
+        0
+      );
+
+      const orderData: TablesInsert<"orders"> = {
+        id: orderId,
+        dealer_id: values.dealer_id,
+        commerciale_id: dealer.commerciale_owner_id,
+        creato_da_user_id: user.id,
+        cliente_finale_id: clienteFinaleId,
+        data_consegna_prevista: values.data_consegna_prevista || null,
+        importo_acconto: values.importo_acconto || 0,
+        importo_totale: importoTotale,
+        note_rivenditore: values.note_rivenditore || null,
+        note_interna: values.note_interna || null,
+        stato: "da_confermare",
+      };
+
+      const { data: newOrder, error: orderError } = await supabase
+        .from("orders")
+        .insert(orderData)
+        .select()
+        .single();
 
       if (orderError) throw orderError;
 
-      // Create order lines
-      const orderLines = orderData.order_lines.map((line) => {
+      const orderLinesData = values.order_lines.map((line: any) => {
         const subtotal = line.quantita * line.prezzo_unitario;
         const afterDiscount = subtotal * (1 - line.sconto / 100);
-        const totaleRiga = afterDiscount * (1 + line.iva / 100);
+        const total = afterDiscount * (1 + line.iva / 100);
 
         return {
-          ordine_id: orderId,
+          ordine_id: newOrder.id,
           categoria: line.categoria,
           descrizione: line.descrizione,
           quantita: line.quantita,
           prezzo_unitario: line.prezzo_unitario,
           sconto: line.sconto,
           iva: line.iva,
-          totale_riga: totaleRiga,
+          totale_riga: total,
         };
       });
 
       const { error: linesError } = await supabase
         .from("order_lines")
-        .insert(orderLines);
+        .insert(orderLinesData);
 
       if (linesError) throw linesError;
 
-      return orderId;
+      return newOrder;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
       toast({
         title: "Ordine creato",
-        description: "L'ordine è stato creato con successo",
+        description: `Ordine ${data.id} creato con successo`,
       });
     },
     onError: (error) => {

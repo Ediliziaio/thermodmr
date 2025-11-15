@@ -4,13 +4,7 @@ import { useDealersInfinite } from "@/hooks/useDealersInfinite";
 import NewDealerDialog from "@/components/dealers/NewDealerDialog";
 import { useInView } from "react-intersection-observer";
 import { useEffect, useMemo } from "react";
-
-const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat("it-IT", {
-    style: "currency",
-    currency: "EUR",
-  }).format(value);
-};
+import { formatCurrency } from "@/lib/utils";
 
 export default function Dealers() {
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useDealersInfinite();

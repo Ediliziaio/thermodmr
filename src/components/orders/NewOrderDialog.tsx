@@ -29,8 +29,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus, Trash2, Loader2 } from "lucide-react";
-import { useDealers } from "@/hooks/useDealers";
+import { useDealersInfinite } from "@/hooks/useDealersInfinite";
 import { useCreateOrder } from "@/hooks/useOrders";
+import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
@@ -68,7 +69,8 @@ const calculateLineTotal = (line: z.infer<typeof orderLineSchema>) => {
 
 export function NewOrderDialog() {
   const [open, setOpen] = useState(false);
-  const { data: dealers } = useDealers();
+  const { data: dealersData } = useDealersInfinite();
+  const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
   const createOrderMutation = useCreateOrder();
 
   const form = useForm<OrderFormValues>({

@@ -14,12 +14,11 @@ export interface CommercialeStats {
   provvigioni_liquidate: number;
 }
 
-export const useCommerciali = () => {
+export const useCommercialeById = (commercialeId?: string) => {
   return useQuery({
-    queryKey: ["commerciali"],
+    queryKey: ["commerciale", commercialeId],
     queryFn: async () => {
-      // Fetch commerciali with their roles
-      const { data: commerciali, error: commercialiError } = await supabase
+      const { data, error } = await supabase
         .from("profiles")
         .select(`
           id,
@@ -28,71 +27,8 @@ export const useCommerciali = () => {
           is_active,
           user_roles!inner(role)
         `)
-        .eq("user_roles.role", "commerciale");
-
-      if (commercialiError) throw commercialiError;
-
-      // For each commerciale, fetch statistics
-      const commercialiWithStats = await Promise.all(
-        commerciali.map(async (commerciale) => {
-          // Count dealers
-          const { count: dealersCount } = await supabase
-            .from("dealers")
-            .select("*", { count: "exact", head: true })
-            .eq("commerciale_owner_id", commerciale.id);
-
-          // Get orders statistics
-          const { data: orders } = await supabase
-            .from("orders")
-            .select("importo_totale")
-            .eq("commerciale_id", commerciale.id);
-
-          const ordiniCount = orders?.length || 0;
-          const fatturatoTotale = orders?.reduce((sum, o) => sum + Number(o.importo_totale), 0) || 0;
-
-          // Get commissions statistics
-          const { data: commissions } = await supabase
-            .from("commissions")
-            .select("importo_calcolato, stato_liquidazione")
-            .eq("commerciale_id", commerciale.id);
-
-          const provvigioniDovute = commissions
-            ?.filter((c) => c.stato_liquidazione === "dovuta")
-            .reduce((sum, c) => sum + Number(c.importo_calcolato), 0) || 0;
-
-          const provvigioniLiquidate = commissions
-            ?.filter((c) => c.stato_liquidazione === "liquidata")
-            .reduce((sum, c) => sum + Number(c.importo_calcolato), 0) || 0;
-
-          return {
-            id: commerciale.id,
-            display_name: commerciale.display_name,
-            email: commerciale.email,
-            is_active: commerciale.is_active,
-            dealers_count: dealersCount || 0,
-            ordini_count: ordiniCount,
-            fatturato_totale: fatturatoTotale,
-            provvigioni_dovute: provvigioniDovute,
-            provvigioni_liquidate: provvigioniLiquidate,
-          } as CommercialeStats;
-        })
-      );
-
-      return commercialiWithStats;
-    },
-  });
-};
-
-export const useCommercialeById = (commercialeId?: string) => {
-  return useQuery({
-    queryKey: ["commerciale", commercialeId],
-    queryFn: async () => {
-      if (!commercialeId) return null;
-
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", commercialeId)
+        .eq("id", commercialeId!)
+        .eq("user_roles.role", "commerciale")
         .single();
 
       if (error) throw error;
@@ -106,11 +42,17 @@ export const useUpdateCommercialeStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, is_active }: { id: string; is_active: boolean }) => {
+    mutationFn: async ({
+      commercialeId,
+      isActive,
+    }: {
+      commercialeId: string;
+      isActive: boolean;
+    }) => {
       const { data, error } = await supabase
         .from("profiles")
-        .update({ is_active })
-        .eq("id", id)
+        .update({ is_active: isActive })
+        .eq("id", commercialeId)
         .select()
         .single();
 
@@ -118,18 +60,20 @@ export const useUpdateCommercialeStatus = () => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["commerciali"] });
+      queryClient.invalidateQueries({ queryKey: ["commerciali-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["commerciale"] });
       toast({
         title: "Stato aggiornato",
         description: "Lo stato del commerciale è stato aggiornato con successo.",
       });
     },
-    onError: (error: Error) => {
+    onError: (error) => {
       toast({
         title: "Errore",
-        description: `Impossibile aggiornare lo stato: ${error.message}`,
+        description: "Impossibile aggiornare lo stato del commerciale.",
         variant: "destructive",
       });
+      console.error("Error updating commerciale status:", error);
     },
   });
 };
@@ -138,11 +82,11 @@ export const useAssignDealerToCommerciale = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ 
-      dealerId, 
-      commercialeId 
-    }: { 
-      dealerId: string; 
+    mutationFn: async ({
+      dealerId,
+      commercialeId,
+    }: {
+      dealerId: string;
       commercialeId: string;
     }) => {
       const { data, error } = await supabase
@@ -156,19 +100,20 @@ export const useAssignDealerToCommerciale = () => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["commerciali"] });
-      queryClient.invalidateQueries({ queryKey: ["dealers"] });
+      queryClient.invalidateQueries({ queryKey: ["dealers-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["commerciali-infinite"] });
       toast({
-        title: "Dealer riassegnato",
-        description: "Il dealer è stato riassegnato con successo.",
+        title: "Assegnazione completata",
+        description: "Il rivenditore è stato assegnato con successo.",
       });
     },
-    onError: (error: Error) => {
+    onError: (error) => {
       toast({
         title: "Errore",
-        description: `Impossibile riassegnare il dealer: ${error.message}`,
+        description: "Impossibile assegnare il rivenditore.",
         variant: "destructive",
       });
+      console.error("Error assigning dealer:", error);
     },
   });
 };
@@ -177,53 +122,33 @@ export const useCreateCommerciale = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      email,
-      password,
-      display_name,
-    }: {
+    mutationFn: async (data: {
       email: string;
       password: string;
       display_name: string;
     }) => {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        throw new Error("Non autenticato");
-      }
-
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-commerciale`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({ email, password, display_name }),
-        }
+      const { data: result, error } = await supabase.functions.invoke(
+        "create-commerciale",
+        { body: data }
       );
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Errore durante la creazione del commerciale");
-      }
-
-      return response.json();
+      if (error) throw error;
+      return result;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["commerciali"] });
+      queryClient.invalidateQueries({ queryKey: ["commerciali-infinite"] });
       toast({
         title: "Commerciale creato",
-        description: "Il nuovo commerciale è stato creato con successo.",
+        description: "Il commerciale è stato creato con successo.",
       });
     },
-    onError: (error: Error) => {
+    onError: (error) => {
       toast({
         title: "Errore",
-        description: `Impossibile creare il commerciale: ${error.message}`,
+        description: "Impossibile creare il commerciale.",
         variant: "destructive",
       });
+      console.error("Error creating commerciale:", error);
     },
   });
 };
@@ -232,55 +157,35 @@ export const useUpdateCommerciale = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      user_id,
-      email,
-      display_name,
-      is_active,
-    }: {
-      user_id: string;
+    mutationFn: async (data: {
+      commerciale_id: string;
       email?: string;
       display_name?: string;
-      is_active?: boolean;
+      password?: string;
     }) => {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        throw new Error("Non autenticato");
-      }
-
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/update-commerciale`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({ user_id, email, display_name, is_active }),
-        }
+      const { data: result, error } = await supabase.functions.invoke(
+        "update-commerciale",
+        { body: data }
       );
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Errore durante l'aggiornamento del commerciale");
-      }
-
-      return response.json();
+      if (error) throw error;
+      return result;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["commerciali"] });
+      queryClient.invalidateQueries({ queryKey: ["commerciali-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["commerciale"] });
       toast({
         title: "Commerciale aggiornato",
-        description: "I dati del commerciale sono stati aggiornati con successo.",
+        description: "Il commerciale è stato aggiornato con successo.",
       });
     },
-    onError: (error: Error) => {
+    onError: (error) => {
       toast({
         title: "Errore",
-        description: `Impossibile aggiornare il commerciale: ${error.message}`,
+        description: "Impossibile aggiornare il commerciale.",
         variant: "destructive",
       });
+      console.error("Error updating commerciale:", error);
     },
   });
 };
@@ -289,52 +194,33 @@ export const useDeleteCommerciale = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({
-      commerciale_id,
-      transfer_to_commerciale_id,
-    }: {
+    mutationFn: async (data: {
       commerciale_id: string;
       transfer_to_commerciale_id: string;
     }) => {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        throw new Error("Non autenticato");
-      }
-
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/delete-commerciale`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({ commerciale_id, transfer_to_commerciale_id }),
-        }
+      const { data: result, error } = await supabase.functions.invoke(
+        "delete-commerciale",
+        { body: data }
       );
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Errore durante l'eliminazione del commerciale");
-      }
-
-      return response.json();
+      if (error) throw error;
+      return result;
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["commerciali"] });
-      queryClient.invalidateQueries({ queryKey: ["dealers"] });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["commerciali-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["dealers-infinite"] });
       toast({
         title: "Commerciale eliminato",
-        description: `Il commerciale è stato eliminato e ${data.dealers_transferred} dealer${data.dealers_transferred !== 1 ? 's' : ''} sono stati trasferiti con successo.`,
+        description: "Il commerciale è stato eliminato e i rivenditori trasferiti.",
       });
     },
-    onError: (error: Error) => {
+    onError: (error) => {
       toast({
         title: "Errore",
-        description: `Impossibile eliminare il commerciale: ${error.message}`,
+        description: "Impossibile eliminare il commerciale.",
         variant: "destructive",
       });
+      console.error("Error deleting commerciale:", error);
     },
   });
 };

@@ -31,10 +31,9 @@ export function EditCommercialeDialog({
     
     updateCommerciale(
       {
-        user_id: commercialeId,
+        commerciale_id: commercialeId,
         email: email !== currentEmail ? email : undefined,
         display_name: displayName !== currentDisplayName ? displayName : undefined,
-        is_active: isActive !== currentIsActive ? isActive : undefined,
       },
       {
         onSuccess: () => {
