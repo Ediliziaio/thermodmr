@@ -3,11 +3,15 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Euro, TrendingUp, CheckCircle, AlertCircle } from "lucide-react";
 import { useDashboardKPIs, useRevenueData } from "@/hooks/useDashboard";
+import { useRealtimeDashboard } from "@/hooks/useRealtimeDashboard";
 import { RevenueChart } from "@/components/dashboard/RevenueChart";
 import { OrderStatusPieChart } from "@/components/dashboard/OrderStatusPieChart";
 import { formatCurrency, getStatusColor, getStatusLabel } from "@/lib/utils";
 
 export default function Dashboard() {
+  // Abilita aggiornamenti real-time
+  useRealtimeDashboard();
+  
   const { data: kpis, isLoading: kpisLoading, error: kpisError } = useDashboardKPIs();
   const { data: revenueData, isLoading: revenueLoading } = useRevenueData(6);
 
