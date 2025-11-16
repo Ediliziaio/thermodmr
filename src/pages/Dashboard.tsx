@@ -1,19 +1,80 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Euro, TrendingUp, CheckCircle, AlertCircle, Radio } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Euro, TrendingUp, CheckCircle, AlertCircle, Radio, CalendarIcon, X } from "lucide-react";
+import { DateRange } from "react-day-picker";
+import { format, subMonths, startOfMonth, endOfMonth, startOfYear, endOfYear, subYears } from "date-fns";
+import { it } from "date-fns/locale";
 import { useDashboardKPIs, useRevenueData } from "@/hooks/useDashboard";
 import { useRealtimeDashboard } from "@/hooks/useRealtimeDashboard";
 import { RevenueChart } from "@/components/dashboard/RevenueChart";
 import { OrderStatusPieChart } from "@/components/dashboard/OrderStatusPieChart";
-import { formatCurrency, getStatusColor, getStatusLabel } from "@/lib/utils";
+import { formatCurrency, getStatusColor, getStatusLabel, cn } from "@/lib/utils";
 
 export default function Dashboard() {
+  // State per il date range
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  
   // Abilita aggiornamenti real-time
   useRealtimeDashboard();
   
-  const { data: kpis, isLoading: kpisLoading, error: kpisError } = useDashboardKPIs();
-  const { data: revenueData, isLoading: revenueLoading } = useRevenueData(6);
+  const { data: kpis, isLoading: kpisLoading, error: kpisError } = useDashboardKPIs(
+    dateRange?.from,
+    dateRange?.to
+  );
+  const { data: revenueData, isLoading: revenueLoading } = useRevenueData(
+    dateRange?.from,
+    dateRange?.to
+  );
+
+  // Quick filter functions
+  const setQuickFilter = (type: 'month' | '3months' | '6months' | 'year' | 'lastyear') => {
+    const now = new Date();
+    switch (type) {
+      case 'month':
+        setDateRange({
+          from: startOfMonth(subMonths(now, 1)),
+          to: endOfMonth(subMonths(now, 1)),
+        });
+        break;
+      case '3months':
+        setDateRange({
+          from: startOfMonth(subMonths(now, 3)),
+          to: now,
+        });
+        break;
+      case '6months':
+        setDateRange({
+          from: startOfMonth(subMonths(now, 6)),
+          to: now,
+        });
+        break;
+      case 'year':
+        setDateRange({
+          from: startOfYear(now),
+          to: endOfYear(now),
+        });
+        break;
+      case 'lastyear':
+        setDateRange({
+          from: startOfYear(subYears(now, 1)),
+          to: endOfYear(subYears(now, 1)),
+        });
+        break;
+    }
+  };
+
+  const formatDateRange = () => {
+    if (!dateRange?.from) return null;
+    if (!dateRange.to) {
+      return format(dateRange.from, "dd MMM yyyy", { locale: it });
+    }
+    return `${format(dateRange.from, "dd MMM yyyy", { locale: it })} - ${format(dateRange.to, "dd MMM yyyy", { locale: it })}`;
+  };
 
   if (kpisLoading) {
     return (
@@ -46,16 +107,103 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           <p className="text-muted-foreground mt-1">
             Panoramica generale degli ordini e delle performance
+            {dateRange?.from && (
+              <span className="ml-2 text-primary font-medium">
+                • {formatDateRange()}
+              </span>
+            )}
           </p>
         </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Radio className="h-4 w-4 text-green-500 animate-pulse" />
-          <span>Dati in tempo reale</span>
+        <div className="flex items-center gap-3">
+          {/* Date Range Picker */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={dateRange ? "default" : "outline"}
+                className={cn(
+                  "justify-start text-left font-normal",
+                  !dateRange && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {dateRange ? formatDateRange() : "Seleziona periodo"}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="end">
+              <div className="p-3 space-y-3">
+                <Calendar
+                  mode="range"
+                  selected={dateRange}
+                  onSelect={setDateRange}
+                  numberOfMonths={2}
+                  locale={it}
+                  className="pointer-events-auto"
+                />
+                <div className="border-t pt-3">
+                  <p className="text-sm font-medium mb-2">Filtri rapidi</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setQuickFilter('month')}
+                    >
+                      Ultimo mese
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setQuickFilter('3months')}
+                    >
+                      Ultimi 3 mesi
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setQuickFilter('6months')}
+                    >
+                      Ultimi 6 mesi
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setQuickFilter('year')}
+                    >
+                      Quest'anno
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setQuickFilter('lastyear')}
+                      className="col-span-2"
+                    >
+                      Anno scorso
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+          
+          {dateRange && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setDateRange(undefined)}
+              title="Reset filtro periodo"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
+          
+          <div className="flex items-center gap-2 text-sm text-muted-foreground border-l pl-3">
+            <Radio className="h-4 w-4 text-green-500 animate-pulse" />
+            <span>Real-time</span>
+          </div>
         </div>
       </div>
 
