@@ -69,9 +69,14 @@ export const useDashboardKPIs = (startDate?: Date, endDate?: Date) => {
   });
 };
 
-export const useRevenueData = (months: number = 6) => {
+export const useRevenueData = (startDate?: Date, endDate?: Date) => {
+  // Calcola il numero di mesi se non ci sono date specifiche
+  const months = startDate && endDate 
+    ? Math.max(1, Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 30)))
+    : 6;
+
   return useQuery({
-    queryKey: ["revenue-data", months],
+    queryKey: ["revenue-data", startDate, endDate, months],
     queryFn: async () => {
       const { data, error } = await supabase.rpc("get_revenue_by_month", {
         p_months: months,
@@ -80,12 +85,24 @@ export const useRevenueData = (months: number = 6) => {
 
       if (error) throw error;
 
-      return (data || []) as Array<{
+      let result = (data || []) as Array<{
         month: string;
         ricavi: number;
         acconti: number;
         incassato: number;
       }>;
+
+      // Se ci sono date specifiche, filtra i risultati
+      if (startDate && endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        result = result.filter(item => {
+          const itemDate = new Date(item.month);
+          return itemDate >= start && itemDate <= end;
+        });
+      }
+
+      return result;
     },
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
