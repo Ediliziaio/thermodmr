@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Euro, TrendingUp, CheckCircle, AlertCircle } from "lucide-react";
+import { Euro, TrendingUp, CheckCircle, AlertCircle, Radio } from "lucide-react";
 import { useDashboardKPIs, useRevenueData } from "@/hooks/useDashboard";
 import { useRealtimeDashboard } from "@/hooks/useRealtimeDashboard";
 import { RevenueChart } from "@/components/dashboard/RevenueChart";
@@ -46,11 +46,17 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground mt-1">
-          Panoramica generale degli ordini e delle performance
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <p className="text-muted-foreground mt-1">
+            Panoramica generale degli ordini e delle performance
+          </p>
+        </div>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Radio className="h-4 w-4 text-green-500 animate-pulse" />
+          <span>Dati in tempo reale</span>
+        </div>
       </div>
 
       {/* KPI Cards */}
