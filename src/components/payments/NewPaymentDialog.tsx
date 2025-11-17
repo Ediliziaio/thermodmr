@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,6 +22,9 @@ import { useCreatePayment } from "@/hooks/usePayments";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { OrderCombobox } from "./OrderCombobox";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 
 interface NewPaymentDialogProps {
   open?: boolean;
@@ -44,24 +47,108 @@ export function NewPaymentDialog({ open: controlledOpen, onOpenChange }: NewPaym
 
   const createPayment = useCreatePayment();
 
-  // Fetch orders for selection
-  const { data: orders = [] } = useQuery({
+  // Fetch orders with payment stats for selection
+  const { data: orders = [], isLoading } = useQuery({
     queryKey: ["ordersForPayment"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("orders")
+        .from("orders_with_payment_stats")
         .select(`
           id,
           stato,
           importo_totale,
-          dealers!inner(ragione_sociale)
+          importo_pagato,
+          importo_da_pagare,
+          percentuale_pagata,
+          data_inserimento,
+          dealers!inner(
+            id,
+            ragione_sociale
+          )
         `)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      return data;
+      return data as any[];
     },
+    staleTime: 5 * 60 * 1000, // 5 minuti
   });
+
+  const selectedOrder = useMemo(
+    () => orders.find((o) => o.id === formData.ordineId),
+    [orders, formData.ordineId]
+  );
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat("it-IT", {
+      style: "currency",
+      currency: "EUR",
+    }).format(amount);
+  };
+
+  const getStatusLabel = (stato: string) => {
+    switch (stato) {
+      case "da_confermare":
+        return "Da Confermare";
+      case "da_pagare_acconto":
+        return "Da Pagare";
+      case "in_lavorazione":
+        return "In Lavorazione";
+      case "da_consegnare":
+        return "Da Consegnare";
+      case "consegnato":
+        return "Consegnato";
+      default:
+        return stato;
+    }
+  };
+
+  const getStatusVariant = (stato: string): "default" | "secondary" | "destructive" | "outline" => {
+    switch (stato) {
+      case "da_confermare":
+        return "outline";
+      case "da_pagare_acconto":
+        return "destructive";
+      case "in_lavorazione":
+        return "default";
+      case "da_consegnare":
+        return "secondary";
+      case "consegnato":
+        return "secondary";
+      default:
+        return "outline";
+    }
+  };
+
+  const handleOrderSelect = (orderId: string) => {
+    const order = orders.find((o) => o.id === orderId);
+    if (!order) return;
+
+    setFormData((prev) => {
+      const newData = { ...prev, ordineId: orderId };
+
+      // Auto-suggerisci importo basato sul tipo di pagamento
+      if (!prev.importo || prev.importo === "0") {
+        if (prev.tipo === "acconto" && order.importo_totale) {
+          // Suggerisci 30% per acconto
+          newData.importo = (order.importo_totale * 0.3).toFixed(2);
+        } else if (prev.tipo === "saldo" && order.importo_da_pagare) {
+          // Suggerisci l'intero importo rimanente per saldo
+          newData.importo = order.importo_da_pagare.toFixed(2);
+        }
+      }
+
+      return newData;
+    });
+
+    // Mostra toast informativo se c'è ancora da pagare
+    if (order.importo_da_pagare && order.importo_da_pagare > 0) {
+      toast({
+        title: "💡 Suggerimento",
+        description: `L'ordine ha ancora ${formatCurrency(order.importo_da_pagare)} da pagare.`,
+      });
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,6 +171,20 @@ export function NewPaymentDialog({ open: controlledOpen, onOpenChange }: NewPaym
         variant: "destructive",
       });
       return;
+    }
+
+    // Validazione avanzata: controlla se l'importo supera il da pagare
+    if (selectedOrder && selectedOrder.importo_da_pagare !== undefined) {
+      const importoDaPagare = selectedOrder.importo_da_pagare;
+      if (importo > importoDaPagare + 0.01) {
+        // +0.01 per tolleranza arrotondamenti
+        toast({
+          title: "⚠️ Attenzione",
+          description: `L'importo (${formatCurrency(importo)}) supera il rimanente da pagare (${formatCurrency(importoDaPagare)}).`,
+          variant: "destructive",
+        });
+        return;
+      }
     }
 
     createPayment.mutate(
@@ -129,29 +230,49 @@ export function NewPaymentDialog({ open: controlledOpen, onOpenChange }: NewPaym
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="ordineId">Ordine</Label>
-            <Select
+            <OrderCombobox
               value={formData.ordineId}
-              onValueChange={(value) =>
-                setFormData({ ...formData, ordineId: value })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Seleziona ordine" />
-              </SelectTrigger>
-              <SelectContent>
-                {orders.map((order) => (
-                  <SelectItem key={order.id} value={order.id}>
-                    {order.id} - {(order.dealers as any)?.ragione_sociale} (
-                    {new Intl.NumberFormat("it-IT", {
-                      style: "currency",
-                      currency: "EUR",
-                    }).format(order.importo_totale)}
-                    )
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              onValueChange={handleOrderSelect}
+              orders={orders}
+              isLoading={isLoading}
+            />
           </div>
+
+          {/* Preview Ordine Selezionato */}
+          {selectedOrder && (
+            <div className="rounded-lg bg-muted p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Ordine Selezionato</span>
+                <Badge variant={getStatusVariant(selectedOrder.stato)}>
+                  {getStatusLabel(selectedOrder.stato)}
+                </Badge>
+              </div>
+              <div className="text-sm text-muted-foreground">
+                🏢 {selectedOrder.dealers.ragione_sociale}
+              </div>
+              <div className="flex gap-4 text-sm">
+                <span>💰 Totale: {formatCurrency(selectedOrder.importo_totale)}</span>
+                {selectedOrder.importo_da_pagare !== undefined && (
+                  <span className="text-orange-600 font-medium">
+                    💵 Da Pagare: {formatCurrency(selectedOrder.importo_da_pagare)}
+                  </span>
+                )}
+              </div>
+
+              {/* Progress Bar Pagamento */}
+              {selectedOrder.percentuale_pagata !== undefined && (
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs">
+                    <span className="text-muted-foreground">Pagato</span>
+                    <span className="font-medium">
+                      {selectedOrder.percentuale_pagata.toFixed(0)}%
+                    </span>
+                  </div>
+                  <Progress value={selectedOrder.percentuale_pagata} className="h-2" />
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="tipo">Tipo Pagamento</Label>
