@@ -8,6 +8,11 @@ const PAGE_SIZE = 50;
 export interface OrderWithDetails extends Tables<"orders"> {
   dealers: { ragione_sociale: string; email: string } | null;
   clients: { nome: string; cognome: string } | null;
+  importo_pagato: number;
+  importo_da_pagare: number;
+  percentuale_pagata: number;
+  numero_pagamenti: number;
+  data_ultimo_pagamento: string | null;
 }
 
 export const useOrdersInfinite = () => {
@@ -18,7 +23,7 @@ export const useOrdersInfinite = () => {
       const to = from + PAGE_SIZE - 1;
 
       const { data, error, count } = await supabase
-        .from("orders")
+        .from("orders_with_payment_stats")
         .select(
           `
           *,
