@@ -76,3 +76,33 @@ export const useUpdateDealer = () => {
     },
   });
 };
+
+export const useDeleteDealer = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from("dealers")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["dealers-infinite"] });
+      toast({
+        title: "Rivenditore eliminato",
+        description: "Il rivenditore è stato eliminato con successo.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Errore",
+        description: "Impossibile eliminare il rivenditore.",
+        variant: "destructive",
+      });
+      console.error("Error deleting dealer:", error);
+    },
+  });
+};
