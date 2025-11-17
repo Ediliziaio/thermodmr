@@ -209,6 +209,56 @@ export const useBulkUpdateOrderStatus = () => {
   });
 };
 
+export const useBulkDeleteOrders = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ 
+      orderIds 
+    }: { 
+      orderIds: string[];
+    }) => {
+      // Elimina tutti gli ordini in parallelo
+      // Le righe, pagamenti, allegati e provvigioni verranno eliminati automaticamente
+      // grazie alle foreign key con ON DELETE CASCADE
+      const deletes = orderIds.map(orderId =>
+        supabase
+          .from("orders")
+          .delete()
+          .eq("id", orderId)
+      );
+
+      const results = await Promise.all(deletes);
+      
+      // Controlla se ci sono errori
+      const errors = results.filter(r => r.error);
+      if (errors.length > 0) {
+        throw new Error(`${errors.length} ordini non sono stati eliminati`);
+      }
+
+      return {
+        success: results.length - errors.length,
+        failed: errors.length,
+      };
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      toast({
+        title: "Eliminazione completata",
+        description: `${data.success} ${data.success === 1 ? 'ordine eliminato' : 'ordini eliminati'} con successo.`,
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Errore",
+        description: error.message || "Impossibile eliminare gli ordini.",
+        variant: "destructive",
+      });
+    },
+  });
+};
+
 export const useUpdateOrderId = () => {
   const queryClient = useQueryClient();
 
