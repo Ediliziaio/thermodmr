@@ -525,6 +525,9 @@ export default function Orders() {
                                       Ultimo: {formatDate(new Date(order.data_ultimo_pagamento))}
                                     </p>
                                   )}
+                                </div>
+                              </TooltipContent>
+                            </Tooltip>
                           </td>
                           <td className="py-4 pr-4 text-sm">
                             <span className={cn(isOverdue && "text-red-600 font-medium")}>
