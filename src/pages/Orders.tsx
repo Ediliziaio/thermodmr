@@ -9,6 +9,7 @@ import { NewOrderDialog } from "@/components/orders/NewOrderDialog";
 import { BulkUpdateStatusDialog } from "@/components/orders/BulkUpdateStatusDialog";
 import { BulkDeleteOrdersDialog } from "@/components/orders/BulkDeleteOrdersDialog";
 import { OrderFilters, OrderFiltersState } from "@/components/orders/OrderFilters";
+import { MobileOrdersList } from "@/components/orders/MobileOrdersList";
 import { useDealersInfinite } from "@/hooks/useDealersInfinite";
 import { useMemo, useState, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
@@ -17,6 +18,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat("it-IT", {
@@ -30,6 +32,7 @@ export default function Orders() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { userRole } = useAuth();
+  const isMobile = useIsMobile();
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useOrdersInfinite();
   const { data: dealersData } = useDealersInfinite();
   const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
@@ -38,6 +41,7 @@ export default function Orders() {
   const [selectedOrderIds, setSelectedOrderIds] = useState<Set<string>>(new Set());
   const [bulkStatusDialogOpen, setBulkStatusDialogOpen] = useState(false);
   const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
+  const [newOrderDialogOpen, setNewOrderDialogOpen] = useState(false);
 
   // Helper functions for selection
   const toggleOrderSelection = (orderId: string) => {
@@ -252,11 +256,63 @@ export default function Orders() {
               Gestisci tutti gli ordini dei rivenditori
             </p>
           </div>
-          <NewOrderDialog />
+          {!isMobile && <NewOrderDialog open={newOrderDialogOpen} onOpenChange={setNewOrderDialogOpen} />}
         </div>
 
-      {/* Statistiche Header */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Statistiche Header - Swipeable su mobile */}
+      {isMobile ? (
+        <div className="overflow-x-auto -mx-6 px-6">
+          <div className="flex gap-4 pb-4" style={{ minWidth: 'max-content' }}>
+            <Card className="min-w-[200px]">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Totale Ordini
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold">{stats.totalOrders}</p>
+              </CardContent>
+            </Card>
+            <Card className="min-w-[200px]">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Valore Totale
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold">
+                  {formatCurrency(stats.totalValue)}
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="min-w-[200px]">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Da Incassare
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold text-orange-600">
+                  {formatCurrency(stats.totalToCollect)}
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="min-w-[200px]">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">
+                  Ordini con Saldo
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-2xl font-bold text-red-600">
+                  {stats.ordersWithBalance}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -306,14 +362,30 @@ export default function Orders() {
             </p>
           </CardContent>
         </Card>
-      </div>
+        </div>
+      )}
 
-      {/* Filtri */}
-      <OrderFilters
-        filters={filters}
-        onFiltersChange={setFilters}
-        dealers={dealers || []}
-      />
+      {/* Vista Condizionale: Mobile vs Desktop */}
+      {isMobile ? (
+        <MobileOrdersList
+          orders={filteredOrders}
+          selectedOrderIds={selectedOrderIds}
+          onToggleSelect={toggleOrderSelection}
+          onViewDetails={(id) => navigate(`/ordini/${id}`)}
+          filters={filters}
+          onFiltersChange={setFilters}
+          dealers={dealers}
+          userRole={userRole || ''}
+          onNewOrder={() => setNewOrderDialogOpen(true)}
+        />
+      ) : (
+        <>
+          {/* Filtri */}
+          <OrderFilters
+            filters={filters}
+            onFiltersChange={setFilters}
+            dealers={dealers || []}
+          />
 
       {/* Orders Table */}
       <Card>
@@ -496,7 +568,9 @@ export default function Orders() {
             </div>
           )}
         </CardContent>
-      </Card>
+        </Card>
+        </>
+      )}
 
       {/* Floating Action Bar */}
       {selectedOrderIds.size > 0 && (
