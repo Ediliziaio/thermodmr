@@ -16,6 +16,8 @@ import { OrderLine } from "@/types";
 interface OrderLinesEditorProps {
   lines: OrderLine[];
   onLinesChange: (lines: OrderLine[]) => void;
+  orderStatus?: string;
+  readOnly?: boolean;
 }
 
 const categories = [
@@ -26,8 +28,10 @@ const categories = [
   "Accessorio",
 ];
 
-export function OrderLinesEditor({ lines, onLinesChange }: OrderLinesEditorProps) {
+export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly = false }: OrderLinesEditorProps) {
   const [editingLines, setEditingLines] = useState<OrderLine[]>(lines);
+  
+  const canEdit = !readOnly && (orderStatus === "da_confermare" || !orderStatus);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("it-IT", {
@@ -88,11 +92,20 @@ export function OrderLinesEditor({ lines, onLinesChange }: OrderLinesEditorProps
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Righe Ordine</CardTitle>
-        <Button onClick={addNewLine} size="sm">
-          <Plus className="h-4 w-4 mr-2" />
-          Aggiungi Riga
-        </Button>
+        {canEdit && (
+          <Button onClick={addNewLine} size="sm">
+            <Plus className="h-4 w-4 mr-2" />
+            Aggiungi Riga
+          </Button>
+        )}
       </CardHeader>
+      {!canEdit && orderStatus !== "da_confermare" && (
+        <div className="px-6 pb-2">
+          <p className="text-sm text-muted-foreground">
+            Le righe possono essere modificate solo quando l'ordine è in stato "Da Confermare"
+          </p>
+        </div>
+      )}
       <CardContent className="space-y-6">
         {editingLines.map((line, index) => (
           <div key={line.id} className="border rounded-lg p-4 space-y-4">
@@ -100,13 +113,15 @@ export function OrderLinesEditor({ lines, onLinesChange }: OrderLinesEditorProps
               <span className="text-sm font-medium text-muted-foreground">
                 Riga #{index + 1}
               </span>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => removeLine(line.id)}
-              >
-                <Trash2 className="h-4 w-4 text-destructive" />
-              </Button>
+              {canEdit && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => removeLine(line.id)}
+                >
+                  <Trash2 className="h-4 w-4 text-destructive" />
+                </Button>
+              )}
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
@@ -115,6 +130,7 @@ export function OrderLinesEditor({ lines, onLinesChange }: OrderLinesEditorProps
                 <Select
                   value={line.categoria}
                   onValueChange={(value) => updateLine(line.id, "categoria", value)}
+                  disabled={!canEdit}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -135,6 +151,7 @@ export function OrderLinesEditor({ lines, onLinesChange }: OrderLinesEditorProps
                   value={line.descrizione}
                   onChange={(e) => updateLine(line.id, "descrizione", e.target.value)}
                   placeholder="Descrizione prodotto"
+                  disabled={!canEdit}
                 />
               </div>
 
@@ -147,6 +164,7 @@ export function OrderLinesEditor({ lines, onLinesChange }: OrderLinesEditorProps
                   onChange={(e) =>
                     updateLine(line.id, "quantita", parseInt(e.target.value) || 1)
                   }
+                  disabled={!canEdit}
                 />
               </div>
 
@@ -160,6 +178,7 @@ export function OrderLinesEditor({ lines, onLinesChange }: OrderLinesEditorProps
                   onChange={(e) =>
                     updateLine(line.id, "prezzoUnitario", parseFloat(e.target.value) || 0)
                   }
+                  disabled={!canEdit}
                 />
               </div>
 
@@ -174,6 +193,7 @@ export function OrderLinesEditor({ lines, onLinesChange }: OrderLinesEditorProps
                   onChange={(e) =>
                     updateLine(line.id, "sconto", parseFloat(e.target.value) || 0)
                   }
+                  disabled={!canEdit}
                 />
               </div>
 
@@ -188,6 +208,7 @@ export function OrderLinesEditor({ lines, onLinesChange }: OrderLinesEditorProps
                   onChange={(e) =>
                     updateLine(line.id, "iva", parseFloat(e.target.value) || 22)
                   }
+                  disabled={!canEdit}
                 />
               </div>
             </div>
