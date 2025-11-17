@@ -29,11 +29,12 @@ interface UsePaymentsInfiniteParams {
   dateRange?: DateRange;
   tipoFilter: string;
   metodoFilter: string;
+  searchQuery?: string;
 }
 
-export const usePaymentsInfinite = ({ dateRange, tipoFilter, metodoFilter }: UsePaymentsInfiniteParams) => {
+export const usePaymentsInfinite = ({ dateRange, tipoFilter, metodoFilter, searchQuery }: UsePaymentsInfiniteParams) => {
   return useInfiniteQuery({
-    queryKey: ["payments-infinite", dateRange, tipoFilter, metodoFilter],
+    queryKey: ["payments-infinite", dateRange, tipoFilter, metodoFilter, searchQuery],
     queryFn: async ({ pageParam = 0 }) => {
       const from = pageParam * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
@@ -69,6 +70,16 @@ export const usePaymentsInfinite = ({ dateRange, tipoFilter, metodoFilter }: Use
       }
       if (metodoFilter !== "all") {
         query = query.eq("metodo", metodoFilter);
+      }
+
+      // Full-text search su riferimento, metodo, ragione sociale dealer
+      if (searchQuery && searchQuery.trim()) {
+        const search = searchQuery.trim().toLowerCase();
+        query = query.or(
+          `riferimento.ilike.%${search}%,` +
+          `metodo.ilike.%${search}%,` +
+          `orders.dealers.ragione_sociale.ilike.%${search}%`
+        );
       }
 
       const { data, error, count } = await query;

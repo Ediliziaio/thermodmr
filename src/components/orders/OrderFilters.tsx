@@ -29,9 +29,11 @@ interface OrderFiltersProps {
   filters: OrderFiltersState;
   onFiltersChange: (filters: OrderFiltersState) => void;
   dealers: Array<{ id: string; ragione_sociale: string }>;
+  searchQuery?: string;
+  onSearchQueryChange?: (query: string) => void;
 }
 
-export function OrderFilters({ filters, onFiltersChange, dealers }: OrderFiltersProps) {
+export function OrderFilters({ filters, onFiltersChange, dealers, searchQuery, onSearchQueryChange }: OrderFiltersProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleFilterChange = (key: keyof OrderFiltersState, value: any) => {
@@ -46,6 +48,28 @@ export function OrderFilters({ filters, onFiltersChange, dealers }: OrderFilters
 
   return (
     <div className="space-y-4">
+      {/* Global Search */}
+      {onSearchQueryChange && (
+        <div className="relative">
+          <Input
+            placeholder="🔍 Ricerca full-text: ID, dealer, cliente, note..."
+            value={searchQuery || ""}
+            onChange={(e) => onSearchQueryChange(e.target.value)}
+            className="pr-20"
+          />
+          {searchQuery && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute right-1 top-1/2 -translate-y-1/2"
+              onClick={() => onSearchQueryChange("")}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      )}
+      
       {/* Quick Filters */}
       <div className="flex flex-wrap gap-2">
         <Button 

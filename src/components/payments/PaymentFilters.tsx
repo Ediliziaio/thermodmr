@@ -1,5 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarIcon, X } from "lucide-react";
@@ -14,6 +15,8 @@ interface PaymentFiltersProps {
   onTipoFilterChange: (tipo: string) => void;
   metodoFilter: string;
   onMetodoFilterChange: (metodo: string) => void;
+  searchQuery?: string;
+  onSearchQueryChange?: (query: string) => void;
   onReset: () => void;
 }
 
@@ -24,10 +27,35 @@ export const PaymentFilters = ({
   onTipoFilterChange,
   metodoFilter,
   onMetodoFilterChange,
+  searchQuery,
+  onSearchQueryChange,
   onReset,
 }: PaymentFiltersProps) => {
   return (
-    <div className="flex flex-wrap gap-4 items-center">
+    <div className="space-y-4">
+      {/* Global Search */}
+      {onSearchQueryChange && (
+        <div className="relative">
+          <Input
+            placeholder="🔍 Ricerca full-text: riferimento, metodo, dealer..."
+            value={searchQuery || ""}
+            onChange={(e) => onSearchQueryChange(e.target.value)}
+            className="pr-20"
+          />
+          {searchQuery && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute right-1 top-1/2 -translate-y-1/2"
+              onClick={() => onSearchQueryChange("")}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      )}
+      
+      <div className="flex flex-wrap gap-4 items-center">
       <Popover>
         <PopoverTrigger asChild>
           <Button variant="outline" className="justify-start text-left font-normal">
@@ -84,10 +112,11 @@ export const PaymentFilters = ({
         </SelectContent>
       </Select>
 
-      <Button variant="ghost" onClick={onReset}>
-        <X className="h-4 w-4 mr-2" />
-        Reset filtri
-      </Button>
+        <Button variant="ghost" onClick={onReset}>
+          <X className="h-4 w-4 mr-2" />
+          Reset filtri
+        </Button>
+      </div>
     </div>
   );
 };
