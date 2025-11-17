@@ -28,6 +28,7 @@ export const useRealtimeSync = () => {
           
           // Invalida queries pagamenti (perché dipendono da orders.stato, orders.dealers)
           queryClient.invalidateQueries({ queryKey: ["allPayments"] });
+          queryClient.invalidateQueries({ queryKey: ["payments-infinite"] });
           queryClient.invalidateQueries({ queryKey: ["orderPayments"] });
           
           // Invalida dashboard
@@ -46,6 +47,7 @@ export const useRealtimeSync = () => {
           
           // Invalida queries pagamenti
           queryClient.invalidateQueries({ queryKey: ["allPayments"] });
+          queryClient.invalidateQueries({ queryKey: ["payments-infinite"] });
           queryClient.invalidateQueries({ queryKey: ["orderPayments"] });
           
           // Invalida queries ordini (perché cambiano importi pagati/da pagare)
