@@ -30,6 +30,7 @@ const Pagamenti = lazy(() => import("./pages/Pagamenti"));
 const Provvigioni = lazy(() => import("./pages/Provvigioni"));
 const RLSTest = lazy(() => import("./pages/RLSTest"));
 const TestDataSeeder = lazy(() => import("./pages/TestDataSeeder"));
+const Impostazioni = lazy(() => import("./pages/Impostazioni"));
 const Placeholder = lazy(() => import("./pages/Placeholder"));
 
 // Ottimizza TanStack Query
@@ -195,9 +196,9 @@ const App = () => (
             <Route
               path="/impostazioni"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiredRole="super_admin">
                   <Layout>
-                    <Placeholder title="Impostazioni" description="Configurazione sistema" />
+                    <Impostazioni />
                   </Layout>
                 </ProtectedRoute>
               }
