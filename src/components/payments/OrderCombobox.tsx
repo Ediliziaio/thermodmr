@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Command,
   CommandEmpty,
@@ -45,6 +46,7 @@ export function OrderCombobox({
   isLoading,
   disabled,
 }: OrderComboboxProps) {
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -60,8 +62,14 @@ export function OrderCombobox({
     if (statusFilter === "in_lavorazione" && order.stato !== "in_lavorazione") {
       return false;
     }
-    // "Solo Miei Dealer" - per ora mostra tutti (richiede contesto utente)
-    // Può essere esteso con user context in futuro
+    
+    // Filtro "Solo Miei Dealer" - filtra per commerciale_owner_id del dealer
+    if (statusFilter === "my_dealers" && user) {
+      const dealerOwnerId = (order.dealers as any)?.commerciale_owner_id;
+      if (dealerOwnerId !== user.id) {
+        return false;
+      }
+    }
     
     // Filtro per query di ricerca
     const query = searchQuery.toLowerCase();
@@ -156,7 +164,7 @@ export function OrderCombobox({
                 <TabsTrigger value="in_lavorazione" className="text-xs">
                   In Lavorazione
                 </TabsTrigger>
-                <TabsTrigger value="my_dealers" className="text-xs" disabled>
+                <TabsTrigger value="my_dealers" className="text-xs">
                   Miei Dealer
                 </TabsTrigger>
               </TabsList>
