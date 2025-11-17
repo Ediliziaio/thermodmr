@@ -250,7 +250,7 @@ const Pagamenti = () => {
           onMetodoFilterChange={setMetodoFilter}
           onResetFilters={handleResetFilters}
           onNewPayment={() => setNewPaymentDialogOpen(true)}
-          onExport={handleExportCSV}
+          onExport={() => setExportDialogOpen(true)}
           userRole={userRole || ''}
           hasNextPage={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
@@ -279,7 +279,7 @@ const Pagamenti = () => {
               <Button variant={viewMode === "timeline" ? "default" : "outline"} size="sm" onClick={() => setViewMode("timeline")}>
                 <CalendarIcon className="h-4 w-4 mr-2" />Timeline
               </Button>
-              <Button variant="outline" size="sm" onClick={handleExportCSV}>
+              <Button variant="outline" size="sm" onClick={() => setExportDialogOpen(true)}>
                 <Download className="h-4 w-4 mr-2" />Esporta
               </Button>
             </div>
