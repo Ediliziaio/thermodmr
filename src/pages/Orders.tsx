@@ -10,7 +10,8 @@ import { BulkUpdateStatusDialog } from "@/components/orders/BulkUpdateStatusDial
 import { BulkDeleteOrdersDialog } from "@/components/orders/BulkDeleteOrdersDialog";
 import { OrderFilters, OrderFiltersState } from "@/components/orders/OrderFilters";
 import { MobileOrdersList } from "@/components/orders/MobileOrdersList";
-import { exportOrders } from "@/lib/exportUtils";
+import { exportOrdersCustom, ORDER_COLUMNS } from "@/lib/exportUtils";
+import { ExportColumnsDialog } from "@/components/export/ExportColumnsDialog";
 import { toast } from "@/hooks/use-toast";
 import { useDealersInfinite } from "@/hooks/useDealersInfinite";
 import { useMemo, useState, useEffect } from "react";
@@ -48,6 +49,7 @@ export default function Orders() {
   const [bulkStatusDialogOpen, setBulkStatusDialogOpen] = useState(false);
   const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
   const [newOrderDialogOpen, setNewOrderDialogOpen] = useState(false);
+  const [exportDialogOpen, setExportDialogOpen] = useState(false);
 
   // Helper functions for selection
   const toggleOrderSelection = (orderId: string) => {
@@ -204,9 +206,13 @@ export default function Orders() {
         }
       }
 
-      return true;
-    });
-  }, [allOrders, filters]);
+  const handleExportCSV = (selectedColumns: string[], data: any[]) => {
+    exportOrdersCustom(data, selectedColumns);
+  };
+
+  const ordersToExport = selectedOrderIds.size > 0 
+    ? filteredOrders.filter(o => selectedOrderIds.has(o.id!))
+    : filteredOrders;
 
   // Statistiche per l'header
   const stats = useMemo(() => {
@@ -624,6 +630,16 @@ export default function Orders() {
                 <Button
                   variant="outline"
                   size="sm"
+                  onClick={() => setExportDialogOpen(true)}
+                  disabled={filteredOrders.length === 0}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Esporta CSV {selectedOrderIds.size > 0 && `(${selectedOrderIds.size})`}
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={clearSelection}
                 >
                   <X className="h-4 w-4 mr-2" />
@@ -647,8 +663,18 @@ export default function Orders() {
       <BulkDeleteOrdersDialog
         open={bulkDeleteDialogOpen}
         onOpenChange={setBulkDeleteDialogOpen}
-        selectedOrderIds={Array.from(selectedOrderIds)}
+        orderIds={Array.from(selectedOrderIds)}
         onSuccess={clearSelection}
+      />
+
+      {/* Export Columns Dialog */}
+      <ExportColumnsDialog
+        open={exportDialogOpen}
+        onOpenChange={setExportDialogOpen}
+        columns={ORDER_COLUMNS}
+        data={ordersToExport}
+        filename="ordini"
+        onExport={handleExportCSV}
       />
     </div>
     </TooltipProvider>

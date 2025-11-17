@@ -1,19 +1,23 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { CheckCircle2, Clock, Euro } from "lucide-react";
+import { CheckCircle2, Clock, Euro, Download } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 import { useCommissions, useCommissionsSummary } from "@/hooks/useCommissions";
 import { CommissionStatusBadge } from "@/components/commissions/CommissionStatusBadge";
 import { LiquidateCommissionDialog } from "@/components/commissions/LiquidateCommissionDialog";
+import { ExportColumnsDialog } from "@/components/export/ExportColumnsDialog";
+import { exportCommissionsCustom, COMMISSION_COLUMNS } from "@/lib/exportUtils";
 import { useAuth } from "@/contexts/AuthContext";
 
 const Provvigioni = () => {
   const [statusFilter, setStatusFilter] = useState<"all" | "dovuta" | "liquidata">("all");
   const [periodFilter, setPeriodFilter] = useState<"all" | "mese" | "trimestre" | "anno">("all");
+  const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const { user, hasRole } = useAuth();
 
   const filters = {
@@ -45,6 +49,10 @@ const Provvigioni = () => {
       personalizzata: "Personalizzata",
     };
     return labels[base] || base;
+  };
+
+  const handleExportCSV = (selectedColumns: string[], data: any[]) => {
+    exportCommissionsCustom(data, selectedColumns);
   };
 
   return (
@@ -107,7 +115,17 @@ const Provvigioni = () => {
         <CardHeader>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <CardTitle>Elenco Provvigioni</CardTitle>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setExportDialogOpen(true)}
+                disabled={commissions.length === 0}
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Esporta CSV
+              </Button>
+              
               <Select 
                 value={statusFilter} 
                 onValueChange={(v) => setStatusFilter(v as "all" | "dovuta" | "liquidata")}

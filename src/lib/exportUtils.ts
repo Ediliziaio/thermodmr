@@ -159,3 +159,179 @@ export function exportCommerciali(commerciali: any[]) {
   const filename = `commerciali_${format(new Date(), "yyyy-MM-dd_HH-mm")}.csv`;
   downloadCSV(csv, filename);
 }
+
+/**
+ * Get nested value from object using dot notation
+ */
+function getNestedValue(obj: any, path: string): any {
+  return path.split('.').reduce((current, key) => current?.[key], obj);
+}
+
+/**
+ * Format value for export based on type
+ */
+function formatValueForExport(value: any, key: string): string {
+  if (value === null || value === undefined) return "";
+  
+  // Currency fields
+  if (key.includes("importo") || key.includes("fatturato") || key.includes("provvigion")) {
+    return formatCurrencyForExport(Number(value));
+  }
+  
+  // Date fields
+  if (key.includes("data") || key.includes("created_at") || key.includes("updated_at")) {
+    return formatDateForExport(value);
+  }
+  
+  // Percentage fields
+  if (key.includes("percentuale")) {
+    return `${Number(value).toFixed(2)}%`;
+  }
+  
+  // Status translations
+  if (key === "stato") {
+    const statusLabels: Record<string, string> = {
+      "da_confermare": "Da Confermare",
+      "da_pagare_acconto": "Da Pagare Acconto",
+      "in_lavorazione": "In Lavorazione",
+      "da_consegnare": "Da Consegnare",
+      "consegnato": "Consegnato",
+    };
+    return statusLabels[value] || value;
+  }
+
+  if (key === "stato_liquidazione") {
+    return value === "dovuta" ? "Dovuta" : "Liquidata";
+  }
+
+  if (key === "base_calcolo") {
+    const baseLabels: Record<string, string> = {
+      "totale": "Totale",
+      "margine": "Margine",
+      "personalizzata": "Personalizzata",
+    };
+    return baseLabels[value] || value;
+  }
+  
+  return String(value);
+}
+
+/**
+ * Column definitions for orders
+ */
+export const ORDER_COLUMNS = [
+  { key: "id", label: "ID Ordine", defaultSelected: true },
+  { key: "dealers.ragione_sociale", label: "Rivenditore", defaultSelected: true },
+  { key: "profiles.display_name", label: "Commerciale", defaultSelected: true },
+  { key: "stato", label: "Stato", defaultSelected: true },
+  { key: "data_inserimento", label: "Data Inserimento", defaultSelected: true },
+  { key: "data_consegna_prevista", label: "Consegna Prevista", defaultSelected: false },
+  { key: "importo_totale", label: "Importo Totale", defaultSelected: true },
+  { key: "importo_acconto", label: "Acconto", defaultSelected: false },
+  { key: "importo_pagato", label: "Importo Pagato", defaultSelected: true },
+  { key: "importo_da_pagare", label: "Da Pagare", defaultSelected: true },
+  { key: "percentuale_pagata", label: "% Pagata", defaultSelected: false },
+  { key: "cliente_finale", label: "Cliente Finale", defaultSelected: false },
+  { key: "note_interna", label: "Note Interna", defaultSelected: false },
+  { key: "note_rivenditore", label: "Note Rivenditore", defaultSelected: false },
+];
+
+/**
+ * Column definitions for payments
+ */
+export const PAYMENT_COLUMNS = [
+  { key: "id", label: "ID Pagamento", defaultSelected: true },
+  { key: "ordine_id", label: "ID Ordine", defaultSelected: true },
+  { key: "orders.dealers.ragione_sociale", label: "Rivenditore", defaultSelected: true },
+  { key: "tipo", label: "Tipo", defaultSelected: true },
+  { key: "metodo", label: "Metodo", defaultSelected: true },
+  { key: "importo", label: "Importo", defaultSelected: true },
+  { key: "data_pagamento", label: "Data Pagamento", defaultSelected: true },
+  { key: "riferimento", label: "Riferimento", defaultSelected: false },
+  { key: "created_at", label: "Data Creazione", defaultSelected: false },
+];
+
+/**
+ * Column definitions for commissions
+ */
+export const COMMISSION_COLUMNS = [
+  { key: "ordine_id", label: "ID Ordine", defaultSelected: true },
+  { key: "orders.dealers.ragione_sociale", label: "Rivenditore", defaultSelected: true },
+  { key: "profiles.display_name", label: "Commerciale", defaultSelected: true },
+  { key: "base_calcolo", label: "Base Calcolo", defaultSelected: true },
+  { key: "orders.importo_totale", label: "Importo Base", defaultSelected: true },
+  { key: "percentuale", label: "Percentuale %", defaultSelected: true },
+  { key: "importo_calcolato", label: "Provvigione €", defaultSelected: true },
+  { key: "stato_liquidazione", label: "Stato", defaultSelected: true },
+  { key: "data_liquidazione", label: "Data Liquidazione", defaultSelected: false },
+  { key: "created_at", label: "Data Creazione", defaultSelected: false },
+];
+
+/**
+ * Export orders with custom columns
+ */
+export function exportOrdersCustom(orders: any[], selectedColumns: string[]) {
+  const data = orders.map(o => {
+    const row: Record<string, string> = {};
+    selectedColumns.forEach(col => {
+      const colDef = ORDER_COLUMNS.find(c => c.key === col);
+      if (!colDef) return;
+      
+      let value: any;
+      if (col === "cliente_finale") {
+        value = o.clients ? `${o.clients.nome} ${o.clients.cognome}` : "";
+      } else {
+        value = getNestedValue(o, col);
+      }
+      
+      row[colDef.label] = formatValueForExport(value, col);
+    });
+    return row;
+  });
+
+  const csv = arrayToCSV(data);
+  const filename = `ordini_${format(new Date(), "yyyy-MM-dd_HH-mm")}.csv`;
+  downloadCSV(csv, filename);
+}
+
+/**
+ * Export payments with custom columns
+ */
+export function exportPaymentsCustom(payments: any[], selectedColumns: string[]) {
+  const data = payments.map(p => {
+    const row: Record<string, string> = {};
+    selectedColumns.forEach(col => {
+      const colDef = PAYMENT_COLUMNS.find(c => c.key === col);
+      if (!colDef) return;
+      
+      const value = getNestedValue(p, col);
+      row[colDef.label] = formatValueForExport(value, col);
+    });
+    return row;
+  });
+
+  const csv = arrayToCSV(data);
+  const filename = `pagamenti_${format(new Date(), "yyyy-MM-dd_HH-mm")}.csv`;
+  downloadCSV(csv, filename);
+}
+
+/**
+ * Export commissions with custom columns
+ */
+export function exportCommissionsCustom(commissions: any[], selectedColumns: string[]) {
+  const data = commissions.map(c => {
+    const row: Record<string, string> = {};
+    selectedColumns.forEach(col => {
+      const colDef = COMMISSION_COLUMNS.find(colDef => colDef.key === col);
+      if (!colDef) return;
+      
+      const value = getNestedValue(c, col);
+      row[colDef.label] = formatValueForExport(value, col);
+    });
+    return row;
+  });
+
+  const csv = arrayToCSV(data);
+  const filename = `provvigioni_${format(new Date(), "yyyy-MM-dd_HH-mm")}.csv`;
+  downloadCSV(csv, filename);
+}
