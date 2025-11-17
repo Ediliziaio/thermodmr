@@ -20,6 +20,7 @@ import { PaymentsSection } from "@/components/orders/PaymentsSection";
 import { AttachmentsSection } from "@/components/orders/AttachmentsSection";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { PaymentTimelineChart } from "@/components/analytics/charts/PaymentTimelineChart";
 import {
   useOrderById,
   useOrderLines,
@@ -278,6 +279,15 @@ export default function OrderDetail() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Payment Timeline Chart */}
+      {orderPayments && orderPayments.length > 0 && (
+        <PaymentTimelineChart
+          payments={orderPayments}
+          totalAmount={order.importo_totale}
+          title="Timeline Pagamenti"
+        />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">

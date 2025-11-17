@@ -14,6 +14,8 @@ import { formatCurrency, getStatusColor, getStatusLabel } from "@/lib/utils";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 import { useNavigate } from "react-router-dom";
+import { RevenueTimelineChart } from "@/components/analytics/charts/RevenueTimelineChart";
+import { OrdersDistributionChart } from "@/components/analytics/charts/OrdersDistributionChart";
 
 export default function DealerDetail() {
   const { id } = useParams<{ id: string }>();
@@ -167,6 +169,7 @@ export default function DealerDetail() {
       <Tabs defaultValue="info" className="space-y-4">
         <TabsList>
           <TabsTrigger value="info">Informazioni</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="orders">Ordini ({dealerOrders.length})</TabsTrigger>
           <TabsTrigger value="stats">Statistiche</TabsTrigger>
         </TabsList>
@@ -241,6 +244,23 @@ export default function DealerDetail() {
               )}
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Tab: Analytics */}
+        <TabsContent value="analytics" className="space-y-4">
+          <div className="grid gap-4">
+            <div className="grid gap-4 md:grid-cols-2">
+              <RevenueTimelineChart 
+                orders={dealerOrders}
+                months={6}
+                title="Trend Fatturato (6 Mesi)"
+              />
+              <OrdersDistributionChart 
+                orders={dealerOrders}
+                title="Distribuzione Ordini per Stato"
+              />
+            </div>
+          </div>
         </TabsContent>
 
         {/* Tab: Ordini */}
