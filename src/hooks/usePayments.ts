@@ -36,7 +36,9 @@ export const useCreatePayment = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
+      queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
       queryClient.invalidateQueries({ queryKey: ["orderPayments"] });
+      queryClient.invalidateQueries({ queryKey: ["allPayments"] });
       toast({
         title: "Pagamento registrato",
         description: "Il pagamento è stato registrato con successo.",
@@ -66,7 +68,9 @@ export const useDeletePayment = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
+      queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
       queryClient.invalidateQueries({ queryKey: ["orderPayments"] });
+      queryClient.invalidateQueries({ queryKey: ["allPayments"] });
       toast({
         title: "Pagamento eliminato",
         description: "Il pagamento è stato eliminato con successo.",
@@ -76,6 +80,47 @@ export const useDeletePayment = () => {
       toast({
         title: "Errore",
         description: `Impossibile eliminare il pagamento: ${error.message}`,
+        variant: "destructive",
+      });
+    },
+  });
+};
+
+export const useBulkDeletePayments = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (paymentIds: string[]) => {
+      const deletions = paymentIds.map(id =>
+        supabase.from("payments").delete().eq("id", id)
+      );
+
+      const results = await Promise.all(deletions);
+      const errors = results.filter(r => r.error);
+
+      if (errors.length > 0) {
+        throw new Error(`${errors.length} pagamenti non eliminati`);
+      }
+
+      return {
+        success: results.length - errors.length,
+        failed: errors.length,
+      };
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["allPayments"] });
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["orderPayments"] });
+      toast({
+        title: "Eliminazione completata",
+        description: `${data.success} pagamenti eliminati con successo.`,
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Errore",
+        description: error.message,
         variant: "destructive",
       });
     },
