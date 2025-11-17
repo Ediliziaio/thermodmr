@@ -588,9 +588,9 @@ export default function Orders() {
             </div>
           )}
         </CardContent>
-        </Card>
-        </>
-      )}
+      </Card>
+      </>
+    )}
 
       {/* Floating Action Bar */}
       {selectedOrderIds.size > 0 && (
