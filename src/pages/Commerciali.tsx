@@ -1,11 +1,16 @@
 import { useState, useMemo, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Users, TrendingUp, Euro, Award, Loader2 } from "lucide-react";
+import { Users, TrendingUp, Euro, Award, Loader2, Plus } from "lucide-react";
 import { useCommercialiInfinite } from "@/hooks/useCommercialiInfinite";
 import { CommercialeCard } from "@/components/commerciali/CommercialeCard";
 import { NewCommercialeDialog } from "@/components/commerciali/NewCommercialeDialog";
 import { CommercialFilters } from "@/components/commerciali/CommercialFilters";
+import { MobileCommercialCard } from "@/components/commerciali/MobileCommercialCard";
+import { MobileCommercialFilters } from "@/components/commerciali/MobileCommercialFilters";
 import { useInView } from "react-intersection-observer";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat("it-IT", {
@@ -15,9 +20,11 @@ const formatCurrency = (value: number) => {
 };
 
 export default function Commerciali() {
+  const isMobile = useIsMobile();
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useCommercialiInfinite();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
+  const [newDialogOpen, setNewDialogOpen] = useState(false);
   const { ref, inView } = useInView();
 
   useEffect(() => {
@@ -75,6 +82,139 @@ export default function Commerciali() {
 
   const totalCount = data?.pages[0]?.totalCount || 0;
 
+  // Mobile view
+  if (isMobile) {
+    return (
+      <div className="space-y-4 pb-20">
+        <div className="flex items-center justify-between px-4 pt-4">
+          <h1 className="text-2xl font-bold">Commerciali</h1>
+        </div>
+
+        {/* Mobile Stats Cards - Horizontal Scroll */}
+        <div className="flex gap-3 overflow-x-auto px-4 pb-2 snap-x snap-mandatory scrollbar-hide">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="min-w-[160px] snap-start"
+          >
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Users className="h-5 w-5 text-muted-foreground" />
+                  <p className="text-xs font-medium text-muted-foreground">Totale</p>
+                </div>
+                <p className="text-2xl font-bold">{stats.totalCommerciali}</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 }}
+            className="min-w-[160px] snap-start"
+          >
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <TrendingUp className="h-5 w-5 text-green-500" />
+                  <p className="text-xs font-medium text-muted-foreground">Attivi</p>
+                </div>
+                <p className="text-2xl font-bold">{stats.activeCommerciali}</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+            className="min-w-[180px] snap-start"
+          >
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Euro className="h-5 w-5 text-blue-500" />
+                  <p className="text-xs font-medium text-muted-foreground">Fatturato</p>
+                </div>
+                <p className="text-lg font-bold">{formatCurrency(stats.totalRevenue)}</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+            className="min-w-[180px] snap-start"
+          >
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Award className="h-5 w-5 text-orange-500" />
+                  <p className="text-xs font-medium text-muted-foreground">Provvigioni</p>
+                </div>
+                <p className="text-lg font-bold">{formatCurrency(stats.totalCommissions)}</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+
+        {/* Mobile Filters */}
+        <div className="px-4">
+          <MobileCommercialFilters
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            statusFilter={statusFilter}
+            onStatusChange={setStatusFilter}
+            resultsCount={filteredCommerciali.length}
+          />
+        </div>
+
+        {/* Mobile Commercial Cards */}
+        <div className="space-y-3 px-4">
+          {filteredCommerciali.map((commerciale, index) => (
+            <motion.div
+              key={commerciale.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+            >
+              <MobileCommercialCard
+                commercial={commerciale}
+                onEdit={(id) => {
+                  console.log("Edit commercial:", id);
+                }}
+                onDelete={(id) => {
+                  console.log("Delete commercial:", id);
+                }}
+              />
+            </motion.div>
+          ))}
+
+          {/* Infinite Scroll Trigger */}
+          {hasNextPage && (
+            <div ref={ref} className="flex justify-center py-4">
+              {isFetchingNextPage && <Loader2 className="h-6 w-6 animate-spin" />}
+            </div>
+          )}
+        </div>
+
+        {/* FAB for New Commercial */}
+        <NewCommercialeDialog open={newDialogOpen} onOpenChange={setNewDialogOpen}>
+          <Button
+            size="lg"
+            className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50"
+            onClick={() => setNewDialogOpen(true)}
+          >
+            <Plus className="h-6 w-6" />
+          </Button>
+        </NewCommercialeDialog>
+      </div>
+    );
+  }
+
+  // Desktop view
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">

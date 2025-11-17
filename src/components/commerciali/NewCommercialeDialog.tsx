@@ -13,8 +13,16 @@ import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
 import { useCreateCommerciale } from "@/hooks/useCommerciali";
 
-export function NewCommercialeDialog() {
-  const [isOpen, setIsOpen] = useState(false);
+interface NewCommercialeDialogProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  children?: React.ReactNode;
+}
+
+export function NewCommercialeDialog({ open, onOpenChange, children }: NewCommercialeDialogProps = {}) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isOpen = open !== undefined ? open : internalOpen;
+  const setIsOpen = onOpenChange || setInternalOpen;
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -35,12 +43,16 @@ export function NewCommercialeDialog() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Nuovo Commerciale
-        </Button>
-      </DialogTrigger>
+      {children ? (
+        <DialogTrigger asChild>{children}</DialogTrigger>
+      ) : (
+        <DialogTrigger asChild>
+          <Button>
+            <Plus className="h-4 w-4 mr-2" />
+            Nuovo Commerciale
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Crea Nuovo Commerciale</DialogTitle>
