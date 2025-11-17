@@ -3,9 +3,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import type { Tables, TablesInsert } from "@/integrations/supabase/types";
 
+// DealerWithStats usa i campi della view dealers_with_stats
 export interface DealerWithStats extends Tables<"dealers"> {
-  ordersCount?: number;
-  totalRevenue?: number;
+  orders_count?: number;
+  total_revenue?: number;
 }
 
 export const useCreateDealer = () => {
