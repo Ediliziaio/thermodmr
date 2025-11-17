@@ -67,8 +67,16 @@ const calculateLineTotal = (line: z.infer<typeof orderLineSchema>) => {
   return total;
 };
 
-export function NewOrderDialog() {
-  const [open, setOpen] = useState(false);
+interface NewOrderDialogProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export function NewOrderDialog({ open: controlledOpen, onOpenChange: controlledOnOpenChange }: NewOrderDialogProps = {}) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
+  const setOpen = controlledOnOpenChange || setInternalOpen;
+  
   const { data: dealersData } = useDealersInfinite();
   const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
   const createOrderMutation = useCreateOrder();
