@@ -206,6 +206,10 @@ export default function Orders() {
         }
       }
 
+      return true; // Passa tutti i filtri
+    });
+  }, [allOrders, filters]);
+
   const handleExportCSV = (selectedColumns: string[], data: any[]) => {
     exportOrdersCustom(data, selectedColumns);
   };
@@ -407,8 +411,8 @@ export default function Orders() {
             dealers={dealers || []}
           />
 
-      {/* Orders Table */}
-      <Card>
+          {/* Orders Table */}
+          <Card>
         <CardHeader>
           <CardTitle>Lista Ordini</CardTitle>
         </CardHeader>
@@ -588,94 +592,94 @@ export default function Orders() {
             </div>
           )}
         </CardContent>
-      </Card>
-      </>
-    )}
-
-      {/* Floating Action Bar */}
-      {selectedOrderIds.size > 0 && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-5">
-          <Card className="shadow-lg border-2">
-            <CardContent className="flex items-center gap-4 p-4">
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="text-sm">
-                  {selectedOrderIds.size} {selectedOrderIds.size === 1 ? 'ordine selezionato' : 'ordini selezionati'}
-                </Badge>
-              </div>
-              
-              <div className="h-6 w-px bg-border" />
-              
-              <div className="flex items-center gap-2">
-                {userRole === 'super_admin' && (
-                  <>
-                    <Button
-                      variant="default"
-                      size="sm"
-                      onClick={() => setBulkStatusDialogOpen(true)}
-                    >
-                      <RefreshCw className="h-4 w-4 mr-2" />
-                      Aggiorna Stato
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => setBulkDeleteDialogOpen(true)}
-                    >
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      Elimina
-                    </Button>
-                  </>
-                )}
-                
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setExportDialogOpen(true)}
-                  disabled={filteredOrders.length === 0}
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  Esporta CSV {selectedOrderIds.size > 0 && `(${selectedOrderIds.size})`}
-                </Button>
-                
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={clearSelection}
-                >
-                  <X className="h-4 w-4 mr-2" />
-                  Annulla
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        </Card>
+        </>
       )}
 
-      {/* Bulk Update Status Dialog */}
-      <BulkUpdateStatusDialog
-        open={bulkStatusDialogOpen}
-        onOpenChange={setBulkStatusDialogOpen}
-        selectedOrderIds={Array.from(selectedOrderIds)}
-        onSuccess={clearSelection}
-      />
+    {/* Floating Action Bar */}
+    {selectedOrderIds.size > 0 && (
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-5">
+        <Card className="shadow-lg border-2">
+          <CardContent className="flex items-center gap-4 p-4">
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" className="text-sm">
+                {selectedOrderIds.size} {selectedOrderIds.size === 1 ? 'ordine selezionato' : 'ordini selezionati'}
+              </Badge>
+            </div>
+            
+            <div className="h-6 w-px bg-border" />
+            
+            <div className="flex items-center gap-2">
+              {userRole === 'super_admin' && (
+                <>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => setBulkStatusDialogOpen(true)}
+                  >
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Aggiorna Stato
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => setBulkDeleteDialogOpen(true)}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Elimina
+                  </Button>
+                </>
+              )}
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setExportDialogOpen(true)}
+                disabled={filteredOrders.length === 0}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Esporta CSV {selectedOrderIds.size > 0 && `(${selectedOrderIds.size})`}
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={clearSelection}
+              >
+                <X className="h-4 w-4 mr-2" />
+                Annulla
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )}
 
-      {/* Bulk Delete Orders Dialog */}
-      <BulkDeleteOrdersDialog
-        open={bulkDeleteDialogOpen}
-        onOpenChange={setBulkDeleteDialogOpen}
-        orderIds={Array.from(selectedOrderIds)}
-        onSuccess={clearSelection}
-      />
+    {/* Bulk Update Status Dialog */}
+    <BulkUpdateStatusDialog
+      open={bulkStatusDialogOpen}
+      onOpenChange={setBulkStatusDialogOpen}
+      selectedOrderIds={Array.from(selectedOrderIds)}
+      onSuccess={clearSelection}
+    />
 
-      {/* Export Columns Dialog */}
-      <ExportColumnsDialog
-        open={exportDialogOpen}
-        onOpenChange={setExportDialogOpen}
-        columns={ORDER_COLUMNS}
-        data={ordersToExport}
-        filename="ordini"
-        onExport={handleExportCSV}
-      />
+    {/* Bulk Delete Orders Dialog */}
+    <BulkDeleteOrdersDialog
+      open={bulkDeleteDialogOpen}
+      onOpenChange={setBulkDeleteDialogOpen}
+      selectedOrderIds={Array.from(selectedOrderIds)}
+      onSuccess={clearSelection}
+    />
+
+    {/* Export Columns Dialog */}
+    <ExportColumnsDialog
+      open={exportDialogOpen}
+      onOpenChange={setExportDialogOpen}
+      columns={ORDER_COLUMNS}
+      data={ordersToExport}
+      filename="ordini"
+      onExport={handleExportCSV}
+    />
     </div>
     </TooltipProvider>
   );
