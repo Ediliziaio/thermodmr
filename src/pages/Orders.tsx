@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Loader2 } from "lucide-react";
+import { Eye, Loader2, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useOrdersInfinite } from "@/hooks/useOrdersInfinite";
 import { NewOrderDialog } from "@/components/orders/NewOrderDialog";
@@ -9,7 +9,10 @@ import { OrderFilters, OrderFiltersState } from "@/components/orders/OrderFilter
 import { useDealersInfinite } from "@/hooks/useDealersInfinite";
 import { useMemo, useState, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-import { formatCurrency, getStatusColor, getStatusLabel } from "@/lib/utils";
+import { formatCurrency, getStatusColor, getStatusLabel, cn } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { supabase } from "@/integrations/supabase/client";
+import { useQueryClient } from "@tanstack/react-query";
 
 const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat("it-IT", {
@@ -21,11 +24,29 @@ const formatDate = (date: Date) => {
 
 export default function Orders() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useOrdersInfinite();
   const { data: dealersData } = useDealersInfinite();
   const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
   const [filters, setFilters] = useState<OrderFiltersState>({});
   const { ref, inView } = useInView();
+
+  // Real-time: Invalida cache ordini quando cambiano i pagamenti
+  useEffect(() => {
+    const channel = supabase
+      .channel('payments-changes')
+      .on('postgres_changes', 
+        { event: '*', schema: 'public', table: 'payments' },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ['orders-infinite'] });
+        }
+      )
+      .subscribe();
+      
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
 
   // Carica automaticamente la prossima pagina quando l'utente scorre fino in fondo
   useEffect(() => {
@@ -98,9 +119,50 @@ export default function Orders() {
         }
       }
 
+      // Filtro per stato pagamento
+      if (filters.statoPagamento) {
+        if (filters.statoPagamento === 'pagato' && order.importo_da_pagare > 0) {
+          return false;
+        }
+        if (filters.statoPagamento === 'non_pagato' && order.importo_pagato > 0) {
+          return false;
+        }
+        if (filters.statoPagamento === 'parziale' && (order.importo_pagato === 0 || order.importo_da_pagare === 0)) {
+          return false;
+        }
+      }
+
+      // Quick filters
+      if (filters.quickFilter === 'saldo' && order.importo_da_pagare === 0) {
+        return false;
+      }
+      if (filters.quickFilter === 'ritardo') {
+        if (!order.data_consegna_prevista || new Date(order.data_consegna_prevista) >= new Date()) {
+          return false;
+        }
+      }
+      if (filters.quickFilter === 'urgenti') {
+        const isOverdue = order.data_consegna_prevista && new Date(order.data_consegna_prevista) < new Date();
+        const hasBalance = order.importo_da_pagare > 0;
+        const isNotDelivered = order.stato !== 'consegnato';
+        if (!(isOverdue || (hasBalance && isNotDelivered))) {
+          return false;
+        }
+      }
+
       return true;
     });
   }, [allOrders, filters]);
+
+  // Statistiche per l'header
+  const stats = useMemo(() => {
+    const totalOrders = filteredOrders.length;
+    const totalValue = filteredOrders.reduce((sum, o) => sum + o.importo_totale, 0);
+    const totalToCollect = filteredOrders.reduce((sum, o) => sum + o.importo_da_pagare, 0);
+    const ordersWithBalance = filteredOrders.filter(o => o.importo_da_pagare > 0).length;
+    
+    return { totalOrders, totalValue, totalToCollect, ordersWithBalance };
+  }, [filteredOrders]);
 
   if (isLoading && !data) {
     return (
@@ -149,6 +211,59 @@ export default function Orders() {
         <NewOrderDialog />
       </div>
 
+      {/* Statistiche Header */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Totale Ordini
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">{stats.totalOrders}</p>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Valore Totale
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">
+              {formatCurrency(stats.totalValue)}
+            </p>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Da Incassare
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold text-orange-600">
+              {formatCurrency(stats.totalToCollect)}
+            </p>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Ordini con Saldo
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold text-red-600">
+              {stats.ordersWithBalance}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Filtri */}
       <OrderFilters
         filters={filters}
@@ -165,7 +280,7 @@ export default function Orders() {
           {filteredOrders.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead>
+                <thead className="sticky top-0 bg-background z-10">
                   <tr className="border-b text-left text-sm font-medium text-muted-foreground">
                     <th className="pb-3 pr-4">ID Ordine</th>
                     <th className="pb-3 pr-4">Rivenditore</th>
@@ -174,58 +289,125 @@ export default function Orders() {
                     <th className="pb-3 pr-4">Data Inserimento</th>
                     <th className="pb-3 pr-4">Importo Totale</th>
                     <th className="pb-3 pr-4">Acconto</th>
+                    <th className="pb-3 pr-4">Importo da Pagare</th>
                     <th className="pb-3 pr-4">Consegna Prevista</th>
                     <th className="pb-3">Azioni</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredOrders.map((order) => (
-                    <tr key={order.id} className="border-b last:border-0">
-                      <td className="py-4 pr-4">
-                        <p className="font-medium">{order.id}</p>
-                      </td>
-                      <td className="py-4 pr-4">
-                        <p className="text-sm">{order.dealers?.ragione_sociale || "-"}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {order.dealers?.email || ""}
-                        </p>
-                      </td>
-                      <td className="py-4 pr-4 text-sm">
-                        {order.clients 
-                          ? `${order.clients.nome} ${order.clients.cognome}` 
-                          : "-"}
-                      </td>
-                      <td className="py-4 pr-4">
-                        <Badge variant="outline" className={getStatusColor(order.stato)}>
-                          {getStatusLabel(order.stato)}
-                        </Badge>
-                      </td>
-                      <td className="py-4 pr-4 text-sm">
-                        {formatDate(new Date(order.data_inserimento))}
-                      </td>
-                      <td className="py-4 pr-4 font-medium">
-                        {formatCurrency(order.importo_totale)}
-                      </td>
-                      <td className="py-4 pr-4 text-sm">
-                        {formatCurrency(order.importo_acconto)}
-                      </td>
-                      <td className="py-4 pr-4 text-sm">
-                        {order.data_consegna_prevista
-                          ? formatDate(new Date(order.data_consegna_prevista))
-                          : "N/A"}
-                      </td>
-                      <td className="py-4">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => navigate(`/ordini/${order.id}`)}
-                        >
-                          <Eye className="h-4 w-4 mr-2" />
-                          Dettagli
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
+                  <TooltipProvider>
+                    {filteredOrders.map((order) => {
+                      const isOverdue = order.data_consegna_prevista && new Date(order.data_consegna_prevista) < new Date();
+                      const hasUrgentBalance = order.importo_da_pagare > 0 && order.stato !== 'consegnato';
+                      
+                      return (
+                        <tr key={order.id} className="border-b last:border-0">
+                          <td className="py-4 pr-4">
+                            <p className="font-medium">{order.id}</p>
+                          </td>
+                          <td className="py-4 pr-4">
+                            <p className="text-sm">{order.dealers?.ragione_sociale || "-"}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {order.dealers?.email || ""}
+                            </p>
+                          </td>
+                          <td className="py-4 pr-4 text-sm">
+                            {order.clients 
+                              ? `${order.clients.nome} ${order.clients.cognome}` 
+                              : "-"}
+                          </td>
+                          <td className="py-4 pr-4">
+                            <div className="flex items-center gap-2">
+                              <Badge variant="outline" className={getStatusColor(order.stato)}>
+                                {getStatusLabel(order.stato)}
+                              </Badge>
+                              {hasUrgentBalance && (
+                                <Badge variant="destructive" className="text-xs">
+                                  <AlertCircle className="h-3 w-3 mr-1" />
+                                  Saldo
+                                </Badge>
+                              )}
+                            </div>
+                          </td>
+                          <td className="py-4 pr-4 text-sm">
+                            {formatDate(new Date(order.data_inserimento))}
+                          </td>
+                          <td className="py-4 pr-4 font-medium">
+                            {formatCurrency(order.importo_totale)}
+                          </td>
+                          <td className="py-4 pr-4 text-sm">
+                            {formatCurrency(order.importo_acconto)}
+                          </td>
+                          <td className="py-4 pr-4">
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <div className="space-y-1 cursor-help">
+                                  <p className={cn(
+                                    "font-medium text-sm",
+                                    order.importo_da_pagare === 0 
+                                      ? "text-green-600" 
+                                      : order.importo_da_pagare > order.importo_totale * 0.5 
+                                        ? "text-red-600" 
+                                        : "text-orange-600"
+                                  )}>
+                                    {formatCurrency(order.importo_da_pagare)}
+                                  </p>
+                                  
+                                  <div className="w-full bg-muted rounded-full h-1.5">
+                                    <div 
+                                      className={cn(
+                                        "h-1.5 rounded-full transition-all",
+                                        order.percentuale_pagata === 100 
+                                          ? "bg-green-500" 
+                                          : order.percentuale_pagata > 50 
+                                            ? "bg-orange-500" 
+                                            : "bg-red-500"
+                                      )}
+                                      style={{ width: `${order.percentuale_pagata}%` }}
+                                    />
+                                  </div>
+                                  
+                                  <p className="text-xs text-muted-foreground">
+                                    {order.numero_pagamenti} pag. • {order.percentuale_pagata.toFixed(0)}%
+                                  </p>
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <div className="space-y-1">
+                                  <p className="font-medium">Dettaglio Pagamenti</p>
+                                  <p className="text-sm">Totale: {formatCurrency(order.importo_totale)}</p>
+                                  <p className="text-sm">Pagato: {formatCurrency(order.importo_pagato)}</p>
+                                  <p className="text-sm">Mancante: {formatCurrency(order.importo_da_pagare)}</p>
+                                  {order.data_ultimo_pagamento && (
+                                    <p className="text-xs text-muted-foreground">
+                                      Ultimo: {formatDate(new Date(order.data_ultimo_pagamento))}
+                                    </p>
+                                  )}
+                                </div>
+                              </TooltipContent>
+                            </Tooltip>
+                          </td>
+                          <td className="py-4 pr-4 text-sm">
+                            <span className={cn(isOverdue && "text-red-600 font-medium")}>
+                              {order.data_consegna_prevista
+                                ? formatDate(new Date(order.data_consegna_prevista))
+                                : "N/A"}
+                            </span>
+                          </td>
+                          <td className="py-4">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => navigate(`/ordini/${order.id}`)}
+                            >
+                              <Eye className="h-4 w-4 mr-2" />
+                              Dettagli
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </TooltipProvider>
                 </tbody>
               </table>
             </div>

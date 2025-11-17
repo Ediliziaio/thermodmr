@@ -54,6 +54,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "attachments_ordine_id_fkey"
+            columns: ["ordine_id"]
+            isOneToOne: false
+            referencedRelation: "orders_with_payment_stats"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "attachments_uploaded_by_user_id_fkey"
             columns: ["uploaded_by_user_id"]
             isOneToOne: false
@@ -228,6 +235,13 @@ export type Database = {
             columns: ["ordine_id"]
             isOneToOne: false
             referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissions_ordine_id_fkey"
+            columns: ["ordine_id"]
+            isOneToOne: false
+            referencedRelation: "orders_with_payment_stats"
             referencedColumns: ["id"]
           },
         ]
@@ -426,6 +440,13 @@ export type Database = {
             referencedRelation: "orders"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "order_lines_ordine_id_fkey"
+            columns: ["ordine_id"]
+            isOneToOne: false
+            referencedRelation: "orders_with_payment_stats"
+            referencedColumns: ["id"]
+          },
         ]
       }
       orders: {
@@ -569,6 +590,13 @@ export type Database = {
             columns: ["ordine_id"]
             isOneToOne: false
             referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_ordine_id_fkey"
+            columns: ["ordine_id"]
+            isOneToOne: false
+            referencedRelation: "orders_with_payment_stats"
             referencedColumns: ["id"]
           },
         ]
@@ -757,6 +785,80 @@ export type Database = {
             columns: ["commerciale_owner_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders_with_payment_stats: {
+        Row: {
+          cliente_finale_id: string | null
+          commerciale_id: string | null
+          created_at: string | null
+          creato_da_user_id: string | null
+          data_consegna_prevista: string | null
+          data_inserimento: string | null
+          data_ultimo_pagamento: string | null
+          dealer_id: string | null
+          id: string | null
+          importo_acconto: number | null
+          importo_da_pagare: number | null
+          importo_pagato: number | null
+          importo_totale: number | null
+          note_interna: string | null
+          note_rivenditore: string | null
+          numero_pagamenti: number | null
+          percentuale_pagata: number | null
+          stato: Database["public"]["Enums"]["order_status"] | null
+          updated_at: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_cliente_finale_id_fkey"
+            columns: ["cliente_finale_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_commerciale_id_fkey"
+            columns: ["commerciale_id"]
+            isOneToOne: false
+            referencedRelation: "commerciali_with_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_commerciale_id_fkey"
+            columns: ["commerciale_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_creato_da_user_id_fkey"
+            columns: ["creato_da_user_id"]
+            isOneToOne: false
+            referencedRelation: "commerciali_with_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_creato_da_user_id_fkey"
+            columns: ["creato_da_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_dealer_id_fkey"
+            columns: ["dealer_id"]
+            isOneToOne: false
+            referencedRelation: "dealers_with_stats"
             referencedColumns: ["id"]
           },
         ]

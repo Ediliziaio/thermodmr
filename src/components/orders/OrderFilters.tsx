@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import { X, Filter } from "lucide-react";
+import { X, Filter, AlertCircle, Clock, Flame } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 export interface OrderFiltersState {
@@ -21,6 +21,8 @@ export interface OrderFiltersState {
   importoMin?: number;
   importoMax?: number;
   searchTerm?: string;
+  statoPagamento?: string;
+  quickFilter?: string;
 }
 
 interface OrderFiltersProps {
@@ -43,26 +45,57 @@ export function OrderFilters({ filters, onFiltersChange, dealers }: OrderFilters
   const hasActiveFilters = Object.values(filters).some((value) => value !== undefined);
 
   return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <div className="flex items-center gap-2 mb-4">
-        <CollapsibleTrigger asChild>
-          <Button variant="outline" size="sm">
-            <Filter className="h-4 w-4 mr-2" />
-            Filtri
-            {hasActiveFilters && (
-              <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary text-primary-foreground">
-                {Object.values(filters).filter((v) => v !== undefined).length}
-              </span>
-            )}
-          </Button>
-        </CollapsibleTrigger>
-        {hasActiveFilters && (
-          <Button variant="ghost" size="sm" onClick={clearFilters}>
-            <X className="h-4 w-4 mr-2" />
-            Cancella filtri
-          </Button>
-        )}
+    <div className="space-y-4">
+      {/* Quick Filters */}
+      <div className="flex flex-wrap gap-2">
+        <Button 
+          variant={filters.quickFilter === 'saldo' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => handleFilterChange('quickFilter', filters.quickFilter === 'saldo' ? undefined : 'saldo')}
+        >
+          <AlertCircle className="h-4 w-4 mr-2" />
+          Con Saldo Scoperto
+        </Button>
+        
+        <Button 
+          variant={filters.quickFilter === 'ritardo' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => handleFilterChange('quickFilter', filters.quickFilter === 'ritardo' ? undefined : 'ritardo')}
+        >
+          <Clock className="h-4 w-4 mr-2" />
+          Consegna in Ritardo
+        </Button>
+        
+        <Button 
+          variant={filters.quickFilter === 'urgenti' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => handleFilterChange('quickFilter', filters.quickFilter === 'urgenti' ? undefined : 'urgenti')}
+        >
+          <Flame className="h-4 w-4 mr-2" />
+          Urgenti
+        </Button>
       </div>
+
+      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+        <div className="flex items-center gap-2">
+          <CollapsibleTrigger asChild>
+            <Button variant="outline" size="sm">
+              <Filter className="h-4 w-4 mr-2" />
+              Filtri Avanzati
+              {hasActiveFilters && (
+                <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary text-primary-foreground">
+                  {Object.values(filters).filter((v) => v !== undefined).length}
+                </span>
+              )}
+            </Button>
+          </CollapsibleTrigger>
+          {hasActiveFilters && (
+            <Button variant="ghost" size="sm" onClick={clearFilters}>
+              <X className="h-4 w-4 mr-2" />
+              Cancella filtri
+            </Button>
+          )}
+        </div>
 
       <CollapsibleContent>
         <Card className="mb-4">
@@ -98,6 +131,27 @@ export function OrderFilters({ filters, onFiltersChange, dealers }: OrderFilters
                     <SelectItem value="in_lavorazione">In Lavorazione</SelectItem>
                     <SelectItem value="da_consegnare">Da Consegnare</SelectItem>
                     <SelectItem value="consegnato">Consegnato</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Stato Pagamento */}
+              <div className="space-y-2">
+                <Label htmlFor="statoPagamento">Stato Pagamento</Label>
+                <Select
+                  value={filters.statoPagamento || "all"}
+                  onValueChange={(value) =>
+                    handleFilterChange("statoPagamento", value === "all" ? undefined : value)
+                  }
+                >
+                  <SelectTrigger id="statoPagamento">
+                    <SelectValue placeholder="Tutti" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Tutti</SelectItem>
+                    <SelectItem value="pagato">Pagato Completamente</SelectItem>
+                    <SelectItem value="parziale">Pagamento Parziale</SelectItem>
+                    <SelectItem value="non_pagato">Non Pagato</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -185,5 +239,6 @@ export function OrderFilters({ filters, onFiltersChange, dealers }: OrderFilters
         </Card>
       </CollapsibleContent>
     </Collapsible>
+    </div>
   );
 }
