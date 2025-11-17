@@ -25,11 +25,12 @@ export const useRealtimeSync = () => {
           // Invalida queries ordini
           queryClient.invalidateQueries({ queryKey: ["orders"] });
           queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
+          queryClient.invalidateQueries({ queryKey: ["order"] }); // Dettaglio ordine
           
           // Invalida queries pagamenti (perché dipendono da orders.stato, orders.dealers)
           queryClient.invalidateQueries({ queryKey: ["allPayments"] });
           queryClient.invalidateQueries({ queryKey: ["payments-infinite"] });
-          queryClient.invalidateQueries({ queryKey: ["orderPayments"] });
+          queryClient.invalidateQueries({ queryKey: ["order-payments"] }); // Fix: era orderPayments
           
           // Invalida dashboard
           queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
@@ -48,11 +49,12 @@ export const useRealtimeSync = () => {
           // Invalida queries pagamenti
           queryClient.invalidateQueries({ queryKey: ["allPayments"] });
           queryClient.invalidateQueries({ queryKey: ["payments-infinite"] });
-          queryClient.invalidateQueries({ queryKey: ["orderPayments"] });
+          queryClient.invalidateQueries({ queryKey: ["order-payments"] }); // Fix: era orderPayments
           
           // Invalida queries ordini (perché cambiano importi pagati/da pagare)
           queryClient.invalidateQueries({ queryKey: ["orders"] });
           queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
+          queryClient.invalidateQueries({ queryKey: ["order"] }); // Dettaglio ordine
           
           // Invalida dashboard
           queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
