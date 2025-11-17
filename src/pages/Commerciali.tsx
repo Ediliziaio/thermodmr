@@ -1,16 +1,20 @@
 import { useState, useMemo, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Users, TrendingUp, Euro, Award, Loader2, Plus } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Users, TrendingUp, Euro, Award, Loader2, Plus, Trash2, Download, X } from "lucide-react";
 import { useCommercialiInfinite } from "@/hooks/useCommercialiInfinite";
 import { CommercialeCard } from "@/components/commerciali/CommercialeCard";
 import { NewCommercialeDialog } from "@/components/commerciali/NewCommercialeDialog";
 import { CommercialFilters } from "@/components/commerciali/CommercialFilters";
 import { MobileCommercialCard } from "@/components/commerciali/MobileCommercialCard";
 import { MobileCommercialFilters } from "@/components/commerciali/MobileCommercialFilters";
+import { BulkDeleteCommercialiDialog } from "@/components/commerciali/BulkDeleteCommercialiDialog";
 import { useInView } from "react-intersection-observer";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { exportCommerciali } from "@/lib/exportUtils";
+import { toast } from "sonner";
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat("it-IT", {
@@ -25,6 +29,8 @@ export default function Commerciali() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
   const [newDialogOpen, setNewDialogOpen] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
   const { ref, inView } = useInView();
 
   useEffect(() => {
@@ -63,6 +69,35 @@ export default function Commerciali() {
       ),
     };
   }, [allCommerciali]);
+
+  // Selection handlers
+  const toggleSelection = (id: string) => {
+    setSelectedIds(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === filteredCommerciali.length && filteredCommerciali.length > 0) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(filteredCommerciali.map(c => c.id)));
+    }
+  };
+
+  const clearSelection = () => setSelectedIds(new Set());
+
+  const handleBulkExport = () => {
+    const selected = filteredCommerciali.filter(c => selectedIds.has(c.id));
+    exportCommerciali(selected);
+    toast.success(`${selected.length} commerciali esportati`);
+  };
 
   if (isLoading && !data) {
     return (
@@ -279,6 +314,52 @@ export default function Commerciali() {
         onStatusChange={setStatusFilter}
       />
 
+      {/* Bulk Actions Toolbar */}
+      {selectedIds.size > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-primary/10 border border-primary/20 rounded-lg p-4"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Checkbox
+                checked={selectedIds.size === filteredCommerciali.length}
+                onCheckedChange={toggleSelectAll}
+              />
+              <p className="text-sm font-medium">
+                {selectedIds.size} commerciale/i selezionato/i
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleBulkExport}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Esporta
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => setBulkDeleteDialogOpen(true)}
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Elimina
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearSelection}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
       <div className="text-sm text-muted-foreground">
         Mostrando {filteredCommerciali.length} di {totalCount} commerciali
       </div>
@@ -293,7 +374,16 @@ export default function Commerciali() {
         <>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredCommerciali.map((commerciale) => (
-              <CommercialeCard key={commerciale.id} commerciale={commerciale} />
+              <div key={commerciale.id} className="relative">
+                <div className="absolute top-4 left-4 z-10">
+                  <Checkbox
+                    checked={selectedIds.has(commerciale.id)}
+                    onCheckedChange={() => toggleSelection(commerciale.id)}
+                    className="bg-background border-2"
+                  />
+                </div>
+                <CommercialeCard commerciale={commerciale} />
+              </div>
             ))}
           </div>
 
@@ -304,6 +394,13 @@ export default function Commerciali() {
           )}
         </>
       )}
+
+      <BulkDeleteCommercialiDialog
+        open={bulkDeleteDialogOpen}
+        onOpenChange={setBulkDeleteDialogOpen}
+        commercialeIds={Array.from(selectedIds)}
+        onSuccess={clearSelection}
+      />
     </div>
   );
 }
