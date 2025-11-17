@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Command,
   CommandEmpty,
@@ -46,11 +47,23 @@ export function OrderCombobox({
 }: OrderComboboxProps) {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
 
   const selectedOrder = orders.find((order) => order.id === value);
 
-  // Filtra ordini in base alla query di ricerca
+  // Filtra ordini in base alla query di ricerca e al filtro stato
   const filteredOrders = orders.filter((order) => {
+    // Filtro per status
+    if (statusFilter === "da_pagare_acconto" && order.stato !== "da_pagare_acconto") {
+      return false;
+    }
+    if (statusFilter === "in_lavorazione" && order.stato !== "in_lavorazione") {
+      return false;
+    }
+    // "Solo Miei Dealer" - per ora mostra tutti (richiede contesto utente)
+    // Può essere esteso con user context in futuro
+    
+    // Filtro per query di ricerca
     const query = searchQuery.toLowerCase();
     return (
       order.id.toLowerCase().includes(query) ||
@@ -131,6 +144,24 @@ export function OrderCombobox({
       </PopoverTrigger>
       <PopoverContent className="w-[500px] p-0" align="start">
         <Command shouldFilter={false}>
+          <div className="p-2 border-b">
+            <Tabs value={statusFilter} onValueChange={setStatusFilter}>
+              <TabsList className="w-full grid grid-cols-4">
+                <TabsTrigger value="all" className="text-xs">
+                  Tutti
+                </TabsTrigger>
+                <TabsTrigger value="da_pagare_acconto" className="text-xs">
+                  Da Pagare
+                </TabsTrigger>
+                <TabsTrigger value="in_lavorazione" className="text-xs">
+                  In Lavorazione
+                </TabsTrigger>
+                <TabsTrigger value="my_dealers" className="text-xs" disabled>
+                  Miei Dealer
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
           <CommandInput
             placeholder="Cerca per ID, dealer, importo, stato..."
             value={searchQuery}
