@@ -19,6 +19,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useRealtimeSync } from "@/hooks/useRealtimeSync";
 
 const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat("it-IT", {
@@ -29,6 +30,8 @@ const formatDate = (date: Date) => {
 };
 
 export default function Orders() {
+  useRealtimeSync();
+  
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { userRole } = useAuth();
