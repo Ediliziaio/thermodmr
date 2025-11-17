@@ -8,7 +8,11 @@ import { Plus } from "lucide-react";
 import { useCreateDealer } from "@/hooks/useDealers";
 import { useAuth } from "@/contexts/AuthContext";
 
-export default function NewDealerDialog() {
+interface NewDealerDialogProps {
+  trigger?: React.ReactNode;
+}
+
+export default function NewDealerDialog({ trigger }: NewDealerDialogProps = {}) {
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
   const createDealer = useCreateDealer();
@@ -59,10 +63,12 @@ export default function NewDealerDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Nuovo Rivenditore
-        </Button>
+        {trigger || (
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
+            Nuovo Rivenditore
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
