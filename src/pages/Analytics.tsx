@@ -1,16 +1,43 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Loader2, TrendingUp, Euro, Package, Clock, Target, Calendar } from "lucide-react";
-import { useAnalytics, PeriodFilter } from "@/hooks/useAnalytics";
+import { Loader2, TrendingUp, Euro, Package, Target, Download, Users } from "lucide-react";
+import { useUnifiedAnalytics } from "@/hooks/useUnifiedAnalytics";
 import { MetricCard } from "@/components/analytics/MetricCard";
-import { ConversionFunnelChart } from "@/components/analytics/ConversionFunnelChart";
-import { RevenueChart } from "@/components/dashboard/RevenueChart";
+import { OrderTrendsChart } from "@/components/analytics/OrderTrendsChart";
+import { PaymentTrendsDetailedChart } from "@/components/analytics/PaymentTrendsDetailedChart";
+import { DealerPerformanceChart } from "@/components/analytics/DealerPerformanceChart";
+import { useAuth } from "@/contexts/AuthContext";
+import { useDealersInfinite } from "@/hooks/useDealersInfinite";
+import { useCommercialiInfinite } from "@/hooks/useCommercialiInfinite";
+import { toast } from "@/hooks/use-toast";
 
 export default function Analytics() {
-  const [period, setPeriod] = useState<PeriodFilter>("month");
-  const { data: analytics, isLoading, error } = useAnalytics(period);
+  const { userRole } = useAuth();
+  const [months, setMonths] = useState(6);
+  const [selectedCommerciale, setSelectedCommerciale] = useState<string | undefined>();
+  const [selectedDealer, setSelectedDealer] = useState<string | undefined>();
+
+  const { data: analytics, isLoading, error } = useUnifiedAnalytics({
+    commercialeId: selectedCommerciale,
+    dealerId: selectedDealer,
+    months,
+  });
+
+  // Fetch commerciali and dealers for filters (only for super_admin)
+  const { data: commercialiData } = useCommercialiInfinite();
+  const { data: dealersData } = useDealersInfinite();
+
+  const commerciali = useMemo(
+    () => commercialiData?.pages.flatMap(p => p.data) || [],
+    [commercialiData]
+  );
+
+  const dealers = useMemo(
+    () => dealersData?.pages.flatMap(p => p.data) || [],
+    [dealersData]
+  );
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("it-IT", {
@@ -21,11 +48,29 @@ export default function Analytics() {
     }).format(value);
   };
 
-  const formatCurrencyFull = (value: number) => {
-    return new Intl.NumberFormat("it-IT", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
+  const handleExportData = () => {
+    if (!analytics) return;
+
+    const csvData = [
+      ["Metrica", "Valore"],
+      ["Totale Ordini", analytics.summary.totalOrders.toString()],
+      ["Ricavi Totali", analytics.summary.totalRevenue.toString()],
+      ["Pagamenti Totali", analytics.summary.totalPayments.toString()],
+      ["Ticket Medio", analytics.summary.averageTicket.toString()],
+      ["Tasso Conversione", `${analytics.summary.conversionRate.toFixed(2)}%`],
+    ].map(row => row.join(",")).join("\n");
+
+    const blob = new Blob([csvData], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `analytics-${new Date().toISOString().split("T")[0]}.csv`;
+    a.click();
+
+    toast({
+      title: "Export completato",
+      description: "I dati analytics sono stati esportati con successo",
+    });
   };
 
   if (isLoading) {
@@ -45,175 +90,120 @@ export default function Analytics() {
   }
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+    <div className="space-y-6">
+      {/* Header with Filters */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Analytics Avanzate</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Dashboard Analytics Unificata</h1>
           <p className="text-muted-foreground mt-1">
-            Analisi dettagliate con comparazione periodo precedente
+            Analisi complete di ordini, pagamenti e performance dealers
           </p>
         </div>
-        <Select value={period} onValueChange={(value) => setPeriod(value as PeriodFilter)}>
-          <SelectTrigger className="w-[180px]">
-            <Calendar className="h-4 w-4 mr-2" />
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="today">Oggi</SelectItem>
-            <SelectItem value="week">Questa Settimana</SelectItem>
-            <SelectItem value="month">Questo Mese</SelectItem>
-            <SelectItem value="quarter">Questo Trimestre</SelectItem>
-            <SelectItem value="year">Quest'Anno</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" onClick={handleExportData}>
+            <Download className="h-4 w-4 mr-2" />
+            Esporta CSV
+          </Button>
+        </div>
       </div>
 
-      {/* Metric Cards with Comparison */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {/* Filters */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex flex-wrap gap-4">
+            <Select value={months.toString()} onValueChange={(v) => setMonths(parseInt(v))}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Periodo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="3">Ultimi 3 mesi</SelectItem>
+                <SelectItem value="6">Ultimi 6 mesi</SelectItem>
+                <SelectItem value="12">Ultimo anno</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {userRole === "super_admin" && (
+              <>
+                <Select value={selectedCommerciale || "all"} onValueChange={(v) => setSelectedCommerciale(v === "all" ? undefined : v)}>
+                  <SelectTrigger className="w-[200px]">
+                    <Users className="h-4 w-4 mr-2" />
+                    <SelectValue placeholder="Tutti i commerciali" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Tutti i commerciali</SelectItem>
+                    {commerciali.map(c => (
+                      <SelectItem key={c.id} value={c.id!}>{c.display_name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select value={selectedDealer || "all"} onValueChange={(v) => setSelectedDealer(v === "all" ? undefined : v)}>
+                  <SelectTrigger className="w-[200px]">
+                    <Users className="h-4 w-4 mr-2" />
+                    <SelectValue placeholder="Tutti i dealers" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Tutti i dealers</SelectItem>
+                    {dealers.map(d => (
+                      <SelectItem key={d.id} value={d.id!}>{d.ragione_sociale}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </>
+            )}
+
+            {(selectedCommerciale || selectedDealer) && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setSelectedCommerciale(undefined);
+                  setSelectedDealer(undefined);
+                }}
+              >
+                Reset Filtri
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Summary Metrics */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <MetricCard
-          title="Ordini Totali"
-          value={analytics.current.totalOrders}
-          change={analytics.comparison.ordersChange}
+          title="Totale Ordini"
+          value={analytics.summary.totalOrders}
+          change={0}
           icon={<Package className="h-4 w-4 text-muted-foreground" />}
         />
         <MetricCard
           title="Ricavi Totali"
-          value={formatCurrency(analytics.current.totalRevenue)}
-          change={analytics.comparison.revenueChange}
+          value={formatCurrency(analytics.summary.totalRevenue)}
+          change={0}
           icon={<Euro className="h-4 w-4 text-muted-foreground" />}
         />
         <MetricCard
-          title="Totale Incassato"
-          value={formatCurrency(analytics.current.totalPaid)}
-          change={analytics.comparison.paidChange}
+          title="Pagamenti Incassati"
+          value={formatCurrency(analytics.summary.totalPayments)}
+          change={0}
           icon={<TrendingUp className="h-4 w-4 text-muted-foreground" />}
         />
         <MetricCard
           title="Ticket Medio"
-          value={formatCurrency(analytics.current.averageOrderValue)}
-          change={analytics.comparison.aovChange}
-          icon={<Euro className="h-4 w-4 text-muted-foreground" />}
-        />
-        <MetricCard
-          title="Tasso di Conversione"
-          value={`${analytics.current.conversionRate.toFixed(1)}%`}
-          change={analytics.comparison.conversionChange}
+          value={formatCurrency(analytics.summary.averageTicket)}
+          change={0}
           icon={<Target className="h-4 w-4 text-muted-foreground" />}
-          formatAsPercentage
-        />
-        <MetricCard
-          title="Giorni Medi Consegna"
-          value={`${analytics.current.averageDaysToDelivery.toFixed(0)} gg`}
-          change={analytics.comparison.daysChange}
-          icon={<Clock className="h-4 w-4 text-muted-foreground" />}
         />
       </div>
 
-      {/* Charts Section */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <ConversionFunnelChart data={analytics.conversionFunnel} />
-        <RevenueChart data={analytics.revenueByMonth.map(m => ({
-          month: m.month,
-          ricavi: m.revenue,
-          acconti: 0,
-          incassato: m.paid
-        }))} />
+      {/* Charts Grid */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <OrderTrendsChart data={analytics.orderTrends} />
+        <PaymentTrendsDetailedChart data={analytics.paymentTrends} />
       </div>
 
-      {/* Detailed Breakdown */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Dettaglio Ordini per Stato</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {Object.entries(analytics.current.ordersByStatus).map(([status, count]) => {
-              const labels: Record<string, string> = {
-                da_confermare: "Da Confermare",
-                da_pagare_acconto: "Da Pagare Acconto",
-                in_lavorazione: "In Lavorazione",
-                da_consegnare: "Da Consegnare",
-                consegnato: "Consegnato",
-              };
-              const percentage = analytics.current.totalOrders > 0
-                ? ((count / analytics.current.totalOrders) * 100).toFixed(1)
-                : 0;
-              
-              return (
-                <div key={status} className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-32 text-sm font-medium">{labels[status] || status}</div>
-                    <div className="flex-1 bg-muted rounded-full h-2 w-64">
-                      <div
-                        className="bg-primary h-2 rounded-full transition-all"
-                        style={{ width: `${percentage}%` }}
-                      />
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-sm text-muted-foreground">{percentage}%</span>
-                    <span className="text-sm font-semibold min-w-[3rem] text-right">{count}</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Period Comparison Summary */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Riepilogo Comparazione</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <h3 className="font-semibold mb-3">Periodo Corrente</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Ordini:</span>
-                  <span className="font-medium">{analytics.current.totalOrders}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Ricavi:</span>
-                  <span className="font-medium">{formatCurrencyFull(analytics.current.totalRevenue)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Incassato:</span>
-                  <span className="font-medium">{formatCurrencyFull(analytics.current.totalPaid)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Ticket Medio:</span>
-                  <span className="font-medium">{formatCurrencyFull(analytics.current.averageOrderValue)}</span>
-                </div>
-              </div>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-3">Periodo Precedente</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Ordini:</span>
-                  <span className="font-medium">{analytics.previous.totalOrders}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Ricavi:</span>
-                  <span className="font-medium">{formatCurrencyFull(analytics.previous.totalRevenue)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Incassato:</span>
-                  <span className="font-medium">{formatCurrencyFull(analytics.previous.totalPaid)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Ticket Medio:</span>
-                  <span className="font-medium">{formatCurrencyFull(analytics.previous.averageOrderValue)}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Dealer Performance */}
+      <DealerPerformanceChart data={analytics.dealerPerformance} />
     </div>
   );
 }
