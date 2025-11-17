@@ -17,6 +17,9 @@ import { formatCurrency } from "@/lib/utils";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
+import { RevenueTimelineChart } from "@/components/analytics/charts/RevenueTimelineChart";
+import { OrdersDistributionChart } from "@/components/analytics/charts/OrdersDistributionChart";
+import { PerformanceComparisonChart } from "@/components/analytics/charts/PerformanceComparisonChart";
 
 const CommercialeDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -167,14 +170,16 @@ const CommercialeDetail = () => {
         </Card>
       </div>
 
-      <Tabs defaultValue="dealers" className="space-y-4">
+      <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
+          <TabsTrigger value="overview">Panoramica</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="dealers">Dealers</TabsTrigger>
           <TabsTrigger value="orders">Ordini</TabsTrigger>
           <TabsTrigger value="commissions">Provvigioni</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="dealers" className="space-y-4">
+        <TabsContent value="overview" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>Dealers Assegnati</CardTitle>
@@ -242,6 +247,34 @@ const CommercialeDetail = () => {
               )}
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-4">
+          <div className="grid gap-4">
+            <PerformanceComparisonChart 
+              orders={commercialeOrders} 
+              title="Confronto Performance Mensile"
+              comparisonType="month"
+            />
+            
+            <div className="grid gap-4 md:grid-cols-2">
+              <RevenueTimelineChart 
+                orders={commercialeOrders}
+                months={6}
+                title="Trend Fatturato (6 Mesi)"
+              />
+              <OrdersDistributionChart 
+                orders={commercialeOrders}
+                title="Distribuzione Ordini"
+              />
+            </div>
+
+            <PerformanceComparisonChart 
+              orders={commercialeOrders} 
+              title="Confronto Performance Annuale"
+              comparisonType="year"
+            />
+          </div>
         </TabsContent>
 
         <TabsContent value="orders" className="space-y-4">
