@@ -57,6 +57,18 @@ export const useOrdersInfinite = ({ searchQuery }: UseOrdersInfiniteParams = {})
 
       if (error) throw error;
 
+      // Debug logging
+      console.log("[useOrdersInfinite] Orders fetched:", {
+        pageParam,
+        ordersCount: data?.length,
+        totalCount: count,
+        searchQuery,
+        ordersByStatus: data?.reduce((acc, o) => {
+          acc[o.stato!] = (acc[o.stato!] || 0) + 1;
+          return acc;
+        }, {} as Record<string, number>)
+      });
+
       return {
         data: data as OrderWithDetails[],
         nextPage: data.length === PAGE_SIZE ? pageParam + 1 : undefined,
@@ -65,6 +77,6 @@ export const useOrdersInfinite = ({ searchQuery }: UseOrdersInfiniteParams = {})
     },
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 0,
-    staleTime: 2 * 60 * 1000, // 2 minuti per dati che cambiano spesso
+    staleTime: 30 * 1000, // 30 secondi per avere dati più freschi
   });
 };

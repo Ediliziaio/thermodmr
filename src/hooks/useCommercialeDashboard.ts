@@ -44,6 +44,17 @@ export const useCommercialeDashboard = (commercialeId?: string) => {
       const totalOrders = orders?.length || 0;
       const totalRevenue = orders?.reduce((sum, o) => sum + Number(o.importo_totale), 0) || 0;
       
+      // Debug logging
+      console.log("[CommercialeDashboard] Orders fetched:", {
+        commercialeId,
+        totalOrders,
+        totalRevenue,
+        ordersByStatus: orders?.reduce((acc, o) => {
+          acc[o.stato] = (acc[o.stato] || 0) + 1;
+          return acc;
+        }, {} as Record<string, number>)
+      });
+      
       const commissionsDovute = commissions
         ?.filter(c => c.stato_liquidazione === "dovuta")
         .reduce((sum, c) => sum + Number(c.importo_calcolato), 0) || 0;

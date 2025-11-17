@@ -103,7 +103,15 @@ export default function Orders() {
 
   // Unisci tutte le pagine in un unico array
   const allOrders = useMemo(() => {
-    return data?.pages.flatMap((page) => page.data) || [];
+    const orders = data?.pages.flatMap((page) => page.data) || [];
+    console.log("[Orders Page] All orders loaded:", {
+      totalOrders: orders.length,
+      ordersByStatus: orders.reduce((acc, o) => {
+        acc[o.stato] = (acc[o.stato] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>)
+    });
+    return orders;
   }, [data]);
 
   const filteredOrders = useMemo(() => {
