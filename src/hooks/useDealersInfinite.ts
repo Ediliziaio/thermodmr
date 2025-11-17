@@ -4,19 +4,63 @@ import type { DealerWithStats } from "./useDealers";
 
 const PAGE_SIZE = 30;
 
-export const useDealersInfinite = () => {
+export interface DealerFilters {
+  search?: string;
+  provincia?: string;
+  commerciale_id?: string;
+  minRevenue?: number;
+  maxRevenue?: number;
+  sortBy?: "ragione_sociale" | "total_revenue" | "orders_count" | "created_at";
+  sortOrder?: "asc" | "desc";
+}
+
+export const useDealersInfinite = (filters: DealerFilters = {}) => {
   return useInfiniteQuery({
-    queryKey: ["dealers-infinite"],
+    queryKey: ["dealers-infinite", filters],
     queryFn: async ({ pageParam = 0 }) => {
       const from = pageParam * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
 
-      // Query ottimizzata: usa la view con statistiche pre-aggregate
-      const { data: dealers, error, count } = await supabase
+      let query = supabase
         .from("dealers_with_stats")
-        .select("*", { count: "exact" })
-        .order("ragione_sociale", { ascending: true })
-        .range(from, to);
+        .select("*", { count: "exact" });
+
+      // Ricerca full-text
+      if (filters.search) {
+        query = query.or(
+          `ragione_sociale.ilike.%${filters.search}%,` +
+          `p_iva.ilike.%${filters.search}%,` +
+          `email.ilike.%${filters.search}%,` +
+          `telefono.ilike.%${filters.search}%`
+        );
+      }
+
+      // Filtro provincia
+      if (filters.provincia) {
+        query = query.eq("provincia", filters.provincia);
+      }
+
+      // Filtro commerciale
+      if (filters.commerciale_id) {
+        query = query.eq("commerciale_owner_id", filters.commerciale_id);
+      }
+
+      // Filtro range fatturato
+      if (filters.minRevenue !== undefined) {
+        query = query.gte("total_revenue", filters.minRevenue);
+      }
+      if (filters.maxRevenue !== undefined) {
+        query = query.lte("total_revenue", filters.maxRevenue);
+      }
+
+      // Sorting
+      const sortBy = filters.sortBy || "ragione_sociale";
+      const sortOrder = filters.sortOrder || "asc";
+      query = query.order(sortBy, { ascending: sortOrder === "asc" });
+
+      query = query.range(from, to);
+
+      const { data: dealers, error, count } = await query;
 
       if (error) throw error;
 
@@ -28,6 +72,6 @@ export const useDealersInfinite = () => {
     },
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 0,
-    staleTime: 10 * 60 * 1000, // 10 minuti per dati più statici
+    staleTime: 10 * 60 * 1000,
   });
 };

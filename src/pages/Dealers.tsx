@@ -1,13 +1,15 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
-import { useDealersInfinite } from "@/hooks/useDealersInfinite";
+import { useDealersInfinite, type DealerFilters } from "@/hooks/useDealersInfinite";
 import NewDealerDialog from "@/components/dealers/NewDealerDialog";
+import { DealerFilters as DealerFiltersComponent } from "@/components/dealers/DealerFilters";
+import { DealerCard } from "@/components/dealers/DealerCard";
 import { useInView } from "react-intersection-observer";
-import { useEffect, useMemo } from "react";
-import { formatCurrency } from "@/lib/utils";
+import { useEffect, useMemo, useState } from "react";
 
 export default function Dealers() {
-  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useDealersInfinite();
+  const [filters, setFilters] = useState<DealerFilters>({});
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useDealersInfinite(filters);
   const { ref, inView } = useInView();
 
   useEffect(() => {
@@ -41,19 +43,25 @@ export default function Dealers() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Rivenditori</h1>
+        <div>
+          <h1 className="text-3xl font-bold">Rivenditori</h1>
+          <p className="text-muted-foreground">
+            Gestisci i rivenditori e monitora le loro performance
+          </p>
+        </div>
         <NewDealerDialog />
       </div>
 
-      <div className="text-sm text-muted-foreground">
-        Mostrando {allDealers.length} di {totalCount} rivenditori
-      </div>
+      <DealerFiltersComponent
+        onFiltersChange={setFilters}
+        resultsCount={totalCount}
+      />
 
       {allDealers.length === 0 ? (
         <Card>
           <CardContent className="p-8">
             <p className="text-center text-muted-foreground">
-              Nessun rivenditore trovato. Aggiungi il primo rivenditore.
+              Nessun rivenditore trovato. Prova a modificare i filtri o aggiungi un nuovo rivenditore.
             </p>
           </CardContent>
         </Card>
@@ -61,46 +69,7 @@ export default function Dealers() {
         <>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {allDealers.map((dealer) => (
-              <Card key={dealer.id}>
-                <CardHeader>
-                  <CardTitle>{dealer.ragione_sociale}</CardTitle>
-                  <CardDescription>P.IVA: {dealer.p_iva}</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground">Contatti</p>
-                    <p className="text-sm">{dealer.email}</p>
-                    <p className="text-sm">{dealer.telefono}</p>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground">Indirizzo</p>
-                    <p className="text-sm">
-                      {dealer.indirizzo}, {dealer.cap}
-                    </p>
-                    <p className="text-sm">
-                      {dealer.citta} ({dealer.provincia})
-                    </p>
-                  </div>
-                  <div className="pt-4 border-t space-y-1">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Ordini:</span>
-                      <span className="font-medium">{dealer.orders_count || 0}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Fatturato totale:</span>
-                      <span className="font-semibold">
-                        {formatCurrency(dealer.total_revenue || 0)}
-                      </span>
-                    </div>
-                    {dealer.commissione_personalizzata && (
-                      <div className="flex justify-between text-sm">
-                        <span className="text-muted-foreground">Commissione:</span>
-                        <span>{dealer.commissione_personalizzata}%</span>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+              <DealerCard key={dealer.id} dealer={dealer} />
             ))}
           </div>
 
