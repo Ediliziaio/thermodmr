@@ -25,7 +25,8 @@ import { formatCurrency } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { useInView } from "react-intersection-observer";
-import { exportPayments } from "@/lib/exportUtils";
+import { exportPaymentsCustom, PAYMENT_COLUMNS } from "@/lib/exportUtils";
+import { ExportColumnsDialog } from "@/components/export/ExportColumnsDialog";
 import { motion } from "framer-motion";
 
 const Pagamenti = () => {
@@ -45,6 +46,7 @@ const Pagamenti = () => {
   const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
   const [newPaymentDialogOpen, setNewPaymentDialogOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"table" | "timeline">("table");
+  const [exportDialogOpen, setExportDialogOpen] = useState(false);
 
   // Infinite scroll
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = usePaymentsInfinite({
@@ -129,37 +131,13 @@ const Pagamenti = () => {
     });
   };
 
-  const handleExportCSV = () => {
-    const selectedPayments = selectedPaymentIds.size > 0
-      ? payments.filter(p => selectedPaymentIds.has(p.id))
-      : payments;
-
-    const csv = [
-      ["Data", "Ordine", "Dealer", "Tipo", "Metodo", "Importo", "Riferimento"].join(","),
-      ...selectedPayments.map(p => [
-        formatDate(p.data_pagamento),
-        p.ordine_id,
-        `"${p.orders.dealers.ragione_sociale}"`,
-        p.tipo,
-        p.metodo,
-        p.importo,
-        p.riferimento || ""
-      ].join(","))
-    ].join("\n");
-
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `pagamenti-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-
-    toast({
-      title: "Export completato",
-      description: `${selectedPayments.length} pagamenti esportati in CSV.`,
-    });
+  const handleExportCSV = (selectedColumns: string[], data: any[]) => {
+    exportPaymentsCustom(data, selectedColumns);
   };
+
+  const paymentsToExport = selectedPaymentIds.size > 0 
+    ? payments.filter(p => selectedPaymentIds.has(p.id!))
+    : payments;
 
   if (isLoading) {
     return (
@@ -379,7 +357,10 @@ const Pagamenti = () => {
               <Badge variant="secondary">{selectedPaymentIds.size} pagamenti selezionati</Badge>
               <div className="h-6 w-px bg-border" />
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={handleExportCSV}><Download className="h-4 w-4 mr-2" />Esporta</Button>
+                <Button variant="outline" size="sm" onClick={() => setExportDialogOpen(true)} disabled={payments.length === 0}>
+                  <Download className="h-4 w-4 mr-2" />
+                  Esporta CSV {selectedPaymentIds.size > 0 && `(${selectedPaymentIds.size})`}
+                </Button>
                 {userRole === 'super_admin' && <Button variant="destructive" size="sm" onClick={() => setBulkDeleteDialogOpen(true)}><Trash2 className="h-4 w-4 mr-2" />Elimina</Button>}
                 <Button variant="ghost" size="sm" onClick={clearSelection}><X className="h-4 w-4 mr-2" />Annulla</Button>
               </div>
@@ -390,6 +371,15 @@ const Pagamenti = () => {
 
       <BulkDeletePaymentsDialog open={bulkDeleteDialogOpen} onOpenChange={setBulkDeleteDialogOpen} selectedPaymentIds={Array.from(selectedPaymentIds)} onConfirm={handleBulkDelete} isPending={bulkDeleteMutation.isPending} />
       <NewPaymentDialog open={newPaymentDialogOpen} onOpenChange={setNewPaymentDialogOpen} />
+      
+      <ExportColumnsDialog
+        open={exportDialogOpen}
+        onOpenChange={setExportDialogOpen}
+        columns={PAYMENT_COLUMNS}
+        data={paymentsToExport}
+        filename="pagamenti"
+        onExport={handleExportCSV}
+      />
     </div>
   );
 };
