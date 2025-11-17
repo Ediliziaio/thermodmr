@@ -23,6 +23,7 @@ import { Plus } from "lucide-react";
 import { Payment, PaymentType } from "@/types";
 import { useCreatePayment } from "@/hooks/usePayments";
 import { toast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface PaymentsSectionProps {
   orderId: string;
@@ -31,7 +32,10 @@ interface PaymentsSectionProps {
 }
 
 export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSectionProps) {
+  const { userRole } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  
+  const canCreatePayment = userRole === "super_admin" || userRole === "commerciale";
   const [newPayment, setNewPayment] = useState({
     tipo: PaymentType.ACCONTO,
     importo: 0,
@@ -134,13 +138,14 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Pagamenti</CardTitle>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm">
-              <Plus className="h-4 w-4 mr-2" />
-              Registra Pagamento
-            </Button>
-          </DialogTrigger>
+        {canCreatePayment && (
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm">
+                <Plus className="h-4 w-4 mr-2" />
+                Registra Pagamento
+              </Button>
+            </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Registra Nuovo Pagamento</DialogTitle>
@@ -237,6 +242,7 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
             </div>
           </DialogContent>
         </Dialog>
+        )}
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Payment Summary */}
