@@ -15,14 +15,18 @@ export interface OrderWithDetails extends Tables<"orders"> {
   data_ultimo_pagamento: string | null;
 }
 
-export const useOrdersInfinite = () => {
+interface UseOrdersInfiniteParams {
+  searchQuery?: string;
+}
+
+export const useOrdersInfinite = ({ searchQuery }: UseOrdersInfiniteParams = {}) => {
   return useInfiniteQuery({
-    queryKey: ["orders-infinite"],
+    queryKey: ["orders-infinite", searchQuery],
     queryFn: async ({ pageParam = 0 }) => {
       const from = pageParam * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
 
-      const { data, error, count } = await supabase
+      let query = supabase
         .from("orders_with_payment_stats")
         .select(
           `
@@ -32,8 +36,24 @@ export const useOrdersInfinite = () => {
         `,
           { count: "exact" }
         )
-        .order("data_inserimento", { ascending: false })
-        .range(from, to);
+        .order("data_inserimento", { ascending: false });
+
+      // Full-text search su ID, dealer, cliente, note
+      if (searchQuery && searchQuery.trim()) {
+        const search = searchQuery.trim().toLowerCase();
+        query = query.or(
+          `id.ilike.%${search}%,` +
+          `dealers.ragione_sociale.ilike.%${search}%,` +
+          `clients.nome.ilike.%${search}%,` +
+          `clients.cognome.ilike.%${search}%,` +
+          `note_interna.ilike.%${search}%,` +
+          `note_rivenditore.ilike.%${search}%`
+        );
+      }
+
+      query = query.range(from, to);
+
+      const { data, error, count } = await query;
 
       if (error) throw error;
 

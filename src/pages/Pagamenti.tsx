@@ -38,6 +38,7 @@ const Pagamenti = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [tipoFilter, setTipoFilter] = useState("all");
   const [metodoFilter, setMetodoFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedPaymentIds, setSelectedPaymentIds] = useState<Set<string>>(new Set());
   const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
   const [newPaymentDialogOpen, setNewPaymentDialogOpen] = useState(false);
@@ -48,6 +49,7 @@ const Pagamenti = () => {
     dateRange,
     tipoFilter,
     metodoFilter,
+    searchQuery,
   });
   const { ref, inView } = useInView();
 
@@ -278,15 +280,17 @@ const Pagamenti = () => {
         <>
           <div className="flex items-center gap-4">
             <div className="flex-1">
-              <PaymentFilters
-                dateRange={dateRange}
-                onDateRangeChange={setDateRange}
-                tipoFilter={tipoFilter}
-                onTipoFilterChange={setTipoFilter}
-                metodoFilter={metodoFilter}
-                onMetodoFilterChange={setMetodoFilter}
-                onReset={handleResetFilters}
-              />
+          <PaymentFilters
+            dateRange={dateRange}
+            onDateRangeChange={setDateRange}
+            tipoFilter={tipoFilter}
+            onTipoFilterChange={setTipoFilter}
+            metodoFilter={metodoFilter}
+            onMetodoFilterChange={setMetodoFilter}
+            searchQuery={searchQuery}
+            onSearchQueryChange={setSearchQuery}
+            onReset={handleResetFilters}
+          />
             </div>
             <div className="flex items-center gap-2">
               <Button variant={viewMode === "table" ? "default" : "outline"} size="sm" onClick={() => setViewMode("table")}>

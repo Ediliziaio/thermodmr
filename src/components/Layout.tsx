@@ -13,10 +13,12 @@ import {
   FileText,
   LogOut,
   Shield,
+  Bell,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { GlobalSearch } from "@/components/GlobalSearch";
 
 interface LayoutProps {
   children: ReactNode;
@@ -124,6 +126,20 @@ export function Layout({ children }: LayoutProps) {
 
       {/* Main Content */}
       <div className="pl-64">
+        {/* Top Bar with GlobalSearch */}
+        <div className="sticky top-0 z-10 bg-background border-b px-6 py-3">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex-1 max-w-2xl">
+              <GlobalSearch />
+            </div>
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" size="icon">
+                <Bell className="h-5 w-5" />
+              </Button>
+            </div>
+          </div>
+        </div>
+        
         <main className="min-h-screen p-8">{children}</main>
       </div>
     </div>

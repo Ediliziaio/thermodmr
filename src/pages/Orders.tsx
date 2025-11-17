@@ -36,7 +36,8 @@ export default function Orders() {
   const queryClient = useQueryClient();
   const { userRole } = useAuth();
   const isMobile = useIsMobile();
-  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useOrdersInfinite();
+  const [searchQuery, setSearchQuery] = useState("");
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useOrdersInfinite({ searchQuery });
   const { data: dealersData } = useDealersInfinite();
   const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
   const [filters, setFilters] = useState<OrderFiltersState>({});
