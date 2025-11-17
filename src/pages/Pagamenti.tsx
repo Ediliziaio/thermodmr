@@ -1,5 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -25,6 +24,8 @@ import { formatCurrency } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { useInView } from "react-intersection-observer";
+import { exportPayments } from "@/lib/exportUtils";
+import { motion } from "framer-motion";
 
 const Pagamenti = () => {
   useRealtimeSync();

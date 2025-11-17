@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, Loader2, AlertCircle, RefreshCw, X, Trash2 } from "lucide-react";
+import { Eye, Loader2, AlertCircle, RefreshCw, X, Trash2, Download } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useOrdersInfinite } from "@/hooks/useOrdersInfinite";
 import { NewOrderDialog } from "@/components/orders/NewOrderDialog";
@@ -10,6 +10,8 @@ import { BulkUpdateStatusDialog } from "@/components/orders/BulkUpdateStatusDial
 import { BulkDeleteOrdersDialog } from "@/components/orders/BulkDeleteOrdersDialog";
 import { OrderFilters, OrderFiltersState } from "@/components/orders/OrderFilters";
 import { MobileOrdersList } from "@/components/orders/MobileOrdersList";
+import { exportOrders } from "@/lib/exportUtils";
+import { toast } from "@/hooks/use-toast";
 import { useDealersInfinite } from "@/hooks/useDealersInfinite";
 import { useMemo, useState, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
@@ -523,9 +525,6 @@ export default function Orders() {
                                       Ultimo: {formatDate(new Date(order.data_ultimo_pagamento))}
                                     </p>
                                   )}
-                                </div>
-                              </TooltipContent>
-                            </Tooltip>
                           </td>
                           <td className="py-4 pr-4 text-sm">
                             <span className={cn(isOverdue && "text-red-600 font-medium")}>
