@@ -61,6 +61,23 @@ export const useRealtimeSync = () => {
           queryClient.invalidateQueries({ queryKey: ["revenue-data"] });
         }
       )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "dealers",
+        },
+        (payload) => {
+          console.log("🏢 Dealers changed:", payload);
+          
+          // Invalida queries dealers
+          queryClient.invalidateQueries({ queryKey: ["dealers-infinite"] });
+          
+          // Invalida dashboard (per top dealers)
+          queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
+        }
+      )
       .subscribe();
 
     return () => {

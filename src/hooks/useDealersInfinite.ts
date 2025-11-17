@@ -20,15 +20,8 @@ export const useDealersInfinite = () => {
 
       if (error) throw error;
 
-      // La view contiene già orders_count e total_revenue
-      const dealersWithStats = (dealers || []).map((dealer) => ({
-        ...dealer,
-        ordersCount: dealer.orders_count,
-        totalRevenue: dealer.total_revenue,
-      }));
-
       return {
-        data: dealersWithStats as DealerWithStats[],
+        data: dealers as DealerWithStats[] || [],
         nextPage: dealers && dealers.length === PAGE_SIZE ? pageParam + 1 : undefined,
         totalCount: count || 0,
       };

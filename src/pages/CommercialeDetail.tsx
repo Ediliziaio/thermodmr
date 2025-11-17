@@ -215,9 +215,9 @@ const CommercialeDetail = () => {
                         </TableCell>
                         <TableCell>{dealer.p_iva}</TableCell>
                         <TableCell>{dealer.email}</TableCell>
-                        <TableCell>{dealer.ordersCount || 0}</TableCell>
+                        <TableCell>{dealer.orders_count || 0}</TableCell>
                         <TableCell className="text-right">
-                          {formatCurrency(dealer.totalRevenue || 0)}
+                          {formatCurrency(dealer.total_revenue || 0)}
                         </TableCell>
                         <TableCell className="text-right">
                           <Button

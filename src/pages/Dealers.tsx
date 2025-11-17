@@ -84,12 +84,12 @@ export default function Dealers() {
                   <div className="pt-4 border-t space-y-1">
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Ordini:</span>
-                      <span className="font-medium">{dealer.ordersCount || 0}</span>
+                      <span className="font-medium">{dealer.orders_count || 0}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Fatturato totale:</span>
                       <span className="font-semibold">
-                        {formatCurrency(dealer.totalRevenue || 0)}
+                        {formatCurrency(dealer.total_revenue || 0)}
                       </span>
                     </div>
                     {dealer.commissione_personalizzata && (
