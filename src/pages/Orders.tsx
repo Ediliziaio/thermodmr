@@ -2,11 +2,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, Loader2, AlertCircle, RefreshCw, X } from "lucide-react";
+import { Eye, Loader2, AlertCircle, RefreshCw, X, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useOrdersInfinite } from "@/hooks/useOrdersInfinite";
 import { NewOrderDialog } from "@/components/orders/NewOrderDialog";
 import { BulkUpdateStatusDialog } from "@/components/orders/BulkUpdateStatusDialog";
+import { BulkDeleteOrdersDialog } from "@/components/orders/BulkDeleteOrdersDialog";
 import { OrderFilters, OrderFiltersState } from "@/components/orders/OrderFilters";
 import { useDealersInfinite } from "@/hooks/useDealersInfinite";
 import { useMemo, useState, useEffect } from "react";
@@ -36,6 +37,7 @@ export default function Orders() {
   const { ref, inView } = useInView();
   const [selectedOrderIds, setSelectedOrderIds] = useState<Set<string>>(new Set());
   const [bulkStatusDialogOpen, setBulkStatusDialogOpen] = useState(false);
+  const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
 
   // Helper functions for selection
   const toggleOrderSelection = (orderId: string) => {
@@ -511,14 +513,24 @@ export default function Orders() {
               
               <div className="flex items-center gap-2">
                 {userRole === 'super_admin' && (
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => setBulkStatusDialogOpen(true)}
-                  >
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Aggiorna Stato
-                  </Button>
+                  <>
+                    <Button
+                      variant="default"
+                      size="sm"
+                      onClick={() => setBulkStatusDialogOpen(true)}
+                    >
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Aggiorna Stato
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => setBulkDeleteDialogOpen(true)}
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Elimina
+                    </Button>
+                  </>
                 )}
                 
                 <Button
@@ -539,6 +551,14 @@ export default function Orders() {
       <BulkUpdateStatusDialog
         open={bulkStatusDialogOpen}
         onOpenChange={setBulkStatusDialogOpen}
+        selectedOrderIds={Array.from(selectedOrderIds)}
+        onSuccess={clearSelection}
+      />
+
+      {/* Bulk Delete Orders Dialog */}
+      <BulkDeleteOrdersDialog
+        open={bulkDeleteDialogOpen}
+        onOpenChange={setBulkDeleteDialogOpen}
         selectedOrderIds={Array.from(selectedOrderIds)}
         onSuccess={clearSelection}
       />
