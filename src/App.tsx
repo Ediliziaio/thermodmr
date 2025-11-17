@@ -27,6 +27,7 @@ const Commerciali = lazy(() => import("./pages/Commerciali"));
 const Pagamenti = lazy(() => import("./pages/Pagamenti"));
 const Provvigioni = lazy(() => import("./pages/Provvigioni"));
 const RLSTest = lazy(() => import("./pages/RLSTest"));
+const TestDataSeeder = lazy(() => import("./pages/TestDataSeeder"));
 const Placeholder = lazy(() => import("./pages/Placeholder"));
 
 // Ottimizza TanStack Query
@@ -204,6 +205,16 @@ const App = () => (
               element={
                 <ProtectedRoute requiredRole="super_admin">
                   <RLSTest />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/seed-test-data"
+              element={
+                <ProtectedRoute requiredRole="super_admin">
+                  <Layout>
+                    <TestDataSeeder />
+                  </Layout>
                 </ProtectedRoute>
               }
             />
