@@ -23,8 +23,16 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
-export function NewPaymentDialog() {
-  const [isOpen, setIsOpen] = useState(false);
+interface NewPaymentDialogProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export function NewPaymentDialog({ open: controlledOpen, onOpenChange }: NewPaymentDialogProps = {}) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  
+  const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen;
+  const setIsOpen = onOpenChange || setInternalOpen;
   const [formData, setFormData] = useState({
     ordineId: "",
     tipo: "acconto" as "acconto" | "saldo" | "parziale",
