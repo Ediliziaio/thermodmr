@@ -1,10 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Loader2, AlertCircle } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Eye, Loader2, AlertCircle, RefreshCw, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useOrdersInfinite } from "@/hooks/useOrdersInfinite";
 import { NewOrderDialog } from "@/components/orders/NewOrderDialog";
+import { BulkUpdateStatusDialog } from "@/components/orders/BulkUpdateStatusDialog";
 import { OrderFilters, OrderFiltersState } from "@/components/orders/OrderFilters";
 import { useDealersInfinite } from "@/hooks/useDealersInfinite";
 import { useMemo, useState, useEffect } from "react";
@@ -13,6 +15,7 @@ import { formatCurrency, getStatusColor, getStatusLabel, cn } from "@/lib/utils"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/contexts/AuthContext";
 
 const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat("it-IT", {
@@ -25,11 +28,37 @@ const formatDate = (date: Date) => {
 export default function Orders() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { userRole } = useAuth();
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useOrdersInfinite();
   const { data: dealersData } = useDealersInfinite();
   const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
   const [filters, setFilters] = useState<OrderFiltersState>({});
   const { ref, inView } = useInView();
+  const [selectedOrderIds, setSelectedOrderIds] = useState<Set<string>>(new Set());
+  const [bulkStatusDialogOpen, setBulkStatusDialogOpen] = useState(false);
+
+  // Helper functions for selection
+  const toggleOrderSelection = (orderId: string) => {
+    setSelectedOrderIds(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(orderId)) {
+        newSet.delete(orderId);
+      } else {
+        newSet.add(orderId);
+      }
+      return newSet;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedOrderIds.size === filteredOrders.length && filteredOrders.length > 0) {
+      setSelectedOrderIds(new Set());
+    } else {
+      setSelectedOrderIds(new Set(filteredOrders.map(o => o.id!)));
+    }
+  };
+
+  const clearSelection = () => setSelectedOrderIds(new Set());
 
   // Real-time: Invalida cache ordini quando cambiano i pagamenti
   useEffect(() => {
@@ -47,6 +76,11 @@ export default function Orders() {
       supabase.removeChannel(channel);
     };
   }, [queryClient]);
+
+  // Clear selection when filters change
+  useEffect(() => {
+    clearSelection();
+  }, [filters]);
 
   // Carica automaticamente la prossima pagina quando l'utente scorre fino in fondo
   useEffect(() => {
@@ -199,17 +233,25 @@ export default function Orders() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Ordini</h1>
-          <p className="text-muted-foreground mt-1">
-            Gestisci tutti gli ordini dei rivenditori
-          </p>
+    <TooltipProvider>
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-3">
+              <h1 className="text-3xl font-bold tracking-tight">Ordini</h1>
+              {selectedOrderIds.size > 0 && (
+                <Badge variant="secondary" className="text-sm">
+                  {selectedOrderIds.size} selezionati
+                </Badge>
+              )}
+            </div>
+            <p className="text-muted-foreground mt-1">
+              Gestisci tutti gli ordini dei rivenditori
+            </p>
+          </div>
+          <NewOrderDialog />
         </div>
-        <NewOrderDialog />
-      </div>
 
       {/* Statistiche Header */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -282,6 +324,13 @@ export default function Orders() {
               <table className="w-full">
                 <thead className="sticky top-0 bg-background z-10">
                   <tr className="border-b text-left text-sm font-medium text-muted-foreground">
+                    <th className="pb-3 pr-4 w-12">
+                      <Checkbox
+                        checked={selectedOrderIds.size === filteredOrders.length && filteredOrders.length > 0}
+                        onCheckedChange={toggleSelectAll}
+                        aria-label="Seleziona tutti gli ordini"
+                      />
+                    </th>
                     <th className="pb-3 pr-4">ID Ordine</th>
                     <th className="pb-3 pr-4">Rivenditore</th>
                     <th className="pb-3 pr-4">Cliente</th>
@@ -295,16 +344,29 @@ export default function Orders() {
                   </tr>
                 </thead>
                 <tbody>
-                  <TooltipProvider>
-                    {filteredOrders.map((order) => {
-                      const isOverdue = order.data_consegna_prevista && new Date(order.data_consegna_prevista) < new Date();
-                      const hasUrgentBalance = order.importo_da_pagare > 0 && order.stato !== 'consegnato';
-                      
-                      return (
-                        <tr key={order.id} className="border-b last:border-0">
-                          <td className="py-4 pr-4">
-                            <p className="font-medium">{order.id}</p>
-                          </td>
+                  {filteredOrders.map((order) => {
+                    const isOverdue = order.data_consegna_prevista && new Date(order.data_consegna_prevista) < new Date();
+                    const hasUrgentBalance = order.importo_da_pagare > 0 && order.stato !== 'consegnato';
+                    const isSelected = selectedOrderIds.has(order.id!);
+                    
+                    return (
+                      <tr 
+                        key={order.id} 
+                        className={cn(
+                          "border-b last:border-0 hover:bg-muted/50 transition-colors",
+                          isSelected && "bg-muted/50"
+                        )}
+                      >
+                        <td className="py-4 pr-4">
+                          <Checkbox
+                            checked={isSelected}
+                            onCheckedChange={() => toggleOrderSelection(order.id!)}
+                            aria-label={`Seleziona ordine ${order.id}`}
+                          />
+                        </td>
+                        <td className="py-4 pr-4">
+                          <p className="font-medium">{order.id}</p>
+                        </td>
                           <td className="py-4 pr-4">
                             <p className="text-sm">{order.dealers?.ragione_sociale || "-"}</p>
                             <p className="text-xs text-muted-foreground">
@@ -407,7 +469,6 @@ export default function Orders() {
                         </tr>
                       );
                     })}
-                  </TooltipProvider>
                 </tbody>
               </table>
             </div>
@@ -434,6 +495,54 @@ export default function Orders() {
           )}
         </CardContent>
       </Card>
+
+      {/* Floating Action Bar */}
+      {selectedOrderIds.size > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-5">
+          <Card className="shadow-lg border-2">
+            <CardContent className="flex items-center gap-4 p-4">
+              <div className="flex items-center gap-2">
+                <Badge variant="secondary" className="text-sm">
+                  {selectedOrderIds.size} {selectedOrderIds.size === 1 ? 'ordine selezionato' : 'ordini selezionati'}
+                </Badge>
+              </div>
+              
+              <div className="h-6 w-px bg-border" />
+              
+              <div className="flex items-center gap-2">
+                {userRole === 'super_admin' && (
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => setBulkStatusDialogOpen(true)}
+                  >
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Aggiorna Stato
+                  </Button>
+                )}
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={clearSelection}
+                >
+                  <X className="h-4 w-4 mr-2" />
+                  Annulla
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Bulk Update Status Dialog */}
+      <BulkUpdateStatusDialog
+        open={bulkStatusDialogOpen}
+        onOpenChange={setBulkStatusDialogOpen}
+        selectedOrderIds={Array.from(selectedOrderIds)}
+        onSuccess={clearSelection}
+      />
     </div>
+    </TooltipProvider>
   );
 }

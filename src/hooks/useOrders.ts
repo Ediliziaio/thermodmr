@@ -159,6 +159,56 @@ export const useUpdateOrderNotes = () => {
   });
 };
 
+export const useBulkUpdateOrderStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ 
+      orderIds, 
+      stato 
+    }: { 
+      orderIds: string[]; 
+      stato: string;
+    }) => {
+      // Aggiorna tutti gli ordini in parallelo
+      const updates = orderIds.map(orderId =>
+        supabase
+          .from("orders")
+          .update({ stato: stato as any })
+          .eq("id", orderId)
+      );
+
+      const results = await Promise.all(updates);
+      
+      // Controlla se ci sono errori
+      const errors = results.filter(r => r.error);
+      if (errors.length > 0) {
+        throw new Error(`${errors.length} ordini non sono stati aggiornati`);
+      }
+
+      return {
+        success: results.length - errors.length,
+        failed: errors.length,
+      };
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      toast({
+        title: "Aggiornamento completato",
+        description: `${data.success} ${data.success === 1 ? 'ordine aggiornato' : 'ordini aggiornati'} con successo.`,
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Errore",
+        description: error.message || "Impossibile aggiornare gli ordini.",
+        variant: "destructive",
+      });
+    },
+  });
+};
+
 export const useUpdateOrderId = () => {
   const queryClient = useQueryClient();
 
