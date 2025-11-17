@@ -42,6 +42,9 @@ interface MobilePaymentsListProps {
   onNewPayment: () => void;
   onExport: () => void;
   userRole: string;
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
+  scrollRef?: (node?: Element | null) => void;
 }
 
 export function MobilePaymentsList({
@@ -60,6 +63,9 @@ export function MobilePaymentsList({
   onNewPayment,
   onExport,
   userRole,
+  hasNextPage,
+  isFetchingNextPage,
+  scrollRef,
 }: MobilePaymentsListProps) {
   const [filtersOpen, setFiltersOpen] = useState(false);
   
@@ -130,19 +136,39 @@ export function MobilePaymentsList({
 
       {/* Payments List */}
       {payments.length > 0 ? (
-        <div className="space-y-3">
-          {payments.map((payment) => (
-            <PaymentMobileCard
-              key={payment.id}
-              payment={payment}
-              isSelected={selectedPaymentIds.has(payment.id)}
-              onToggleSelect={() => onToggleSelect(payment.id)}
-              onViewOrder={() => onViewOrder(payment.ordine_id)}
-              onDelete={() => onDeletePayment(payment.id)}
-              canDelete={userRole === 'super_admin'}
-            />
-          ))}
-        </div>
+        <>
+          <div className="space-y-3">
+            {payments.map((payment) => (
+              <PaymentMobileCard
+                key={payment.id}
+                payment={payment}
+                isSelected={selectedPaymentIds.has(payment.id)}
+                onToggleSelect={() => onToggleSelect(payment.id)}
+                onViewOrder={() => onViewOrder(payment.ordine_id)}
+                onDelete={() => onDeletePayment(payment.id)}
+                canDelete={userRole === 'super_admin'}
+              />
+            ))}
+          </div>
+
+          {/* Infinite Scroll Trigger */}
+          {hasNextPage && (
+            <div ref={scrollRef} className="flex justify-center py-6">
+              {isFetchingNextPage && (
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <div className="h-5 w-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                  <span>Caricamento...</span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {!hasNextPage && payments.length > 0 && (
+            <div className="text-center py-6 text-sm text-muted-foreground">
+              Tutti i {payments.length} pagamenti caricati
+            </div>
+          )}
+        </>
       ) : (
         <div className="text-center py-12 text-muted-foreground">
           Nessun pagamento trovato

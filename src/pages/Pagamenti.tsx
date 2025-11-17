@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -11,13 +11,12 @@ import { MobilePaymentsList } from "@/components/payments/MobilePaymentsList";
 import { BulkDeletePaymentsDialog } from "@/components/payments/BulkDeletePaymentsDialog";
 import { PaymentsTimeline } from "@/components/payments/PaymentsTimeline";
 import { PaymentTrendsChart } from "@/components/payments/PaymentTrendsChart";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { usePaymentsInfinite } from "@/hooks/usePaymentsInfinite";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 import { DateRange } from "react-day-picker";
 import { useNavigate } from "react-router-dom";
-import { Euro, TrendingUp, Clock, CreditCard, Download, Trash2, X, List, Calendar as CalendarIcon } from "lucide-react";
+import { Euro, TrendingUp, Clock, CreditCard, Download, Trash2, X, List, Calendar as CalendarIcon, Loader2, RefreshCw } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useDeletePayment, useBulkDeletePayments } from "@/hooks/usePayments";
 import { useRealtimeSync } from "@/hooks/useRealtimeSync";
@@ -25,25 +24,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { formatCurrency } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
-
-interface PaymentWithDetails {
-  id: string;
-  tipo: string;
-  importo: number;
-  metodo: string;
-  data_pagamento: string;
-  riferimento: string | null;
-  ordine_id: string;
-  orders: {
-    id: string;
-    stato: string;
-    importo_totale: number;
-    dealer_id: string;
-    dealers: {
-      ragione_sociale: string;
-    };
-  };
-}
+import { useInView } from "react-intersection-observer";
 
 const Pagamenti = () => {
   useRealtimeSync();
@@ -62,43 +43,26 @@ const Pagamenti = () => {
   const [newPaymentDialogOpen, setNewPaymentDialogOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"table" | "timeline">("table");
 
-  const { data: payments = [], isLoading } = useQuery({
-    queryKey: ["allPayments", dateRange, tipoFilter, metodoFilter],
-    queryFn: async () => {
-      let query = supabase
-        .from("payments")
-        .select(`
-          *,
-          orders!inner(
-            id,
-            stato,
-            importo_totale,
-            dealer_id,
-            dealers!inner(
-              ragione_sociale
-            )
-          )
-        `)
-        .order("data_pagamento", { ascending: false });
-
-      if (dateRange?.from) {
-        query = query.gte("data_pagamento", format(dateRange.from, "yyyy-MM-dd"));
-      }
-      if (dateRange?.to) {
-        query = query.lte("data_pagamento", format(dateRange.to, "yyyy-MM-dd"));
-      }
-      if (tipoFilter !== "all") {
-        query = query.eq("tipo", tipoFilter as "acconto" | "saldo" | "parziale");
-      }
-      if (metodoFilter !== "all") {
-        query = query.eq("metodo", metodoFilter);
-      }
-
-      const { data, error } = await query;
-      if (error) throw error;
-      return data as PaymentWithDetails[];
-    },
+  // Infinite scroll
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = usePaymentsInfinite({
+    dateRange,
+    tipoFilter,
+    metodoFilter,
   });
+  const { ref, inView } = useInView();
+
+  // Combine all pages
+  const payments = useMemo(
+    () => data?.pages.flatMap(page => page.data) || [],
+    [data]
+  );
+
+  // Auto-fetch next page when scrolling
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const formatDate = (dateString: string) => {
     return format(new Date(dateString), "dd MMM yyyy", { locale: it });
@@ -207,6 +171,24 @@ const Pagamenti = () => {
     );
   }
 
+  if (error) {
+    return (
+      <div className="space-y-6 p-6">
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center">
+            <p className="text-muted-foreground mb-4">Errore nel caricamento dei pagamenti</p>
+            <Button onClick={() => window.location.reload()}>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Ricarica
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const totalCount = data?.pages[0]?.totalCount || 0;
+
   return (
     <div className="space-y-6 p-6">
       <div className="flex justify-between items-start">
@@ -217,7 +199,10 @@ const Pagamenti = () => {
               <Badge variant="secondary">{selectedPaymentIds.size} selezionati</Badge>
             )}
           </div>
-          <p className="text-muted-foreground mt-1">Storico e gestione pagamenti</p>
+          <p className="text-muted-foreground mt-1">
+            {totalCount} pagamenti totali
+            {payments.length < totalCount && ` · ${payments.length} caricati`}
+          </p>
         </div>
         {!isMobile && <NewPaymentDialog open={newPaymentDialogOpen} onOpenChange={setNewPaymentDialogOpen} />}
       </div>
@@ -285,6 +270,9 @@ const Pagamenti = () => {
           onNewPayment={() => setNewPaymentDialogOpen(true)}
           onExport={handleExportCSV}
           userRole={userRole || ''}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          scrollRef={ref}
         />
       ) : (
         <>
@@ -355,6 +343,24 @@ const Pagamenti = () => {
                   )}
                 </TableBody>
               </Table>
+
+              {/* Infinite Scroll Trigger */}
+              {hasNextPage && (
+                <div ref={ref} className="flex justify-center py-4">
+                  {isFetchingNextPage && (
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>Caricamento pagamenti...</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {!hasNextPage && payments.length > 0 && (
+                <div className="text-center py-4 text-sm text-muted-foreground">
+                  Tutti i {payments.length} pagamenti caricati
+                </div>
+              )}
             </Card>
           )}
         </>
