@@ -17,6 +17,8 @@ import NotFound from "./pages/NotFound";
 const Dashboard = lazy(() => import("./pages/SmartDashboard"));
 const Analytics = lazy(() => import("./pages/Analytics"));
 const OrderDetail = lazy(() => import("./pages/OrderDetail"));
+const DealerDetail = lazy(() => import("./pages/DealerDetail"));
+const PaymentDetail = lazy(() => import("./pages/PaymentDetail"));
 const CommercialeDetail = lazy(() => import("./pages/CommercialeDetail"));
 const CommercialeDashboard = lazy(() => import("./pages/CommercialeDashboard"));
 const Orders = lazy(() => import("./pages/Orders"));
@@ -98,6 +100,16 @@ const App = () => (
               }
             />
             <Route
+              path="/rivenditori/:id"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <DealerDetail />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/commerciali"
               element={
                 <ProtectedRoute>
@@ -133,6 +145,16 @@ const App = () => (
                 <ProtectedRoute>
                   <Layout>
                     <Pagamenti />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/pagamenti/:id"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <PaymentDetail />
                   </Layout>
                 </ProtectedRoute>
               }

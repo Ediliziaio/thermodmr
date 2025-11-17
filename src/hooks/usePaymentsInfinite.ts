@@ -12,6 +12,7 @@ export interface PaymentWithDetails {
   metodo: string;
   data_pagamento: string;
   riferimento: string | null;
+  ricevuta_url: string | null;
   ordine_id: string;
   created_at: string;
   orders: {
