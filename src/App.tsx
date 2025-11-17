@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Layout } from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { DashboardRouter } from "./components/DashboardRouter";
 import { Loader2 } from "lucide-react";
 
 // Import immediati per pagine critiche
@@ -15,6 +16,7 @@ import NotFound from "./pages/NotFound";
 
 // Lazy loading per componenti pesanti
 const Dashboard = lazy(() => import("./pages/SmartDashboard"));
+const DealerDashboard = lazy(() => import("./pages/DealerDashboard"));
 const Analytics = lazy(() => import("./pages/Analytics"));
 const OrderDetail = lazy(() => import("./pages/OrderDetail"));
 const DealerDetail = lazy(() => import("./pages/DealerDetail"));
@@ -65,7 +67,7 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Layout>
-                    <Dashboard />
+                    <DashboardRouter />
                   </Layout>
                 </ProtectedRoute>
               }
