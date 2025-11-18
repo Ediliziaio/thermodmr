@@ -22,6 +22,7 @@ export default function Dashboard() {
   
   // State per il date range
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
   
   // Abilita aggiornamenti real-time
   useRealtimeDashboard();
@@ -38,6 +39,7 @@ export default function Dashboard() {
   // Quick filter functions
   const setQuickFilter = (type: 'month' | '3months' | '6months' | 'year' | 'lastyear') => {
     const now = new Date();
+    setActiveFilter(type);
     switch (type) {
       case 'month':
         setDateRange({
@@ -131,41 +133,41 @@ export default function Dashboard() {
           <div className="flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide w-full md:w-auto">
             <Button
               size="sm"
-              variant="outline"
+              variant={activeFilter === 'month' ? 'default' : 'outline'}
               onClick={() => setQuickFilter('month')}
-              className="snap-center min-w-fit"
+              className="snap-center min-w-fit transition-all"
             >
               {isMobile ? "1M" : "Mese Scorso"}
             </Button>
             <Button
               size="sm"
-              variant="outline"
+              variant={activeFilter === '3months' ? 'default' : 'outline'}
               onClick={() => setQuickFilter('3months')}
-              className="snap-center min-w-fit"
+              className="snap-center min-w-fit transition-all"
             >
               {isMobile ? "3M" : "Ultimi 3 Mesi"}
             </Button>
             <Button
               size="sm"
-              variant="outline"
+              variant={activeFilter === '6months' ? 'default' : 'outline'}
               onClick={() => setQuickFilter('6months')}
-              className="snap-center min-w-fit"
+              className="snap-center min-w-fit transition-all"
             >
               {isMobile ? "6M" : "Ultimi 6 Mesi"}
             </Button>
             <Button
               size="sm"
-              variant="outline"
+              variant={activeFilter === 'year' ? 'default' : 'outline'}
               onClick={() => setQuickFilter('year')}
-              className="snap-center min-w-fit"
+              className="snap-center min-w-fit transition-all"
             >
               {isMobile ? "1A" : "Anno Corrente"}
             </Button>
             <Button
               size="sm"
-              variant="outline"
+              variant={activeFilter === 'lastyear' ? 'default' : 'outline'}
               onClick={() => setQuickFilter('lastyear')}
-              className="snap-center min-w-fit"
+              className="snap-center min-w-fit transition-all"
             >
               {isMobile ? "AA" : "Anno Scorso"}
             </Button>

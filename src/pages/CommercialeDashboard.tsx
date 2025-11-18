@@ -8,8 +8,16 @@ import {
   Euro, 
   Users,
   Package,
-  DollarSign
+  DollarSign,
+  FileText,
+  Store,
+  Plus
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { EmptyState } from "@/components/dashboard/EmptyState";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
 import {
   LineChart,
   Line,
@@ -62,6 +70,7 @@ const STATUS_LABELS: Record<string, string> = {
 
 export default function CommercialeDashboard() {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { data, isLoading } = useCommercialeDashboard(user?.id);
 
@@ -292,39 +301,93 @@ export default function CommercialeDashboard() {
           <CardTitle className={isMobile ? "text-base" : ""}>Ultimi 5 Ordini</CardTitle>
         </CardHeader>
         <CardContent className={isMobile ? "p-4 pt-0" : ""}>
-          <div className="space-y-3 md:space-y-4">
-            {data.latestOrders.map((order) => (
-              <div
-                key={order.id}
-                className="flex items-center justify-between border-b pb-3 last:border-0"
-              >
-                <div className="flex items-center gap-4">
-                  <Package className="h-8 w-8 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium">{order.id}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {(order.dealers as any)?.[0]?.ragione_sociale || "N/A"}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {format(new Date(order.data_inserimento), "dd MMM yyyy, HH:mm", {
-                        locale: it,
+          {data.latestOrders.length === 0 ? (
+            <EmptyState
+              icon={FileText}
+              title="Nessun ordine recente"
+              description="Non ci sono ordini nel periodo recente. Crea un nuovo ordine per iniziare."
+              action={
+                <Button onClick={() => navigate("/ordini")}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Crea Ordine
+                </Button>
+              }
+            />
+          ) : isMobile ? (
+            <div className="space-y-3">
+              {data.latestOrders.map((order) => (
+                <Card 
+                  key={order.id}
+                  className="cursor-pointer hover:bg-accent/50 transition-colors"
+                  onClick={() => navigate(`/ordini/${order.id}`)}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex justify-between items-start mb-3">
+                      <div>
+                        <p className="font-semibold text-base">{order.id}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {(order.dealers as any)?.[0]?.ragione_sociale || "N/A"}
+                        </p>
+                      </div>
+                      <Badge variant="outline" className="text-xs">
+                        {STATUS_LABELS[order.stato] || order.stato}
+                      </Badge>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <p className="text-muted-foreground text-xs">Importo</p>
+                        <p className="font-bold text-lg">
+                          €{Number(order.importo_totale).toLocaleString("it-IT", { minimumFractionDigits: 2 })}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground text-xs">Data</p>
+                        <p className="font-medium">
+                          {format(new Date(order.data_inserimento), "dd MMM yyyy", { locale: it })}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-3 md:space-y-4">
+              {data.latestOrders.map((order) => (
+                <div
+                  key={order.id}
+                  className="flex items-center justify-between border-b pb-3 last:border-0 hover:bg-accent/50 transition-colors cursor-pointer rounded p-2"
+                  onClick={() => navigate(`/ordini/${order.id}`)}
+                >
+                  <div className="flex items-center gap-4">
+                    <Package className="h-8 w-8 text-muted-foreground" />
+                    <div>
+                      <p className="font-medium">{order.id}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {(order.dealers as any)?.[0]?.ragione_sociale || "N/A"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {format(new Date(order.data_inserimento), "dd MMM yyyy, HH:mm", {
+                          locale: it,
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-bold">
+                      €{Number(order.importo_totale).toLocaleString("it-IT", {
+                        minimumFractionDigits: 2,
                       })}
                     </p>
+                    <Badge variant="outline" className="mt-1">
+                      {STATUS_LABELS[order.stato] || order.stato}
+                    </Badge>
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-bold">
-                    €{Number(order.importo_totale).toLocaleString("it-IT", {
-                      minimumFractionDigits: 2,
-                    })}
-                  </p>
-                  <Badge variant="outline" className="mt-1">
-                    {STATUS_LABELS[order.stato] || order.stato}
-                  </Badge>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

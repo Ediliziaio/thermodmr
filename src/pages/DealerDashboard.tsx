@@ -15,7 +15,7 @@ import {
   ExternalLink,
   CreditCard
 } from "lucide-react";
-import { formatCurrency, getStatusColor, getStatusLabel } from "@/lib/utils";
+import { formatCurrency, getStatusColor, getStatusLabel, cn } from "@/lib/utils";
 import { useDealerOrderStats, useRecentActivity, usePaymentReminders } from "@/hooks/useDealerDashboard";
 import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
@@ -234,12 +234,25 @@ export default function DealerDashboard() {
         </Card>
 
         {/* Payment Reminders */}
-        <Card className="md:col-span-2">
+        <Card className={cn(
+          "md:col-span-2 border-l-4 transition-all",
+          reminders && reminders.length > 0 ? "border-l-destructive shadow-lg" : "border-l-transparent"
+        )}>
           <CardHeader className="p-4 sm:p-6">
-            <CardTitle className="text-lg md:text-xl flex items-center gap-2">
-              <AlertCircle className="h-5 w-5 text-warning" />
-              Promemoria Pagamenti
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <AlertCircle className={cn(
+                  "h-5 w-5",
+                  reminders && reminders.length > 0 ? "text-destructive" : "text-warning"
+                )} />
+                <CardTitle className="text-lg md:text-xl">Promemoria Pagamenti</CardTitle>
+              </div>
+              {reminders && reminders.length > 0 && (
+                <Badge variant="destructive" className="animate-pulse">
+                  {reminders.length}
+                </Badge>
+              )}
+            </div>
             <CardDescription className="text-xs md:text-sm">
               Ordini che richiedono attenzione per i pagamenti
             </CardDescription>
@@ -256,12 +269,13 @@ export default function DealerDashboard() {
                 {reminders.map((reminder) => (
                   <div
                     key={reminder.orderId}
-                    className="border rounded-lg p-4 hover:bg-accent/50 transition-colors cursor-pointer"
+                    className="border rounded-lg p-4 hover:bg-destructive/5 transition-colors cursor-pointer bg-destructive/5 border-destructive/20"
                     onClick={() => navigate(`/ordini/${reminder.orderId}`)}
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
+                          <AlertCircle className="h-4 w-4 text-destructive" />
                           <span className="font-medium">Ordine {reminder.orderId}</span>
                           <Badge variant="outline" className={getStatusColor(reminder.stato)}>
                             {getStatusLabel(reminder.stato)}
@@ -278,7 +292,7 @@ export default function DealerDashboard() {
                           </div>
                           <div>
                             <p className="text-muted-foreground">Rimanente</p>
-                            <p className="font-medium text-warning">{formatCurrency(reminder.remainingAmount)}</p>
+                            <p className="font-bold text-destructive">{formatCurrency(reminder.remainingAmount)}</p>
                           </div>
                         </div>
                         <div className="mt-3">
@@ -289,8 +303,12 @@ export default function DealerDashboard() {
                           <Progress value={reminder.percentage} className="h-2" />
                         </div>
                       </div>
-                      <Button variant="outline" size="sm">
-                        <ExternalLink className="h-4 w-4" />
+                      <Button variant="destructive" size="sm" onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/ordini/${reminder.orderId}`);
+                      }}>
+                        <CreditCard className="h-3 w-3 mr-1" />
+                        Paga
                       </Button>
                     </div>
                   </div>
@@ -299,7 +317,8 @@ export default function DealerDashboard() {
             ) : (
               <div className="text-center py-8 text-muted-foreground">
                 <CheckCircle className="h-12 w-12 mx-auto mb-3 opacity-50 text-success" />
-                <p>Ottimo! Nessun pagamento in sospeso</p>
+                <p className="text-sm font-medium">Tutto in regola!</p>
+                <p className="text-xs mt-1">Non ci sono pagamenti in sospeso.</p>
               </div>
             )}
           </CardContent>
