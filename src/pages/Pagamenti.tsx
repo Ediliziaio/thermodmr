@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PaymentFilters } from "@/components/payments/PaymentFilters";
+import { MobilePaymentFilters } from "@/components/payments/MobilePaymentFilters";
 import { NewPaymentDialog } from "@/components/payments/NewPaymentDialog";
 import { MobilePaymentsList } from "@/components/payments/MobilePaymentsList";
 import { BulkDeletePaymentsDialog } from "@/components/payments/BulkDeletePaymentsDialog";
@@ -16,7 +17,7 @@ import { format } from "date-fns";
 import { it } from "date-fns/locale";
 import { DateRange } from "react-day-picker";
 import { useNavigate } from "react-router-dom";
-import { Euro, TrendingUp, Clock, CreditCard, Download, Trash2, X, List, Calendar as CalendarIcon, Loader2, RefreshCw } from "lucide-react";
+import { Euro, TrendingUp, Clock, CreditCard, Download, Trash2, X, List, Calendar as CalendarIcon, Loader2, RefreshCw, Plus } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useDeletePayment, useBulkDeletePayments } from "@/hooks/usePayments";
 import { useRealtimeSync } from "@/hooks/useRealtimeSync";
@@ -236,31 +237,28 @@ const Pagamenti = () => {
 
       {/* Views */}
       {isMobile ? (
-        <MobilePaymentsList
-          payments={payments}
-          selectedPaymentIds={selectedPaymentIds}
-          onToggleSelect={togglePaymentSelection}
-          onViewOrder={(id) => navigate(`/ordini/${id}`)}
-          onDeletePayment={handleDeletePayment}
-          dateRange={dateRange}
-          onDateRangeChange={setDateRange}
-          tipoFilter={tipoFilter}
-          onTipoFilterChange={setTipoFilter}
-          metodoFilter={metodoFilter}
-          onMetodoFilterChange={setMetodoFilter}
-          onResetFilters={handleResetFilters}
-          onNewPayment={() => setNewPaymentDialogOpen(true)}
-          onExport={() => setExportDialogOpen(true)}
-          userRole={userRole || ''}
-          hasNextPage={hasNextPage}
-          isFetchingNextPage={isFetchingNextPage}
-          scrollRef={ref}
-        />
-      ) : (
         <>
-          <div className="flex items-center gap-4">
-            <div className="flex-1">
-          <PaymentFilters
+          <MobilePaymentsList
+            payments={payments}
+            selectedPaymentIds={selectedPaymentIds}
+            onToggleSelect={togglePaymentSelection}
+            onViewOrder={(id) => navigate(`/ordini/${id}`)}
+            onDeletePayment={handleDeletePayment}
+            dateRange={dateRange}
+            onDateRangeChange={setDateRange}
+            tipoFilter={tipoFilter}
+            onTipoFilterChange={setTipoFilter}
+            metodoFilter={metodoFilter}
+            onMetodoFilterChange={setMetodoFilter}
+            onResetFilters={handleResetFilters}
+            onNewPayment={() => setNewPaymentDialogOpen(true)}
+            onExport={() => setExportDialogOpen(true)}
+            userRole={userRole || ''}
+            hasNextPage={hasNextPage}
+            isFetchingNextPage={isFetchingNextPage}
+            scrollRef={ref}
+          />
+          <MobilePaymentFilters
             dateRange={dateRange}
             onDateRangeChange={setDateRange}
             tipoFilter={tipoFilter}
@@ -271,6 +269,22 @@ const Pagamenti = () => {
             onSearchQueryChange={setSearchQuery}
             onReset={handleResetFilters}
           />
+        </>
+      ) : (
+        <>
+          <div className="flex items-center gap-4">
+            <div className="flex-1">
+              <PaymentFilters
+                dateRange={dateRange}
+                onDateRangeChange={setDateRange}
+                tipoFilter={tipoFilter}
+                onTipoFilterChange={setTipoFilter}
+                metodoFilter={metodoFilter}
+                onMetodoFilterChange={setMetodoFilter}
+                searchQuery={searchQuery}
+                onSearchQueryChange={setSearchQuery}
+                onReset={handleResetFilters}
+              />
             </div>
             <div className="flex items-center gap-2">
               <Button variant={viewMode === "table" ? "default" : "outline"} size="sm" onClick={() => setViewMode("table")}>
@@ -367,6 +381,17 @@ const Pagamenti = () => {
             </CardContent>
           </Card>
         </div>
+      )}
+
+      {/* FAB for New Payment (Mobile Only) */}
+      {isMobile && selectedPaymentIds.size === 0 && userRole !== 'rivenditore' && (
+        <Button
+          size="lg"
+          className="fixed bottom-6 right-4 h-14 w-14 rounded-full shadow-lg z-40"
+          onClick={() => setNewPaymentDialogOpen(true)}
+        >
+          <Plus className="h-6 w-6" />
+        </Button>
       )}
 
       <BulkDeletePaymentsDialog open={bulkDeleteDialogOpen} onOpenChange={setBulkDeleteDialogOpen} selectedPaymentIds={Array.from(selectedPaymentIds)} onConfirm={handleBulkDelete} isPending={bulkDeleteMutation.isPending} />
