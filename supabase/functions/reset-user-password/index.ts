@@ -144,6 +144,34 @@ serve(async (req) => {
 
     console.log("Successfully reset password for user:", userId);
 
+    // Log the password reset action in audit_log
+    try {
+      const { error: auditError } = await supabaseAdmin
+        .from('audit_log')
+        .insert({
+          entity: 'user',
+          azione: 'password_reset',
+          entity_id: userId,
+          user_id: callingUser.id,
+          old_values: null, // Don't store password values for security
+          new_values: { 
+            action: 'Password reset by admin',
+            reset_by: callingUser.email,
+            reset_at: new Date().toISOString()
+          }
+        });
+
+      if (auditError) {
+        console.error("Failed to create audit log entry:", auditError);
+        // Don't fail the request if audit logging fails, just log the error
+      } else {
+        console.log("Audit log entry created for password reset");
+      }
+    } catch (auditLogError) {
+      console.error("Exception creating audit log:", auditLogError);
+      // Don't fail the request if audit logging fails
+    }
+
     // Return success with new password
     return new Response(
       JSON.stringify({ 
