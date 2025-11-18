@@ -9,6 +9,7 @@ import { UserPlus, Mail, Shield, Users, Briefcase, Store } from "lucide-react";
 import { useUsers, useUpdateUserRole, useUpdateUserStatus } from "@/hooks/useSettings";
 import { Skeleton } from "@/components/ui/skeleton";
 import InviteUserDialog from "./InviteUserDialog";
+import ResetPasswordDialog from "./ResetPasswordDialog";
 
 const UserManagementSection = () => {
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
@@ -58,7 +59,7 @@ const UserManagementSection = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <Select
           value={user.roles[0] || ""}
           onValueChange={(value) =>
@@ -77,6 +78,16 @@ const UserManagementSection = () => {
             <SelectItem value="rivenditore">Rivenditore</SelectItem>
           </SelectContent>
         </Select>
+
+        <ResetPasswordDialog
+          userId={user.id}
+          userName={user.display_name}
+          trigger={
+            <Button variant="outline" size="sm">
+              Reset Password
+            </Button>
+          }
+        />
 
         <div className="flex items-center gap-2">
           <Switch
