@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, Loader2, AlertCircle, RefreshCw, X, Trash2, Download } from "lucide-react";
+import { Eye, Loader2, AlertCircle, RefreshCw, X, Trash2, Download, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useOrdersInfinite } from "@/hooks/useOrdersInfinite";
 import { NewOrderDialog } from "@/components/orders/NewOrderDialog";
@@ -10,6 +10,7 @@ import { BulkUpdateStatusDialog } from "@/components/orders/BulkUpdateStatusDial
 import { BulkDeleteOrdersDialog } from "@/components/orders/BulkDeleteOrdersDialog";
 import { OrderFilters, OrderFiltersState } from "@/components/orders/OrderFilters";
 import { MobileOrdersList } from "@/components/orders/MobileOrdersList";
+import { MobileOrderFilters } from "@/components/orders/MobileOrderFilters";
 import { exportOrdersCustom, ORDER_COLUMNS } from "@/lib/exportUtils";
 import { ExportColumnsDialog } from "@/components/export/ExportColumnsDialog";
 import { toast } from "@/hooks/use-toast";
@@ -383,24 +384,31 @@ export default function Orders() {
 
       {/* Vista Condizionale: Mobile vs Desktop */}
       {isMobile ? (
-        <MobileOrdersList
-          orders={filteredOrders}
-          selectedOrderIds={selectedOrderIds}
-          onToggleSelect={toggleOrderSelection}
-          onViewDetails={(id) => navigate(`/ordini/${id}`)}
-          filters={filters}
-          onFiltersChange={setFilters}
-          dealers={dealers}
-          userRole={userRole || ''}
-          onNewOrder={() => setNewOrderDialogOpen(true)}
-        />
+        <>
+          <MobileOrdersList
+            orders={filteredOrders}
+            selectedOrderIds={selectedOrderIds}
+            onToggleSelect={toggleOrderSelection}
+            onViewDetails={(id) => navigate(`/ordini/${id}`)}
+            userRole={userRole || ''}
+          />
+          <MobileOrderFilters
+            filters={filters}
+            onFiltersChange={setFilters}
+            dealers={dealers || []}
+            searchQuery={searchQuery}
+            onSearchQueryChange={setSearchQuery}
+          />
+        </>
       ) : (
         <>
-          {/* Filtri */}
+          {/* Filtri Desktop */}
           <OrderFilters
             filters={filters}
             onFiltersChange={setFilters}
             dealers={dealers || []}
+            searchQuery={searchQuery}
+            onSearchQueryChange={setSearchQuery}
           />
 
           {/* Orders Table */}

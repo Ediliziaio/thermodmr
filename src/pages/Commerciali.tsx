@@ -196,15 +196,13 @@ export default function Commerciali() {
         </div>
 
         {/* Mobile Filters */}
-        <div className="px-4">
-          <MobileCommercialFilters
-            searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
-            statusFilter={statusFilter}
-            onStatusChange={setStatusFilter}
-            resultsCount={filteredCommerciali.length}
-          />
-        </div>
+        <MobileCommercialFilters
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          statusFilter={statusFilter}
+          onStatusChange={setStatusFilter}
+          resultsCount={filteredCommerciali.length}
+        />
 
         {/* Mobile Commercial Cards */}
         <div className="space-y-3 px-4">
