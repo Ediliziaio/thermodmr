@@ -1,6 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCommercialeDashboard } from "@/hooks/useCommercialeDashboard";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { 
   TrendingUp, 
   ShoppingCart, 
@@ -60,6 +61,7 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 export default function CommercialeDashboard() {
+  const isMobile = useIsMobile();
   const { user } = useAuth();
   const { data, isLoading } = useCommercialeDashboard(user?.id);
 
@@ -85,18 +87,18 @@ export default function CommercialeDashboard() {
   }));
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto p-4 md:p-6 space-y-4 md:space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Dashboard Commerciale</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl md:text-3xl font-bold">Dashboard Commerciale</h1>
+          <p className="text-sm md:text-base text-muted-foreground">
             Panoramica delle tue performance e statistiche commerciali
           </p>
         </div>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 xl:grid-cols-5">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Ordini Totali</CardTitle>
@@ -237,35 +239,60 @@ export default function CommercialeDashboard() {
           </CardContent>
         </Card>
 
+        {/* Top Dealers */}
         <Card>
-          <CardHeader>
-            <CardTitle>Top 5 Dealers per Fatturato</CardTitle>
+          <CardHeader className={isMobile ? "p-4" : ""}>
+            <CardTitle className={isMobile ? "text-base" : ""}>Top 5 Rivenditori per Fatturato</CardTitle>
           </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={data.topDealers} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" />
-                <YAxis dataKey="name" type="category" width={120} />
+          <CardContent className={isMobile ? "p-4 pt-0" : ""}>
+            <ResponsiveContainer width="100%" height={isMobile ? 280 : 300}>
+              <BarChart 
+                data={data.topDealers} 
+                layout="vertical"
+                margin={isMobile ? { top: 5, right: 5, left: -10, bottom: 5 } : undefined}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
+                <XAxis 
+                  type="number"
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: isMobile ? 10 : 12 }}
+                  tickFormatter={(value) => `€${(value / 1000).toFixed(0)}k`}
+                />
+                <YAxis 
+                  dataKey="name" 
+                  type="category"
+                  tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: isMobile ? 10 : 12 }}
+                  width={isMobile ? 80 : 120}
+                />
                 <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '8px',
+                    fontSize: isMobile ? '11px' : '13px',
+                  }}
                   formatter={(value: number) =>
                     `€${value.toLocaleString("it-IT", { minimumFractionDigits: 2 })}`
                   }
                 />
-                <Bar dataKey="revenue" fill={COLORS.primary} name="Fatturato" />
+                <Bar 
+                  dataKey="revenue" 
+                  fill={COLORS.primary}
+                  radius={[0, 4, 4, 0]}
+                  name="Fatturato"
+                />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
       </div>
 
-      {/* Latest Orders */}
+      {/* Recent Orders */}
       <Card>
-        <CardHeader>
-          <CardTitle>Ultimi 5 Ordini</CardTitle>
+        <CardHeader className={isMobile ? "p-4" : ""}>
+          <CardTitle className={isMobile ? "text-base" : ""}>Ultimi 5 Ordini</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
+        <CardContent className={isMobile ? "p-4 pt-0" : ""}>
+          <div className="space-y-3 md:space-y-4">
             {data.latestOrders.map((order) => (
               <div
                 key={order.id}

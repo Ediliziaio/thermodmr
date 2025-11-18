@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface RevenueChartProps {
   data: Array<{
@@ -11,6 +12,8 @@ interface RevenueChartProps {
 }
 
 export function RevenueChart({ data }: RevenueChartProps) {
+  const isMobile = useIsMobile();
+  
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("it-IT", {
       style: "currency",
@@ -22,23 +25,30 @@ export function RevenueChart({ data }: RevenueChartProps) {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Andamento Ricavi</CardTitle>
-        <CardDescription>Ultimi 6 mesi</CardDescription>
+      <CardHeader className={isMobile ? "p-4" : ""}>
+        <CardTitle className={isMobile ? "text-base" : ""}>Andamento Ricavi</CardTitle>
+        <CardDescription className={isMobile ? "text-xs" : ""}>Ultimi 6 mesi</CardDescription>
       </CardHeader>
-      <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={data}>
+      <CardContent className={isMobile ? "p-4 pt-0" : ""}>
+        <ResponsiveContainer width="100%" height={isMobile ? 220 : 300}>
+          <LineChart 
+            data={data}
+            margin={isMobile ? { top: 5, right: 5, left: -20, bottom: 5 } : undefined}
+          >
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
             <XAxis 
               dataKey="month" 
               className="text-xs"
-              tick={{ fill: 'hsl(var(--muted-foreground))' }}
+              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: isMobile ? 10 : 12 }}
+              angle={isMobile ? -35 : 0}
+              textAnchor={isMobile ? "end" : "middle"}
+              height={isMobile ? 60 : 30}
             />
             <YAxis 
               className="text-xs"
               tickFormatter={formatCurrency}
-              tick={{ fill: 'hsl(var(--muted-foreground))' }}
+              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: isMobile ? 10 : 12 }}
+              width={isMobile ? 50 : 60}
             />
             <Tooltip
               formatter={(value: number) => formatCurrency(value)}
@@ -46,32 +56,36 @@ export function RevenueChart({ data }: RevenueChartProps) {
                 backgroundColor: 'hsl(var(--card))',
                 border: '1px solid hsl(var(--border))',
                 borderRadius: '8px',
+                fontSize: isMobile ? '11px' : '13px',
               }}
             />
-            <Legend />
+            <Legend 
+              iconSize={isMobile ? 8 : 12}
+              wrapperStyle={{ fontSize: isMobile ? '10px' : '12px' }}
+            />
             <Line
               type="monotone"
               dataKey="ricavi"
               name="Ricavi Totali"
               stroke="hsl(var(--primary))"
-              strokeWidth={2}
-              dot={{ fill: 'hsl(var(--primary))', r: 4 }}
+              strokeWidth={isMobile ? 1.5 : 2}
+              dot={{ fill: 'hsl(var(--primary))', r: isMobile ? 3 : 4 }}
             />
             <Line
               type="monotone"
               dataKey="acconti"
               name="Acconti"
               stroke="hsl(var(--chart-2))"
-              strokeWidth={2}
-              dot={{ fill: 'hsl(var(--chart-2))', r: 4 }}
+              strokeWidth={isMobile ? 1.5 : 2}
+              dot={{ fill: 'hsl(var(--chart-2))', r: isMobile ? 3 : 4 }}
             />
             <Line
               type="monotone"
               dataKey="incassato"
               name="Incassato"
               stroke="hsl(var(--chart-3))"
-              strokeWidth={2}
-              dot={{ fill: 'hsl(var(--chart-3))', r: 4 }}
+              strokeWidth={isMobile ? 1.5 : 2}
+              dot={{ fill: 'hsl(var(--chart-3))', r: isMobile ? 3 : 4 }}
             />
           </LineChart>
         </ResponsiveContainer>

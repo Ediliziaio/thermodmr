@@ -51,23 +51,23 @@ export default function DealerDashboard() {
   const newActivitiesCount = activities?.filter(a => a.isNew).length || 0;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 md:space-y-6 lg:space-y-8 p-4 md:p-6">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Benvenuto</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Benvenuto</h1>
+          <p className="text-sm md:text-base text-muted-foreground mt-1">
             Panoramica dei tuoi ordini e notifiche
           </p>
         </div>
-        <Button onClick={() => navigate("/ordini")} size="lg">
+        <Button onClick={() => navigate("/ordini")} size="lg" className="min-h-[44px]">
           <Plus className="h-4 w-4 mr-2" />
           Nuovo Ordine
         </Button>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Ordini Totali</CardTitle>
@@ -121,16 +121,17 @@ export default function DealerDashboard() {
         </Card>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Orders by Status */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Ordini per Stato</CardTitle>
-            <CardDescription>
-              Distribuzione dei tuoi ordini per stato corrente
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+      {/* Recent Activity & Payment Reminders Grid */}
+      <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2">
+      {/* Order Distribution by Status */}
+      <Card>
+        <CardHeader className="p-4 sm:p-6">
+          <CardTitle className="text-lg md:text-xl">Distribuzione Ordini per Stato</CardTitle>
+          <CardDescription className="text-xs md:text-sm">
+            I tuoi ordini suddivisi per stato di avanzamento
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3 md:space-y-4 p-4 sm:p-6 pt-0">
             {Object.entries(stats.ordersByStatus).map(([status, count]) => (
               <div key={status} className="space-y-2">
                 <div className="flex items-center justify-between">
@@ -167,22 +168,20 @@ export default function DealerDashboard() {
           </CardContent>
         </Card>
 
-        {/* Recent Activity & Notifications */}
+        {/* Recent Activity */}
         <Card>
-          <CardHeader>
+          <CardHeader className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Notifiche Recenti</CardTitle>
-                <CardDescription>
-                  Aggiornamenti sugli ordini degli ultimi 7 giorni
-                </CardDescription>
-              </div>
+              <CardTitle className="text-lg md:text-xl">Attività Recente</CardTitle>
               {newActivitiesCount > 0 && (
-                <Badge variant="default" className="bg-primary">
+                <Badge variant="default" className="bg-primary text-xs">
                   {newActivitiesCount} nuove
                 </Badge>
               )}
             </div>
+            <CardDescription className="text-xs md:text-sm">
+              Aggiornamenti sugli ordini degli ultimi 7 giorni
+            </CardDescription>
           </CardHeader>
           <CardContent>
             {activitiesLoading ? (
@@ -236,12 +235,12 @@ export default function DealerDashboard() {
 
         {/* Payment Reminders */}
         <Card className="md:col-span-2">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="text-lg md:text-xl flex items-center gap-2">
               <AlertCircle className="h-5 w-5 text-warning" />
               Promemoria Pagamenti
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-xs md:text-sm">
               Ordini che richiedono attenzione per i pagamenti
             </CardDescription>
           </CardHeader>
