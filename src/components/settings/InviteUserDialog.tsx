@@ -11,8 +11,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Copy, AlertCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface InviteUserDialogProps {
   open: boolean;
@@ -20,10 +23,39 @@ interface InviteUserDialogProps {
 }
 
 const InviteUserDialog = ({ open, onOpenChange }: InviteUserDialogProps) => {
+  const queryClient = useQueryClient();
   const [email, setEmail] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [role, setRole] = useState<string>("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [createdPassword, setCreatedPassword] = useState<string | null>(null);
+
+  const generateSecurePassword = (): string => {
+    const length = 12;
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+    let pwd = "";
+    for (let i = 0; i < length; i++) {
+      pwd += charset.charAt(Math.floor(Math.random() * charset.length));
+    }
+    return pwd;
+  };
+
+  const resetForm = () => {
+    setEmail("");
+    setDisplayName("");
+    setRole("");
+    setPassword("");
+    setCreatedPassword(null);
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "Copiato!",
+      description: "Password copiata negli appunti",
+    });
+  };
 
   const handleInvite = async () => {
     if (!email || !displayName || !role) {
@@ -37,22 +69,46 @@ const InviteUserDialog = ({ open, onOpenChange }: InviteUserDialogProps) => {
 
     setLoading(true);
     try {
-      // Note: This requires the assign-role edge function to be invoked
-      // For now, we'll show a message that the user needs to sign up first
+      // Generate password if not provided
+      const finalPassword = password || generateSecurePassword();
+      
+      // Get current session
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        throw new Error("Sessione non valida");
+      }
+
+      // Call create-user edge function
+      const response = await supabase.functions.invoke('create-user', {
+        body: {
+          email,
+          password: finalPassword,
+          display_name: displayName,
+          role,
+        },
+      });
+
+      if (response.error) {
+        throw new Error(response.error.message || 'Errore durante la creazione');
+      }
+
+      // Show success with password
+      setCreatedPassword(finalPassword);
+      
       toast({
-        title: "Invito preparato",
-        description: `Invia questo link di registrazione a ${displayName}: ${window.location.origin}/auth con email: ${email}. Dopo la registrazione, assegna il ruolo "${role}" da questa sezione.`,
+        title: "✅ Utente creato con successo",
+        description: `${displayName} è stato aggiunto al sistema`,
       });
       
-      onOpenChange(false);
-      setEmail("");
-      setDisplayName("");
-      setRole("");
-    } catch (error) {
-      console.error("Error inviting user:", error);
+      // Invalidate users query to refresh the list
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      
+    } catch (error: any) {
+      console.error("Error creating user:", error);
       toast({
         title: "Errore",
-        description: "Impossibile inviare l'invito",
+        description: error.message || "Impossibile creare l'utente",
         variant: "destructive",
       });
     } finally {
@@ -60,60 +116,130 @@ const InviteUserDialog = ({ open, onOpenChange }: InviteUserDialogProps) => {
     }
   };
 
+  const handleClose = () => {
+    resetForm();
+    onOpenChange(false);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Invita Nuovo Utente</DialogTitle>
+          <DialogTitle>Crea Nuovo Utente</DialogTitle>
           <DialogDescription>
-            Inserisci i dettagli del nuovo utente da invitare nel sistema
+            Inserisci i dettagli del nuovo utente. L'account sarà attivo immediatamente.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email *</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="utente@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
+        {createdPassword ? (
+          <div className="space-y-4 py-4">
+            <Alert>
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                ⚠️ Salvare la password - sarà mostrata solo ora
+              </AlertDescription>
+            </Alert>
 
-          <div className="space-y-2">
-            <Label htmlFor="displayName">Nome Visualizzato *</Label>
-            <Input
-              id="displayName"
-              placeholder="Mario Rossi"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-            />
-          </div>
+            <div className="space-y-2">
+              <Label>Email</Label>
+              <div className="p-2 bg-muted rounded text-sm">
+                {email}
+              </div>
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="role">Ruolo *</Label>
-            <Select value={role} onValueChange={setRole}>
-              <SelectTrigger>
-                <SelectValue placeholder="Seleziona un ruolo" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="super_admin">Super Admin</SelectItem>
-                <SelectItem value="commerciale">Commerciale</SelectItem>
-                <SelectItem value="rivenditore">Rivenditore</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="space-y-2">
+              <Label>Password Temporanea</Label>
+              <div className="flex gap-2">
+                <code className="flex-1 p-2 bg-muted rounded text-sm break-all">
+                  {createdPassword}
+                </code>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => copyToClipboard(createdPassword)}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            <Alert className="bg-amber-500/10 border-amber-500/20">
+              <AlertDescription className="text-sm">
+                L'utente può accedere immediatamente con queste credenziali. Consigliato cambiare la password al primo accesso.
+              </AlertDescription>
+            </Alert>
           </div>
-        </div>
+        ) : (
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email *</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="utente@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={loading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="displayName">Nome Visualizzato *</Label>
+              <Input
+                id="displayName"
+                placeholder="Mario Rossi"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                disabled={loading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="role">Ruolo *</Label>
+              <Select value={role} onValueChange={setRole} disabled={loading}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Seleziona un ruolo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="super_admin">Super Admin</SelectItem>
+                  <SelectItem value="commerciale">Commerciale</SelectItem>
+                  <SelectItem value="rivenditore">Rivenditore</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password">Password (opzionale)</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="Lascia vuoto per generare automaticamente"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={loading}
+              />
+              <p className="text-xs text-muted-foreground">
+                Se vuota, verrà generata una password sicura di 12 caratteri
+              </p>
+            </div>
+          </div>
+        )}
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Annulla
-          </Button>
-          <Button onClick={handleInvite} disabled={loading}>
-            {loading ? "Invio..." : "Invia Invito"}
-          </Button>
+          {createdPassword ? (
+            <Button onClick={handleClose} className="w-full">
+              Chiudi
+            </Button>
+          ) : (
+            <>
+              <Button variant="outline" onClick={handleClose} disabled={loading}>
+                Annulla
+              </Button>
+              <Button onClick={handleInvite} disabled={loading}>
+                {loading ? "Creazione..." : "Crea Utente"}
+              </Button>
+            </>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>
