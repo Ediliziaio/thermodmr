@@ -27,7 +27,6 @@ const InviteUserDialog = ({ open, onOpenChange }: InviteUserDialogProps) => {
   const [email, setEmail] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [role, setRole] = useState<string>("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [createdPassword, setCreatedPassword] = useState<string | null>(null);
 
@@ -45,7 +44,6 @@ const InviteUserDialog = ({ open, onOpenChange }: InviteUserDialogProps) => {
     setEmail("");
     setDisplayName("");
     setRole("");
-    setPassword("");
     setCreatedPassword(null);
   };
 
@@ -69,21 +67,14 @@ const InviteUserDialog = ({ open, onOpenChange }: InviteUserDialogProps) => {
 
     setLoading(true);
     try {
-      // Generate password if not provided
-      const finalPassword = password || generateSecurePassword();
-      
-      // Get current session
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        throw new Error("Sessione non valida");
-      }
+      // Genera sempre password temporanea sicura
+      const tempPassword = generateSecurePassword();
 
       // Call create-user edge function
       const response = await supabase.functions.invoke('create-user', {
         body: {
           email,
-          password: finalPassword,
+          password: tempPassword,
           display_name: displayName,
           role,
         },
@@ -94,7 +85,7 @@ const InviteUserDialog = ({ open, onOpenChange }: InviteUserDialogProps) => {
       }
 
       // Show success with password
-      setCreatedPassword(finalPassword);
+      setCreatedPassword(tempPassword);
       
       toast({
         title: "✅ Utente creato con successo",
@@ -206,21 +197,6 @@ const InviteUserDialog = ({ open, onOpenChange }: InviteUserDialogProps) => {
                   <SelectItem value="rivenditore">Rivenditore</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">Password (opzionale)</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Lascia vuoto per generare automaticamente"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={loading}
-              />
-              <p className="text-xs text-muted-foreground">
-                Se vuota, verrà generata una password sicura di 12 caratteri
-              </p>
             </div>
           </div>
         )}
