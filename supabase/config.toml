@@ -3,9 +3,6 @@ project_id = "wkinpwoqgevbntfuiejd"
 [functions.notify-dealer-reassignment]
 verify_jwt = true
 
-[functions.create-commerciale]
-verify_jwt = true
-
 [functions.create-user]
 verify_jwt = true
 
@@ -16,9 +13,6 @@ verify_jwt = true
 verify_jwt = true
 
 [functions.delete-commerciale]
-verify_jwt = true
-
-[functions.assign-role]
 verify_jwt = true
 
 [functions.seed-test-data]

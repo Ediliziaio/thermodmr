@@ -12,7 +12,6 @@ interface OrderMobileCardProps {
   isSelected: boolean;
   onToggleSelect: () => void;
   onViewDetails: () => void;
-  onShowActions: () => void;
   userRole: string;
 }
 
@@ -21,7 +20,6 @@ export function OrderMobileCard({
   isSelected,
   onToggleSelect,
   onViewDetails,
-  onShowActions,
   userRole,
 }: OrderMobileCardProps) {
   const x = useMotionValue(0);
@@ -212,17 +210,6 @@ export function OrderMobileCard({
               <Eye className="h-4 w-4 mr-2" />
               Dettagli
             </Button>
-            
-            {userRole === 'super_admin' && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-10 w-10 p-0"
-                onClick={onShowActions}
-              >
-                <MoreVertical className="h-5 w-5" />
-              </Button>
-            )}
           </div>
         </CardContent>
       </Card>
