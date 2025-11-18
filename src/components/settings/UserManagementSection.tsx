@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,23 +16,19 @@ const UserManagementSection = () => {
   const updateRole = useUpdateUserRole();
   const updateStatus = useUpdateUserStatus();
 
-  // Filter users by role
-  const adminUsers = users?.filter(u => u.roles.includes('super_admin')) || [];
-  const commercialeUsers = users?.filter(u => u.roles.includes('commerciale')) || [];
-  const rivenditoreUsers = users?.filter(u => u.roles.includes('rivenditore')) || [];
-
-  const getRoleBadgeColor = (role: string) => {
-    switch (role) {
-      case "super_admin":
-        return "bg-red-500";
-      case "commerciale":
-        return "bg-blue-500";
-      case "rivenditore":
-        return "bg-green-500";
-      default:
-        return "bg-muted";
-    }
-  };
+  // Filter users by role with useMemo for optimization
+  const adminUsers = useMemo(() => 
+    users?.filter(u => u.roles.includes('super_admin')) || [], 
+    [users]
+  );
+  const commercialeUsers = useMemo(() => 
+    users?.filter(u => u.roles.includes('commerciale')) || [], 
+    [users]
+  );
+  const rivenditoreUsers = useMemo(() => 
+    users?.filter(u => u.roles.includes('rivenditore')) || [], 
+    [users]
+  );
 
   const getRoleLabel = (role: string) => {
     switch (role) {
@@ -82,19 +78,13 @@ const UserManagementSection = () => {
           </SelectContent>
         </Select>
 
-        <Badge className={getRoleBadgeColor(user.roles[0] || "")}>
-          {getRoleLabel(user.roles[0] || "Nessun ruolo")}
-        </Badge>
-
         <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">
-            {user.is_active ? "Attivo" : "Disattivato"}
-          </span>
           <Switch
             checked={user.is_active}
             onCheckedChange={(checked) =>
               updateStatus.mutate({ userId: user.id, isActive: checked })
             }
+            aria-label={user.is_active ? "Disattiva utente" : "Attiva utente"}
           />
         </div>
       </div>
