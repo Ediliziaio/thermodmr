@@ -217,12 +217,8 @@ export default function Commerciali() {
             >
               <MobileCommercialCard
                 commercial={commerciale}
-                onEdit={(id) => {
-                  console.log("Edit commercial:", id);
-                }}
-                onDelete={(id) => {
-                  console.log("Delete commercial:", id);
-                }}
+                onEdit={() => {}}
+                onDelete={() => {}}
               />
             </motion.div>
           ))}

@@ -2,7 +2,6 @@ import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Layout } from "./components/Layout";
@@ -15,14 +14,11 @@ import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
 // Lazy loading per componenti pesanti
-const Dashboard = lazy(() => import("./pages/SmartDashboard"));
-const DealerDashboard = lazy(() => import("./pages/DealerDashboard"));
 const Analytics = lazy(() => import("./pages/Analytics"));
 const OrderDetail = lazy(() => import("./pages/OrderDetail"));
 const DealerDetail = lazy(() => import("./pages/DealerDetail"));
 const PaymentDetail = lazy(() => import("./pages/PaymentDetail"));
 const CommercialeDetail = lazy(() => import("./pages/CommercialeDetail"));
-const CommercialeDashboard = lazy(() => import("./pages/CommercialeDashboard"));
 const Orders = lazy(() => import("./pages/Orders"));
 const Dealers = lazy(() => import("./pages/Dealers"));
 const Commerciali = lazy(() => import("./pages/Commerciali"));
@@ -33,19 +29,6 @@ const TestDataSeeder = lazy(() => import("./pages/TestDataSeeder"));
 const Impostazioni = lazy(() => import("./pages/Impostazioni"));
 const Placeholder = lazy(() => import("./pages/Placeholder"));
 
-// Ottimizza TanStack Query
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000, // 5 minuti
-      gcTime: 10 * 60 * 1000, // 10 minuti
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: true,
-      retry: 1,
-    },
-  },
-});
-
 // Loading fallback component
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -54,14 +37,13 @@ const PageLoader = () => (
 );
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AuthProvider>
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
+  <TooltipProvider>
+    <Toaster />
+    <Sonner />
+    <BrowserRouter>
+      <AuthProvider>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
             <Route path="/auth" element={<Auth />} />
             <Route
               path="/"
@@ -129,16 +111,6 @@ const App = () => (
                 <ProtectedRoute>
                   <Layout>
                     <CommercialeDetail />
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dashboard-commerciale"
-              element={
-                <ProtectedRoute requiredRole="commerciale">
-                  <Layout>
-                    <CommercialeDashboard />
                   </Layout>
                 </ProtectedRoute>
               }
@@ -222,12 +194,11 @@ const App = () => (
               }
             />
             <Route path="*" element={<NotFound />} />
-          </Routes>
+            </Routes>
           </Suspense>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
-  </QueryClientProvider>
 );
 
 export default App;

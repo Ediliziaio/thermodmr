@@ -92,10 +92,6 @@ export function MobileOrdersList({
               isSelected={selectedOrderIds.has(order.id!)}
               onToggleSelect={() => onToggleSelect(order.id!)}
               onViewDetails={() => onViewDetails(order.id!)}
-              onShowActions={() => {
-                // TODO: Implementare bottom sheet azioni rapide
-                console.log("Actions for order:", order.id);
-              }}
               userRole={userRole}
             />
           ))}
