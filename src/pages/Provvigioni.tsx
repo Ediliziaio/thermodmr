@@ -5,14 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CheckCircle2, Clock, Euro, Download } from "lucide-react";
-import { format } from "date-fns";
-import { it } from "date-fns/locale";
 import { useCommissions, useCommissionsSummary } from "@/hooks/useCommissions";
 import { CommissionStatusBadge } from "@/components/commissions/CommissionStatusBadge";
 import { LiquidateCommissionDialog } from "@/components/commissions/LiquidateCommissionDialog";
 import { ExportColumnsDialog } from "@/components/export/ExportColumnsDialog";
 import { exportCommissionsCustom, COMMISSION_COLUMNS } from "@/lib/exportUtils";
 import { useAuth } from "@/contexts/AuthContext";
+import { formatCurrency, formatDate } from "@/lib/utils";
 
 const Provvigioni = () => {
   const [statusFilter, setStatusFilter] = useState<"all" | "dovuta" | "liquidata">("all");
@@ -30,17 +29,6 @@ const Provvigioni = () => {
   const { data: summary } = useCommissionsSummary(
     hasRole("commerciale") ? user?.id : undefined
   );
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("it-IT", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  };
-
-  const formatDate = (dateString: string) => {
-    return format(new Date(dateString), "dd MMM yyyy", { locale: it });
-  };
 
   const getBaseCalcoloLabel = (base: string) => {
     const labels: Record<string, string> = {

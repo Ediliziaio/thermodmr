@@ -17,7 +17,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency, getStatusLabel, getStatusVariant } from "@/lib/utils";
 
 interface OrderWithStats {
   id: string;
@@ -81,52 +81,12 @@ export function OrderCombobox({
     );
   });
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("it-IT", {
-      style: "currency",
-      currency: "EUR",
-    }).format(amount);
-  };
-
-  const getStatusVariant = (stato: string): "default" | "secondary" | "destructive" | "outline" => {
-    switch (stato) {
-      case "da_confermare":
-        return "outline";
-      case "da_pagare_acconto":
-        return "destructive";
-      case "in_lavorazione":
-        return "default";
-      case "da_consegnare":
-        return "secondary";
-      case "consegnato":
-        return "secondary";
-      default:
-        return "outline";
-    }
-  };
-
-  const getStatusLabel = (stato: string) => {
-    switch (stato) {
-      case "da_confermare":
-        return "Da Confermare";
-      case "da_pagare_acconto":
-        return "Da Pagare";
-      case "in_lavorazione":
-        return "In Lavorazione";
-      case "da_consegnare":
-        return "Da Consegnare";
-      case "consegnato":
-        return "Consegnato";
-      default:
-        return stato;
-    }
-  };
-
   const handleSelect = (orderId: string) => {
     onValueChange(orderId);
     setOpen(false);
     setSearchQuery("");
   };
+
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
