@@ -1,125 +1,115 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.81.1";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { corsHeaders, handleCors } from '../_shared/cors.ts';
+import { createAdminClient, verifySuperAdmin, createSupabaseClient } from '../_shared/auth.ts';
+import { createErrorResponse, createSuccessResponse, ApiError, HttpStatus } from '../_shared/errors.ts';
+import { validateBody, z, CommonSchemas } from '../_shared/validation.ts';
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+// Input validation schema
+const updateCommercialeSchema = z.object({
+  user_id: CommonSchemas.uuid,
+  email: CommonSchemas.email.optional(),
+  display_name: CommonSchemas.displayName.optional(),
+  is_active: z.boolean().optional(),
+});
 
-serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
-  }
+Deno.serve(async (req) => {
+  // Handle CORS preflight
+  const corsResponse = handleCors(req);
+  if (corsResponse) return corsResponse;
 
   try {
-    const supabaseAdmin = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false,
-        },
-      }
-    );
+    // Create clients
+    const supabase = createSupabaseClient(req);
+    const supabaseAdmin = createAdminClient();
 
-    // Verify the user making the request is a super_admin
-    const authHeader = req.headers.get("Authorization")!;
-    const token = authHeader.replace("Bearer ", "");
-    const { data: { user } } = await supabaseAdmin.auth.getUser(token);
+    // Verify caller is super_admin
+    const caller = await verifySuperAdmin(supabase);
+    console.log(`User ${caller.id} (${caller.email}) updating commerciale`);
 
-    if (!user) {
-      throw new Error("Unauthorized");
+    // Validate input
+    const { user_id, email, display_name, is_active } = await validateBody(req, updateCommercialeSchema);
+    console.log('Updating user:', user_id);
+
+    // Check if at least one field to update
+    if (email === undefined && display_name === undefined && is_active === undefined) {
+      throw new ApiError('No fields to update provided', HttpStatus.BAD_REQUEST);
     }
 
-    // Check if user is super_admin
-    const { data: roles } = await supabaseAdmin
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .eq("role", "super_admin")
+    // Verify target user exists
+    const { data: existingProfile, error: profileCheckError } = await supabaseAdmin
+      .from('profiles')
+      .select('id')
+      .eq('id', user_id)
       .single();
 
-    if (!roles) {
-      throw new Error("Only super admins can update commerciali");
+    if (profileCheckError || !existingProfile) {
+      throw new ApiError('User not found', HttpStatus.NOT_FOUND);
     }
-
-    // Validate input using Zod schema
-    const inputSchema = z.object({
-      user_id: z.string().uuid("Invalid user_id format"),
-      email: z.string().email("Invalid email format").max(255, "Email too long").optional(),
-      display_name: z.string().trim().min(1, "Display name cannot be empty").max(100, "Display name too long").optional(),
-      is_active: z.boolean().optional(),
-    });
-
-    const requestBody = await req.json();
-    const validationResult = inputSchema.safeParse(requestBody);
-    
-    if (!validationResult.success) {
-      throw new Error(`Validation failed: ${validationResult.error.errors.map(e => e.message).join(", ")}`);
-    }
-
-    const { user_id, email, display_name, is_active } = validationResult.data;
 
     // Update email if provided
     if (email) {
-      const { error: emailError } = await supabaseAdmin.auth.admin.updateUserById(
-        user_id,
-        { email }
-      );
-      if (emailError) throw emailError;
+      const { error: emailError } = await supabaseAdmin.auth.admin.updateUserById(user_id, { email });
+      if (emailError) {
+        console.error('Error updating email:', emailError);
+        throw new ApiError(`Failed to update email: ${emailError.message}`, HttpStatus.BAD_REQUEST);
+      }
+
+      // Also update profiles table
+      const { error: profileEmailError } = await supabaseAdmin
+        .from('profiles')
+        .update({ email })
+        .eq('id', user_id);
+
+      if (profileEmailError) {
+        console.error('Error updating profile email:', profileEmailError);
+      }
     }
 
     // Update display_name if provided
     if (display_name !== undefined) {
-      const { error: metadataError } = await supabaseAdmin.auth.admin.updateUserById(
-        user_id,
-        { 
-          user_metadata: { display_name }
-        }
-      );
-      if (metadataError) throw metadataError;
+      const { error: metadataError } = await supabaseAdmin.auth.admin.updateUserById(user_id, {
+        user_metadata: { display_name },
+      });
 
-      // Also update profiles table
+      if (metadataError) {
+        console.error('Error updating metadata:', metadataError);
+        throw new ApiError(`Failed to update display name: ${metadataError.message}`, HttpStatus.BAD_REQUEST);
+      }
+
       const { error: profileError } = await supabaseAdmin
-        .from("profiles")
+        .from('profiles')
         .update({ display_name })
-        .eq("id", user_id);
-      
-      if (profileError) throw profileError;
+        .eq('id', user_id);
+
+      if (profileError) {
+        console.error('Error updating profile:', profileError);
+      }
     }
 
     // Update is_active if provided
     if (is_active !== undefined) {
       const { error: activeError } = await supabaseAdmin
-        .from("profiles")
+        .from('profiles')
         .update({ is_active })
-        .eq("id", user_id);
-      
-      if (activeError) throw activeError;
+        .eq('id', user_id);
+
+      if (activeError) {
+        console.error('Error updating is_active:', activeError);
+        throw new ApiError(`Failed to update active status: ${activeError.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
     }
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        message: "Commerciale updated successfully",
-      }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 200,
-      }
-    );
+    console.log('User updated successfully:', user_id);
+
+    return createSuccessResponse({
+      success: true,
+      message: 'Commerciale updated successfully',
+      updated_fields: {
+        email: email !== undefined,
+        display_name: display_name !== undefined,
+        is_active: is_active !== undefined,
+      },
+    });
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-    console.error("Error updating commerciale:", error);
-    
-    return new Response(
-      JSON.stringify({ error: errorMessage }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 400,
-      }
-    );
+    return createErrorResponse(error);
   }
 });

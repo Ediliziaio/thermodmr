@@ -1,199 +1,98 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.81.1";
-import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+import { corsHeaders, handleCors } from '../_shared/cors.ts';
+import { createAdminClient, verifySuperAdmin, createSupabaseClient } from '../_shared/auth.ts';
+import { createErrorResponse, createSuccessResponse, ApiError, HttpStatus } from '../_shared/errors.ts';
+import { validateBody, z, CommonSchemas } from '../_shared/validation.ts';
 
 // Input validation schema
-const inputSchema = z.object({
-  userId: z.string().uuid({ message: "Invalid user ID format" }),
+const resetPasswordSchema = z.object({
+  userId: CommonSchemas.uuid,
 });
 
-// Generate secure random password
-function generateSecurePassword(): string {
-  const length = 12;
-  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-  let password = "";
+/**
+ * Generate secure random password
+ */
+function generateSecurePassword(length: number = 12): string {
+  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
   const randomValues = new Uint8Array(length);
   crypto.getRandomValues(randomValues);
   
+  let password = '';
   for (let i = 0; i < length; i++) {
     password += charset.charAt(randomValues[i] % charset.length);
   }
   return password;
 }
 
-serve(async (req) => {
-  // Handle CORS preflight requests
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
+Deno.serve(async (req) => {
+  // Handle CORS preflight
+  const corsResponse = handleCors(req);
+  if (corsResponse) return corsResponse;
 
   try {
-    // Get Authorization header
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      console.error("Missing Authorization header");
-      return new Response(
-        JSON.stringify({ error: "Missing Authorization header" }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+    // Create clients
+    const supabase = createSupabaseClient(req);
+    const supabaseAdmin = createAdminClient();
+
+    // Verify caller is super_admin
+    const caller = await verifySuperAdmin(supabase);
+    console.log(`User ${caller.id} (${caller.email}) resetting password`);
+
+    // Validate input
+    const { userId } = await validateBody(req, resetPasswordSchema);
+    console.log('Resetting password for user:', userId);
+
+    // Verify target user exists
+    const { data: targetUser, error: userCheckError } = await supabaseAdmin.auth.admin.getUserById(userId);
+
+    if (userCheckError || !targetUser?.user) {
+      throw new ApiError('User not found', HttpStatus.NOT_FOUND);
     }
 
-    // Create Supabase client for checking caller permissions
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      global: {
-        headers: { Authorization: authHeader },
-      },
-    });
-
-    // Get the calling user
-    const { data: { user: callingUser }, error: userError } = await supabase.auth.getUser();
-    
-    if (userError || !callingUser) {
-      console.error("Error getting calling user:", userError);
-      return new Response(
-        JSON.stringify({ error: "Unauthorized - Invalid token" }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Check if calling user has super_admin role
-    const { data: roles, error: rolesError } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', callingUser.id);
-
-    if (rolesError) {
-      console.error("Error checking roles:", rolesError);
-      return new Response(
-        JSON.stringify({ error: "Error checking permissions" }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const isSuperAdmin = roles?.some(r => r.role === 'super_admin');
-    if (!isSuperAdmin) {
-      console.error("User is not super_admin:", callingUser.id);
-      return new Response(
-        JSON.stringify({ error: "Forbidden - Only super admins can reset passwords" }),
-        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Parse and validate request body
-    const body = await req.json();
-    console.log("Reset password request for user:", body.userId);
-
-    const validationResult = inputSchema.safeParse(body);
-    if (!validationResult.success) {
-      console.error("Validation failed:", validationResult.error.errors);
-      return new Response(
-        JSON.stringify({ 
-          error: "Invalid input", 
-          details: validationResult.error.errors 
-        }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const { userId } = validationResult.data;
-
-    // Generate new secure password
+    // Generate new password
     const newPassword = generateSecurePassword();
-    console.log("Generated new password for user:", userId);
 
-    // Create admin client to update user password
-    const supabaseServiceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-    if (!supabaseServiceRoleKey) {
-      console.error("Missing SUPABASE_SERVICE_ROLE_KEY");
-      return new Response(
-        JSON.stringify({ error: "Server configuration error" }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
-      }
+    // Update password
+    const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+      password: newPassword,
     });
-
-    // Update user password using Admin API
-    const { data: updatedUser, error: updateError } = await supabaseAdmin.auth.admin.updateUserById(
-      userId,
-      { password: newPassword }
-    );
 
     if (updateError) {
-      console.error("Error updating user password:", updateError);
-      return new Response(
-        JSON.stringify({ 
-          error: "Failed to reset password", 
-          details: updateError.message 
-        }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      console.error('Error updating password:', updateError);
+      throw new ApiError(
+        `Failed to reset password: ${updateError.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
 
-    console.log("Successfully reset password for user:", userId);
+    console.log('Password reset successfully for user:', userId);
 
-    // Log the password reset action in audit_log
+    // Log the action in audit_log
     try {
-      const { error: auditError } = await supabaseAdmin
-        .from('audit_log')
-        .insert({
-          entity: 'user',
-          azione: 'password_reset',
-          entity_id: userId,
-          user_id: callingUser.id,
-          old_values: null, // Don't store password values for security
-          new_values: { 
-            action: 'Password reset by admin',
-            reset_by: callingUser.email,
-            reset_at: new Date().toISOString()
-          }
-        });
-
-      if (auditError) {
-        console.error("Failed to create audit log entry:", auditError);
-        // Don't fail the request if audit logging fails, just log the error
-      } else {
-        console.log("Audit log entry created for password reset");
-      }
-    } catch (auditLogError) {
-      console.error("Exception creating audit log:", auditLogError);
-      // Don't fail the request if audit logging fails
+      await supabaseAdmin.from('audit_log').insert({
+        entity: 'user',
+        azione: 'password_reset',
+        entity_id: userId,
+        user_id: caller.id,
+        old_values: null,
+        new_values: {
+          action: 'Password reset by admin',
+          reset_by: caller.email,
+          reset_at: new Date().toISOString(),
+        },
+      });
+      console.log('Audit log entry created');
+    } catch (auditError) {
+      console.error('Failed to create audit log:', auditError);
+      // Non-critical, don't fail the request
     }
 
-    // Return success with new password
-    return new Response(
-      JSON.stringify({ 
-        success: true,
-        userId: userId,
-        newPassword: newPassword,
-        message: "Password successfully reset"
-      }),
-      { 
-        status: 200, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-      }
-    );
-
+    return createSuccessResponse({
+      success: true,
+      userId,
+      newPassword,
+      message: 'Password successfully reset',
+    });
   } catch (error) {
-    console.error("Unexpected error:", error);
-    return new Response(
-      JSON.stringify({ 
-        error: "Internal server error",
-        details: error instanceof Error ? error.message : "Unknown error"
-      }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return createErrorResponse(error);
   }
 });

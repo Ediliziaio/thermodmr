@@ -1,154 +1,91 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.81.1';
-import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
+import { corsHeaders, handleCors } from '../_shared/cors.ts';
+import { createAdminClient, verifySuperAdmin, createSupabaseClient } from '../_shared/auth.ts';
+import { createErrorResponse, createSuccessResponse, ApiError, HttpStatus } from '../_shared/errors.ts';
+import { validateBody, z, CommonSchemas } from '../_shared/validation.ts';
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+// Input validation schema
+const createUserSchema = z.object({
+  email: CommonSchemas.email,
+  password: CommonSchemas.password,
+  display_name: CommonSchemas.displayName,
+  role: CommonSchemas.appRole,
+});
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight requests
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
+  // Handle CORS preflight
+  const corsResponse = handleCors(req);
+  if (corsResponse) return corsResponse;
 
   try {
-    // Initialize Supabase client with service role
-    const supabaseAdmin = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false
-        }
-      }
-    );
+    // Create clients
+    const supabase = createSupabaseClient(req);
+    const supabaseAdmin = createAdminClient();
 
-    // Verify the user is authenticated and is a super_admin
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      throw new Error('No authorization header');
-    }
-
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: userError } = await supabaseAdmin.auth.getUser(token);
-    
-    if (userError || !user) {
-      throw new Error('Unauthorized');
-    }
-
-    // Check if user has super_admin role
-    const { data: roleData, error: roleError } = await supabaseAdmin
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', user.id)
-      .eq('role', 'super_admin')
-      .single();
-
-    if (roleError || !roleData) {
-      console.error('Role check failed:', roleError);
-      return new Response(
-        JSON.stringify({ error: 'Only super admins can create users' }),
-        { 
-          status: 403, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      );
-    }
+    // Verify caller is super_admin
+    const caller = await verifySuperAdmin(supabase);
+    console.log(`User ${caller.id} (${caller.email}) creating new user`);
 
     // Validate input
-    const inputSchema = z.object({
-      email: z.string().email().max(255),
-      password: z.string().min(8).max(72),
-      display_name: z.string().trim().min(1).max(100),
-      role: z.enum(['super_admin', 'commerciale', 'rivenditore']),
-    });
-
-    const body = await req.json();
-    const validatedData = inputSchema.parse(body);
-
-    console.log('Creating user with email:', validatedData.email);
+    const { email, password, display_name, role } = await validateBody(req, createUserSchema);
+    console.log('Creating user with email:', email);
 
     // Create user with Supabase Admin API
     const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
-      email: validatedData.email,
-      password: validatedData.password,
-      email_confirm: true, // Auto-confirm email
-      user_metadata: {
-        display_name: validatedData.display_name,
-      },
+      email,
+      password,
+      email_confirm: true,
+      user_metadata: { display_name },
     });
 
     if (createError) {
       console.error('Error creating user:', createError);
-      throw new Error(`Failed to create user: ${createError.message}`);
+      throw new ApiError(`Failed to create user: ${createError.message}`, HttpStatus.BAD_REQUEST);
     }
 
     console.log('User created successfully, ID:', newUser.user.id);
 
-    // Insert into profiles table (should be handled by trigger, but let's be safe)
+    // Insert into profiles table
     const { error: profileError } = await supabaseAdmin
       .from('profiles')
       .upsert({
         id: newUser.user.id,
-        email: validatedData.email,
-        display_name: validatedData.display_name,
+        email,
+        display_name,
         is_active: true,
       });
 
     if (profileError) {
       console.error('Error creating profile:', profileError);
-      // Don't fail the entire operation, the trigger should handle this
+      // Don't fail - trigger should handle this
     }
 
-    // Assign role in user_roles table
+    // Assign role
     const { error: roleInsertError } = await supabaseAdmin
       .from('user_roles')
       .insert({
         user_id: newUser.user.id,
-        role: validatedData.role,
+        role,
       });
 
     if (roleInsertError) {
       console.error('Error assigning role:', roleInsertError);
-      // Try to clean up the created user
+      // Clean up the created user
       await supabaseAdmin.auth.admin.deleteUser(newUser.user.id);
-      throw new Error(`Failed to assign role: ${roleInsertError.message}`);
+      throw new ApiError(`Failed to assign role: ${roleInsertError.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    console.log('Role assigned successfully');
+    console.log('Role assigned successfully:', role);
 
-    return new Response(
-      JSON.stringify({ 
-        success: true,
-        user: {
-          id: newUser.user.id,
-          email: validatedData.email,
-          display_name: validatedData.display_name,
-          role: validatedData.role,
-        }
-      }),
-      { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200 
-      }
-    );
+    return createSuccessResponse({
+      success: true,
+      user: {
+        id: newUser.user.id,
+        email,
+        display_name,
+        role,
+      },
+    });
   } catch (error) {
-    console.error('Error in create-user function:', error);
-    
-    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
-    const statusCode = errorMessage.includes('Unauthorized') || errorMessage.includes('super admins') ? 403 : 400;
-    
-    return new Response(
-      JSON.stringify({ 
-        error: errorMessage,
-        details: error instanceof z.ZodError ? error.errors : undefined
-      }),
-      { 
-        status: statusCode,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
-    );
+    return createErrorResponse(error);
   }
 });
