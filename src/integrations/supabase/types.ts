@@ -895,6 +895,18 @@ export type Database = {
       }
     }
     Functions: {
+      cleanup_old_audit_logs: {
+        Args: { p_days_to_keep?: number }
+        Returns: number
+      }
+      get_commerciale_stats: {
+        Args: {
+          p_commerciale_id: string
+          p_end_date?: string
+          p_start_date?: string
+        }
+        Returns: Json
+      }
       get_dashboard_kpis: {
         Args: {
           p_commerciale_id?: string
@@ -903,6 +915,7 @@ export type Database = {
         }
         Returns: Json
       }
+      get_order_stats: { Args: { p_order_id: string }; Returns: Json }
       get_revenue_by_month: {
         Args: { p_commerciale_id?: string; p_months?: number }
         Returns: Json
@@ -913,6 +926,14 @@ export type Database = {
           p_end_date?: string
           p_limit?: number
           p_start_date?: string
+        }
+        Returns: Json
+      }
+      get_upcoming_deadlines: {
+        Args: {
+          p_commerciale_id?: string
+          p_days_ahead?: number
+          p_limit?: number
         }
         Returns: Json
       }
