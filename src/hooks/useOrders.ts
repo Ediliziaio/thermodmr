@@ -1,13 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import type { Tables, TablesInsert } from "@/integrations/supabase/types";
+import type { TablesInsert } from "@/integrations/supabase/types";
 import { useAuth } from "@/contexts/AuthContext";
 
-export interface OrderWithDetails extends Tables<"orders"> {
-  dealers: { ragione_sociale: string; email: string } | null;
-  clients: { nome: string; cognome: string } | null;
-}
+// Re-export tipi centralizzati per retrocompatibilità
+export type { OrderWithDetails, OrderWithPaymentStats } from "@/types/orders";
 
 export const useOrderById = (orderId: string) => {
   return useQuery({

@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { formatDateTime } from "@/lib/utils";
 
 interface AttachmentsSectionProps {
   orderId: string;
@@ -22,16 +23,6 @@ export function AttachmentsSection({ orderId, attachments }: AttachmentsSectionP
     if (bytes < 1024) return bytes + " B";
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
     return (bytes / (1024 * 1024)).toFixed(1) + " MB";
-  };
-
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat("it-IT", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
   };
 
   const getFileIcon = (mimeType: string) => {
@@ -202,7 +193,7 @@ export function AttachmentsSection({ orderId, attachments }: AttachmentsSectionP
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <span>{formatFileSize(attachment.dimensione)}</span>
                       <span>•</span>
-                      <span>{formatDate(attachment.createdAt)}</span>
+                      <span>{formatDateTime(attachment.createdAt)}</span>
                     </div>
                   </div>
                 </div>

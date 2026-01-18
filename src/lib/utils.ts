@@ -1,10 +1,15 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { format } from "date-fns";
+import { it } from "date-fns/locale";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * Formatta un valore numerico come valuta EUR
+ */
 export const formatCurrency = (value: number) => {
   return new Intl.NumberFormat("it-IT", {
     style: "currency",
@@ -12,6 +17,9 @@ export const formatCurrency = (value: number) => {
   }).format(value);
 };
 
+/**
+ * Formatta una percentuale
+ */
 export const formatPercentage = (value: number) => {
   return new Intl.NumberFormat("it-IT", {
     style: "percent",
@@ -20,6 +28,26 @@ export const formatPercentage = (value: number) => {
   }).format(value / 100);
 };
 
+/**
+ * Formatta una data con date-fns (locale italiano)
+ * @param date - Data da formattare (Date | string)
+ * @param formatStr - Formato stringa (default: "dd MMM yyyy")
+ */
+export const formatDate = (date: Date | string, formatStr = "dd MMM yyyy") => {
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+  return format(dateObj, formatStr, { locale: it });
+};
+
+/**
+ * Formatta una data con orario
+ */
+export const formatDateTime = (date: Date | string) => {
+  return formatDate(date, "dd MMM yyyy HH:mm");
+};
+
+/**
+ * Restituisce le classi CSS per il colore dello stato ordine
+ */
 export const getStatusColor = (status: string) => {
   const colors: Record<string, string> = {
     da_confermare: "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400",
@@ -31,6 +59,9 @@ export const getStatusColor = (status: string) => {
   return colors[status] || "bg-muted/10 text-muted-foreground";
 };
 
+/**
+ * Restituisce l'etichetta leggibile per lo stato ordine
+ */
 export const getStatusLabel = (status: string) => {
   const labels: Record<string, string> = {
     da_confermare: "Da Confermare",
@@ -40,4 +71,24 @@ export const getStatusLabel = (status: string) => {
     consegnato: "Consegnato",
   };
   return labels[status] || status;
+};
+
+/**
+ * Restituisce la variante Badge per lo stato ordine
+ */
+export const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
+  switch (status) {
+    case "da_confermare":
+      return "outline";
+    case "da_pagare_acconto":
+      return "destructive";
+    case "in_lavorazione":
+      return "default";
+    case "da_consegnare":
+      return "secondary";
+    case "consegnato":
+      return "secondary";
+    default:
+      return "outline";
+  }
 };

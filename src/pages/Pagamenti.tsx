@@ -71,7 +71,7 @@ const Pagamenti = () => {
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const formatDate = (dateString: string) => {
+  const formatDateLocal = (dateString: string) => {
     return format(new Date(dateString), "dd MMM yyyy", { locale: it });
   };
 
@@ -326,7 +326,7 @@ const Pagamenti = () => {
                     payments.map((payment) => (
                       <TableRow key={payment.id} className={selectedPaymentIds.has(payment.id) ? 'bg-muted/50' : ''}>
                         <TableCell><Checkbox checked={selectedPaymentIds.has(payment.id)} onCheckedChange={() => togglePaymentSelection(payment.id)} /></TableCell>
-                        <TableCell>{formatDate(payment.data_pagamento)}</TableCell>
+                        <TableCell>{formatDateLocal(payment.data_pagamento)}</TableCell>
                         <TableCell><button onClick={() => navigate(`/ordini/${payment.ordine_id}`)} className="font-medium hover:underline text-primary">{payment.ordine_id}</button></TableCell>
                         <TableCell>{payment.orders.dealers.ragione_sociale}</TableCell>
                         <TableCell><Badge variant={getTipoBadgeVariant(payment.tipo)}>{payment.tipo}</Badge></TableCell>

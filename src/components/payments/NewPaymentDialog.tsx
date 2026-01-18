@@ -25,6 +25,7 @@ import { toast } from "@/hooks/use-toast";
 import { OrderCombobox } from "./OrderCombobox";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { formatCurrency, getStatusLabel, getStatusVariant } from "@/lib/utils";
 
 interface NewPaymentDialogProps {
   open?: boolean;
@@ -78,47 +79,6 @@ export function NewPaymentDialog({ open: controlledOpen, onOpenChange }: NewPaym
     () => orders.find((o) => o.id === formData.ordineId),
     [orders, formData.ordineId]
   );
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("it-IT", {
-      style: "currency",
-      currency: "EUR",
-    }).format(amount);
-  };
-
-  const getStatusLabel = (stato: string) => {
-    switch (stato) {
-      case "da_confermare":
-        return "Da Confermare";
-      case "da_pagare_acconto":
-        return "Da Pagare";
-      case "in_lavorazione":
-        return "In Lavorazione";
-      case "da_consegnare":
-        return "Da Consegnare";
-      case "consegnato":
-        return "Consegnato";
-      default:
-        return stato;
-    }
-  };
-
-  const getStatusVariant = (stato: string): "default" | "secondary" | "destructive" | "outline" => {
-    switch (stato) {
-      case "da_confermare":
-        return "outline";
-      case "da_pagare_acconto":
-        return "destructive";
-      case "in_lavorazione":
-        return "default";
-      case "da_consegnare":
-        return "secondary";
-      case "consegnato":
-        return "secondary";
-      default:
-        return "outline";
-    }
-  };
 
   const handleOrderSelect = (orderId: string) => {
     const order = orders.find((o) => o.id === orderId);
