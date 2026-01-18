@@ -14,6 +14,7 @@ import { useDashboardKPIs, useRevenueData } from "@/hooks/useDashboard";
 import { useRealtimeDashboard } from "@/hooks/useRealtimeDashboard";
 import { RevenueChart } from "@/components/dashboard/RevenueChart";
 import { OrderStatusPieChart } from "@/components/dashboard/OrderStatusPieChart";
+import { DeadlinesWidget } from "@/components/dashboard/DeadlinesWidget";
 import { formatCurrency, getStatusColor, getStatusLabel, cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -317,12 +318,19 @@ export default function Dashboard() {
       </div>
 
       {/* Charts Section */}
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {revenueLoading ? (
-          <Skeleton className="h-[400px]" />
+          <Skeleton className="h-[400px] lg:col-span-2" />
         ) : (
-          <RevenueChart data={revenueData || []} />
+          <div className="lg:col-span-2">
+            <RevenueChart data={revenueData || []} />
+          </div>
         )}
+        <DeadlinesWidget daysAhead={14} limit={5} />
+      </div>
+
+      {/* Order Status Chart */}
+      <div className="grid gap-4 md:grid-cols-2">
         <OrderStatusPieChart
           data={Object.entries(kpis.ordersByStatus).map(([status, count]) => ({
             name: getStatusLabel(status),

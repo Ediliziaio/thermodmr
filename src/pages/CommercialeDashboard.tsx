@@ -10,13 +10,12 @@ import {
   Package,
   DollarSign,
   FileText,
-  Store,
   Plus
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { EmptyState } from "@/components/dashboard/EmptyState";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { DeadlinesWidget } from "@/components/dashboard/DeadlinesWidget";
 import { cn } from "@/lib/utils";
 import {
   LineChart,
@@ -89,10 +88,22 @@ export default function CommercialeDashboard() {
 
   if (!data) return null;
 
-  const statusChartData = Object.entries(data.statusCounts).map(([status, count]) => ({
+  const statusChartData = Object.entries(data.ordersByStatus).map(([status, count]) => ({
     name: STATUS_LABELS[status] || status,
     value: count,
     color: STATUS_COLORS[status] || COLORS.muted,
+  }));
+
+  // Prepara i dati per il grafico fatturato
+  const revenueChartData = data.revenueByMonth.map(m => ({
+    month: m.month,
+    revenue: m.ricavi,
+  }));
+
+  // Prepara i dati per il grafico top dealers
+  const topDealersChartData = data.topDealers.map(d => ({
+    name: d.dealer_name,
+    revenue: d.total_revenue,
   }));
 
   return (
@@ -114,7 +125,7 @@ export default function CommercialeDashboard() {
             <ShoppingCart className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.kpis.totalOrders}</div>
+            <div className="text-2xl font-bold">{data.totalOrders}</div>
           </CardContent>
         </Card>
 
@@ -125,7 +136,7 @@ export default function CommercialeDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              €{data.kpis.totalRevenue.toLocaleString("it-IT", { minimumFractionDigits: 2 })}
+              €{data.totalRevenue.toLocaleString("it-IT", { minimumFractionDigits: 2 })}
             </div>
           </CardContent>
         </Card>
@@ -137,7 +148,7 @@ export default function CommercialeDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-warning">
-              €{data.kpis.commissionsDovute.toLocaleString("it-IT", { minimumFractionDigits: 2 })}
+              €{data.commissionsDovute.toLocaleString("it-IT", { minimumFractionDigits: 2 })}
             </div>
           </CardContent>
         </Card>
@@ -149,7 +160,7 @@ export default function CommercialeDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-success">
-              €{data.kpis.commissionsLiquidate.toLocaleString("it-IT", { minimumFractionDigits: 2 })}
+              €{data.commissionsLiquidate.toLocaleString("it-IT", { minimumFractionDigits: 2 })}
             </div>
           </CardContent>
         </Card>
@@ -160,7 +171,7 @@ export default function CommercialeDashboard() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.kpis.activeDealers}</div>
+            <div className="text-2xl font-bold">{data.activeDealers}</div>
           </CardContent>
         </Card>
       </div>
@@ -173,7 +184,7 @@ export default function CommercialeDashboard() {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={data.revenueByMonth}>
+              <LineChart data={revenueChartData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
                 <YAxis />
@@ -219,8 +230,8 @@ export default function CommercialeDashboard() {
         </Card>
       </div>
 
-      {/* Charts Row 2 */}
-      <div className="grid gap-4 md:grid-cols-2">
+      {/* Charts Row 2 + Deadlines Widget */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader>
             <CardTitle>Distribuzione Stati Ordini</CardTitle>
@@ -256,7 +267,7 @@ export default function CommercialeDashboard() {
           <CardContent className={isMobile ? "p-4 pt-0" : ""}>
             <ResponsiveContainer width="100%" height={isMobile ? 280 : 300}>
               <BarChart 
-                data={data.topDealers} 
+                data={topDealersChartData} 
                 layout="vertical"
                 margin={isMobile ? { top: 5, right: 5, left: -10, bottom: 5 } : undefined}
               >
@@ -293,6 +304,9 @@ export default function CommercialeDashboard() {
             </ResponsiveContainer>
           </CardContent>
         </Card>
+
+        {/* Deadlines Widget */}
+        <DeadlinesWidget commercialeId={user?.id} daysAhead={14} limit={5} />
       </div>
 
       {/* Recent Orders */}
@@ -326,7 +340,7 @@ export default function CommercialeDashboard() {
                       <div>
                         <p className="font-semibold text-base">{order.id}</p>
                         <p className="text-sm text-muted-foreground">
-                          {(order.dealers as any)?.[0]?.ragione_sociale || "N/A"}
+                          {order.dealer_name}
                         </p>
                       </div>
                       <Badge variant="outline" className="text-xs">
@@ -365,7 +379,7 @@ export default function CommercialeDashboard() {
                     <div>
                       <p className="font-medium">{order.id}</p>
                       <p className="text-sm text-muted-foreground">
-                        {(order.dealers as any)?.[0]?.ragione_sociale || "N/A"}
+                        {order.dealer_name}
                       </p>
                       <p className="text-xs text-muted-foreground">
                         {format(new Date(order.data_inserimento), "dd MMM yyyy, HH:mm", {
