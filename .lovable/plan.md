@@ -1,33 +1,27 @@
 
 
-## Reset Password per f.andriciuc@overthemol.com
+## Accesso all'Area Rivenditore dal Super Admin
 
-### Problema
-L'utente esiste nel database (creato il 12/11/2025, email confermata), ma la password "Password2025!" non funziona. L'ultimo accesso risale al 26/11/2025 -- la password potrebbe essere stata modificata in seguito.
+### Cosa cambia
+Aggiungere la possibilita' di cliccare su una card rivenditore (sia desktop che mobile) per accedere alla pagina di dettaglio del rivenditore (`/rivenditori/:id`), che gia' esiste e mostra informazioni complete, ordini, analytics e statistiche.
 
-### Soluzione
-Creare una edge function temporanea di amministrazione che resetta la password usando il service role key (che bypassa l'autenticazione).
+### Modifiche
+
+**1. `src/components/dealers/DealerCard.tsx`**
+- Rendere la card cliccabile con navigazione a `/rivenditori/{dealer.id}`
+- Aggiungere un bottone "Visualizza" nel menu dropdown
+- Wrappare la card con un `Link` o aggiungere `onClick` con `useNavigate`
+
+**2. `src/components/dealers/MobileDealerCard.tsx`**
+- Aggiungere un tap sulla card per navigare a `/rivenditori/{dealer.id}`
+- Aggiungere un'icona chevron per indicare che la card e' cliccabile
+- Mantenere lo swipe per modifica/elimina
 
 ### Dettagli Tecnici
 
-**1. Creare `supabase/functions/admin-reset-password/index.ts`**
-
-Una funzione semplice e temporanea che:
-- Accetta `userId` e `newPassword` nel body
-- Usa il service role key per chiamare `auth.admin.updateUserById()`
-- Imposta la nuova password "Password2025!"
-- Protetta con un segreto hardcoded temporaneo nell'header (per evitare uso non autorizzato)
-
-**2. Chiamare la funzione per resettare la password**
-
-Dopo il deploy, la funzione verra' invocata una volta per impostare la password a "Password2025!" per l'utente `5c038f03-cc9e-401c-a498-0104e7d0425e`.
-
-**3. Rimuovere la funzione temporanea**
-
-Dopo il reset, la funzione verra' eliminata per sicurezza.
-
-### Risultato Atteso
-Potrai accedere con:
-- Email: f.andriciuc@overthemol.com
-- Password: Password2025!
+- Importare `useNavigate` da `react-router-dom` in entrambi i componenti
+- Nel `DealerCard`, aggiungere `onClick={() => navigate(/rivenditori/${dealer.id})}` sulla Card con `cursor-pointer`
+- Aggiungere un'opzione "Visualizza Dettaglio" nel DropdownMenu del DealerCard
+- Nel `MobileDealerCard`, aggiungere `onClick` sulla Card che naviga al dettaglio (solo se non si sta facendo swipe)
+- La pagina `DealerDetail.tsx` esiste gia' e la route `/rivenditori/:id` e' gia' configurata in `App.tsx`
 
