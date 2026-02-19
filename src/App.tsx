@@ -29,6 +29,7 @@ const RLSTest = lazy(() => import("./pages/RLSTest"));
 const TestDataSeeder = lazy(() => import("./pages/TestDataSeeder"));
 const Impostazioni = lazy(() => import("./pages/Impostazioni"));
 const Placeholder = lazy(() => import("./pages/Placeholder"));
+const DealerArea = lazy(() => import("./pages/DealerArea"));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -93,6 +94,16 @@ const App = () => (
                 <ProtectedRoute>
                   <Layout>
                     <DealerDetail />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/rivenditori/:id/area"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <DealerArea />
                   </Layout>
                 </ProtectedRoute>
               }

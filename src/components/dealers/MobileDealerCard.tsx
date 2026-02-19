@@ -79,7 +79,7 @@ export function MobileDealerCard({ dealer }: MobileDealerCardProps) {
         {/* Card Content */}
         <Card
           className="w-full hover:shadow-md transition-shadow touch-manipulation cursor-pointer"
-          onClick={() => { if (!isDragging) navigate(`/rivenditori/${dealer.id}`); }}
+          onClick={() => { if (!isDragging) navigate(`/rivenditori/${dealer.id}/area`); }}
         >
           <CardContent className="p-4 space-y-3">
             {/* Header */}

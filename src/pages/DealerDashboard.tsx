@@ -20,12 +20,18 @@ import { useDealerOrderStats, useRecentActivity, usePaymentReminders } from "@/h
 import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { it } from "date-fns/locale";
+import { ArrowLeft } from "lucide-react";
 
-export default function DealerDashboard() {
+interface DealerDashboardProps {
+  dealerId?: string;
+  dealerName?: string;
+}
+
+export default function DealerDashboard({ dealerId, dealerName }: DealerDashboardProps) {
   const navigate = useNavigate();
-  const { data: stats, isLoading: statsLoading } = useDealerOrderStats();
-  const { data: activities, isLoading: activitiesLoading } = useRecentActivity();
-  const { data: reminders, isLoading: remindersLoading } = usePaymentReminders();
+  const { data: stats, isLoading: statsLoading } = useDealerOrderStats(dealerId);
+  const { data: activities, isLoading: activitiesLoading } = useRecentActivity(dealerId);
+  const { data: reminders, isLoading: remindersLoading } = usePaymentReminders(dealerId);
 
   if (statsLoading) {
     return (
@@ -55,15 +61,25 @@ export default function DealerDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Benvenuto</h1>
+          {dealerId && (
+            <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="mb-2">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Torna indietro
+            </Button>
+          )}
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
+            {dealerName ? `Area ${dealerName}` : "Benvenuto"}
+          </h1>
           <p className="text-sm md:text-base text-muted-foreground mt-1">
-            Panoramica dei tuoi ordini e notifiche
+            Panoramica {dealerName ? "degli" : "dei tuoi"} ordini e notifiche
           </p>
         </div>
-        <Button onClick={() => navigate("/ordini")} size="lg" className="min-h-[44px]">
-          <Plus className="h-4 w-4 mr-2" />
-          Nuovo Ordine
-        </Button>
+        {!dealerId && (
+          <Button onClick={() => navigate("/ordini")} size="lg" className="min-h-[44px]">
+            <Plus className="h-4 w-4 mr-2" />
+            Nuovo Ordine
+          </Button>
+        )}
       </div>
 
       {/* KPI Cards */}

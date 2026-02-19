@@ -24,18 +24,25 @@ interface RecentActivity {
   isNew: boolean;
 }
 
-export const useDealerOrderStats = () => {
+export const useDealerOrderStats = (dealerId?: string) => {
   return useQuery({
-    queryKey: ["dealer-order-stats"],
+    queryKey: ["dealer-order-stats", dealerId],
     queryFn: async (): Promise<DealerOrderStats> => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      // Get orders created by this dealer
-      const { data: orders, error } = await supabase
+      // Get orders for this dealer
+      let query = supabase
         .from("orders_with_payment_stats")
-        .select("*")
-        .eq("creato_da_user_id", user.id);
+        .select("*");
+      
+      if (dealerId) {
+        query = query.eq("dealer_id", dealerId);
+      } else {
+        query = query.eq("creato_da_user_id", user.id);
+      }
+      
+      const { data: orders, error } = await query;
 
       if (error) throw error;
 
@@ -68,18 +75,25 @@ export const useDealerOrderStats = () => {
   });
 };
 
-export const useRecentActivity = () => {
+export const useRecentActivity = (dealerId?: string) => {
   return useQuery({
-    queryKey: ["dealer-recent-activity"],
+    queryKey: ["dealer-recent-activity", dealerId],
     queryFn: async (): Promise<RecentActivity[]> => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
       // Get recent orders with their latest updates
-      const { data: orders, error } = await supabase
+      let query = supabase
         .from("orders")
-        .select("id, stato, updated_at, created_at")
-        .eq("creato_da_user_id", user.id)
+        .select("id, stato, updated_at, created_at");
+      
+      if (dealerId) {
+        query = query.eq("dealer_id", dealerId);
+      } else {
+        query = query.eq("creato_da_user_id", user.id);
+      }
+      
+      const { data: orders, error } = await query
         .order("updated_at", { ascending: false })
         .limit(10);
 
@@ -141,18 +155,25 @@ export const useRecentActivity = () => {
   });
 };
 
-export const usePaymentReminders = () => {
+export const usePaymentReminders = (dealerId?: string) => {
   return useQuery({
-    queryKey: ["dealer-payment-reminders"],
+    queryKey: ["dealer-payment-reminders", dealerId],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
       // Get orders that need payment
-      const { data: orders, error } = await supabase
+      let query = supabase
         .from("orders_with_payment_stats")
-        .select("*")
-        .eq("creato_da_user_id", user.id)
+        .select("*");
+      
+      if (dealerId) {
+        query = query.eq("dealer_id", dealerId);
+      } else {
+        query = query.eq("creato_da_user_id", user.id);
+      }
+      
+      const { data: orders, error } = await query
         .in("stato", ["da_pagare_acconto", "in_lavorazione", "da_consegnare"])
         .gt("importo_da_pagare", 0)
         .order("data_inserimento", { ascending: false });
