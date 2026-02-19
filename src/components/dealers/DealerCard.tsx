@@ -32,7 +32,7 @@ export function DealerCard({ dealer }: DealerCardProps) {
     // Don't navigate if clicking on dropdown or interactive elements
     const target = e.target as HTMLElement;
     if (target.closest('[role="menu"]') || target.closest('button') || target.closest('a')) return;
-    navigate(`/rivenditori/${dealer.id}`);
+    navigate(`/rivenditori/${dealer.id}/area`);
   };
 
   return (

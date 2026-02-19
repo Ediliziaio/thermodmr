@@ -112,6 +112,10 @@ export default function DealerDetail() {
           </div>
           <p className="text-muted-foreground">P.IVA: {dealer.p_iva}</p>
         </div>
+        <Button onClick={() => navigate(`/rivenditori/${dealer.id}/area`)} variant="default">
+          <Eye className="h-4 w-4 mr-2" />
+          Entra nell'Area Rivenditore
+        </Button>
       </div>
 
       {/* KPI Cards */}
