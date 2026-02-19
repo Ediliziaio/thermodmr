@@ -2,10 +2,11 @@ import { useState } from "react";
 import { motion, useMotionValue, useTransform, PanInfo } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Mail, MapPin, Phone, Pencil, Trash2 } from "lucide-react";
+import { Building2, ChevronRight, Mail, MapPin, Phone, Pencil, Trash2 } from "lucide-react";
 import { EditDealerDialog } from "./EditDealerDialog";
 import { DeleteDealerDialog } from "./DeleteDealerDialog";
 import type { DealerWithStats } from "@/hooks/useDealers";
+import { useNavigate } from "react-router-dom";
 
 interface MobileDealerCardProps {
   dealer: DealerWithStats;
@@ -21,13 +22,17 @@ const formatCurrency = (amount: number) => {
 export function MobileDealerCard({ dealer }: MobileDealerCardProps) {
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const navigate = useNavigate();
   const x = useMotionValue(0);
   const opacity = useTransform(x, [-100, 0, 100], [0.5, 1, 0.5]);
   const scale = useTransform(x, [-100, 0, 100], [0.95, 1, 0.95]);
 
   const handleDragEnd = (_: any, info: PanInfo) => {
     const threshold = 80;
-    
+    const wasDragging = Math.abs(info.offset.x) > 10;
+    setIsDragging(false);
+
     if (info.offset.x > threshold) {
       // Swipe right - Edit
       setShowEditDialog(true);
@@ -49,6 +54,7 @@ export function MobileDealerCard({ dealer }: MobileDealerCardProps) {
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.2}
+        onDragStart={() => setIsDragging(true)}
         onDragEnd={handleDragEnd}
         className="relative"
       >
@@ -71,7 +77,10 @@ export function MobileDealerCard({ dealer }: MobileDealerCardProps) {
         </div>
 
         {/* Card Content */}
-        <Card className="w-full hover:shadow-md transition-shadow touch-manipulation">
+        <Card
+          className="w-full hover:shadow-md transition-shadow touch-manipulation cursor-pointer"
+          onClick={() => { if (!isDragging) navigate(`/rivenditori/${dealer.id}`); }}
+        >
           <CardContent className="p-4 space-y-3">
             {/* Header */}
             <div className="flex items-start justify-between gap-3">
@@ -129,10 +138,13 @@ export function MobileDealerCard({ dealer }: MobileDealerCardProps) {
               </div>
             </div>
 
-            {/* Swipe Hint */}
-            <p className="text-xs text-center text-muted-foreground pt-2 border-t">
-              ← Scorri per modificare o eliminare →
-            </p>
+            {/* Footer with hint and chevron */}
+            <div className="flex items-center justify-between pt-2 border-t">
+              <p className="text-xs text-muted-foreground">
+                ← Scorri per modificare o eliminare →
+              </p>
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            </div>
           </CardContent>
         </Card>
       </motion.div>
