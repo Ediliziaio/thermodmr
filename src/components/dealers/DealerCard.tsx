@@ -8,10 +8,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Building2, Mail, MapPin, MoreVertical, Pencil, Phone, Trash2 } from "lucide-react";
+import { Building2, Eye, Mail, MapPin, MoreVertical, Pencil, Phone, Trash2 } from "lucide-react";
 import { EditDealerDialog } from "./EditDealerDialog";
 import { DeleteDealerDialog } from "./DeleteDealerDialog";
 import type { DealerWithStats } from "@/hooks/useDealers";
+import { useNavigate } from "react-router-dom";
 
 interface DealerCardProps {
   dealer: DealerWithStats;
@@ -25,8 +26,17 @@ const formatCurrency = (amount: number) => {
 };
 
 export function DealerCard({ dealer }: DealerCardProps) {
+  const navigate = useNavigate();
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Don't navigate if clicking on dropdown or interactive elements
+    const target = e.target as HTMLElement;
+    if (target.closest('[role="menu"]') || target.closest('button') || target.closest('a')) return;
+    navigate(`/rivenditori/${dealer.id}`);
+  };
+
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={handleCardClick}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="space-y-1 flex-1">
@@ -43,6 +53,11 @@ export function DealerCard({ dealer }: DealerCardProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => navigate(`/rivenditori/${dealer.id}`)}>
+                <Eye className="h-4 w-4 mr-2" />
+                Visualizza Dettaglio
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
               <EditDealerDialog
                 dealer={dealer}
                 trigger={
