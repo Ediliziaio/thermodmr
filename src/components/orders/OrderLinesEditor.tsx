@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Plus, Trash2 } from "lucide-react";
 import { OrderLine } from "@/types";
+import { IvaSelector } from "./IvaSelector";
 
 interface OrderLinesEditorProps {
   lines: OrderLine[];
@@ -199,21 +200,11 @@ export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly =
 
               <div className="space-y-2">
                 <Label>IVA</Label>
-                <Select
-                  value={String(line.iva)}
-                  onValueChange={(value) => updateLine(line.id, "iva", parseFloat(value))}
+                <IvaSelector
+                  value={line.iva}
+                  onChange={(value) => updateLine(line.id, "iva", value)}
                   disabled={!canEdit}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="0">0% - Reverse Charge</SelectItem>
-                    <SelectItem value="4">4% - IVA ridotta</SelectItem>
-                    <SelectItem value="10">10% - IVA ridotta</SelectItem>
-                    <SelectItem value="22">22% - IVA ordinaria</SelectItem>
-                  </SelectContent>
-                </Select>
+                />
               </div>
             </div>
 
