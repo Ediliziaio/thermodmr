@@ -343,7 +343,7 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
         <CardContent>
           <div className="grid gap-3 md:grid-cols-3">
             <Button 
-              onClick={() => navigate("/ordini")} 
+              onClick={() => navigate(dealerId ? `/rivenditori/${dealerId}/area/ordini` : "/ordini")} 
               variant="outline" 
               className="justify-start h-auto py-4"
             >
@@ -355,7 +355,7 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
             </Button>
             
             <Button 
-              onClick={() => navigate("/ordini")} 
+              onClick={() => navigate(dealerId ? `/rivenditori/${dealerId}/area/ordini` : "/ordini")} 
               variant="outline" 
               className="justify-start h-auto py-4"
             >
@@ -367,14 +367,14 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
             </Button>
             
             <Button 
-              onClick={() => navigate("/ordini")} 
+              onClick={() => navigate(dealerId ? `/rivenditori/${dealerId}/area/pagamenti` : "/pagamenti")} 
               variant="outline" 
               className="justify-start h-auto py-4"
             >
-              <TrendingUp className="h-5 w-5 mr-3" />
+              <CreditCard className="h-5 w-5 mr-3" />
               <div className="text-left">
-                <p className="font-medium">Report</p>
-                <p className="text-xs text-muted-foreground">Statistiche ordini</p>
+                <p className="font-medium">Pagamenti</p>
+                <p className="text-xs text-muted-foreground">Storico pagamenti</p>
               </div>
             </Button>
           </div>
