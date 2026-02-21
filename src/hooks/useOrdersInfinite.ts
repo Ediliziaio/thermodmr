@@ -29,7 +29,8 @@ export const useOrdersInfinite = ({ searchQuery, dealerId }: UseOrdersInfinitePa
         `,
           { count: "exact" }
         )
-        .order("data_inserimento", { ascending: false });
+        .order("data_inserimento", { ascending: false })
+        .neq("stato", "preventivo");
 
       // Filtro per dealer specifico
       if (dealerId) {
