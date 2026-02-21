@@ -102,9 +102,7 @@ const App = () => (
               path="/rivenditori/:id/area"
               element={
                 <ProtectedRoute>
-                  <Layout>
-                    <DealerArea />
-                  </Layout>
+                  <DealerArea />
                 </ProtectedRoute>
               }
             />
