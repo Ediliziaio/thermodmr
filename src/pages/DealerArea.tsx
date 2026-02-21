@@ -1,9 +1,22 @@
 import { useParams } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { useDealersInfinite } from "@/hooks/useDealersInfinite";
+import { DealerAreaLayout } from "@/components/DealerAreaLayout";
 import DealerDashboard from "./DealerDashboard";
 import { Skeleton } from "@/components/ui/skeleton";
+import { lazy, Suspense } from "react";
+import { Loader2 } from "lucide-react";
+
+const Orders = lazy(() => import("./Orders"));
+const OrderDetail = lazy(() => import("./OrderDetail"));
+
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-[50vh]">
+    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+  </div>
+);
 
 export default function DealerArea() {
   const { id } = useParams<{ id: string }>();
@@ -29,9 +42,15 @@ export default function DealerArea() {
   }
 
   return (
-    <>
-      <DealerDashboard dealerId={id} dealerName={dealer?.ragione_sociale || undefined} />
+    <DealerAreaLayout dealerId={id!} dealerName={dealer?.ragione_sociale || undefined}>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route index element={<DealerDashboard dealerId={id} dealerName={dealer?.ragione_sociale || undefined} />} />
+          <Route path="ordini" element={<Orders />} />
+          <Route path="ordini/:orderId" element={<OrderDetail />} />
+        </Routes>
+      </Suspense>
       {hasNextPage && <div ref={ref} />}
-    </>
+    </DealerAreaLayout>
   );
 }
