@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Building2, Eye, Mail, MapPin, MoreVertical, Pencil, Phone, Trash2 } from "lucide-react";
+import { Building2, Eye, LogIn, Mail, MapPin, MoreVertical, Pencil, Phone, Trash2 } from "lucide-react";
 import { EditDealerDialog } from "./EditDealerDialog";
 import { DeleteDealerDialog } from "./DeleteDealerDialog";
 import type { DealerWithStats } from "@/hooks/useDealers";
@@ -134,6 +134,17 @@ export function DealerCard({ dealer }: DealerCardProps) {
             </div>
           )}
         </div>
+
+        <Button
+          className="w-full mt-3"
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/rivenditori/${dealer.id}/area`);
+          }}
+        >
+          <LogIn className="h-4 w-4 mr-2" />
+          Accedi all'Area Rivenditore
+        </Button>
       </CardContent>
     </Card>
   );
