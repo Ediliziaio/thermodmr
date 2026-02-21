@@ -61,14 +61,8 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          {dealerId && (
-            <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="mb-2">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Torna indietro
-            </Button>
-          )}
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-            {dealerName ? `Area ${dealerName}` : "Benvenuto"}
+            {dealerName ? `Dashboard ${dealerName}` : "Benvenuto"}
           </h1>
           <p className="text-sm md:text-base text-muted-foreground mt-1">
             Panoramica {dealerName ? "degli" : "dei tuoi"} ordini e notifiche

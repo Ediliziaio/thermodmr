@@ -99,7 +99,7 @@ const App = () => (
               }
             />
             <Route
-              path="/rivenditori/:id/area"
+              path="/rivenditori/:id/area/*"
               element={
                 <ProtectedRoute>
                   <DealerArea />
