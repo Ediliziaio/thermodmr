@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
   ShoppingCart,
+  CreditCard,
   LogOut,
   Menu,
   Eye,
@@ -27,6 +28,7 @@ export function DealerAreaLayout({ children, dealerId, dealerName }: DealerAreaL
   const navigation = [
     { name: "Dashboard", href: basePath, icon: LayoutDashboard },
     { name: "Ordini", href: `${basePath}/ordini`, icon: ShoppingCart },
+    { name: "Pagamenti", href: `${basePath}/pagamenti`, icon: CreditCard },
   ];
 
   const isActive = (href: string) => {

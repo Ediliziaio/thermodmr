@@ -9,11 +9,12 @@ const PAGE_SIZE = 50;
 
 interface UseOrdersInfiniteParams {
   searchQuery?: string;
+  dealerId?: string;
 }
 
-export const useOrdersInfinite = ({ searchQuery }: UseOrdersInfiniteParams = {}) => {
+export const useOrdersInfinite = ({ searchQuery, dealerId }: UseOrdersInfiniteParams = {}) => {
   return useInfiniteQuery({
-    queryKey: ["orders-infinite", searchQuery],
+    queryKey: ["orders-infinite", searchQuery, dealerId],
     queryFn: async ({ pageParam = 0 }) => {
       const from = pageParam * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
@@ -29,6 +30,11 @@ export const useOrdersInfinite = ({ searchQuery }: UseOrdersInfiniteParams = {})
           { count: "exact" }
         )
         .order("data_inserimento", { ascending: false });
+
+      // Filtro per dealer specifico
+      if (dealerId) {
+        query = query.eq("dealer_id", dealerId);
+      }
 
       // Ricerca solo su campi della tabella orders (evita errori con join)
       if (searchQuery && searchQuery.trim()) {
