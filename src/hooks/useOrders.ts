@@ -305,6 +305,27 @@ export const useUpdateOrderId = () => {
   });
 };
 
+const generatePreventivoId = async (): Promise<string> => {
+  const year = new Date().getFullYear();
+  const { data: last } = await supabase
+    .from("orders")
+    .select("id")
+    .ilike("id", `PRV-${year}-%`)
+    .order("id", { ascending: false })
+    .limit(1)
+    .single();
+
+  let nextNumber = 1;
+  if (last?.id) {
+    const match = last.id.match(/PRV-\d{4}-(\d{4})/);
+    if (match) {
+      nextNumber = parseInt(match[1], 10) + 1;
+    }
+  }
+
+  return `PRV-${year}-${nextNumber.toString().padStart(4, "0")}`;
+};
+
 const generateOrderId = async (): Promise<string> => {
   const year = new Date().getFullYear();
   const { data: lastOrder } = await supabase
@@ -433,6 +454,119 @@ export const useCreateOrder = () => {
         variant: "destructive",
       });
       console.error("Error creating order:", error);
+    },
+  });
+};
+
+export const useCreatePreventivo = () => {
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
+
+  return useMutation({
+    mutationFn: async (values: any) => {
+      if (!user?.id) throw new Error("User not authenticated");
+
+      const { data: dealer } = await supabase
+        .from("dealers")
+        .select("commerciale_owner_id")
+        .eq("id", values.dealer_id)
+        .single();
+
+      if (!dealer) throw new Error("Dealer not found");
+
+      let clienteFinaleId: string | null = null;
+      if (values.cliente_nome && values.cliente_cognome) {
+        const { data: newClient, error: clientError } = await supabase
+          .from("clients")
+          .insert({
+            dealer_id: values.dealer_id,
+            nome: values.cliente_nome,
+            cognome: values.cliente_cognome,
+            email: values.cliente_email || null,
+            telefono: values.cliente_telefono || null,
+            indirizzo: values.cliente_indirizzo || null,
+          })
+          .select()
+          .single();
+
+        if (clientError) throw clientError;
+        clienteFinaleId = newClient.id;
+      }
+
+      const preventivoId = await generatePreventivoId();
+      const importoTotale = values.order_lines.reduce(
+        (sum: number, line: any) => {
+          const subtotal = line.quantita * line.prezzo_unitario;
+          const afterDiscount = subtotal * (1 - line.sconto / 100);
+          const total = afterDiscount * (1 + line.iva / 100);
+          return sum + total;
+        },
+        0
+      );
+
+      const orderData: TablesInsert<"orders"> = {
+        id: preventivoId,
+        dealer_id: values.dealer_id,
+        commerciale_id: dealer.commerciale_owner_id,
+        creato_da_user_id: user.id,
+        cliente_finale_id: clienteFinaleId,
+        data_consegna_prevista: values.data_consegna_prevista || null,
+        data_scadenza_preventivo: values.data_scadenza_preventivo || null,
+        importo_acconto: 0,
+        importo_totale: importoTotale,
+        note_rivenditore: values.note_rivenditore || null,
+        note_interna: values.note_interna || null,
+        stato: "preventivo",
+      };
+
+      const { data: newOrder, error: orderError } = await supabase
+        .from("orders")
+        .insert(orderData)
+        .select()
+        .single();
+
+      if (orderError) throw orderError;
+
+      const orderLinesData = values.order_lines.map((line: any) => {
+        const subtotal = line.quantita * line.prezzo_unitario;
+        const afterDiscount = subtotal * (1 - line.sconto / 100);
+        const total = afterDiscount * (1 + line.iva / 100);
+
+        return {
+          ordine_id: newOrder.id,
+          categoria: line.categoria,
+          descrizione: line.descrizione,
+          quantita: line.quantita,
+          prezzo_unitario: line.prezzo_unitario,
+          sconto: line.sconto,
+          iva: line.iva,
+          totale_riga: total,
+        };
+      });
+
+      const { error: linesError } = await supabase
+        .from("order_lines")
+        .insert(orderLinesData);
+
+      if (linesError) throw linesError;
+
+      return newOrder;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["dealer-preventivi"] });
+      toast({
+        title: "Preventivo creato",
+        description: `Preventivo ${data.id} creato con successo`,
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Errore",
+        description: "Impossibile creare il preventivo",
+        variant: "destructive",
+      });
+      console.error("Error creating preventivo:", error);
     },
   });
 };

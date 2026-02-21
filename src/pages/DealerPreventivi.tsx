@@ -6,27 +6,18 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { FileText, ArrowRightCircle, Eye, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { FileText, ArrowRightCircle, Eye, AlertTriangle, CheckCircle2, Plus } from "lucide-react";
 import { formatCurrency, formatDate, cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
+import { NewPreventivoDialog } from "@/components/orders/NewPreventivoDialog";
 
 interface DealerPreventiviProps {
   dealerId?: string;
@@ -35,7 +26,9 @@ interface DealerPreventiviProps {
 export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { userRole } = useAuth();
   const [convertId, setConvertId] = useState<string | null>(null);
+  const [preventivoDialogOpen, setPreventivoDialogOpen] = useState(false);
 
   const { data: preventivi, isLoading } = useQuery({
     queryKey: ["dealer-preventivi", dealerId],
@@ -86,10 +79,23 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Preventivi</h1>
-          <p className="text-sm text-muted-foreground mt-1">
+         <p className="text-sm text-muted-foreground mt-1">
             Gestisci i tuoi preventivi e convertili in ordini
           </p>
         </div>
+        {(userRole === "super_admin" || userRole === "commerciale") && (
+          <>
+            <Button onClick={() => setPreventivoDialogOpen(true)}>
+              <Plus className="mr-2 h-4 w-4" />
+              Nuovo Preventivo
+            </Button>
+            <NewPreventivoDialog
+              open={preventivoDialogOpen}
+              onOpenChange={setPreventivoDialogOpen}
+              defaultDealerId={dealerId}
+            />
+          </>
+        )}
       </div>
 
       {isLoading ? (

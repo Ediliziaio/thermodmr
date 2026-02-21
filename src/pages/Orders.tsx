@@ -2,10 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, Loader2, AlertCircle, RefreshCw, X, Trash2, Download, Plus } from "lucide-react";
+import { Eye, Loader2, AlertCircle, RefreshCw, X, Trash2, Download, Plus, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useOrdersInfinite } from "@/hooks/useOrdersInfinite";
 import { NewOrderDialog } from "@/components/orders/NewOrderDialog";
+import { NewPreventivoDialog } from "@/components/orders/NewPreventivoDialog";
 import { BulkUpdateStatusDialog } from "@/components/orders/BulkUpdateStatusDialog";
 import { BulkDeleteOrdersDialog } from "@/components/orders/BulkDeleteOrdersDialog";
 import { OrderFilters, OrderFiltersState } from "@/components/orders/OrderFilters";
@@ -56,6 +57,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
   const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
   const [newOrderDialogOpen, setNewOrderDialogOpen] = useState(false);
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
+  const [preventivoDialogOpen, setPreventivoDialogOpen] = useState(false);
 
   // Helper functions for selection
   const toggleOrderSelection = (orderId: string) => {
@@ -278,7 +280,20 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
               Gestisci tutti gli ordini dei rivenditori
             </p>
           </div>
-          {!isMobile && !isDealerArea && <NewOrderDialog open={newOrderDialogOpen} onOpenChange={setNewOrderDialogOpen} />}
+          {!isMobile && !isDealerArea && (
+            <div className="flex gap-2">
+              {userRole === "super_admin" && (
+                <>
+                  <Button variant="outline" onClick={() => setPreventivoDialogOpen(true)}>
+                    <FileText className="mr-2 h-4 w-4" />
+                    Nuovo Preventivo
+                  </Button>
+                  <NewPreventivoDialog open={preventivoDialogOpen} onOpenChange={setPreventivoDialogOpen} />
+                </>
+              )}
+              <NewOrderDialog open={newOrderDialogOpen} onOpenChange={setNewOrderDialogOpen} />
+            </div>
+          )}
         </div>
 
       {/* Statistiche Header - Swipeable su mobile */}
