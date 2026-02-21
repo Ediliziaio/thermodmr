@@ -2,7 +2,8 @@ import { useState } from "react";
 import { motion, useMotionValue, useTransform, PanInfo } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Building2, ChevronRight, Mail, MapPin, Phone, Pencil, Trash2 } from "lucide-react";
+import { Building2, LogIn, Mail, MapPin, Phone, Pencil, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { EditDealerDialog } from "./EditDealerDialog";
 import { DeleteDealerDialog } from "./DeleteDealerDialog";
 import type { DealerWithStats } from "@/hooks/useDealers";
@@ -139,11 +140,18 @@ export function MobileDealerCard({ dealer }: MobileDealerCardProps) {
             </div>
 
             {/* Footer with hint and chevron */}
-            <div className="flex items-center justify-between pt-2 border-t">
-              <p className="text-xs text-muted-foreground">
-                ← Scorri per modificare o eliminare →
-              </p>
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            <div className="pt-2 border-t">
+              <Button
+                className="w-full"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/rivenditori/${dealer.id}/area`);
+                }}
+              >
+                <LogIn className="h-4 w-4 mr-2" />
+                Accedi
+              </Button>
             </div>
           </CardContent>
         </Card>
