@@ -30,6 +30,7 @@ const TestDataSeeder = lazy(() => import("./pages/TestDataSeeder"));
 const Impostazioni = lazy(() => import("./pages/Impostazioni"));
 const Placeholder = lazy(() => import("./pages/Placeholder"));
 const DealerArea = lazy(() => import("./pages/DealerArea"));
+const DealerPreventivi = lazy(() => import("./pages/DealerPreventivi"));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -74,6 +75,16 @@ const App = () => (
                 <ProtectedRoute>
                   <Layout>
                     <OrderDetail />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/preventivi"
+              element={
+                <ProtectedRoute requiredRole="super_admin">
+                  <Layout>
+                    <DealerPreventivi />
                   </Layout>
                 </ProtectedRoute>
               }
