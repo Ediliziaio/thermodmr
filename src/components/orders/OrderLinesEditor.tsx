@@ -198,18 +198,22 @@ export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly =
               </div>
 
               <div className="space-y-2">
-                <Label>IVA (%)</Label>
-                <Input
-                  type="number"
-                  min="0"
-                  max="100"
-                  step="0.01"
-                  value={line.iva}
-                  onChange={(e) =>
-                    updateLine(line.id, "iva", parseFloat(e.target.value) || 22)
-                  }
+                <Label>IVA</Label>
+                <Select
+                  value={String(line.iva)}
+                  onValueChange={(value) => updateLine(line.id, "iva", parseFloat(value))}
                   disabled={!canEdit}
-                />
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">0% - Reverse Charge</SelectItem>
+                    <SelectItem value="4">4% - IVA ridotta</SelectItem>
+                    <SelectItem value="10">10% - IVA ridotta</SelectItem>
+                    <SelectItem value="22">22% - IVA ordinaria</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 

@@ -396,16 +396,22 @@ export function NewOrderDialog({ open: controlledOpen, onOpenChange: controlledO
                           </div>
                         </div>
 
-                        <div className="mt-2 flex justify-between items-center text-sm">
-                          <span className="text-muted-foreground">
-                            IVA: {watchedLines[index]?.iva || 22}%
-                          </span>
-                          <span className="font-semibold">
-                            Totale riga:{" "}
-                            {new Intl.NumberFormat("it-IT", {
-                              style: "currency",
-                              currency: "EUR",
-                            }).format(calculateLineTotal(watchedLines[index]))}
+                        <div className="mt-2 flex justify-between items-center text-sm gap-3">
+                          <FormField control={form.control} name={`order_lines.${index}.iva`} render={({ field }) => (
+                            <FormItem className="flex-1">
+                              <Select onValueChange={(v) => field.onChange(parseFloat(v))} value={String(field.value)}>
+                                <FormControl><SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger></FormControl>
+                                <SelectContent>
+                                  <SelectItem value="0">0% - Reverse Charge</SelectItem>
+                                  <SelectItem value="4">4% - IVA ridotta</SelectItem>
+                                  <SelectItem value="10">10% - IVA ridotta</SelectItem>
+                                  <SelectItem value="22">22% - IVA ordinaria</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </FormItem>
+                          )} />
+                          <span className="font-semibold whitespace-nowrap">
+                            Totale: {new Intl.NumberFormat("it-IT", { style: "currency", currency: "EUR" }).format(calculateLineTotal(watchedLines[index]))}
                           </span>
                         </div>
                       </CardContent>
