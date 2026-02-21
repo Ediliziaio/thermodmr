@@ -1,50 +1,41 @@
 
-## Area Rivenditore con Sidebar dedicata e Navigazione
 
-### Problema
-Attualmente l'area rivenditore (`/rivenditori/:id/area`) mostra solo la dashboard senza sidebar. Il super admin dovrebbe vedere una sidebar ridotta con le voci che il rivenditore vedrebbe (Dashboard, Ordini, Impostazioni) e poter navigare tra le sezioni come se fosse il rivenditore.
-
-### Soluzione
-Creare un layout dedicato `DealerAreaLayout` con una sidebar che mostra solo le voci del rivenditore, tutte scopate al dealer specifico. Le route dell'area rivenditore saranno sotto `/rivenditori/:id/area/*`.
-
-### Struttura delle pagine nell'area rivenditore
-
-```text
-/rivenditori/:id/area          -> Dashboard rivenditore (KPI, ordini, attivita')
-/rivenditori/:id/area/ordini   -> Lista ordini filtrati per quel rivenditore
-/rivenditori/:id/area/ordini/:orderId -> Dettaglio ordine
-```
+## Aggiungere Pagamenti alla sidebar e filtrare ordini per dealer
 
 ### Modifiche previste
 
-**1. Creare `src/components/DealerAreaLayout.tsx`**
-- Nuovo layout con sidebar ridotta, simile a `Layout.tsx` ma con:
-  - Solo le voci visibili al rivenditore: Dashboard, Ordini, Impostazioni
-  - I link puntano a `/rivenditori/:id/area/...` invece che alle route globali
-  - Header con nome del rivenditore e bottone "Esci dall'Area" (torna a `/rivenditori`)
-  - Nessuna GlobalSearch (il super admin non cerca qui)
-  - Badge "Stai visualizzando come: [Nome Rivenditore]" per chiarire il contesto
+**1. `src/components/DealerAreaLayout.tsx`**
+- Aggiungere la voce "Pagamenti" nella sidebar con icona `CreditCard`
+- Route: `/rivenditori/:id/area/pagamenti`
 
-**2. Modificare `src/pages/DealerArea.tsx`**
-- Trasformarlo in un wrapper con `<Routes>` nested che usa `DealerAreaLayout`
-- Route interne:
-  - `/` -> DealerDashboard (gia' esistente)
-  - `/ordini` -> Lista ordini filtrata per quel dealer
-  - `/ordini/:orderId` -> Dettaglio ordine (riusa `OrderDetail` esistente)
+**2. `src/pages/DealerArea.tsx`**
+- Aggiungere la route per i pagamenti: `pagamenti` -> componente `Pagamenti` (lazy loaded)
+- Passare il `dealerId` come prop/context ai componenti figli per filtrare i dati
+- Per gli ordini: passare `dealerId` come prop a `Orders` per pre-filtrare
+- Per i pagamenti: passare `dealerId` come prop a `Pagamenti` per pre-filtrare
 
-**3. Aggiornare `src/App.tsx`**
-- Cambiare la route da `path="/rivenditori/:id/area"` a `path="/rivenditori/:id/area/*"` per supportare le sotto-route
+**3. `src/hooks/useOrdersInfinite.ts`**
+- Aggiungere parametro opzionale `dealerId` all'interfaccia `UseOrdersInfiniteParams`
+- Se `dealerId` e' presente, aggiungere `.eq("dealer_id", dealerId)` alla query
+- Aggiungere `dealerId` alla `queryKey` per cache separata
 
-**4. Modificare `src/pages/DealerDashboard.tsx`**
-- Rimuovere il bottone "Torna indietro" (sara' gestito dal layout)
-- Le azioni rapide (Crea Ordine, Visualizza Ordini) navigheranno alle route interne dell'area (`../ordini` relative)
+**4. `src/pages/Orders.tsx`**
+- Accettare prop opzionale `dealerId?: string`
+- Passare `dealerId` a `useOrdersInfinite`
+- Quando `dealerId` e' presente: nascondere il filtro per rivenditore (non serve), nascondere il bottone "Nuovo Ordine" (il rivenditore non crea ordini da qui), e aggiornare la navigazione per i dettagli ordine per usare path relativi all'area rivenditore
 
-### Voci della sidebar rivenditore
+**5. `src/hooks/usePaymentsInfinite.ts`**
+- Aggiungere parametro opzionale `dealerId`
+- Se presente, filtrare i pagamenti per ordini appartenenti a quel dealer (join con orders)
+- Aggiungere `dealerId` alla `queryKey`
 
-| Voce | Icona | Route |
-|------|-------|-------|
-| Dashboard | LayoutDashboard | `/rivenditori/:id/area` |
-| Ordini | ShoppingCart | `/rivenditori/:id/area/ordini` |
+**6. `src/pages/Pagamenti.tsx`**
+- Accettare prop opzionale `dealerId?: string`
+- Passare `dealerId` a `usePaymentsInfinite`
+- Quando `dealerId` e' presente: nascondere il bottone "Nuovo Pagamento" (il rivenditore non registra pagamenti), aggiornare la navigazione ordini per usare path relativi all'area
 
-In alto: nome rivenditore + badge "Vista Rivenditore"
-In basso: bottone "Esci dall'Area" con freccia che riporta a `/rivenditori`
+### Dettagli tecnici
+
+La navigazione ai dettagli ordine dall'area rivenditore usera' il path `/rivenditori/:id/area/ordini/:orderId` invece di `/ordini/:orderId`, cosi' l'utente resta nel contesto dell'area rivenditore.
+
+Il filtro `dealerId` viene applicato a livello di query database (non solo lato client) per efficienza e sicurezza.
