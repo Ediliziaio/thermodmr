@@ -1,71 +1,54 @@
 
 
-## Creazione Preventivi da parte del Super Admin
+## Duplica Preventivo
 
 ### Obiettivo
-Permettere al Super Admin di creare nuovi preventivi. Un preventivo usa lo stesso form dell'ordine ma con stato iniziale `preventivo` e un campo aggiuntivo `data_scadenza_preventivo`.
+Aggiungere un bottone "Duplica" su ogni riga della lista preventivi. Cliccandolo, si apre il dialog `NewPreventivoDialog` pre-compilato con i dati del preventivo selezionato (dealer, cliente, righe, note), pronto per essere salvato come nuovo preventivo.
 
 ### Modifiche previste
 
 ---
 
-#### 1. Nuovo dialog `NewPreventivoDialog` (`src/components/orders/NewPreventivoDialog.tsx`)
+#### 1. Fetch dati completi del preventivo da duplicare (`src/pages/DealerPreventivi.tsx`)
 
-Componente basato su `NewOrderDialog` con queste differenze:
-- Titolo: "Crea Nuovo Preventivo"
-- Campo aggiuntivo: **Data Scadenza Preventivo** (tipo `date`, obbligatorio)
-- Il campo "Importo Acconto" viene nascosto (non rilevante per un preventivo)
-- Bottone: "Crea Preventivo"
-- Al submit chiama un nuovo hook `useCreatePreventivo`
+- Aggiungere uno stato `duplicateData` che contiene i valori del preventivo da duplicare
+- Quando l'utente clicca "Duplica", fare una query per caricare i dati completi dell'ordine (incluse le `order_lines` e i dati del cliente finale dalla tabella `clients`)
+- Una volta caricati, aprire il `NewPreventivoDialog` passando i dati come prop `defaultValues`
 
----
-
-#### 2. Nuovo hook `useCreatePreventivo` (`src/hooks/useOrders.ts`)
-
-Funzione simile a `useCreateOrder` ma:
-- Genera un ID con prefisso `PRV-YYYY-NNNN` invece di `ORD-YYYY-NNNN`
-- Imposta `stato: "preventivo"` invece di `"da_confermare"`
-- Salva `data_scadenza_preventivo` dal form
-- Imposta `importo_acconto: 0`
-- Toast di successo: "Preventivo creato"
-- Invalida anche la query `["preventivi"]` oltre a `["orders-infinite"]`
-
-Aggiungere anche `generatePreventivoId()` come funzione helper.
+Aggiungere il bottone "Duplica" (icona `Copy`):
+- **Desktop**: nella colonna Azioni, accanto a "Visualizza" e "Converti"
+- **Mobile**: come bottone aggiuntivo nella card
 
 ---
 
-#### 3. Pagina Ordini: bottone "Nuovo Preventivo" per Super Admin (`src/pages/Orders.tsx`)
+#### 2. Estendere `NewPreventivoDialog` (`src/components/orders/NewPreventivoDialog.tsx`)
 
-- Accanto al bottone "Nuovo Ordine", aggiungere un bottone **"Nuovo Preventivo"** visibile solo se `userRole === "super_admin"`
-- Il bottone apre `NewPreventivoDialog`
-- Icona: `FileText` + `Plus`
-
----
-
-#### 4. Pagina Preventivi del dealer: bottone "Nuovo Preventivo" (`src/pages/DealerPreventivi.tsx`)
-
-- Aggiungere il bottone "Nuovo Preventivo" anche nella pagina preventivi dell'area rivenditore
-- Visibile solo per `super_admin` (e `commerciale`, come da regole RBAC approvate)
-- Il `dealer_id` viene pre-selezionato automaticamente se siamo nell'area di un dealer specifico
+- Aggiungere una prop opzionale `defaultValues` con i dati pre-compilati (dealer_id, cliente, note, righe)
+- Usare `useEffect` per chiamare `form.reset(defaultValues)` quando `defaultValues` cambia
+- La data di scadenza viene lasciata vuota (il preventivo duplicato deve avere una nuova scadenza)
+- Il titolo cambia in "Duplica Preventivo" quando `defaultValues` e' presente
 
 ---
 
-### Dettagli tecnici
+#### 3. Query di fetch per la duplicazione
 
-**Schema form preventivo** (Zod):
-- Stesso schema di `orderFormSchema` ma con `data_scadenza_preventivo: z.string().min(1, "Data scadenza richiesta")` obbligatorio
-- Senza `importo_acconto`
+Quando l'utente clicca "Duplica":
 
-**Generazione ID preventivo**:
 ```text
-PRV-2026-0001, PRV-2026-0002, ...
+1. Fetch da "orders" -> note_rivenditore, note_interna, data_consegna_prevista, dealer_id, cliente_finale_id
+2. Fetch da "order_lines" WHERE ordine_id = id -> categoria, descrizione, quantita, prezzo_unitario, sconto, iva
+3. (Se cliente_finale_id presente) Fetch da "clients" -> nome, cognome, email, telefono, indirizzo
 ```
-Query: `SELECT id FROM orders WHERE id ILIKE 'PRV-2026-%' ORDER BY id DESC LIMIT 1`
 
-**Flusso insert**:
-1. Lookup `commerciale_owner_id` dal dealer selezionato
-2. (Opzionale) Crea cliente finale
-3. Genera `PRV-YYYY-NNNN`
-4. Insert in `orders` con `stato = 'preventivo'` e `data_scadenza_preventivo`
-5. Insert righe in `order_lines`
+I dati vengono mappati nel formato del form e passati al dialog.
+
+---
+
+### Riepilogo flusso
+
+1. Utente clicca "Duplica" su un preventivo
+2. Il sistema carica ordine + righe + cliente
+3. Si apre il dialog pre-compilato (senza data scadenza)
+4. L'utente modifica cio' che serve e clicca "Crea Preventivo"
+5. Viene creato un nuovo preventivo con un nuovo ID `PRV-YYYY-NNNN`
 
