@@ -29,6 +29,7 @@ interface LayoutProps {
 const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard, roles: ["super_admin", "commerciale", "rivenditore"] },
   { name: "Ordini", href: "/ordini", icon: ShoppingCart, roles: ["super_admin", "commerciale", "rivenditore"] },
+  { name: "Preventivi", href: "/preventivi", icon: FileText, roles: ["super_admin"] },
   { name: "Rivenditori", href: "/rivenditori", icon: Users, roles: ["super_admin", "commerciale"] },
   { name: "Commerciali", href: "/commerciali", icon: Briefcase, roles: ["super_admin"] },
   { name: "Pagamenti", href: "/pagamenti", icon: CreditCard, roles: ["super_admin", "commerciale"] },
