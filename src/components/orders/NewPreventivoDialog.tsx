@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -59,6 +59,26 @@ const preventivoFormSchema = z.object({
 
 type PreventivoFormValues = z.infer<typeof preventivoFormSchema>;
 
+export interface PreventivoDefaultValues {
+  dealer_id?: string;
+  cliente_nome?: string;
+  cliente_cognome?: string;
+  cliente_email?: string;
+  cliente_telefono?: string;
+  cliente_indirizzo?: string;
+  data_consegna_prevista?: string;
+  note_rivenditore?: string;
+  note_interna?: string;
+  order_lines?: Array<{
+    categoria: string;
+    descrizione: string;
+    quantita: number;
+    prezzo_unitario: number;
+    sconto: number;
+    iva: number;
+  }>;
+}
+
 const calculateLineTotal = (line: z.infer<typeof orderLineSchema>) => {
   const subtotal = line.quantita * line.prezzo_unitario;
   const afterDiscount = subtotal * (1 - line.sconto / 100);
@@ -69,9 +89,11 @@ interface NewPreventivoDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   defaultDealerId?: string;
+  defaultValues?: PreventivoDefaultValues;
 }
 
-export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId }: NewPreventivoDialogProps) {
+export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defaultValues }: NewPreventivoDialogProps) {
+  const isDuplicate = !!defaultValues;
   const { data: dealersData } = useDealersInfinite();
   const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
   const createPreventivoMutation = useCreatePreventivo();
@@ -86,6 +108,27 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId }: New
       ],
     },
   });
+
+  // Pre-fill form when duplicating
+  useEffect(() => {
+    if (defaultValues && open) {
+      form.reset({
+        dealer_id: defaultValues.dealer_id || defaultDealerId || "",
+        cliente_nome: defaultValues.cliente_nome || "",
+        cliente_cognome: defaultValues.cliente_cognome || "",
+        cliente_email: defaultValues.cliente_email || "",
+        cliente_telefono: defaultValues.cliente_telefono || "",
+        cliente_indirizzo: defaultValues.cliente_indirizzo || "",
+        data_consegna_prevista: defaultValues.data_consegna_prevista || "",
+        data_scadenza_preventivo: "", // always empty for duplicates
+        note_rivenditore: defaultValues.note_rivenditore || "",
+        note_interna: defaultValues.note_interna || "",
+        order_lines: defaultValues.order_lines && defaultValues.order_lines.length > 0
+          ? defaultValues.order_lines
+          : [{ categoria: "Infissi", descrizione: "", quantita: 1, prezzo_unitario: 0, sconto: 0, iva: 22 }],
+      });
+    }
+  }, [defaultValues, open]);
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -117,9 +160,11 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId }: New
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Crea Nuovo Preventivo</DialogTitle>
+          <DialogTitle>{isDuplicate ? "Duplica Preventivo" : "Crea Nuovo Preventivo"}</DialogTitle>
           <DialogDescription>
-            Compila i dati del preventivo e aggiungi le righe prodotto
+            {isDuplicate
+              ? "Modifica i dati pre-compilati e salva come nuovo preventivo"
+              : "Compila i dati del preventivo e aggiungi le righe prodotto"}
           </DialogDescription>
         </DialogHeader>
 
@@ -296,7 +341,7 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId }: New
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Annulla</Button>
               <Button type="submit" disabled={createPreventivoMutation.isPending}>
                 {createPreventivoMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Crea Preventivo
+                {isDuplicate ? "Duplica Preventivo" : "Crea Preventivo"}
               </Button>
             </div>
           </form>
