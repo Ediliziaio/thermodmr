@@ -13,7 +13,8 @@ import {
   Bell,
   Plus,
   ExternalLink,
-  CreditCard
+  CreditCard,
+  FileText
 } from "lucide-react";
 import { formatCurrency, getStatusColor, getStatusLabel, cn } from "@/lib/utils";
 import { useDealerOrderStats, useRecentActivity, usePaymentReminders } from "@/hooks/useDealerDashboard";
@@ -77,16 +78,29 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
       </div>
 
       {/* KPI Cards */}
-      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Preventivi Attivi</CardTitle>
+            <FileText className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.ordersByStatus.preventivo || 0}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              In attesa di conferma
+            </p>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Ordini Totali</CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalOrders}</div>
+            <div className="text-2xl font-bold">{stats.totalOrders - (stats.ordersByStatus.preventivo || 0)}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Tutti i tuoi ordini
+              Ordini confermati
             </p>
           </CardContent>
         </Card>
@@ -341,7 +355,19 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
           <CardTitle>Azioni Rapide</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-3 md:grid-cols-3">
+          <div className="grid gap-3 md:grid-cols-4">
+            <Button 
+              onClick={() => navigate(dealerId ? `/rivenditori/${dealerId}/area/preventivi` : "/ordini")} 
+              variant="outline" 
+              className="justify-start h-auto py-4"
+            >
+              <FileText className="h-5 w-5 mr-3" />
+              <div className="text-left">
+                <p className="font-medium">Preventivi</p>
+                <p className="text-xs text-muted-foreground">Gestisci preventivi</p>
+              </div>
+            </Button>
+
             <Button 
               onClick={() => navigate(dealerId ? `/rivenditori/${dealerId}/area/ordini` : "/ordini")} 
               variant="outline" 

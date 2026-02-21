@@ -457,6 +457,7 @@ export type Database = {
           creato_da_user_id: string
           data_consegna_prevista: string | null
           data_inserimento: string
+          data_scadenza_preventivo: string | null
           dealer_id: string
           id: string
           importo_acconto: number
@@ -473,6 +474,7 @@ export type Database = {
           creato_da_user_id: string
           data_consegna_prevista?: string | null
           data_inserimento?: string
+          data_scadenza_preventivo?: string | null
           dealer_id: string
           id: string
           importo_acconto?: number
@@ -489,6 +491,7 @@ export type Database = {
           creato_da_user_id?: string
           data_consegna_prevista?: string | null
           data_inserimento?: string
+          data_scadenza_preventivo?: string | null
           dealer_id?: string
           id?: string
           importo_acconto?: number
@@ -950,6 +953,7 @@ export type Database = {
       commission_base: "totale" | "margine" | "personalizzata"
       liquidation_status: "dovuta" | "liquidata"
       order_status:
+        | "preventivo"
         | "da_confermare"
         | "da_pagare_acconto"
         | "in_lavorazione"
@@ -1087,6 +1091,7 @@ export const Constants = {
       commission_base: ["totale", "margine", "personalizzata"],
       liquidation_status: ["dovuta", "liquidata"],
       order_status: [
+        "preventivo",
         "da_confermare",
         "da_pagare_acconto",
         "in_lavorazione",

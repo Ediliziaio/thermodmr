@@ -7,6 +7,7 @@ interface StatusStepperProps {
 }
 
 const steps = [
+  { status: OrderStatus.PREVENTIVO, label: "Preventivo", number: 0 },
   { status: OrderStatus.DA_CONFERMARE, label: "Da Confermare", number: 1 },
   { status: OrderStatus.DA_PAGARE_ACCONTO, label: "Da Pagare Acconto", number: 2 },
   { status: OrderStatus.IN_LAVORAZIONE, label: "In Lavorazione", number: 3 },

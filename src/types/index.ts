@@ -5,6 +5,7 @@ export enum UserRole {
 }
 
 export enum OrderStatus {
+  PREVENTIVO = "PREVENTIVO",
   DA_CONFERMARE = "DA_CONFERMARE",
   DA_PAGARE_ACCONTO = "DA_PAGARE_ACCONTO",
   IN_LAVORAZIONE = "IN_LAVORAZIONE",

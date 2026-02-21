@@ -12,6 +12,7 @@ import { Loader2 } from "lucide-react";
 const Orders = lazy(() => import("./Orders"));
 const OrderDetail = lazy(() => import("./OrderDetail"));
 const Pagamenti = lazy(() => import("./Pagamenti"));
+const DealerPreventivi = lazy(() => import("./DealerPreventivi"));
 
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-[50vh]">
@@ -47,6 +48,7 @@ export default function DealerArea() {
       <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route index element={<DealerDashboard dealerId={id} dealerName={dealer?.ragione_sociale || undefined} />} />
+          <Route path="preventivi" element={<DealerPreventivi dealerId={id} />} />
           <Route path="ordini" element={<Orders dealerId={id} />} />
           <Route path="ordini/:orderId" element={<OrderDetail />} />
           <Route path="pagamenti" element={<Pagamenti dealerId={id} />} />

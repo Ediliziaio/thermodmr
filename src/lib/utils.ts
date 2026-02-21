@@ -50,6 +50,7 @@ export const formatDateTime = (date: Date | string) => {
  */
 export const getStatusColor = (status: string) => {
   const colors: Record<string, string> = {
+    preventivo: "bg-slate-500/10 text-slate-700 dark:text-slate-400",
     da_confermare: "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400",
     da_pagare_acconto: "bg-orange-500/10 text-orange-700 dark:text-orange-400",
     in_lavorazione: "bg-blue-500/10 text-blue-700 dark:text-blue-400",
@@ -64,6 +65,7 @@ export const getStatusColor = (status: string) => {
  */
 export const getStatusLabel = (status: string) => {
   const labels: Record<string, string> = {
+    preventivo: "Preventivo",
     da_confermare: "Da Confermare",
     da_pagare_acconto: "Da Pagare Acconto",
     in_lavorazione: "In Lavorazione",
@@ -78,6 +80,8 @@ export const getStatusLabel = (status: string) => {
  */
 export const getStatusVariant = (status: string): "default" | "secondary" | "destructive" | "outline" => {
   switch (status) {
+    case "preventivo":
+      return "outline";
     case "da_confermare":
       return "outline";
     case "da_pagare_acconto":
