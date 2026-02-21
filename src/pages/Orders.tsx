@@ -33,15 +33,20 @@ const formatDate = (date: Date) => {
   }).format(date);
 };
 
-export default function Orders() {
+interface OrdersProps {
+  dealerId?: string;
+}
+
+export default function Orders({ dealerId }: OrdersProps = {}) {
   useRealtimeSync();
   
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { userRole } = useAuth();
   const isMobile = useIsMobile();
+  const isDealerArea = !!dealerId;
   const [searchQuery, setSearchQuery] = useState("");
-  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useOrdersInfinite({ searchQuery });
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useOrdersInfinite({ searchQuery, dealerId });
   const { data: dealersData } = useDealersInfinite();
   const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
   const [filters, setFilters] = useState<OrderFiltersState>({});
@@ -273,7 +278,7 @@ export default function Orders() {
               Gestisci tutti gli ordini dei rivenditori
             </p>
           </div>
-          {!isMobile && <NewOrderDialog open={newOrderDialogOpen} onOpenChange={setNewOrderDialogOpen} />}
+          {!isMobile && !isDealerArea && <NewOrderDialog open={newOrderDialogOpen} onOpenChange={setNewOrderDialogOpen} />}
         </div>
 
       {/* Statistiche Header - Swipeable su mobile */}
@@ -389,7 +394,7 @@ export default function Orders() {
             orders={filteredOrders}
             selectedOrderIds={selectedOrderIds}
             onToggleSelect={toggleOrderSelection}
-            onViewDetails={(id) => navigate(`/ordini/${id}`)}
+            onViewDetails={(id) => isDealerArea ? navigate(`../ordini/${id}`, { relative: 'path' }) : navigate(`/ordini/${id}`)}
             userRole={userRole || ''}
           />
           <MobileOrderFilters
@@ -558,7 +563,7 @@ export default function Orders() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => navigate(`/ordini/${order.id}`)}
+                              onClick={() => isDealerArea ? navigate(`../ordini/${order.id}`, { relative: 'path' }) : navigate(`/ordini/${order.id}`)}
                             >
                               <Eye className="h-4 w-4 mr-2" />
                               Dettagli

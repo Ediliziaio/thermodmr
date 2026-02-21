@@ -31,11 +31,12 @@ interface UsePaymentsInfiniteParams {
   tipoFilter: string;
   metodoFilter: string;
   searchQuery?: string;
+  dealerId?: string;
 }
 
-export const usePaymentsInfinite = ({ dateRange, tipoFilter, metodoFilter, searchQuery }: UsePaymentsInfiniteParams) => {
+export const usePaymentsInfinite = ({ dateRange, tipoFilter, metodoFilter, searchQuery, dealerId }: UsePaymentsInfiniteParams) => {
   return useInfiniteQuery({
-    queryKey: ["payments-infinite", dateRange, tipoFilter, metodoFilter, searchQuery],
+    queryKey: ["payments-infinite", dateRange, tipoFilter, metodoFilter, searchQuery, dealerId],
     queryFn: async ({ pageParam = 0 }) => {
       const from = pageParam * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
@@ -59,6 +60,11 @@ export const usePaymentsInfinite = ({ dateRange, tipoFilter, metodoFilter, searc
         )
         .order("data_pagamento", { ascending: false })
         .range(from, to);
+
+      // Filtro per dealer specifico
+      if (dealerId) {
+        query = query.eq("orders.dealer_id", dealerId);
+      }
 
       if (dateRange?.from) {
         query = query.gte("data_pagamento", format(dateRange.from, "yyyy-MM-dd"));

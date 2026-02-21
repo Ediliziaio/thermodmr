@@ -30,7 +30,12 @@ import { exportPaymentsCustom, PAYMENT_COLUMNS } from "@/lib/exportUtils";
 import { ExportColumnsDialog } from "@/components/export/ExportColumnsDialog";
 import { motion } from "framer-motion";
 
-const Pagamenti = () => {
+interface PagamentiProps {
+  dealerId?: string;
+}
+
+const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
+  const isDealerArea = !!dealerId;
   useRealtimeSync();
   
   const navigate = useNavigate();
@@ -55,6 +60,7 @@ const Pagamenti = () => {
     tipoFilter,
     metodoFilter,
     searchQuery,
+    dealerId,
   });
   const { ref, inView } = useInView();
 
@@ -187,7 +193,7 @@ const Pagamenti = () => {
             {payments.length < totalCount && ` · ${payments.length} caricati`}
           </p>
         </div>
-        {!isMobile && <NewPaymentDialog open={newPaymentDialogOpen} onOpenChange={setNewPaymentDialogOpen} />}
+        {!isMobile && !isDealerArea && <NewPaymentDialog open={newPaymentDialogOpen} onOpenChange={setNewPaymentDialogOpen} />}
       </div>
 
       {/* Stats Cards */}
@@ -327,7 +333,7 @@ const Pagamenti = () => {
                       <TableRow key={payment.id} className={selectedPaymentIds.has(payment.id) ? 'bg-muted/50' : ''}>
                         <TableCell><Checkbox checked={selectedPaymentIds.has(payment.id)} onCheckedChange={() => togglePaymentSelection(payment.id)} /></TableCell>
                         <TableCell>{formatDateLocal(payment.data_pagamento)}</TableCell>
-                        <TableCell><button onClick={() => navigate(`/ordini/${payment.ordine_id}`)} className="font-medium hover:underline text-primary">{payment.ordine_id}</button></TableCell>
+                        <TableCell><button onClick={() => isDealerArea ? navigate(`../ordini/${payment.ordine_id}`, { relative: 'path' }) : navigate(`/ordini/${payment.ordine_id}`)} className="font-medium hover:underline text-primary">{payment.ordine_id}</button></TableCell>
                         <TableCell>{payment.orders.dealers.ragione_sociale}</TableCell>
                         <TableCell><Badge variant={getTipoBadgeVariant(payment.tipo)}>{payment.tipo}</Badge></TableCell>
                         <TableCell className="capitalize">{payment.metodo}</TableCell>
@@ -384,7 +390,7 @@ const Pagamenti = () => {
       )}
 
       {/* FAB for New Payment (Mobile Only) */}
-      {isMobile && selectedPaymentIds.size === 0 && userRole !== 'rivenditore' && (
+      {isMobile && selectedPaymentIds.size === 0 && userRole !== 'rivenditore' && !isDealerArea && (
         <Button
           size="lg"
           className="fixed bottom-6 right-4 h-14 w-14 rounded-full shadow-lg z-40"
