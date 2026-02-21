@@ -8,6 +8,7 @@ import {
   LogOut,
   Menu,
   Eye,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -27,6 +28,7 @@ export function DealerAreaLayout({ children, dealerId, dealerName }: DealerAreaL
 
   const navigation = [
     { name: "Dashboard", href: basePath, icon: LayoutDashboard },
+    { name: "Preventivi", href: `${basePath}/preventivi`, icon: FileText },
     { name: "Ordini", href: `${basePath}/ordini`, icon: ShoppingCart },
     { name: "Pagamenti", href: `${basePath}/pagamenti`, icon: CreditCard },
   ];

@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 interface DealerOrderStats {
   totalOrders: number;
   ordersByStatus: {
+    preventivo: number;
     da_confermare: number;
     da_pagare_acconto: number;
     in_lavorazione: number;
@@ -50,6 +51,7 @@ export const useDealerOrderStats = (dealerId?: string) => {
       const stats: DealerOrderStats = {
         totalOrders: orders.length,
         ordersByStatus: {
+          preventivo: 0,
           da_confermare: 0,
           da_pagare_acconto: 0,
           in_lavorazione: 0,
@@ -197,6 +199,7 @@ export const usePaymentReminders = (dealerId?: string) => {
 
 const getStatusLabel = (status: string) => {
   const labels: Record<string, string> = {
+    preventivo: "Preventivo",
     da_confermare: "Da Confermare",
     da_pagare_acconto: "Da Pagare Acconto",
     in_lavorazione: "In Lavorazione",
