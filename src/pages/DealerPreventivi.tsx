@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -12,12 +12,12 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { FileText, ArrowRightCircle, Eye, AlertTriangle, CheckCircle2, Plus } from "lucide-react";
+import { FileText, ArrowRightCircle, Eye, AlertTriangle, CheckCircle2, Plus, Copy } from "lucide-react";
 import { formatCurrency, formatDate, cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
-import { NewPreventivoDialog } from "@/components/orders/NewPreventivoDialog";
+import { NewPreventivoDialog, type PreventivoDefaultValues } from "@/components/orders/NewPreventivoDialog";
 
 interface DealerPreventiviProps {
   dealerId?: string;
@@ -29,6 +29,8 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
   const { userRole } = useAuth();
   const [convertId, setConvertId] = useState<string | null>(null);
   const [preventivoDialogOpen, setPreventivoDialogOpen] = useState(false);
+  const [duplicateData, setDuplicateData] = useState<PreventivoDefaultValues | undefined>(undefined);
+  const [isDuplicating, setIsDuplicating] = useState(false);
 
   const { data: preventivi, isLoading } = useQuery({
     queryKey: ["dealer-preventivi", dealerId],
@@ -67,6 +69,73 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
     },
   });
 
+  const handleDuplicate = async (id: string) => {
+    setIsDuplicating(true);
+    try {
+      // Fetch order data
+      const { data: order, error: orderError } = await supabase
+        .from("orders")
+        .select("dealer_id, note_rivenditore, note_interna, data_consegna_prevista, cliente_finale_id")
+        .eq("id", id)
+        .single();
+      if (orderError) throw orderError;
+
+      // Fetch order lines
+      const { data: lines, error: linesError } = await supabase
+        .from("order_lines")
+        .select("categoria, descrizione, quantita, prezzo_unitario, sconto, iva")
+        .eq("ordine_id", id);
+      if (linesError) throw linesError;
+
+      // Fetch client if present
+      let clientData: PreventivoDefaultValues = {};
+      if (order.cliente_finale_id) {
+        const { data: client } = await supabase
+          .from("clients")
+          .select("nome, cognome, email, telefono, indirizzo")
+          .eq("id", order.cliente_finale_id)
+          .single();
+        if (client) {
+          clientData = {
+            cliente_nome: client.nome || "",
+            cliente_cognome: client.cognome || "",
+            cliente_email: client.email || "",
+            cliente_telefono: client.telefono || "",
+            cliente_indirizzo: client.indirizzo || "",
+          };
+        }
+      }
+
+      setDuplicateData({
+        dealer_id: order.dealer_id,
+        note_rivenditore: order.note_rivenditore || "",
+        note_interna: order.note_interna || "",
+        data_consegna_prevista: order.data_consegna_prevista || "",
+        ...clientData,
+        order_lines: lines?.map(l => ({
+          categoria: l.categoria,
+          descrizione: l.descrizione,
+          quantita: l.quantita,
+          prezzo_unitario: Number(l.prezzo_unitario),
+          sconto: Number(l.sconto),
+          iva: Number(l.iva),
+        })) || [],
+      });
+      setPreventivoDialogOpen(true);
+    } catch {
+      toast.error("Errore nel caricamento dei dati per la duplicazione");
+    } finally {
+      setIsDuplicating(false);
+    }
+  };
+
+  const handleDialogClose = (open: boolean) => {
+    setPreventivoDialogOpen(open);
+    if (!open) {
+      setDuplicateData(undefined);
+    }
+  };
+
   const isExpired = (date: string | null) => {
     if (!date) return false;
     return new Date(date) < new Date();
@@ -79,22 +148,15 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Preventivi</h1>
-         <p className="text-sm text-muted-foreground mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             Gestisci i tuoi preventivi e convertili in ordini
           </p>
         </div>
         {(userRole === "super_admin" || userRole === "commerciale") && (
-          <>
-            <Button onClick={() => setPreventivoDialogOpen(true)}>
-              <Plus className="mr-2 h-4 w-4" />
-              Nuovo Preventivo
-            </Button>
-            <NewPreventivoDialog
-              open={preventivoDialogOpen}
-              onOpenChange={setPreventivoDialogOpen}
-              defaultDealerId={dealerId}
-            />
-          </>
+          <Button onClick={() => { setDuplicateData(undefined); setPreventivoDialogOpen(true); }}>
+            <Plus className="mr-2 h-4 w-4" />
+            Nuovo Preventivo
+          </Button>
         )}
       </div>
 
@@ -152,17 +214,32 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                         </div>
                       )}
                     </div>
-                    <Button
-                      size="sm"
-                      className="w-full"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setConvertId(p.id);
-                      }}
-                    >
-                      <ArrowRightCircle className="h-4 w-4 mr-2" />
-                      Converti in Ordine
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="flex-1"
+                        disabled={isDuplicating}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDuplicate(p.id);
+                        }}
+                      >
+                        <Copy className="h-4 w-4 mr-2" />
+                        Duplica
+                      </Button>
+                      <Button
+                        size="sm"
+                        className="flex-1"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setConvertId(p.id);
+                        }}
+                      >
+                        <ArrowRightCircle className="h-4 w-4 mr-2" />
+                        Converti
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               );
@@ -229,6 +306,17 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                               <Eye className="h-4 w-4" />
                             </Button>
                             <Button
+                              variant="ghost"
+                              size="sm"
+                              disabled={isDuplicating}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDuplicate(p.id);
+                              }}
+                            >
+                              <Copy className="h-4 w-4" />
+                            </Button>
+                            <Button
                               size="sm"
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -259,6 +347,14 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
           </CardContent>
         </Card>
       )}
+
+      {/* Preventivo Dialog (create or duplicate) */}
+      <NewPreventivoDialog
+        open={preventivoDialogOpen}
+        onOpenChange={handleDialogClose}
+        defaultDealerId={dealerId}
+        defaultValues={duplicateData}
+      />
 
       {/* Confirm Conversion Dialog */}
       <AlertDialog open={!!convertId} onOpenChange={() => setConvertId(null)}>
