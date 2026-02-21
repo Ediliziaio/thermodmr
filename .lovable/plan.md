@@ -1,55 +1,49 @@
 
 
-## Modifiche richieste
+## Aggiunta IVA personalizzata
 
-Due interventi:
-1. **IVA 0% (Reverse Charge)** - Permettere di selezionare IVA 0% sia nei preventivi che negli ordini
-2. **Allegati nei preventivi** - Aggiungere la sezione caricamento file (PDF, immagini, ecc.) nella pagina dettaglio preventivo
+Permettere all'utente di inserire un'aliquota IVA personalizzata oltre alle opzioni predefinite (0%, 4%, 10%, 22%).
 
 ---
 
-### 1. IVA con opzione 0% (Reverse Charge)
+### Approccio
 
-Attualmente il campo IVA e un input numerico libero (min 0, max 100). Tecnicamente gia accetta 0, ma il valore di default e sempre 22 e non c'e indicazione chiara per il reverse charge.
+Aggiungere un'opzione **"Personalizzata"** nel menu a tendina IVA. Quando selezionata, viene mostrato un campo numerico dove l'utente puo digitare liberamente l'aliquota desiderata (es. 5%, 8%, 15%).
 
-**Modifiche:**
+### Componenti da modificare
 
-**`src/components/orders/OrderLinesEditor.tsx`**
-- Sostituire l'input numerico IVA con un `Select` a tendina con le opzioni:
-  - `0%` - Reverse Charge
-  - `4%` - IVA ridotta
-  - `10%` - IVA ridotta
-  - `22%` - IVA ordinaria
-- Default rimane 22%
+**1. `src/components/orders/OrderLinesEditor.tsx`**
+- Aggiungere nel Select IVA l'opzione `"custom"` con etichetta "Personalizzata"
+- Quando l'utente seleziona "Personalizzata", mostrare un `Input` numerico accanto al Select per inserire il valore
+- Se il valore corrente di IVA non corrisponde a 0, 4, 10 o 22, mostrare automaticamente il campo personalizzato
+- Il calcolo del totale resta invariato (usa gia il valore numerico)
 
-**`src/components/orders/NewPreventivoDialog.tsx`**
-- Stesso trattamento: sostituire il valore IVA fisso con un `Select` nella riga del preventivo
-- Le opzioni saranno identiche: 0%, 4%, 10%, 22%
-- Mostrare l'etichetta "Reverse Charge" accanto allo 0% per chiarezza
+**2. `src/components/orders/NewPreventivoDialog.tsx`**
+- Stessa logica: aggiungere opzione "Personalizzata" nel Select IVA delle righe preventivo
+- Gestire lo stato locale per tracciare se la riga ha IVA custom
+- Mostrare input numerico quando selezionata
 
-**`src/components/orders/NewOrderDialog.tsx`**
-- Se presente un editor righe simile, applicare la stessa modifica
+**3. `src/components/orders/NewOrderDialog.tsx`**
+- Identica modifica al dialog di creazione ordine
 
----
+### Comportamento UX
 
-### 2. Allegati nella pagina dettaglio Preventivo
+- Le opzioni standard restano: 0% (Reverse Charge), 4%, 10%, 22%
+- In fondo alla lista appare "Personalizzata..."
+- Cliccando "Personalizzata", il Select si nasconde e appare un Input numerico con un bottone per tornare alle opzioni standard
+- Il campo numerico accetta valori da 0 a 100 con decimali
+- Il totale riga si aggiorna in tempo reale
 
-Il componente `AttachmentsSection` esiste gia e funziona nella pagina `OrderDetail`. Poiche i preventivi sono tecnicamente ordini con stato "preventivo", la sezione allegati e gia visibile quando si apre il dettaglio di un preventivo (`/ordini/:id`).
+### Dettagli tecnici
 
-Verifico che non ci siano blocchi:
-- `AttachmentsSection` non filtra per stato, quindi funziona gia per i preventivi
-- Il bucket `order-attachments` e gia configurato
-- Le policy RLS sugli allegati gia coprono gli ordini (preventivi inclusi)
-
-**Nessuna modifica necessaria per gli allegati**: la sezione e gia presente nel dettaglio ordine/preventivo. Quando si clicca su un preventivo dalla lista, si apre `OrderDetail` che include `AttachmentsSection`.
-
----
-
-### Riepilogo tecnico
+- Lo schema Zod gia accetta valori IVA da 0 a 100, quindi nessuna modifica alla validazione
+- Il database (`order_lines.iva`) e di tipo `numeric`, accetta gia qualsiasi valore
+- Non servono migrazioni database
+- Si traccia lo stato custom con una logica locale: se il valore IVA non e tra [0, 4, 10, 22], viene mostrato l'input personalizzato
 
 | File | Modifica |
 |------|----------|
-| `src/components/orders/OrderLinesEditor.tsx` | Sostituire input IVA con Select (0%, 4%, 10%, 22%) |
-| `src/components/orders/NewPreventivoDialog.tsx` | Aggiungere Select IVA nelle righe preventivo (0%, 4%, 10%, 22%) |
-| `src/components/orders/NewOrderDialog.tsx` | Stessa modifica Select IVA se presente editor righe |
+| `src/components/orders/OrderLinesEditor.tsx` | Aggiungere opzione "Personalizzata" + input numerico |
+| `src/components/orders/NewPreventivoDialog.tsx` | Stessa modifica nelle righe preventivo |
+| `src/components/orders/NewOrderDialog.tsx` | Stessa modifica nelle righe ordine |
 
