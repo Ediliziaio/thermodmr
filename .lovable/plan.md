@@ -1,42 +1,87 @@
 
 
-## Correzione Colori Landing Page - Da Rosso a Blu/Teal del Logo
+## Miglioramenti Landing Page ThermoDMR
 
-### Il Problema
-La pagina usa ovunque `hsl(10, 80%, 50%)` (rosso/arancio) che NON corrisponde ai colori del logo ThermoDMR. Il logo ha colori **blu/teal** (circa `hsl(195, 85%, 45%)`) e testo scuro. Inoltre, sulla navbar scura il logo con testo nero non si legge.
+Ho analizzato tutte le sezioni della landing page e trovato diversi problemi da correggere, dal piu critico al meno.
 
 ---
 
-### Cosa cambiera
+### 1. BUG CRITICO: Le sezioni intermedie sono invisibili durante lo scroll
 
-**1. Colore principale: da rosso a blu/teal del logo**
+Le sezioni Chi Siamo, Contatori, Prodotti, Vantaggi e Garanzie non appaiono quando si scrolla la pagina normalmente. Restano trasparenti (opacity: 0) perche le animazioni framer-motion non si attivano correttamente. Solo cliccando il menu di navigazione si riesce a vederle.
 
-Tutti i 122 riferimenti a `hsl(10, 80%, ...)` verranno sostituiti con il colore blu/teal del logo:
+**Soluzione**: Abbassare il `threshold` da `0.2` a `0.05` e aggiungere `rootMargin: "0px 0px -50px 0px"` per far partire le animazioni prima. In alternativa, usare `initial="visible"` come fallback.
 
-| Uso | Prima (rosso) | Dopo (blu/teal logo) |
-|-----|---------------|---------------------|
-| Colore primario | `hsl(10, 80%, 50%)` | `hsl(195, 85%, 45%)` |
-| Hover | `hsl(10, 80%, 42%)` | `hsl(195, 85%, 38%)` |
-| Testo chiaro | `hsl(10, 80%, 55%)` | `hsl(195, 85%, 55%)` |
-| Testo piu chiaro | `hsl(10, 80%, 60%)` | `hsl(195, 85%, 60%)` |
-| Ombre/glow | `hsl(10, 80%, 50%, 0.3)` | `hsl(195, 85%, 45%, 0.3)` |
-| Gradiente (da) | `hsl(10, 80%, 55%)` | `hsl(195, 85%, 50%)` |
-| Gradiente (a) | `hsl(30, 90%, 55%)` | `hsl(210, 80%, 55%)` |
-| CTA finale overlay (da) | `hsl(10, 80%, 40%)` | `hsl(195, 85%, 35%)` |
-| CTA finale overlay (a) | `hsl(25, 85%, 35%)` | `hsl(210, 80%, 35%)` |
-| CTA finale testo | `hsl(10, 80%, 45%)` | `hsl(195, 85%, 40%)` |
+---
 
-**2. Logo su navbar scura**
+### 2. Bottone "Scopri i Vantaggi" quasi invisibile
 
-Il logo attuale ha parti in nero che non si leggono sullo sfondo scuro. Soluzione:
-- Aggiungere un filtro CSS `brightness` e `invert` selettivo al logo quando la navbar e scura
-- Oppure usare un approccio con `filter: brightness(0) invert(1)` per rendere il logo bianco su sfondo scuro, e poi tornare ai colori originali quando la navbar diventa bianca allo scroll
-- In pratica: classe CSS condizionale `brightness-0 invert` quando `!scrolled`, rimossa quando `scrolled`
+Nella Hero, il bottone secondario ha bordo e testo bianchi semitrasparenti su overlay scuro - si legge a fatica.
+
+**Soluzione**: Aggiungere sfondo semitrasparente `bg-white/15` e rendere il bordo piu visibile `border-white/50`.
+
+---
+
+### 3. Sezione "Perche Scegliere ThermoDMR" poco impattante
+
+Le 4 card sono generiche: sfondo quasi bianco, icona pallida, nessun elemento visivo forte. Sembrano identiche alla sezione Garanzie sotto.
+
+**Soluzione**: 
+- Sfondo sezione scuro (grigio scuro/nero) con card bianche per contrasto forte
+- Icone piu grandi con sfondo colorato pieno (non solo 10% opacita)
+- Aggiungere numeri/dati chiave in evidenza (es. "15gg" in grande sopra il titolo)
+
+---
+
+### 4. Sezione Garanzie troppo simile ai Vantaggi
+
+Stesse card bianche, stesso layout. L'utente non percepisce la differenza.
+
+**Soluzione**:
+- Layout diverso: card con bordo sinistro colorato (accent bar) invece di card centrate
+- Oppure icone con sfondo pieno teal e testo bianco
+- Aggiungere una linea/badge "Garantito contrattualmente" su ogni card
+
+---
+
+### 5. Footer troppo scarno
+
+Solo logo, un telefono placeholder e un link. Mancano: indirizzo, P.IVA, social media, e soprattutto i dati reali.
+
+**Soluzione**:
+- Aggiungere colonna con indirizzo e P.IVA
+- Aggiungere link ai social (anche se placeholder)
+- Layout a 4 colonne: Brand | Prodotti | Contatti | Legal
+
+---
+
+### 6. Manca un form di contatto
+
+Tutti i CTA ("Diventa Rivenditore", "Richiedi Informazioni") puntano al footer che ha solo email e telefono. Nessun modo per il rivenditore di lasciare i propri dati.
+
+**Soluzione**: Aggiungere una sezione "Contattaci" prima del footer con un form semplice: Nome, Azienda, Email, Telefono, Messaggio, e bottone "Invia Richiesta". I dati verranno salvati nel database.
+
+---
+
+### 7. Active link nella navbar poco visibile
+
+Quando si e su una sezione, il link attivo nel menu cambia colore ma non ha abbastanza contrasto.
+
+**Soluzione**: Aggiungere un indicatore visivo piu forte (underline o dot sotto il link attivo).
+
+---
 
 ### Dettagli tecnici
 
-| File | Modifica |
-|------|----------|
-| `src/pages/Home.tsx` | Sostituzione di tutti i colori rosso/arancio con blu/teal del logo + filtro CSS condizionale sul logo nella navbar |
+| File | Modifiche |
+|------|-----------|
+| `src/pages/Home.tsx` | Fix animazioni (threshold/rootMargin), miglioramento bottone hero, redesign sezioni Vantaggi e Garanzie con layout differenziato, footer arricchito, form di contatto |
+| Migrazione DB | Creare tabella `contact_requests` per salvare i dati del form |
 
-Nessun altro file da modificare.
+### Priorita consigliata
+
+1. Fix animazioni (critico - senza questo la pagina e inutilizzabile)
+2. Form di contatto (senza form i CTA non fanno nulla)
+3. Miglioramento visivo Vantaggi/Garanzie
+4. Footer e dettagli minori
+
