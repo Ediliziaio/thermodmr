@@ -89,7 +89,13 @@ const Navbar = () => {
       }`}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-        <img src={logo} alt="ThermoDMR" className="h-10 object-contain" />
+        <img
+          src={logo}
+          alt="ThermoDMR"
+          className={`h-10 object-contain transition-all duration-300 ${
+            scrolled ? "" : "brightness-0 invert"
+          }`}
+        />
 
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((item) => (
@@ -98,7 +104,7 @@ const Navbar = () => {
               onClick={() => scrollTo(item.id)}
               className={`text-sm font-medium transition-colors ${
                 scrolled
-                  ? "text-[hsl(0,0%,35%)] hover:text-[hsl(10,80%,50%)]"
+                  ? "text-[hsl(0,0%,35%)] hover:text-[hsl(195,85%,45%)]"
                   : "text-white/80 hover:text-white"
               }`}
             >
@@ -111,7 +117,7 @@ const Navbar = () => {
           <Link to="/auth">
             <Button
               size="sm"
-              className="bg-[hsl(10,80%,50%)] hover:bg-[hsl(10,80%,42%)] text-white font-semibold rounded-full px-6 shadow-[0_4px_20px_hsl(10,80%,50%,0.3)]"
+              className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-6 shadow-[0_4px_20px_hsl(195,85%,45%,0.3)]"
             >
               Area Riservata
             </Button>
@@ -137,7 +143,7 @@ const Navbar = () => {
               <button
                 key={item.id}
                 onClick={() => scrollTo(item.id)}
-                className="block w-full text-left text-sm font-medium text-[hsl(0,0%,30%)] hover:text-[hsl(10,80%,50%)] py-2"
+                className="block w-full text-left text-sm font-medium text-[hsl(0,0%,30%)] hover:text-[hsl(195,85%,45%)] py-2"
               >
                 {item.label}
               </button>
@@ -173,7 +179,7 @@ const Hero = () => {
         <motion.div initial="hidden" animate="visible" variants={stagger} className="space-y-8">
           <motion.p
             variants={fadeUp}
-            className="text-xs font-bold tracking-[0.3em] text-[hsl(10,80%,60%)] uppercase"
+            className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,60%)] uppercase"
           >
             ThermoDMR — Produttore di Infissi e Serramenti
           </motion.p>
@@ -183,7 +189,7 @@ const Hero = () => {
             className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold leading-[1.1] text-white"
           >
             Il Partner Produttore che Ti Fa{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[hsl(10,80%,55%)] to-[hsl(30,90%,55%)]">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[hsl(195,85%,50%)] to-[hsl(210,80%,55%)]">
               Guadagnare di Più
             </span>
           </motion.h1>
@@ -199,7 +205,7 @@ const Hero = () => {
             <a href="#contatti">
               <Button
                 size="lg"
-                className="bg-[hsl(10,80%,50%)] hover:bg-[hsl(10,80%,42%)] text-white font-semibold rounded-full px-8 text-base shadow-[0_6px_30px_hsl(10,80%,50%,0.4)] hover:shadow-[0_6px_40px_hsl(10,80%,50%,0.6)] transition-all"
+                className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-8 text-base shadow-[0_6px_30px_hsl(195,85%,45%,0.4)] hover:shadow-[0_6px_40px_hsl(195,85%,45%,0.6)] transition-all"
               >
                 Diventa Rivenditore
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -219,7 +225,7 @@ const Hero = () => {
           <motion.div variants={fadeUp} className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/50 pt-4">
             {["Tempi certi", "Prezzo più basso", "Pagamenti flessibili", "Margini garantiti"].map((t) => (
               <span key={t} className="flex items-center gap-1.5">
-                <CheckCircle2 className="h-4 w-4 text-[hsl(10,80%,55%)]" />
+                <CheckCircle2 className="h-4 w-4 text-[hsl(195,85%,55%)]" />
                 {t}
               </span>
             ))}
@@ -240,7 +246,7 @@ const Hero = () => {
               className="w-[420px] h-[420px] object-cover rounded-3xl shadow-2xl border-4 border-white/20"
             />
             {/* Floating badges */}
-            <div className="absolute -top-3 -right-3 bg-[hsl(10,80%,50%)] text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg">
+            <div className="absolute -top-3 -right-3 bg-[hsl(195,85%,45%)] text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg">
               Consegna 15gg
             </div>
             <div className="absolute -bottom-3 -left-3 bg-white text-[hsl(0,0%,20%)] text-xs font-bold px-4 py-2 rounded-full shadow-lg border border-[hsl(0,0%,90%)]">
@@ -269,12 +275,12 @@ const ChiSiamo = () => {
           className="grid lg:grid-cols-2 gap-16 items-center"
         >
           <motion.div variants={fadeUp} className="space-y-6">
-            <p className="text-xs font-bold tracking-[0.3em] text-[hsl(10,80%,50%)] uppercase">
+            <p className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase">
               Chi siamo
             </p>
             <h2 className="text-3xl sm:text-4xl font-bold text-[hsl(0,0%,10%)] leading-tight">
               Produciamo Infissi di Qualità per{" "}
-              <span className="text-[hsl(10,80%,50%)]">Far Crescere la Tua Attività</span>
+              <span className="text-[hsl(195,85%,45%)]">Far Crescere la Tua Attività</span>
             </h2>
             <p className="text-[hsl(0,0%,40%)] leading-relaxed text-lg">
               Da oltre 10 anni produciamo serramenti internamente, senza intermediari.
@@ -287,7 +293,7 @@ const ChiSiamo = () => {
               dedicato sempre disponibile per far crescere il tuo business.
             </p>
             <a href="#contatti">
-              <Button className="bg-[hsl(10,80%,50%)] hover:bg-[hsl(10,80%,42%)] text-white font-semibold rounded-full px-8 mt-4 shadow-[0_4px_20px_hsl(10,80%,50%,0.25)]">
+              <Button className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-8 mt-4 shadow-[0_4px_20px_hsl(195,85%,45%,0.25)]">
                 Richiedi Informazioni Commerciali
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
@@ -351,7 +357,7 @@ const StatItem = ({ value, suffix, label, inView }: { value: number; suffix: str
     <motion.div variants={fadeUp} className="text-center space-y-2">
       <p className="text-4xl sm:text-5xl font-extrabold text-white">
         {count.toLocaleString("it-IT")}
-        <span className="text-[hsl(10,80%,55%)]">{suffix}</span>
+        <span className="text-[hsl(195,85%,55%)]">{suffix}</span>
       </p>
       <p className="text-sm text-white/60 font-medium">{label}</p>
     </motion.div>
@@ -400,7 +406,7 @@ const Products = () => {
           variants={stagger}
           className="text-center mb-16"
         >
-          <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(10,80%,50%)] uppercase mb-4">
+          <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
             Cosa Puoi Vendere
           </motion.p>
           <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-bold text-[hsl(0,0%,10%)]">
@@ -418,7 +424,7 @@ const Products = () => {
             <motion.div
               key={f.title}
               variants={fadeUp}
-              className="group rounded-2xl overflow-hidden border border-[hsl(0,0%,90%)] bg-white shadow-sm hover:shadow-xl hover:border-[hsl(10,80%,50%)]/30 hover:-translate-y-1 transition-all duration-300"
+              className="group rounded-2xl overflow-hidden border border-[hsl(0,0%,90%)] bg-white shadow-sm hover:shadow-xl hover:border-[hsl(195,85%,45%)]/30 hover:-translate-y-1 transition-all duration-300"
             >
               {/* Product image */}
               <div className="relative h-48 overflow-hidden">
@@ -428,7 +434,7 @@ const Products = () => {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[hsl(0,0%,0%)]/30 to-transparent" />
-                <div className="absolute bottom-3 left-3 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[hsl(10,80%,50%)] text-white shadow-lg">
+                <div className="absolute bottom-3 left-3 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[hsl(195,85%,45%)] text-white shadow-lg">
                   <f.icon className="h-5 w-5" />
                 </div>
               </div>
@@ -482,7 +488,7 @@ const WhyThermoDMR = () => {
           variants={stagger}
           className="text-center mb-16"
         >
-          <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(10,80%,50%)] uppercase mb-4">
+          <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
             I Tuoi Vantaggi Competitivi
           </motion.p>
           <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-bold text-[hsl(0,0%,10%)] max-w-3xl mx-auto">
@@ -504,10 +510,10 @@ const WhyThermoDMR = () => {
             <motion.div
               key={a.title}
               variants={fadeUp}
-              className="p-8 rounded-2xl border border-[hsl(0,0%,90%)] bg-[hsl(0,0%,98%)] hover:shadow-lg hover:border-[hsl(10,80%,50%)]/20 transition-all duration-300"
+              className="p-8 rounded-2xl border border-[hsl(0,0%,90%)] bg-[hsl(0,0%,98%)] hover:shadow-lg hover:border-[hsl(195,85%,45%)]/20 transition-all duration-300"
             >
               <div className="flex gap-5">
-                <div className="shrink-0 inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[hsl(10,80%,50%)]/10 text-[hsl(10,80%,50%)]">
+                <div className="shrink-0 inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[hsl(195,85%,45%)]/10 text-[hsl(195,85%,45%)]">
                   <a.icon className="h-7 w-7" />
                 </div>
                 <div className="space-y-3">
@@ -561,7 +567,7 @@ const Guarantees = () => {
           variants={stagger}
           className="text-center mb-16"
         >
-          <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(10,80%,50%)] uppercase mb-4">
+          <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
             Le nostre garanzie
           </motion.p>
           <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-bold text-[hsl(0,0%,10%)]">
@@ -581,7 +587,7 @@ const Guarantees = () => {
               variants={fadeUp}
               className="text-center p-8 rounded-2xl bg-white border border-[hsl(0,0%,90%)] hover:shadow-lg transition-shadow duration-300"
             >
-              <div className="mb-6 inline-flex items-center justify-center w-14 h-14 rounded-full bg-[hsl(10,80%,50%)]/10 text-[hsl(10,80%,50%)]">
+              <div className="mb-6 inline-flex items-center justify-center w-14 h-14 rounded-full bg-[hsl(195,85%,45%)]/10 text-[hsl(195,85%,45%)]">
                 <g.icon className="h-7 w-7" />
               </div>
               <h3 className="text-lg font-bold text-[hsl(0,0%,10%)] mb-3">{g.title}</h3>
@@ -607,7 +613,7 @@ const FinalCta = () => {
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: "url('/images/cta-bg.jpg')" }}
       />
-      <div className="absolute inset-0 bg-gradient-to-br from-[hsl(10,80%,40%)]/85 to-[hsl(25,85%,35%)]/85" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[hsl(195,85%,35%)]/85 to-[hsl(210,80%,35%)]/85" />
 
       <motion.div
         ref={ref}
@@ -628,7 +634,7 @@ const FinalCta = () => {
           <a href="#contatti">
             <Button
               size="lg"
-              className="bg-white text-[hsl(10,80%,45%)] hover:bg-white/90 font-bold rounded-full px-12 text-base shadow-xl hover:shadow-2xl transition-all"
+              className="bg-white text-[hsl(195,85%,40%)] hover:bg-white/90 font-bold rounded-full px-12 text-base shadow-xl hover:shadow-2xl transition-all"
             >
               Diventa Rivenditore ThermoDMR
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -648,7 +654,7 @@ const Footer = () => (
     <div className="max-w-7xl mx-auto px-6">
       <div className="grid sm:grid-cols-3 gap-12 mb-12">
         <div className="space-y-4">
-          <img src={logo} alt="ThermoDMR" className="h-10 object-contain opacity-90" />
+          <img src={logo} alt="ThermoDMR" className="h-10 object-contain brightness-0 invert opacity-90" />
           <p className="text-sm text-white/40 leading-relaxed">
             Produciamo serramenti di alta qualità per far crescere la tua attività.
             Il tuo successo è il nostro obiettivo.
@@ -658,11 +664,11 @@ const Footer = () => (
         <div className="space-y-4">
           <h4 className="text-sm font-bold text-white/80 uppercase tracking-wider">Contatti</h4>
           <div className="space-y-3">
-            <a href="tel:+390000000000" className="flex items-center gap-2 text-sm text-white/40 hover:text-[hsl(10,80%,55%)] transition-colors">
+            <a href="tel:+390000000000" className="flex items-center gap-2 text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors">
               <Phone className="h-4 w-4" />
               +39 000 000 0000
             </a>
-            <a href="mailto:info@thermodmr.it" className="flex items-center gap-2 text-sm text-white/40 hover:text-[hsl(10,80%,55%)] transition-colors">
+            <a href="mailto:info@thermodmr.it" className="flex items-center gap-2 text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors">
               <Mail className="h-4 w-4" />
               info@thermodmr.it
             </a>
@@ -674,7 +680,7 @@ const Footer = () => (
           <div className="space-y-3">
             <Link
               to="/auth"
-              className="block text-sm text-white/40 hover:text-[hsl(10,80%,55%)] transition-colors"
+              className="block text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors"
             >
               Area Riservata Rivenditori
             </Link>
