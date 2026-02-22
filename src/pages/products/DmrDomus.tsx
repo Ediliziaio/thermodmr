@@ -1,7 +1,21 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { ArrowRight, CheckCircle2, Zap, ThermometerSun, Shield, Volume2 } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Zap,
+  ThermometerSun,
+  Shield,
+  Volume2,
+  Wind,
+  Lock,
+  Settings2,
+  Thermometer,
+  RotateCcw,
+  Maximize2,
+  Palette,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
@@ -34,12 +48,58 @@ const specs = [
 ];
 
 const features = [
-  "Profilo a 5 camere per isolamento superiore",
+  "Profilo a 5 camere per isolamento termico e acustico superiore",
+  "Battute strette che massimizzano le aree vetrate e la luce naturale",
+  "Battuta centrale estrusa \"safetec inside\" anti-forzatura nella variante MD",
+  "Possibilità di scegliere tra 2 o 3 guarnizioni di tenuta",
+  "Elementi antieffrazione con possibilità di classe RC2",
   "Vetrocamera con gas argon e vetro basso emissivo",
-  "Ferramenta Roto di alta qualità",
-  "Tripla guarnizione di tenuta",
-  "Design squadrato moderno",
-  "Predisposizione per sensori domotici",
+  "Finiture Woodec e Aludec per un'estetica unica e personalizzata",
+  "Ferramenta Roto di alta qualità con chiusure perimetrali",
+];
+
+const windowAdvantages = [
+  {
+    icon: Wind,
+    title: "Microventilazione",
+    desc: "Clip di microventilazione che consente un ricambio d'aria costante senza aprire completamente l'anta, ideale per mantenere un clima salubre.",
+  },
+  {
+    icon: Lock,
+    title: "Maniglia di Sicurezza",
+    desc: "Maniglia in alluminio con funzione di sicurezza integrata, disponibile in diverse finiture per adattarsi a ogni stile d'arredo.",
+  },
+  {
+    icon: Settings2,
+    title: "Cerniere 3D Regolabili",
+    desc: "Regolabili su tre livelli con portata fino a 130 kg. Disponibile anche nella versione a scomparsa Designo per un'estetica minimale.",
+  },
+  {
+    icon: Thermometer,
+    title: "Canalina Calda",
+    desc: "Canalina warm-edge che riduce il ponte termico sul bordo del vetro, disponibile in acciaio o plastica con ampia gamma di colori.",
+  },
+  {
+    icon: RotateCcw,
+    title: "Blocco Rotazione Maniglia",
+    desc: "Sistema che impedisce il posizionamento errato dell'anta, prevenendo danni alla ferramenta e garantendo il corretto funzionamento.",
+  },
+  {
+    icon: Maximize2,
+    title: "Braccio Oscillo-Battente",
+    desc: "Permette l'apertura dell'anta sia a battente che a ribalta, con funzione microventilazione integrata per un comfort ottimale.",
+  },
+];
+
+const availableColors = [
+  { name: "Bianco", color: "hsl(0, 0%, 98%)", border: true },
+  { name: "Rovere Dorato", color: "hsl(35, 55%, 55%)" },
+  { name: "Noce", color: "hsl(25, 45%, 35%)" },
+  { name: "Antracite", color: "hsl(0, 0%, 25%)" },
+  { name: "Grigio Chiaro", color: "hsl(0, 0%, 78%)" },
+  { name: "Verde Scuro", color: "hsl(140, 30%, 25%)" },
+  { name: "Bianco Crema", color: "hsl(40, 30%, 90%)", border: true },
+  { name: "Jet Black", color: "hsl(0, 0%, 8%)" },
 ];
 
 const benefits = [
@@ -51,6 +111,8 @@ const benefits = [
 const DmrDomus = () => {
   const [specsRef, specsInView] = useInView(inViewOpts);
   const [benefitsRef, benefitsInView] = useInView(inViewOpts);
+  const [advantagesRef, advantagesInView] = useInView(inViewOpts);
+  const [colorsRef, colorsInView] = useInView(inViewOpts);
 
   return (
     <div className="min-h-screen bg-white">
@@ -60,7 +122,7 @@ const DmrDomus = () => {
         category="Finestre in PVC"
         title="DMR"
         titleAccent="DOMUS"
-        description="Il best-seller della gamma. Profilo a 5 camere per un isolamento superiore e massimo comfort abitativo, con ferramenta Roto di alta qualità."
+        description="Il best-seller della gamma. Profilo a 5 camere con costruzione multicamera per eccellente isolamento termico e acustico. Battute strette per massimizzare la luce naturale e finiture Woodec e Aludec per un'estetica unica."
         heroImage="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600&q=80"
         badge={{ label: "Best Seller", color: "gold" }}
       />
@@ -76,6 +138,9 @@ const DmrDomus = () => {
             </div>
             <div className="space-y-6">
               <h2 className="text-3xl font-bold text-[hsl(0,0%,10%)]">Caratteristiche Principali</h2>
+              <p className="text-[hsl(0,0%,40%)] leading-relaxed">
+                Il DMR DOMUS offre battute strette che massimizzano le aree vetrate e la luce naturale in ogni ambiente. La costruzione multicamera a 5 camere garantisce eccellente isolamento termico e acustico. La battuta centrale estrusa "safetec inside" nella variante MD rende estremamente difficile la forzatura, con possibilità di raggiungere la classe antieffrazione RC2.
+              </p>
               <ul className="space-y-3">
                 {features.map((f) => (
                   <li key={f} className="flex items-center gap-3 text-[hsl(0,0%,35%)]">
@@ -96,6 +161,7 @@ const DmrDomus = () => {
 
       <ProductGallery images={galleryImages} />
 
+      {/* Specs */}
       <section ref={specsRef} className="py-24 bg-[hsl(0,0%,97%)]">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div initial="hidden" animate={specsInView ? "visible" : "hidden"} variants={stagger}>
@@ -112,6 +178,68 @@ const DmrDomus = () => {
         </div>
       </section>
 
+      {/* Window Advantages */}
+      <section ref={advantagesRef} className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div initial="hidden" animate={advantagesInView ? "visible" : "hidden"} variants={stagger}>
+            <motion.div variants={fadeUp} className="text-center mb-14">
+              <p className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-3">Dettagli Tecnici</p>
+              <h2 className="text-3xl font-bold text-[hsl(0,0%,10%)]">Vantaggi della Finestra</h2>
+              <p className="text-[hsl(0,0%,45%)] mt-3 max-w-2xl mx-auto">
+                Ogni dettaglio del DMR DOMUS è progettato per garantire funzionalità, sicurezza e comfort abitativo superiore.
+              </p>
+            </motion.div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {windowAdvantages.map((adv) => (
+                <motion.div
+                  key={adv.title}
+                  variants={fadeUp}
+                  className="group bg-[hsl(0,0%,97%)] rounded-2xl p-7 border border-[hsl(0,0%,92%)] hover:border-[hsl(195,85%,45%,0.3)] hover:shadow-lg transition-all duration-300"
+                >
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[hsl(195,85%,45%,0.1)] group-hover:bg-[hsl(195,85%,45%,0.15)] transition-colors mb-4">
+                    <adv.icon className="h-6 w-6 text-[hsl(195,85%,45%)]" />
+                  </div>
+                  <h3 className="text-lg font-bold text-[hsl(0,0%,10%)] mb-2">{adv.title}</h3>
+                  <p className="text-sm text-[hsl(0,0%,40%)] leading-relaxed">{adv.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Available Colors */}
+      <section ref={colorsRef} className="py-24 bg-[hsl(0,0%,97%)]">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div initial="hidden" animate={colorsInView ? "visible" : "hidden"} variants={stagger}>
+            <motion.div variants={fadeUp} className="text-center mb-14">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[hsl(195,85%,45%,0.1)] mb-4">
+                <Palette className="h-6 w-6 text-[hsl(195,85%,45%)]" />
+              </div>
+              <h2 className="text-3xl font-bold text-[hsl(0,0%,10%)]">Colori Disponibili</h2>
+              <p className="text-[hsl(0,0%,45%)] mt-3 max-w-2xl mx-auto">
+                Scegli tra un'ampia gamma di colori e finiture Woodec e Aludec per personalizzare le tue finestre e armonizzarle con lo stile della tua abitazione.
+              </p>
+            </motion.div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto">
+              {availableColors.map((c) => (
+                <motion.div key={c.name} variants={fadeUp} className="flex flex-col items-center gap-3">
+                  <div
+                    className="w-20 h-20 rounded-2xl shadow-md transition-transform hover:scale-110"
+                    style={{
+                      backgroundColor: c.color,
+                      border: c.border ? "2px solid hsl(0, 0%, 85%)" : "none",
+                    }}
+                  />
+                  <span className="text-sm font-medium text-[hsl(0,0%,25%)]">{c.name}</span>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Benefits */}
       <section ref={benefitsRef} className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div initial="hidden" animate={benefitsInView ? "visible" : "hidden"} variants={stagger}>
