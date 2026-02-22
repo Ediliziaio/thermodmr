@@ -1,16 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo_Thermodmr.png";
-
-const sectionMap: Record<string, string> = {
-  "/chi-siamo": "chi-siamo",
-  "/vantaggi": "vantaggi",
-  "/garanzie": "garanzie",
-  "/contatti": "contatti",
-};
 
 const productLinks = [
   { label: "Finestre in PVC", to: "/prodotti-pubblico" },
@@ -40,15 +33,6 @@ const PublicNavbar = () => {
   const dropdownTimeout = useRef<ReturnType<typeof setTimeout>>();
   const location = useLocation();
 
-  const handleNavClick = useCallback((e: React.MouseEvent, to: string) => {
-    const sectionId = sectionMap[to];
-    if (!sectionId) return;
-    if (location.pathname === "/") {
-      e.preventDefault();
-      document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
-      setMobileOpen(false);
-    }
-  }, [location.pathname]);
 
   const isProductPage = location.pathname.startsWith("/prodotti");
 
@@ -148,7 +132,6 @@ const PublicNavbar = () => {
               <Link
                 key={item.to}
                 to={item.to}
-                onClick={(e) => handleNavClick(e, item.to)}
                 className={`relative text-sm font-medium transition-colors pb-1 ${
                   isActive
                     ? "text-[hsl(195,85%,45%)]"
@@ -269,7 +252,7 @@ const PublicNavbar = () => {
                     <div key={item.to}>
                       <Link
                         to={item.to}
-                        onClick={(e) => { handleNavClick(e, item.to); setMobileOpen(false); }}
+                        onClick={() => setMobileOpen(false)}
                         className={`block w-full text-left text-sm font-medium min-h-[48px] flex items-center px-2 rounded-xl transition-colors ${
                           isActive
                             ? "text-[hsl(195,85%,45%)] font-bold bg-[hsl(195,85%,45%,0.05)]"
