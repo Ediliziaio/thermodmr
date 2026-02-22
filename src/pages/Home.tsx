@@ -15,17 +15,18 @@ import {
   Box,
   Blinds,
   SunDim,
-  Clock,
-  CreditCard,
-  Target,
-  Truck,
-  BadgePercent,
   Send,
   Loader2,
+  MapPin,
+  Leaf,
+  Palette,
+  Factory,
+  Award,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo_Thermodmr.png";
@@ -39,7 +40,7 @@ const stagger = {
   visible: { transition: { staggerChildren: 0.12 } },
 };
 
-/* ─── Shared useInView options to fix visibility bug ─── */
+/* ─── Shared useInView options ─── */
 const inViewOptions = { triggerOnce: true, threshold: 0.05, rootMargin: "0px 0px -50px 0px" };
 
 /* ─── Animated counter hook ─── */
@@ -63,11 +64,11 @@ import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
 
 /* ═══════════════════════════════════════════
-   2. HERO — with improved secondary button
+   2. HERO
    ═══════════════════════════════════════════ */
 const Hero = () => {
-  const scrollToVantaggi = useCallback(() => {
-    document.getElementById("vantaggi")?.scrollIntoView({ behavior: "smooth" });
+  const scrollToProdotti = useCallback(() => {
+    document.getElementById("prodotti")?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   return (
@@ -85,23 +86,23 @@ const Hero = () => {
             variants={fadeUp}
             className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,60%)] uppercase"
           >
-            ThermoDMR — Produttore di Infissi e Serramenti
+            ThermoDMR — Infissi e Serramenti in PVC
           </motion.p>
 
           <motion.h1
             variants={fadeUp}
             className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold leading-[1.1] text-white"
           >
-            Il Partner Produttore che Ti Fa{" "}
+            Finestre di Design al{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[hsl(195,85%,50%)] to-[hsl(210,80%,55%)]">
-              Guadagnare di Più
+              Miglior Prezzo di Mercato
             </span>
           </motion.h1>
 
           <motion.p variants={fadeUp} className="text-lg text-white/70 max-w-xl leading-relaxed">
-            Tempi certi di consegna, prezzi più bassi sul mercato e pagamenti flessibili.{" "}
+            Design italiano, isolamento superiore, qualità certificata.{" "}
             <span className="text-white/90 font-medium">
-              Smetti di rincorrere fornitori inaffidabili e inizia a far crescere la tua attività.
+              Produciamo direttamente, senza intermediari, per offrirti il miglior rapporto qualità-prezzo.
             </span>
           </motion.p>
 
@@ -111,23 +112,23 @@ const Hero = () => {
                 size="lg"
                 className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-8 text-base shadow-[0_6px_30px_hsl(195,85%,45%,0.4)] hover:shadow-[0_6px_40px_hsl(195,85%,45%,0.6)] transition-all"
               >
-                Diventa Rivenditore
+                Richiedi Preventivo
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </a>
             <Button
               size="lg"
               variant="outline"
-              onClick={scrollToVantaggi}
+              onClick={scrollToProdotti}
               className="rounded-full px-8 text-base border-white/50 text-white bg-white/15 hover:bg-white/25 hover:text-white backdrop-blur-sm"
             >
-              Scopri i Vantaggi
+              Scopri i Prodotti
               <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </motion.div>
 
           <motion.div variants={fadeUp} className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/50 pt-4">
-            {["Tempi certi", "Prezzo più basso", "Pagamenti flessibili", "Margini garantiti"].map((t) => (
+            {["Made in Italy", "Isolamento Classe A", "Garanzia 15 Anni", "Design Esclusivo"].map((t) => (
               <span key={t} className="flex items-center gap-1.5">
                 <CheckCircle2 className="h-4 w-4 text-[hsl(195,85%,55%)]" />
                 {t}
@@ -181,25 +182,25 @@ const ChiSiamo = () => {
               Chi siamo
             </p>
             <h2 className="text-3xl sm:text-4xl font-bold text-[hsl(0,0%,10%)] leading-tight">
-              Produciamo Infissi di Qualità per{" "}
-              <span className="text-[hsl(195,85%,45%)]">Far Crescere la Tua Attività</span>
+              Produciamo Infissi di Design con{" "}
+              <span className="text-[hsl(195,85%,45%)]">Tecnologia e Passione Italiana</span>
             </h2>
             <p className="text-[hsl(0,0%,40%)] leading-relaxed text-lg">
-              Da oltre 10 anni produciamo serramenti internamente, senza intermediari.
-              Questo ci permette di offrirti il <strong>prezzo più competitivo sul mercato</strong>,
-              tempi di consegna certi e un controllo qualità rigoroso su ogni singolo prodotto.
+              Da oltre 10 anni progettiamo e realizziamo serramenti nel nostro stabilimento produttivo,
+              unendo <strong>design contemporaneo</strong> e <strong>tecnologia avanzata</strong>.
+              Ogni finestra nasce dalla cura artigianale italiana e da processi industriali certificati.
             </p>
             <p className="text-[hsl(0,0%,40%)] leading-relaxed">
-              Il nostro obiettivo non è solo venderti un prodotto, ma <strong>farti guadagnare</strong>.
-              Ti forniamo supporto commerciale, materiale marketing personalizzato e un referente
-              dedicato sempre disponibile per far crescere il tuo business.
+              La produzione interna ci permette di garantire <strong>qualità costante</strong>,
+              tempi rapidi e un prezzo di fabbrica senza intermediari. Scegliamo materiali sostenibili
+              e soluzioni ad alto isolamento per il comfort della tua casa e il rispetto dell'ambiente.
             </p>
-            <a href="#contatti">
+            <Link to="/chi-siamo">
               <Button className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-8 mt-4 shadow-[0_4px_20px_hsl(195,85%,45%,0.25)]">
-                Richiedi Informazioni Commerciali
+                Scopri la Nostra Storia
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-            </a>
+            </Link>
           </motion.div>
 
           <motion.div variants={fadeUp} className="flex justify-center">
@@ -219,10 +220,10 @@ const ChiSiamo = () => {
    4. CONTATORI
    ═══════════════════════════════════════════ */
 const stats = [
-  { value: 200, suffix: "+", label: "Rivenditori Attivi" },
+  { value: 50, suffix: ".000+", label: "Finestre Installate" },
   { value: 10, suffix: "+", label: "Anni di Esperienza" },
-  { value: 15, suffix: "gg", label: "Tempi Medi di Consegna" },
-  { value: 98, suffix: "%", label: "Consegne Puntuali" },
+  { value: 15, suffix: "gg", label: "Tempi di Consegna" },
+  { value: 98, suffix: "%", label: "Clienti Soddisfatti" },
 ];
 
 const Stats = () => {
@@ -266,7 +267,7 @@ const StatItem = ({ value, suffix, label, inView }: { value: number; suffix: str
 };
 
 /* ═══════════════════════════════════════════
-   5. PRODOTTI — 3 modelli PVC + 4 accessori
+   5. PRODOTTI
    ═══════════════════════════════════════════ */
 const pvcModels = [
   {
@@ -332,7 +333,7 @@ const Products = () => {
           className="text-center mb-16"
         >
           <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
-            Cosa Puoi Vendere
+            La Nostra Gamma
           </motion.p>
           <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-bold text-[hsl(0,0%,10%)]">
             I Nostri Prodotti
@@ -410,36 +411,28 @@ const Products = () => {
 };
 
 /* ═══════════════════════════════════════════
-   6. PERCHÉ SCEGLIERE THERMODMR — dark bg, bold cards with key metrics
+   6. PERCHÉ SCEGLIERE THERMODMR — vantaggi generali
    ═══════════════════════════════════════════ */
 const advantages = [
   {
-    icon: BadgePercent,
-    metric: "-30%",
-    metricLabel: "vs concorrenza",
-    title: "Prezzo Più Basso sul Mercato",
-    desc: "Produciamo internamente, senza intermediari. Prezzi imbattibili e margini più alti su ogni vendita.",
+    icon: ThermometerSun,
+    title: "Isolamento Superiore",
+    desc: "Classe A di isolamento termico e acustico. I nostri serramenti garantiscono un risparmio energetico fino al 40%, per una casa più calda d'inverno e fresca d'estate.",
   },
   {
-    icon: Clock,
-    metric: "15gg",
-    metricLabel: "garantiti",
-    title: "Tempi Certi di Consegna",
-    desc: "15 giorni lavorativi dalla conferma d'ordine. Mai più clienti che aspettano, mai più scuse da dare.",
+    icon: Palette,
+    title: "Design Made in Italy",
+    desc: "Linee pulite, finiture curate nei minimi dettagli e un'ampia scelta di colori e stili. Ogni serramento è progettato per valorizzare l'estetica della tua casa.",
   },
   {
-    icon: CreditCard,
-    metric: "60gg",
-    metricLabel: "pagamento",
-    title: "Pagamenti Flessibili",
-    desc: "Condizioni personalizzate per gestire al meglio la tua liquidità. Lavoriamo insieme per la formula giusta.",
+    icon: Factory,
+    title: "Miglior Rapporto Qualità/Prezzo",
+    desc: "Produzione diretta nel nostro stabilimento, senza intermediari. Ti offriamo il prezzo di fabbrica con la qualità di un prodotto artigianale italiano.",
   },
   {
-    icon: Target,
-    metric: "100%",
-    metricLabel: "dedicato",
-    title: "Il Tuo Successo è il Nostro Obiettivo",
-    desc: "Supporto commerciale, materiale marketing personalizzato, formazione tecnica e referente dedicato.",
+    icon: Award,
+    title: "Garanzia e Assistenza",
+    desc: "Fino a 15 anni di garanzia su tutti i nostri prodotti. Assistenza post-vendita dedicata e un team tecnico sempre a tua disposizione.",
   },
 ];
 
@@ -456,14 +449,14 @@ const WhyThermoDMR = () => {
           className="text-center mb-16"
         >
           <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,55%)] uppercase mb-4">
-            I Tuoi Vantaggi Competitivi
+            I Nostri Punti di Forza
           </motion.p>
           <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-bold text-white max-w-3xl mx-auto">
             Perché Scegliere ThermoDMR
           </motion.h2>
           <motion.p variants={fadeUp} className="text-white/50 text-lg mt-6 max-w-2xl mx-auto leading-relaxed">
-            Stanco di fornitori che non rispettano i tempi, con prezzi sempre più alti e zero supporto?
-            Con ThermoDMR hai un partner che lavora per farti guadagnare.
+            Qualità certificata, design esclusivo e il miglior prezzo di mercato.
+            Tutto nasce nel nostro stabilimento, dalla progettazione alla consegna.
           </motion.p>
         </motion.div>
 
@@ -480,13 +473,9 @@ const WhyThermoDMR = () => {
               className="p-8 rounded-2xl bg-white/[0.06] border border-white/10 hover:bg-white/[0.1] hover:border-[hsl(195,85%,45%)]/30 transition-all duration-300"
             >
               <div className="flex gap-5">
-                <div className="shrink-0 space-y-3">
+                <div className="shrink-0">
                   <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[hsl(195,85%,45%)] text-white shadow-[0_4px_20px_hsl(195,85%,45%,0.3)]">
                     <a.icon className="h-7 w-7" />
-                  </div>
-                  <div className="text-center">
-                    <p className="text-2xl font-extrabold text-[hsl(195,85%,55%)]">{a.metric}</p>
-                    <p className="text-[10px] text-white/40 uppercase tracking-wider">{a.metricLabel}</p>
                   </div>
                 </div>
                 <div className="space-y-3">
@@ -503,28 +492,28 @@ const WhyThermoDMR = () => {
 };
 
 /* ═══════════════════════════════════════════
-   7. GARANZIE — accent bar layout with badge
+   7. GARANZIE — qualità prodotto, certificazioni
    ═══════════════════════════════════════════ */
 const guarantees = [
   {
     icon: Shield,
-    title: "Zero Reclami, Zero Problemi",
-    desc: "Qualità certificata e controllo rigoroso su ogni prodotto. Meno resi, più reputazione per la tua attività.",
+    title: "Qualità Certificata",
+    desc: "Tutti i nostri serramenti sono certificati secondo le normative europee. Materiali di prima scelta e controllo qualità rigoroso su ogni prodotto.",
   },
   {
-    icon: Truck,
-    title: "Consegna Garantita nei Tempi",
-    desc: "Mai più clienti che aspettano. 15 giorni lavorativi dalla conferma d'ordine. Se non rispettiamo, ti risarciamo.",
+    icon: Leaf,
+    title: "Sostenibilità Ambientale",
+    desc: "Profili in PVC riciclabile, vetri basso-emissivi e processi produttivi a basso impatto ambientale. Scegli il comfort senza rinunciare al pianeta.",
   },
   {
-    icon: BadgePercent,
-    title: "Margini Protetti",
-    desc: "Listino riservato e zona esclusiva. Nessuna concorrenza interna tra rivenditori ThermoDMR nella tua area.",
+    icon: Award,
+    title: "Garanzia Fino a 15 Anni",
+    desc: "I nostri prodotti sono costruiti per durare. Offriamo una garanzia estesa fino a 15 anni su profili, vetri e ferramenta.",
   },
   {
     icon: Headphones,
-    title: "Supporto Commerciale Dedicato",
-    desc: "Un referente sempre disponibile, materiale marketing personalizzato e formazione tecnica continua.",
+    title: "Assistenza Post-Vendita",
+    desc: "Un team dedicato ti segue anche dopo l'acquisto. Supporto tecnico, manutenzione e ricambi sempre disponibili per la massima tranquillità.",
   },
 ];
 
@@ -544,7 +533,7 @@ const Guarantees = () => {
             Le nostre garanzie
           </motion.p>
           <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-bold text-[hsl(0,0%,10%)]">
-            Cosa Ti Garantiamo
+            Qualità che Dura nel Tempo
           </motion.h2>
         </motion.div>
 
@@ -564,12 +553,7 @@ const Guarantees = () => {
                 <g.icon className="h-6 w-6" />
               </div>
               <div className="space-y-2">
-                <div className="flex items-center gap-3">
-                  <h3 className="text-lg font-bold text-[hsl(0,0%,10%)]">{g.title}</h3>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[hsl(195,85%,45%)] bg-[hsl(195,85%,45%)]/10 px-2 py-0.5 rounded-full whitespace-nowrap">
-                    Garantito
-                  </span>
-                </div>
+                <h3 className="text-lg font-bold text-[hsl(0,0%,10%)]">{g.title}</h3>
                 <p className="text-sm text-[hsl(0,0%,45%)] leading-relaxed">{g.desc}</p>
               </div>
             </motion.div>
@@ -581,9 +565,51 @@ const Guarantees = () => {
 };
 
 /* ═══════════════════════════════════════════
-   8. CTA FINALE
+   8. TROVA IL RIVENDITORE DI ZONA
    ═══════════════════════════════════════════ */
-const FinalCta = () => {
+const FindDealer = () => {
+  const [ref, inView] = useInView(inViewOptions);
+
+  return (
+    <section ref={ref} className="py-24 bg-[hsl(0,0%,97%)]">
+      <div className="max-w-4xl mx-auto px-6">
+        <motion.div
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          variants={stagger}
+          className="text-center space-y-6"
+        >
+          <motion.div variants={fadeUp} className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[hsl(195,85%,45%)]/10 mx-auto">
+            <MapPin className="h-8 w-8 text-[hsl(195,85%,45%)]" />
+          </motion.div>
+          <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-bold text-[hsl(0,0%,10%)]">
+            Trova il Rivenditore ThermoDMR Più Vicino a Te
+          </motion.h2>
+          <motion.p variants={fadeUp} className="text-[hsl(0,0%,45%)] text-lg max-w-2xl mx-auto leading-relaxed">
+            Una rete di professionisti qualificati su tutto il territorio nazionale, pronti
+            a consigliarti la soluzione migliore per la tua casa.
+          </motion.p>
+          <motion.div variants={fadeUp}>
+            <a href="#contatti">
+              <Button
+                size="lg"
+                className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-8 text-base shadow-[0_4px_20px_hsl(195,85%,45%,0.25)]"
+              >
+                Contattaci per Trovare il Tuo Rivenditore
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </a>
+          </motion.div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+/* ═══════════════════════════════════════════
+   9. DIVENTA RIVENDITORE
+   ═══════════════════════════════════════════ */
+const BecomeDealer = () => {
   const [ref, inView] = useInView(inViewOptions);
 
   return (
@@ -592,7 +618,7 @@ const FinalCta = () => {
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: "url('/images/cta-bg.jpg')" }}
       />
-      <div className="absolute inset-0 bg-gradient-to-br from-[hsl(195,85%,35%)]/85 to-[hsl(210,80%,35%)]/85" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[hsl(0,0%,8%)]/90 to-[hsl(210,80%,15%)]/90" />
 
       <motion.div
         initial="hidden"
@@ -601,20 +627,31 @@ const FinalCta = () => {
         className="relative max-w-3xl mx-auto px-6 text-center"
       >
         <motion.h2 variants={fadeUp} className="text-3xl sm:text-5xl font-extrabold text-white mb-6 leading-tight">
-          Inizia a Guadagnare di Più{" "}
-          <span className="text-white/90">Oggi!</span>
+          Vuoi Diventare un Rivenditore{" "}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[hsl(195,85%,50%)] to-[hsl(210,80%,55%)]">
+            ThermoDMR?
+          </span>
         </motion.h2>
-        <motion.p variants={fadeUp} className="text-white/80 text-lg mb-10 max-w-xl mx-auto">
-          Entra nella rete ThermoDMR: un partner produttore serio, con prezzi imbattibili,
-          consegne puntuali e un unico obiettivo — far crescere la tua attività.
+        <motion.p variants={fadeUp} className="text-white/70 text-lg mb-8 max-w-xl mx-auto leading-relaxed">
+          Entra nella nostra rete di rivenditori e accedi a vantaggi esclusivi per far crescere la tua attività.
         </motion.p>
+
+        <motion.div variants={fadeUp} className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-white/60 mb-10">
+          {["Prezzi di fabbrica", "Zona esclusiva", "Supporto marketing", "Consegne rapide"].map((t) => (
+            <span key={t} className="flex items-center gap-1.5">
+              <CheckCircle2 className="h-4 w-4 text-[hsl(195,85%,55%)]" />
+              {t}
+            </span>
+          ))}
+        </motion.div>
+
         <motion.div variants={fadeUp}>
           <a href="#contatti">
             <Button
               size="lg"
               className="bg-white text-[hsl(195,85%,40%)] hover:bg-white/90 font-bold rounded-full px-12 text-base shadow-xl hover:shadow-2xl transition-all"
             >
-              Diventa Rivenditore ThermoDMR
+              Candidati Ora
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </a>
@@ -625,12 +662,13 @@ const FinalCta = () => {
 };
 
 /* ═══════════════════════════════════════════
-   9. CONTACT FORM
+   10. CONTACT FORM — generalista
    ═══════════════════════════════════════════ */
 const ContactForm = () => {
   const [ref, inView] = useInView(inViewOptions);
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [tipoUtente, setTipoUtente] = useState("");
   const [formData, setFormData] = useState({
     nome: "",
     azienda: "",
@@ -651,9 +689,13 @@ const ContactForm = () => {
     }
     setLoading(true);
     try {
+      const aziendaValue = tipoUtente
+        ? `[${tipoUtente}] ${formData.azienda.trim()}`.trim()
+        : formData.azienda.trim() || null;
+
       const { error } = await supabase.from("contact_requests").insert({
         nome: formData.nome.trim(),
-        azienda: formData.azienda.trim() || null,
+        azienda: aziendaValue,
         email: formData.email.trim(),
         telefono: formData.telefono.trim() || null,
         messaggio: formData.messaggio.trim(),
@@ -661,6 +703,7 @@ const ContactForm = () => {
       if (error) throw error;
       toast({ title: "Richiesta inviata!", description: "Ti ricontatteremo al più presto." });
       setFormData({ nome: "", azienda: "", email: "", telefono: "", messaggio: "" });
+      setTipoUtente("");
     } catch {
       toast({ title: "Errore", description: "Impossibile inviare la richiesta. Riprova.", variant: "destructive" });
     } finally {
@@ -681,10 +724,10 @@ const ContactForm = () => {
               Contattaci
             </p>
             <h2 className="text-3xl sm:text-4xl font-bold text-[hsl(0,0%,10%)]">
-              Diventa Rivenditore ThermoDMR
+              Contattaci
             </h2>
             <p className="text-[hsl(0,0%,45%)] text-lg mt-4 max-w-2xl mx-auto">
-              Compila il form e un nostro commerciale ti ricontatterà entro 24 ore.
+              Compila il form per richiedere un preventivo o per informazioni sulla nostra rete di rivenditori.
             </p>
           </motion.div>
 
@@ -696,14 +739,23 @@ const ContactForm = () => {
                   <Input name="nome" value={formData.nome} onChange={handleChange} placeholder="Mario Rossi" required maxLength={100} />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-[hsl(0,0%,20%)]">Azienda</label>
-                  <Input name="azienda" value={formData.azienda} onChange={handleChange} placeholder="La Tua Azienda Srl" maxLength={100} />
+                  <label className="text-sm font-medium text-[hsl(0,0%,20%)]">Tipo</label>
+                  <Select value={tipoUtente} onValueChange={setTipoUtente}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Seleziona..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="privato">Sono un privato</SelectItem>
+                      <SelectItem value="rivenditore">Sono un rivenditore</SelectItem>
+                      <SelectItem value="altro">Altro</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
               <div className="grid sm:grid-cols-2 gap-5">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-[hsl(0,0%,20%)]">Email *</label>
-                  <Input name="email" type="email" value={formData.email} onChange={handleChange} placeholder="info@tuaazienda.it" required maxLength={255} />
+                  <Input name="email" type="email" value={formData.email} onChange={handleChange} placeholder="info@email.it" required maxLength={255} />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-[hsl(0,0%,20%)]">Telefono</label>
@@ -711,8 +763,12 @@ const ContactForm = () => {
                 </div>
               </div>
               <div className="space-y-2">
+                <label className="text-sm font-medium text-[hsl(0,0%,20%)]">Azienda (opzionale)</label>
+                <Input name="azienda" value={formData.azienda} onChange={handleChange} placeholder="Nome della tua azienda" maxLength={100} />
+              </div>
+              <div className="space-y-2">
                 <label className="text-sm font-medium text-[hsl(0,0%,20%)]">Messaggio *</label>
-                <Textarea name="messaggio" value={formData.messaggio} onChange={handleChange} placeholder="Descrivi la tua attività e cosa cerchi in un fornitore..." required maxLength={1000} rows={4} />
+                <Textarea name="messaggio" value={formData.messaggio} onChange={handleChange} placeholder="Descrivi cosa stai cercando: un preventivo per casa tua, informazioni per diventare rivenditore..." required maxLength={1000} rows={4} />
               </div>
               <Button
                 type="submit"
@@ -752,7 +808,8 @@ const Home = () => (
     <Products />
     <WhyThermoDMR />
     <Guarantees />
-    <FinalCta />
+    <FindDealer />
+    <BecomeDealer />
     <ContactForm />
     <PublicFooter />
   </div>
