@@ -12,22 +12,11 @@ import {
   Layers,
   DoorOpen,
   SunDim,
-  TrendingUp,
   Clock,
   CreditCard,
   Target,
-  Award,
   Truck,
   BadgePercent,
-  Users,
-  Phone,
-  Mail,
-  Menu,
-  X,
-  MapPin,
-  Facebook,
-  Instagram,
-  Linkedin,
   Send,
   Loader2,
 } from "lucide-react";
@@ -67,134 +56,8 @@ const useCounter = (end: number, duration = 2000, start = false) => {
   return count;
 };
 
-/* ═══════════════════════════════════════════
-   1. NAVBAR — with active link indicator
-   ═══════════════════════════════════════════ */
-const Navbar = () => {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
-
-  useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 40);
-      // Detect active section
-      const sections = ["chi-siamo", "prodotti", "vantaggi", "garanzie", "contatti"];
-      let current = "";
-      for (const id of sections) {
-        const el = document.getElementById(id);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 150 && rect.bottom > 150) {
-            current = id;
-          }
-        }
-      }
-      setActiveSection(current);
-    };
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  const scrollTo = useCallback((id: string) => {
-    setMobileOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  }, []);
-
-  const navLinks = [
-    { label: "Chi Siamo", id: "chi-siamo" },
-    { label: "Prodotti", id: "prodotti" },
-    { label: "Vantaggi", id: "vantaggi" },
-    { label: "Garanzie", id: "garanzie" },
-    { label: "Contatti", id: "contatti" },
-  ];
-
-  return (
-    <nav
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white/95 backdrop-blur-lg border-b border-[hsl(0,0%,90%)] shadow-sm"
-          : "bg-[hsl(0,0%,10%)]/80 backdrop-blur-md"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-        <img
-          src={logo}
-          alt="ThermoDMR"
-          className={`h-10 object-contain transition-all duration-300 ${
-            scrolled ? "" : "brightness-0 invert"
-          }`}
-        />
-
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => scrollTo(item.id)}
-              className={`relative text-sm font-medium transition-colors pb-1 ${
-                scrolled
-                  ? activeSection === item.id
-                    ? "text-[hsl(195,85%,45%)]"
-                    : "text-[hsl(0,0%,35%)] hover:text-[hsl(195,85%,45%)]"
-                  : activeSection === item.id
-                    ? "text-white"
-                    : "text-white/80 hover:text-white"
-              }`}
-            >
-              {item.label}
-              {/* Active indicator dot */}
-              {activeSection === item.id && (
-                <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-5 h-0.5 rounded-full bg-[hsl(195,85%,45%)]" />
-              )}
-            </button>
-          ))}
-        </div>
-
-        <div className="flex items-center gap-3">
-          <Link to="/auth">
-            <Button
-              size="sm"
-              className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-6 shadow-[0_4px_20px_hsl(195,85%,45%,0.3)]"
-            >
-              Area Riservata
-            </Button>
-          </Link>
-          <button
-            className="md:hidden p-2"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            {mobileOpen ? (
-              <X className={`h-6 w-6 ${scrolled ? "text-[hsl(0,0%,20%)]" : "text-white"}`} />
-            ) : (
-              <Menu className={`h-6 w-6 ${scrolled ? "text-[hsl(0,0%,20%)]" : "text-white"}`} />
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-[hsl(0,0%,90%)] shadow-lg">
-          <div className="px-6 py-4 space-y-3">
-            {navLinks.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollTo(item.id)}
-                className={`block w-full text-left text-sm font-medium py-2 ${
-                  activeSection === item.id
-                    ? "text-[hsl(195,85%,45%)] font-bold"
-                    : "text-[hsl(0,0%,30%)] hover:text-[hsl(195,85%,45%)]"
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </nav>
-  );
-};
+import PublicNavbar from "@/components/PublicNavbar";
+import PublicFooter from "@/components/PublicFooter";
 
 /* ═══════════════════════════════════════════
    2. HERO — with improved secondary button
@@ -815,95 +678,13 @@ const ContactForm = () => {
   );
 };
 
-/* ═══════════════════════════════════════════
-   10. FOOTER — 4 columns with full info
-   ═══════════════════════════════════════════ */
-const Footer = () => (
-  <footer className="bg-[hsl(0,0%,8%)] py-16 border-t border-white/5">
-    <div className="max-w-7xl mx-auto px-6">
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-        {/* Brand */}
-        <div className="space-y-4">
-          <img src={logo} alt="ThermoDMR" className="h-10 object-contain brightness-0 invert opacity-90" />
-          <p className="text-sm text-white/40 leading-relaxed">
-            Produciamo serramenti di alta qualità per far crescere la tua attività.
-            Il tuo successo è il nostro obiettivo.
-          </p>
-          <div className="flex gap-3 pt-2">
-            <a href="#" className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 text-white/50 hover:bg-[hsl(195,85%,45%)] hover:text-white transition-all">
-              <Facebook className="h-4 w-4" />
-            </a>
-            <a href="#" className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 text-white/50 hover:bg-[hsl(195,85%,45%)] hover:text-white transition-all">
-              <Instagram className="h-4 w-4" />
-            </a>
-            <a href="#" className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 text-white/50 hover:bg-[hsl(195,85%,45%)] hover:text-white transition-all">
-              <Linkedin className="h-4 w-4" />
-            </a>
-          </div>
-        </div>
-
-        {/* Prodotti */}
-        <div className="space-y-4">
-          <h4 className="text-sm font-bold text-white/80 uppercase tracking-wider">Prodotti</h4>
-          <div className="space-y-2 text-sm text-white/40">
-            <p>Finestre in PVC</p>
-            <p>Finestre in Alluminio</p>
-            <p>Porte e Portoncini</p>
-            <p>Persiane e Oscuranti</p>
-          </div>
-        </div>
-
-        {/* Contatti */}
-        <div className="space-y-4">
-          <h4 className="text-sm font-bold text-white/80 uppercase tracking-wider">Contatti</h4>
-          <div className="space-y-3">
-            <a href="tel:+390000000000" className="flex items-center gap-2 text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors">
-              <Phone className="h-4 w-4 shrink-0" />
-              +39 000 000 0000
-            </a>
-            <a href="mailto:info@thermodmr.it" className="flex items-center gap-2 text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors">
-              <Mail className="h-4 w-4 shrink-0" />
-              info@thermodmr.it
-            </a>
-            <div className="flex items-start gap-2 text-sm text-white/40">
-              <MapPin className="h-4 w-4 shrink-0 mt-0.5" />
-              <span>Via dell'Industria, 00<br />00000 Città (PR)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Legal */}
-        <div className="space-y-4">
-          <h4 className="text-sm font-bold text-white/80 uppercase tracking-wider">Link Utili</h4>
-          <div className="space-y-2">
-            <Link
-              to="/auth"
-              className="block text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors"
-            >
-              Area Riservata Rivenditori
-            </Link>
-          </div>
-          <div className="pt-4">
-            <p className="text-xs text-white/25">P.IVA: 00000000000</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="border-t border-white/10 pt-8 text-center">
-        <p className="text-sm text-white/30">
-          © {new Date().getFullYear()} ThermoDMR. Tutti i diritti riservati.
-        </p>
-      </div>
-    </div>
-  </footer>
-);
 
 /* ═══════════════════════════════════════════
    PAGE
    ═══════════════════════════════════════════ */
 const Home = () => (
   <div className="min-h-screen bg-white">
-    <Navbar />
+    <PublicNavbar />
     <Hero />
     <ChiSiamo />
     <Stats />
@@ -912,7 +693,7 @@ const Home = () => (
     <Guarantees />
     <FinalCta />
     <ContactForm />
-    <Footer />
+    <PublicFooter />
   </div>
 );
 
