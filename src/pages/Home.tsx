@@ -22,6 +22,8 @@ import {
   Users,
   Phone,
   Mail,
+  Menu,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo_Thermodmr.png";
@@ -57,6 +59,8 @@ const useCounter = (end: number, duration = 2000, start = false) => {
    ═══════════════════════════════════════════ */
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll);
@@ -64,53 +68,89 @@ const Navbar = () => {
   }, []);
 
   const scrollTo = useCallback((id: string) => {
+    setMobileOpen(false);
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   }, []);
+
+  const navLinks = [
+    { label: "Chi Siamo", id: "chi-siamo" },
+    { label: "Prodotti", id: "prodotti" },
+    { label: "Vantaggi", id: "vantaggi" },
+    { label: "Garanzie", id: "garanzie" },
+    { label: "Contatti", id: "contatti" },
+  ];
 
   return (
     <nav
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[hsl(0,0%,5%)]/95 backdrop-blur-lg border-b border-white/10 shadow-lg"
-          : "bg-transparent"
+          ? "bg-white/95 backdrop-blur-lg border-b border-[hsl(0,0%,90%)] shadow-sm"
+          : "bg-[hsl(0,0%,10%)]/80 backdrop-blur-md"
       }`}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
         <img src={logo} alt="ThermoDMR" className="h-10 object-contain" />
 
         <div className="hidden md:flex items-center gap-8">
-          {[
-            { label: "Chi Siamo", id: "chi-siamo" },
-            { label: "Prodotti", id: "prodotti" },
-            { label: "Vantaggi", id: "vantaggi" },
-            { label: "Garanzie", id: "garanzie" },
-            { label: "Contatti", id: "contatti" },
-          ].map((item) => (
+          {navLinks.map((item) => (
             <button
               key={item.id}
               onClick={() => scrollTo(item.id)}
-              className="text-sm font-medium text-white/70 hover:text-white transition-colors"
+              className={`text-sm font-medium transition-colors ${
+                scrolled
+                  ? "text-[hsl(0,0%,35%)] hover:text-[hsl(10,80%,50%)]"
+                  : "text-white/80 hover:text-white"
+              }`}
             >
               {item.label}
             </button>
           ))}
         </div>
 
-        <Link to="/auth">
-          <Button
-            size="sm"
-            className="bg-[hsl(10,80%,50%)] hover:bg-[hsl(10,80%,42%)] text-white font-semibold rounded-full px-6 shadow-[0_4px_20px_hsl(10,80%,50%,0.3)]"
+        <div className="flex items-center gap-3">
+          <Link to="/auth">
+            <Button
+              size="sm"
+              className="bg-[hsl(10,80%,50%)] hover:bg-[hsl(10,80%,42%)] text-white font-semibold rounded-full px-6 shadow-[0_4px_20px_hsl(10,80%,50%,0.3)]"
+            >
+              Area Riservata
+            </Button>
+          </Link>
+          <button
+            className="md:hidden p-2"
+            onClick={() => setMobileOpen(!mobileOpen)}
           >
-            Area Riservata
-          </Button>
-        </Link>
+            {mobileOpen ? (
+              <X className={`h-6 w-6 ${scrolled ? "text-[hsl(0,0%,20%)]" : "text-white"}`} />
+            ) : (
+              <Menu className={`h-6 w-6 ${scrolled ? "text-[hsl(0,0%,20%)]" : "text-white"}`} />
+            )}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <div className="md:hidden bg-white border-t border-[hsl(0,0%,90%)] shadow-lg">
+          <div className="px-6 py-4 space-y-3">
+            {navLinks.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => scrollTo(item.id)}
+                className="block w-full text-left text-sm font-medium text-[hsl(0,0%,30%)] hover:text-[hsl(10,80%,50%)] py-2"
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
 
 /* ═══════════════════════════════════════════
-   2. HERO
+   2. HERO — Full-screen image like TeknoFinestre
    ═══════════════════════════════════════════ */
 const Hero = () => {
   const scrollToVantaggi = useCallback(() => {
@@ -118,11 +158,16 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-[hsl(0,0%,5%)]">
-      {/* Decorative blobs */}
-      <div className="absolute -top-60 -right-60 w-[800px] h-[800px] rounded-full bg-[radial-gradient(circle,hsl(10,80%,50%)_0%,transparent_65%)] opacity-20 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,hsl(25,90%,55%)_0%,transparent_70%)] opacity-10 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-[hsl(0,0%,5%)] to-transparent pointer-events-none" />
+    <section className="relative min-h-screen flex items-center overflow-hidden">
+      {/* Background image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: "url('/images/hero-bg.jpg')" }}
+      />
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-[hsl(0,0%,10%)]/60" />
+      {/* Bottom gradient fade */}
+      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[hsl(0,0%,10%)]/80 to-transparent" />
 
       <div className="relative max-w-7xl mx-auto px-6 pt-32 pb-24 grid lg:grid-cols-2 gap-16 items-center w-full">
         <motion.div initial="hidden" animate="visible" variants={stagger} className="space-y-8">
@@ -143,9 +188,9 @@ const Hero = () => {
             </span>
           </motion.h1>
 
-          <motion.p variants={fadeUp} className="text-lg text-white/60 max-w-xl leading-relaxed">
+          <motion.p variants={fadeUp} className="text-lg text-white/70 max-w-xl leading-relaxed">
             Tempi certi di consegna, prezzi più bassi sul mercato e pagamenti flessibili.{" "}
-            <span className="text-white/80 font-medium">
+            <span className="text-white/90 font-medium">
               Smetti di rincorrere fornitori inaffidabili e inizia a far crescere la tua attività.
             </span>
           </motion.p>
@@ -154,7 +199,7 @@ const Hero = () => {
             <a href="#contatti">
               <Button
                 size="lg"
-                className="bg-[hsl(10,80%,50%)] hover:bg-[hsl(10,80%,42%)] text-white font-semibold rounded-full px-8 text-base shadow-[0_6px_30px_hsl(10,80%,50%,0.35)] hover:shadow-[0_6px_40px_hsl(10,80%,50%,0.5)] transition-all"
+                className="bg-[hsl(10,80%,50%)] hover:bg-[hsl(10,80%,42%)] text-white font-semibold rounded-full px-8 text-base shadow-[0_6px_30px_hsl(10,80%,50%,0.4)] hover:shadow-[0_6px_40px_hsl(10,80%,50%,0.6)] transition-all"
               >
                 Diventa Rivenditore
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -164,14 +209,14 @@ const Hero = () => {
               size="lg"
               variant="outline"
               onClick={scrollToVantaggi}
-              className="rounded-full px-8 text-base border-white/20 text-white/80 hover:bg-white/10 hover:text-white"
+              className="rounded-full px-8 text-base border-white/30 text-white hover:bg-white/10 hover:text-white"
             >
               Scopri i Vantaggi
               <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </motion.div>
 
-          <motion.div variants={fadeUp} className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/40 pt-4">
+          <motion.div variants={fadeUp} className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/50 pt-4">
             {["Tempi certi", "Prezzo più basso", "Pagamenti flessibili", "Margini garantiti"].map((t) => (
               <span key={t} className="flex items-center gap-1.5">
                 <CheckCircle2 className="h-4 w-4 text-[hsl(10,80%,55%)]" />
@@ -181,29 +226,24 @@ const Hero = () => {
           </motion.div>
         </motion.div>
 
-        {/* Decorative panel */}
+        {/* Hero right — Product profile image like TeknoFinestre */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.85, rotateY: 10 }}
-          animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+          initial={{ opacity: 0, x: 60 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
           className="hidden lg:flex items-center justify-center"
         >
-          <div className="relative w-[440px] h-[440px]">
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[hsl(10,80%,50%)] to-[hsl(30,90%,50%)] opacity-15 blur-3xl" />
-            <div className="absolute inset-0 rounded-3xl border border-white/10 bg-white/[0.03] backdrop-blur-xl" />
-            <div className="absolute inset-8 rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.06] to-transparent flex items-center justify-center">
-              <div className="text-center space-y-4">
-                <TrendingUp className="h-16 w-16 text-[hsl(10,80%,55%)] mx-auto opacity-80" />
-                <p className="text-white/60 text-sm font-medium">Il Tuo Obiettivo</p>
-                <p className="text-white text-3xl font-bold">+Margini</p>
-                <p className="text-white/40 text-xs">Listino riservato — Zona esclusiva</p>
-              </div>
-            </div>
+          <div className="relative">
+            <img
+              src="/images/hero-profile.jpg"
+              alt="Profilo serramento ThermoDMR"
+              className="w-[420px] h-[420px] object-cover rounded-3xl shadow-2xl border-4 border-white/20"
+            />
             {/* Floating badges */}
             <div className="absolute -top-3 -right-3 bg-[hsl(10,80%,50%)] text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg">
               Consegna 15gg
             </div>
-            <div className="absolute -bottom-3 -left-3 bg-white/10 backdrop-blur-md text-white text-xs font-bold px-4 py-2 rounded-full border border-white/20">
+            <div className="absolute -bottom-3 -left-3 bg-white text-[hsl(0,0%,20%)] text-xs font-bold px-4 py-2 rounded-full shadow-lg border border-[hsl(0,0%,90%)]">
               Made in Italy
             </div>
           </div>
@@ -214,7 +254,7 @@ const Hero = () => {
 };
 
 /* ═══════════════════════════════════════════
-   3. CHI SIAMO
+   3. CHI SIAMO — with real image
    ═══════════════════════════════════════════ */
 const ChiSiamo = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
@@ -255,19 +295,11 @@ const ChiSiamo = () => {
           </motion.div>
 
           <motion.div variants={fadeUp} className="flex justify-center">
-            <div className="relative w-full max-w-md aspect-square">
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[hsl(10,80%,95%)] to-[hsl(25,80%,92%)]" />
-              <div className="absolute inset-6 rounded-2xl bg-white shadow-xl flex items-center justify-center border border-[hsl(0,0%,92%)]">
-                <div className="text-center space-y-4 p-8">
-                  <div className="w-16 h-16 mx-auto rounded-2xl bg-[hsl(10,80%,50%)]/10 flex items-center justify-center">
-                    <Award className="h-8 w-8 text-[hsl(10,80%,50%)]" />
-                  </div>
-                  <p className="text-sm text-[hsl(0,0%,50%)] font-medium">Produzione Interna</p>
-                  <p className="text-3xl font-bold text-[hsl(0,0%,10%)]">100%</p>
-                  <p className="text-xs text-[hsl(0,0%,60%)]">Nessun intermediario — Made in Italy</p>
-                </div>
-              </div>
-            </div>
+            <img
+              src="/images/chi-siamo.jpg"
+              alt="Infissi moderni installati"
+              className="w-full max-w-lg rounded-3xl shadow-xl object-cover aspect-[4/3]"
+            />
           </motion.div>
         </motion.div>
       </div>
@@ -276,7 +308,7 @@ const ChiSiamo = () => {
 };
 
 /* ═══════════════════════════════════════════
-   4. CONTATORI / SOCIAL PROOF
+   4. CONTATORI — with background image
    ═══════════════════════════════════════════ */
 const stats = [
   { value: 200, suffix: "+", label: "Rivenditori Attivi" },
@@ -289,8 +321,15 @@ const Stats = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.3 });
 
   return (
-    <section ref={ref} className="py-20 bg-[hsl(0,0%,5%)]">
-      <div className="max-w-7xl mx-auto px-6">
+    <section ref={ref} className="py-20 relative overflow-hidden">
+      {/* Background image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: "url('/images/counters-bg.jpg')" }}
+      />
+      <div className="absolute inset-0 bg-[hsl(0,0%,8%)]/80" />
+
+      <div className="relative max-w-7xl mx-auto px-6">
         <motion.div
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
@@ -314,34 +353,38 @@ const StatItem = ({ value, suffix, label, inView }: { value: number; suffix: str
         {count.toLocaleString("it-IT")}
         <span className="text-[hsl(10,80%,55%)]">{suffix}</span>
       </p>
-      <p className="text-sm text-white/50 font-medium">{label}</p>
+      <p className="text-sm text-white/60 font-medium">{label}</p>
     </motion.div>
   );
 };
 
 /* ═══════════════════════════════════════════
-   5. PRODOTTI
+   5. PRODOTTI — with real images
    ═══════════════════════════════════════════ */
 const products = [
   {
     icon: ThermometerSun,
     title: "Finestre in PVC",
     desc: "Il prodotto più richiesto dal mercato. Alto isolamento, manutenzione zero e margini eccellenti per il rivenditore. Ampia gamma di colori e finiture.",
+    image: "/images/product-pvc.jpg",
   },
   {
     icon: Layers,
     title: "Finestre in Alluminio",
     desc: "Linee sottili e grandi superfici vetrate: il prodotto premium che i tuoi clienti cercano. Resistenza e design per progetti di alto livello.",
+    image: "/images/product-alluminio.jpg",
   },
   {
     icon: DoorOpen,
     title: "Porte e Portoncini",
     desc: "Portoncini d'ingresso blindati con finiture personalizzabili. Un prodotto ad alto valore aggiunto che aumenta il ticket medio dei tuoi ordini.",
+    image: "/images/product-porte.jpg",
   },
   {
     icon: SunDim,
     title: "Persiane e Oscuranti",
     desc: "Completa la vendita con sistemi oscuranti coordinati. Motorizzazione e domotica disponibili per upselling e margini superiori.",
+    image: "/images/product-persiane.jpg",
   },
 ];
 
@@ -349,7 +392,7 @@ const Products = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   return (
-    <section ref={ref} id="prodotti" className="py-24 bg-[hsl(0,0%,98%)]">
+    <section ref={ref} id="prodotti" className="py-24 bg-[hsl(0,0%,97%)]">
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
           initial="hidden"
@@ -375,13 +418,24 @@ const Products = () => {
             <motion.div
               key={f.title}
               variants={fadeUp}
-              className="group rounded-2xl border border-[hsl(0,0%,90%)] bg-white p-8 shadow-sm hover:shadow-xl hover:border-[hsl(10,80%,50%)]/30 hover:-translate-y-1 transition-all duration-300"
+              className="group rounded-2xl overflow-hidden border border-[hsl(0,0%,90%)] bg-white shadow-sm hover:shadow-xl hover:border-[hsl(10,80%,50%)]/30 hover:-translate-y-1 transition-all duration-300"
             >
-              <div className="mb-6 inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[hsl(10,80%,50%)]/10 text-[hsl(10,80%,50%)] group-hover:bg-[hsl(10,80%,50%)] group-hover:text-white transition-colors duration-300">
-                <f.icon className="h-7 w-7" />
+              {/* Product image */}
+              <div className="relative h-48 overflow-hidden">
+                <img
+                  src={f.image}
+                  alt={f.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[hsl(0,0%,0%)]/30 to-transparent" />
+                <div className="absolute bottom-3 left-3 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[hsl(10,80%,50%)] text-white shadow-lg">
+                  <f.icon className="h-5 w-5" />
+                </div>
               </div>
-              <h3 className="text-lg font-bold text-[hsl(0,0%,10%)] mb-3">{f.title}</h3>
-              <p className="text-sm text-[hsl(0,0%,45%)] leading-relaxed">{f.desc}</p>
+              <div className="p-6">
+                <h3 className="text-lg font-bold text-[hsl(0,0%,10%)] mb-3">{f.title}</h3>
+                <p className="text-sm text-[hsl(0,0%,45%)] leading-relaxed">{f.desc}</p>
+              </div>
             </motion.div>
           ))}
         </motion.div>
@@ -499,7 +553,7 @@ const Guarantees = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
 
   return (
-    <section ref={ref} id="garanzie" className="py-24 bg-[hsl(0,0%,98%)]">
+    <section ref={ref} id="garanzie" className="py-24 bg-[hsl(0,0%,97%)]">
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
           initial="hidden"
@@ -541,14 +595,19 @@ const Guarantees = () => {
 };
 
 /* ═══════════════════════════════════════════
-   8. CTA FINALE
+   8. CTA FINALE — with background image
    ═══════════════════════════════════════════ */
 const FinalCta = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.3 });
 
   return (
-    <section ref={ref} className="py-28 bg-gradient-to-br from-[hsl(10,80%,48%)] to-[hsl(25,85%,42%)] relative overflow-hidden">
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgMGg2MHY2MEgweiIgZmlsbD0ibm9uZSIvPjxjaXJjbGUgY3g9IjMwIiBjeT0iMzAiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wOCkiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IGZpbGw9InVybCgjZykiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiLz48L3N2Zz4=')] opacity-50" />
+    <section ref={ref} className="py-28 relative overflow-hidden">
+      {/* Background image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: "url('/images/cta-bg.jpg')" }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-br from-[hsl(10,80%,40%)]/85 to-[hsl(25,85%,35%)]/85" />
 
       <motion.div
         ref={ref}
@@ -561,7 +620,7 @@ const FinalCta = () => {
           Inizia a Guadagnare di Più{" "}
           <span className="text-white/90">Oggi!</span>
         </motion.h2>
-        <motion.p variants={fadeUp} className="text-white/70 text-lg mb-10 max-w-xl mx-auto">
+        <motion.p variants={fadeUp} className="text-white/80 text-lg mb-10 max-w-xl mx-auto">
           Entra nella rete ThermoDMR: un partner produttore serio, con prezzi imbattibili,
           consegne puntuali e un unico obiettivo — far crescere la tua attività.
         </motion.p>
@@ -585,7 +644,7 @@ const FinalCta = () => {
    9. FOOTER
    ═══════════════════════════════════════════ */
 const Footer = () => (
-  <footer id="contatti" className="bg-[hsl(0,0%,5%)] py-16 border-t border-white/5">
+  <footer id="contatti" className="bg-[hsl(0,0%,8%)] py-16 border-t border-white/5">
     <div className="max-w-7xl mx-auto px-6">
       <div className="grid sm:grid-cols-3 gap-12 mb-12">
         <div className="space-y-4">
@@ -636,7 +695,7 @@ const Footer = () => (
    PAGE
    ═══════════════════════════════════════════ */
 const Home = () => (
-  <div className="min-h-screen bg-[hsl(0,0%,5%)]">
+  <div className="min-h-screen bg-white">
     <Navbar />
     <Hero />
     <ChiSiamo />
