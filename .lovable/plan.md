@@ -1,19 +1,34 @@
 
 
-## Ottimizzare l'immagine del serramento nella Hero
+## Sostituire le immagini della Homepage con le foto caricate
 
-### Problema attuale
-L'immagine del serramento PVC e forzata in un contenitore quadrato (420x420px) con `object-cover`, che la taglia. Inoltre ha `bg-white` e `border` che nascondono la trasparenza del PNG e creano un riquadro bianco rigido.
+### Cosa resta invariato
+- L'immagine di sfondo dell'Hero (`/images/hero-bg.jpg`) -- come richiesto
+- L'immagine del serramento PVC nella Hero (gia aggiornata)
+- Le immagini di sfondo dei contatori e della CTA
 
-### Modifiche previste
+### Immagini da copiare e rinominare
 
-**File**: `src/pages/Home.tsx` (riga 153-157)
+I file caricati verranno copiati in `src/assets/` con nomi neutri (senza riferimenti ad altre aziende):
 
-1. **Rimuovere le dimensioni fisse quadrate** (`w-[220px] h-[220px]` ecc.) e usare invece `w-[280px] sm:w-[340px] lg:w-[460px]` solo in larghezza, lasciando l'altezza automatica cosi la finestra si vede per intero
-2. **Cambiare `object-cover` in `object-contain`** per mostrare tutta l'immagine senza taglio
-3. **Rimuovere `bg-white`** per far vedere lo sfondo scuro dell'hero attraverso la trasparenza del PNG
-4. **Rimuovere `border-4 border-white/20`** e `rounded-3xl` perche con il PNG trasparente non servono bordi attorno a un rettangolo
-5. **Aggiungere un leggero `drop-shadow`** tramite `drop-shadow-2xl` per dare profondita alla finestra sullo sfondo scuro
+| File originale | Nuovo nome in `src/assets/` | Destinazione |
+|---|---|---|
+| `WnD-finestra-pvc-infissi-square-maxi-3G.webp` | `thermodmr-finestre-pvc-interni.webp` | Chi Siamo |
+| `copertina-infissi-pvc.jpg` | `thermodmr-scorrevoli-terrazza.jpg` | PVC Model: DMR CONFORT |
+| `infissi-pacifici-tivoli-finestre-pvc-winbox.jpg` | `thermodmr-finestra-effetto-legno.jpg` | PVC Model: DMR DOMUS |
+| `Serramenti-in-PVC_1.jpg` | `thermodmr-serramenti-vista-mare.jpg` | PVC Model: DMR PASSIVE |
+| `oknoplast-psk-porta-finestra-scorrevole.webp` | `thermodmr-porta-scorrevole.webp` | Accessorio: Portoncini |
+| `alluminia_group_infissi_pvc-821x1024.webp` | `thermodmr-infissi-esterni.webp` | Accessorio: Cassonetti |
+| `bicolore_9fb3b13b-eecd-4d14-b29c-eda2c76d931d.webp` | `thermodmr-finestra-bicolore.webp` | Accessorio: Tapparelle e Persiane (condivisa) |
 
-### Risultato
-La finestra PVC apparira intera, senza ritaglio, con lo sfondo trasparente che si fonde naturalmente con lo sfondo scuro della hero section.
+### Modifiche al codice in `src/pages/Home.tsx`
+
+1. **Aggiungere 7 import** per le nuove immagini con nomi neutri
+2. **Chi Siamo** (riga 214): sostituire `/images/chi-siamo.jpg` con l'import della foto interni PVC bianchi
+3. **PVC Models** (righe 310, 317, 324): sostituire le 3 URL Unsplash con le foto importate
+4. **Accessories** (righe 333, 339, 345, 351): sostituire le 4 URL Unsplash con le foto importate (l'immagine bicolore verra usata per 2 accessori)
+
+### Dettaglio tecnico
+
+Tutte le immagini saranno importate come moduli ES6 (`import nomeImg from "@/assets/..."`) per una migliore ottimizzazione del bundle. I riferimenti Unsplash verranno completamente rimossi dalla homepage.
+
