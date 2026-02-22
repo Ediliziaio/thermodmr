@@ -1,48 +1,42 @@
 
 
-## Redesign Landing Page - Stile TeknoFinestre con Colori del Logo e Immagini Reali
+## Correzione Colori Landing Page - Da Rosso a Blu/Teal del Logo
 
-La pagina attuale ha due problemi principali rispetto a TeknoFinestre:
-1. **Nessuna immagine reale** - Solo forme astratte e icone, mentre TeknoFinestre usa foto reali di interni, finestre e prodotti
-2. **Stile troppo "tech/dark"** - Sfondo nero con blob decorativi, mentre TeknoFinestre ha un aspetto luminoso e professionale con foto a tutto schermo
+### Il Problema
+La pagina usa ovunque `hsl(10, 80%, 50%)` (rosso/arancio) che NON corrisponde ai colori del logo ThermoDMR. Il logo ha colori **blu/teal** (circa `hsl(195, 85%, 45%)`) e testo scuro. Inoltre, sulla navbar scura il logo con testo nero non si legge.
 
-### Cosa cambia
+---
 
-**Hero** - Da sfondo nero con blob a **foto a tutto schermo** di un interno moderno con grandi finestre luminose (come TeknoFinestre), con overlay scuro semitrasparente per leggibilita del testo. A destra, immagine del profilo di un serramento (come fa TeknoFinestre con il taglio tecnico del profilo).
+### Cosa cambiera
 
-**Chi Siamo** - Aggiunta immagine reale di infissi/serramenti in alluminio nella colonna destra (come TeknoFinestre), al posto del box astratto "Produzione Interna 100%".
+**1. Colore principale: da rosso a blu/teal del logo**
 
-**Contatori** - Sfondo con immagine reale di infissi installati (come TeknoFinestre che usa una foto di infissi Schuco), con overlay scuro per contrasto.
+Tutti i 122 riferimenti a `hsl(10, 80%, ...)` verranno sostituiti con il colore blu/teal del logo:
 
-**Prodotti** - Ogni card avra un'immagine reale del prodotto (finestre PVC, alluminio, porte, persiane) invece delle sole icone.
+| Uso | Prima (rosso) | Dopo (blu/teal logo) |
+|-----|---------------|---------------------|
+| Colore primario | `hsl(10, 80%, 50%)` | `hsl(195, 85%, 45%)` |
+| Hover | `hsl(10, 80%, 42%)` | `hsl(195, 85%, 38%)` |
+| Testo chiaro | `hsl(10, 80%, 55%)` | `hsl(195, 85%, 55%)` |
+| Testo piu chiaro | `hsl(10, 80%, 60%)` | `hsl(195, 85%, 60%)` |
+| Ombre/glow | `hsl(10, 80%, 50%, 0.3)` | `hsl(195, 85%, 45%, 0.3)` |
+| Gradiente (da) | `hsl(10, 80%, 55%)` | `hsl(195, 85%, 50%)` |
+| Gradiente (a) | `hsl(30, 90%, 55%)` | `hsl(210, 80%, 55%)` |
+| CTA finale overlay (da) | `hsl(10, 80%, 40%)` | `hsl(195, 85%, 35%)` |
+| CTA finale overlay (a) | `hsl(25, 85%, 35%)` | `hsl(210, 80%, 35%)` |
+| CTA finale testo | `hsl(10, 80%, 45%)` | `hsl(195, 85%, 40%)` |
 
-**Perche Scegliere ThermoDMR** - Layout piu visivo con immagini di supporto.
+**2. Logo su navbar scura**
 
-**CTA Finale** - Sfondo con foto reale di showroom/installazione, non gradiente piatto.
+Il logo attuale ha parti in nero che non si leggono sullo sfondo scuro. Soluzione:
+- Aggiungere un filtro CSS `brightness` e `invert` selettivo al logo quando la navbar e scura
+- Oppure usare un approccio con `filter: brightness(0) invert(1)` per rendere il logo bianco su sfondo scuro, e poi tornare ai colori originali quando la navbar diventa bianca allo scroll
+- In pratica: classe CSS condizionale `brightness-0 invert` quando `!scrolled`, rimossa quando `scrolled`
 
-### Colori
-
-I colori principali restano quelli del logo ThermoDMR gia in uso:
-- Rosso/arancio principale: `hsl(10, 80%, 50%)` per CTA, accenti, titoli evidenziati
-- Arancio gradiente: `hsl(25-30, 90%, 55%)` per sfumature
-- Sfondo hero: foto reale con overlay scuro, non sfondo nero piatto
-- Sezioni chiare: bianco e grigio chiaro come TeknoFinestre
-
-### Immagini (da Unsplash, royalty-free)
-
-Tutte le immagini saranno caricate da URL Unsplash per dare un aspetto professionale e reale:
-- Hero background: interno moderno con grandi finestre panoramiche
-- Hero destra: profilo tecnico di un serramento (o finestra aperta)
-- Chi Siamo: installazione di infissi moderni
-- Contatori background: facciata con infissi in alluminio
-- Prodotti: 4 foto specifiche (finestre PVC, alluminio, porta d'ingresso, persiane)
-- CTA finale: showroom di serramenti
-
-### Modifiche tecniche
+### Dettagli tecnici
 
 | File | Modifica |
 |------|----------|
-| `src/pages/Home.tsx` | Riscrittura completa dello stile visivo: aggiunta immagini reali da Unsplash, layout ispirato a TeknoFinestre, mantenimento del copy B2B per rivenditori e dei colori del logo |
+| `src/pages/Home.tsx` | Sostituzione di tutti i colori rosso/arancio con blu/teal del logo + filtro CSS condizionale sul logo nella navbar |
 
-Il copy orientato ai rivenditori resta invariato. Cambia solo la presentazione visiva per avvicinarla allo stile TeknoFinestre.
-
+Nessun altro file da modificare.
