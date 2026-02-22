@@ -23,28 +23,31 @@ const stagger = { visible: { transition: { staggerChildren: 0.12 } } };
 const inViewOpts = { triggerOnce: true, threshold: 0.05, rootMargin: "0px 0px -50px 0px" };
 
 const features = [
-  "Pannelli decorativi personalizzabili",
-  "Serratura di sicurezza multipoint",
-  "Isolamento termico e acustico superiore",
-  "Soglia ribassata disponibile",
-  "Resistenza agli agenti atmosferici",
-  "Ampia gamma di finiture e colori RAL",
-  "Predisposizione per citofono e domotica",
+  "Profondità costruttiva disponibile in 76, 82 e 92 mm",
+  "6 camere di isolamento per massima efficienza termica",
+  "3 guarnizioni con guarnizione mediana per tenuta superiore",
+  "Coefficiente termico Uw fino a 0,72 W/m²K",
+  "Prestazioni acustiche fino a 47 dB (classe 5)",
+  "Resistenza all'effrazione fino a classe RC3",
+  "Serratura multipunto meccanico-automatica con bloccaggio automatico",
+  "Soglia standard in alluminio 20 mm o soluzione senza soglia",
+  "Pannelli ornamentali HPL, vetro termoisolante e applicazioni in acciaio inox",
+  "Ampia gamma di colori e pellicole decorative",
 ];
 
 const specs = [
-  { label: "Materiale", value: "PVC multi-camera" },
-  { label: "Sicurezza", value: "Classe RC2" },
-  { label: "Isolamento", value: "Ud 1.0 W/m²K" },
-  { label: "Pannelli", value: "Personalizzabili" },
-  { label: "Serratura", value: "Multipoint" },
-  { label: "Finiture", value: "RAL completa" },
+  { label: "Profondità", value: "76 / 82 / 92 mm" },
+  { label: "Camere", value: "6" },
+  { label: "Uw", value: "fino a 0,72 W/m²K" },
+  { label: "Acustica", value: "47 dB (classe 5)" },
+  { label: "Sicurezza", value: "Fino a RC3" },
+  { label: "Serratura", value: "Multipunto automatica" },
 ];
 
 const benefits = [
-  { icon: Lock, title: "Massima Sicurezza", desc: "Serratura multipoint e rinforzi in acciaio per una protezione affidabile contro le effrazioni." },
-  { icon: ThermometerSun, title: "Isolamento Perfetto", desc: "Il portoncino in PVC garantisce un taglio termico eccellente, eliminando spifferi e dispersioni." },
-  { icon: Shield, title: "Design su Misura", desc: "Pannelli decorativi in diverse finiture per adattarsi a qualsiasi stile architettonico." },
+  { icon: Lock, title: "Massima Sicurezza", desc: "Serratura multipunto meccanico-automatica con 3 punti di chiusura a fuoriuscita automatica, resistenza fino a classe RC3." },
+  { icon: ThermometerSun, title: "Isolamento Perfetto", desc: "Uw fino a 0,72 W/m²K grazie a 6 camere di isolamento e 3 guarnizioni con guarnizione mediana." },
+  { icon: Shield, title: "Personalizzazione Totale", desc: "Pannelli ornamentali HPL, barre e maniglie in acciaio inox, sopraluce e luci laterali per ogni esigenza." },
 ];
 
 const Portoncini = () => {
@@ -59,7 +62,7 @@ const Portoncini = () => {
         category="I Nostri Prodotti"
         title="Portoncini in"
         titleAccent="PVC"
-        description="Portoncini d'ingresso in PVC con elevata sicurezza e isolamento termico. Finiture personalizzabili per adattarsi a ogni stile architettonico."
+        description="Portoncini d'ingresso in PVC con profondità costruttiva 76-82-92 mm, 6 camere di isolamento e 3 guarnizioni. Uw fino a 0,72 W/m²K, acustica fino a 47 dB, sicurezza fino a RC3."
         heroImage="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1600&q=80"
       />
 

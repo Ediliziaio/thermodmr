@@ -24,28 +24,29 @@ const stagger = { visible: { transition: { staggerChildren: 0.12 } } };
 const inViewOpts = { triggerOnce: true, threshold: 0.05, rootMargin: "0px 0px -50px 0px" };
 
 const features = [
-  "Alluminio verniciato a polvere",
-  "Lamelle orientabili per controllo luce",
-  "Cerniere a scomparsa",
-  "Ampia gamma colori RAL",
-  "Manutenzione zero",
-  "Resistenza agli agenti atmosferici",
-  "Design classico ed elegante",
+  "Sezione profili: 56 mm telai e 46 mm anta",
+  "Lamelle fisse (83x25 mm planari o 40x25 mm simmetriche) o orientabili (72x12 mm, da 0° a 180°)",
+  "Zoccolatura di base regolabile H 75-113 mm",
+  "Guarnizione su telai e anta",
+  "Telai tipo Z o L, oppure senza telai con anta a muro",
+  "Verniciatura RAL a scelta o sublimazione effetto legno",
+  "Tipologie: a battente, a libro, scorrevole interno o esterno muro",
+  "Superfici piane, facili da pulire",
 ];
 
 const specs = [
-  { label: "Materiale", value: "Alluminio" },
-  { label: "Verniciatura", value: "A polvere" },
-  { label: "Lamelle", value: "Orientabili" },
-  { label: "Cerniere", value: "A scomparsa" },
-  { label: "Colori", value: "Gamma RAL" },
-  { label: "Manutenzione", value: "Zero" },
+  { label: "Telai", value: "56 mm" },
+  { label: "Anta", value: "46 mm" },
+  { label: "Lamelle", value: "Fisse o orientabili" },
+  { label: "Orientamento", value: "0 - 180 gradi" },
+  { label: "Zoccolatura", value: "H 75-113 mm" },
+  { label: "Finiture", value: "RAL / Effetto legno" },
 ];
 
 const benefits = [
-  { icon: Eye, title: "Controllo Luce", desc: "Lamelle orientabili per regolare luminosità e ventilazione in base alle esigenze." },
-  { icon: Paintbrush, title: "Design Elegante", desc: "Cerniere a scomparsa e finiture raffinate per un aspetto pulito e moderno." },
-  { icon: Wind, title: "Zero Manutenzione", desc: "Alluminio verniciato a polvere: nessuna verniciatura periodica, resistenza totale agli agenti atmosferici." },
+  { icon: Eye, title: "Controllo Luce", desc: "Lamelle orientabili da 0° a 180° a comando manuale per regolare luminosità e ventilazione in modo preciso." },
+  { icon: Paintbrush, title: "Versatilità", desc: "Realizzabili a battente, a libro o scorrevole, per integrarsi con ogni soluzione costruttiva in nuova costruzione o ristrutturazione." },
+  { icon: Wind, title: "Design e Finiture", desc: "Superfici piane facili da pulire, verniciatura RAL a scelta o sublimazione in tinta legno per un aspetto elegante e naturale." },
 ];
 
 const Persiane = () => {
@@ -60,7 +61,7 @@ const Persiane = () => {
         category="I Nostri Prodotti"
         title="Persiane in"
         titleAccent="Alluminio"
-        description="Persiane in alluminio con lamelle orientabili per un controllo ottimale della luce e della ventilazione. Design elegante e zero manutenzione."
+        description="Persiane esterne in alluminio con lamelle fisse o orientabili. Sezione profili 56 mm telai e 46 mm anta. Verniciatura RAL a scelta o sublimazione effetto legno."
         heroImage="https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=1600&q=80"
       />
 
