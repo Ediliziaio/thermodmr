@@ -1,8 +1,15 @@
-import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState, useCallback } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo_Thermodmr.png";
+
+const sectionMap: Record<string, string> = {
+  "/chi-siamo": "chi-siamo",
+  "/vantaggi": "vantaggi",
+  "/garanzie": "garanzie",
+  "/contatti": "contatti",
+};
 
 const navLinks = [
   { label: "Chi Siamo", to: "/chi-siamo" },
@@ -15,6 +22,17 @@ const navLinks = [
 const PublicNavbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleNavClick = useCallback((e: React.MouseEvent, to: string) => {
+    const sectionId = sectionMap[to];
+    if (!sectionId) return; // let normal Link handle it
+    if (location.pathname === "/") {
+      e.preventDefault();
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+      setMobileOpen(false);
+    }
+  }, [location.pathname]);
 
   return (
     <nav className="fixed top-0 inset-x-0 z-50 bg-white border-b border-[hsl(0,0%,90%)] shadow-sm">
@@ -30,6 +48,7 @@ const PublicNavbar = () => {
               <Link
                 key={item.to}
                 to={item.to}
+                onClick={(e) => handleNavClick(e, item.to)}
                 className={`relative text-sm font-medium transition-colors pb-1 ${
                   isActive
                     ? "text-[hsl(195,85%,45%)]"
@@ -49,9 +68,10 @@ const PublicNavbar = () => {
           <Link to="/auth">
             <Button
               size="sm"
-              className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-6 shadow-[0_4px_20px_hsl(195,85%,45%,0.3)]"
+              className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-4 md:px-6 shadow-[0_4px_20px_hsl(195,85%,45%,0.3)]"
             >
-              Area Riservata
+              <span className="md:hidden">Accedi</span>
+              <span className="hidden md:inline">Area Riservata</span>
             </Button>
           </Link>
           <button
@@ -76,7 +96,7 @@ const PublicNavbar = () => {
                 <Link
                   key={item.to}
                   to={item.to}
-                  onClick={() => setMobileOpen(false)}
+                  onClick={(e) => { handleNavClick(e, item.to); setMobileOpen(false); }}
                   className={`block w-full text-left text-sm font-medium py-2 ${
                     isActive
                       ? "text-[hsl(195,85%,45%)] font-bold"
