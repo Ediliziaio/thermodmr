@@ -5,6 +5,14 @@ import { ArrowRight, CheckCircle2, Shield, Lock, ThermometerSun } from "lucide-r
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
+import ProductGallery from "@/components/products/ProductGallery";
+
+const galleryImages = [
+  { src: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1200&q=80", alt: "Portoncino - Ingresso elegante" },
+  { src: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1200&q=80", alt: "Portoncino - Dettaglio serratura" },
+  { src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80", alt: "Portoncino - Pannello decorativo" },
+  { src: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&q=80", alt: "Portoncino - Vista notturna" },
+];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -92,6 +100,8 @@ const Portoncini = () => {
           </div>
         </div>
       </section>
+
+      <ProductGallery images={galleryImages} />
 
       <section ref={specsRef} className="py-24 bg-[hsl(0,0%,97%)]">
         <div className="max-w-7xl mx-auto px-6">

@@ -5,6 +5,14 @@ import { ArrowRight, CheckCircle2, Crown, ThermometerSun, Shield, Leaf } from "l
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
+import ProductGallery from "@/components/products/ProductGallery";
+
+const galleryImages = [
+  { src: "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80", alt: "DMR PASSIVE - Architettura contemporanea" },
+  { src: "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=1200&q=80", alt: "DMR PASSIVE - Efficienza energetica" },
+  { src: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&q=80", alt: "DMR PASSIVE - Vetro triplo dettaglio" },
+  { src: "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=1200&q=80", alt: "DMR PASSIVE - Villa moderna" },
+];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -91,6 +99,8 @@ const DmrPassive = () => {
           </div>
         </div>
       </section>
+
+      <ProductGallery images={galleryImages} />
 
       <section ref={specsRef} className="py-24 bg-[hsl(0,0%,97%)]">
         <div className="max-w-7xl mx-auto px-6">

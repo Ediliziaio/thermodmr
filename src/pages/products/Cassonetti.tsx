@@ -5,6 +5,14 @@ import { ArrowRight, CheckCircle2, Box, ThermometerSun, Wrench, Ruler } from "lu
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
+import ProductGallery from "@/components/products/ProductGallery";
+
+const galleryImages = [
+  { src: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=1200&q=80", alt: "Cassonetto - Installato" },
+  { src: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&q=80", alt: "Cassonetto - Dettaglio coibentazione" },
+  { src: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=1200&q=80", alt: "Cassonetto - Sezione tecnica" },
+  { src: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=80", alt: "Cassonetto - Facciata moderna" },
+];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -89,6 +97,8 @@ const Cassonetti = () => {
           </div>
         </div>
       </section>
+
+      <ProductGallery images={galleryImages} />
 
       <section ref={specsRef} className="py-24 bg-[hsl(0,0%,97%)]">
         <div className="max-w-7xl mx-auto px-6">
