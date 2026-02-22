@@ -28,9 +28,9 @@ const guarantees = [
   {
     icon: Truck,
     title: "Consegna Garantita nei Tempi",
-    desc: "Mai più clienti che aspettano. 15 giorni lavorativi dalla conferma d'ordine. Se non rispettiamo, ti risarciamo.",
+    desc: "Mai più clienti che aspettano. Da 2 a 6 settimane dalla conferma d'ordine, garantite contrattualmente.",
     details: [
-      "15 giorni lavorativi garantiti contrattualmente",
+      "Da 2 a 6 settimane garantite contrattualmente",
       "Tracking ordine in tempo reale",
       "Penale automatica in caso di ritardo",
       "Consegna con mezzo dedicato e scarico incluso",

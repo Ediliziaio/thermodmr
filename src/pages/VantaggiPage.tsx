@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { ArrowRight, BadgePercent, Clock, CreditCard, Target, TrendingUp, Users, Award, Headphones } from "lucide-react";
+import { ArrowRight, BadgePercent, Clock, Target, TrendingUp, Users, Award, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
@@ -23,17 +23,10 @@ const mainAdvantages = [
   },
   {
     icon: Clock,
-    metric: "15gg",
-    metricLabel: "garantiti",
+    metric: "2-6 sett.",
+    metricLabel: "garantite",
     title: "Tempi Certi di Consegna",
-    desc: "15 giorni lavorativi dalla conferma d'ordine, garantiti contrattualmente. Mai più clienti che aspettano settimane, mai più scuse da dare. Se non rispettiamo, ti risarciamo.",
-  },
-  {
-    icon: CreditCard,
-    metric: "60gg",
-    metricLabel: "pagamento",
-    title: "Pagamenti Flessibili",
-    desc: "Condizioni di pagamento personalizzate per gestire al meglio la tua liquidità. Lavoriamo insieme per trovare la formula giusta per il tuo business.",
+    desc: "Da 2 a 6 settimane dalla conferma d'ordine, garantite contrattualmente. Mai più clienti che aspettano mesi, mai più scuse da dare.",
   },
   {
     icon: Target,
