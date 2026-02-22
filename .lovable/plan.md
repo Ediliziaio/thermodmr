@@ -1,49 +1,33 @@
 
 
-## Aggiunta IVA personalizzata
+## Creazione Preventivi di Esempio
 
-Permettere all'utente di inserire un'aliquota IVA personalizzata oltre alle opzioni predefinite (0%, 4%, 10%, 22%).
+Inseriro 5 preventivi di esempio con dati realistici, distribuiti tra diversi dealer e con righe d'ordine dettagliate.
 
----
+### Preventivi da creare
 
-### Approccio
+| ID | Dealer | Descrizione | Importo | Scadenza | Note |
+|----|--------|-------------|---------|----------|------|
+| PRV-2026-0002 | Dealer Milano Srl | Ristrutturazione appartamento - finestre e porte | ~8.500 EUR | +30gg | Preventivo urgente |
+| PRV-2026-0003 | Partner Roma Snc | Fornitura serramenti villa | ~15.200 EUR | +45gg | Cliente premium |
+| PRV-2026-0004 | Panorma Infissi | Sostituzione infissi ufficio | ~6.800 EUR | +20gg | Reverse Charge (IVA 0%) |
+| PRV-2026-0005 | Rivenditore Torino Spa | Portoni e finestre capannone | ~22.000 EUR | +60gg | Grande fornitura industriale |
+| PRV-2026-0006 | Infissi Moderni | Preventivo showroom | ~4.300 EUR | +15gg | Piccola fornitura |
 
-Aggiungere un'opzione **"Personalizzata"** nel menu a tendina IVA. Quando selezionata, viene mostrato un campo numerico dove l'utente puo digitare liberamente l'aliquota desiderata (es. 5%, 8%, 15%).
+### Dettagli per ogni preventivo
 
-### Componenti da modificare
+Ogni preventivo avra:
+- 2-4 righe d'ordine con categorie miste (Finestre, Porte, Accessori)
+- Misure realistiche (larghezza x altezza)
+- Sconti variabili (0-15%)
+- IVA mista: la maggior parte al 22%, uno al 0% (Reverse Charge), uno al 10%
+- Acconto calcolato al 30% del totale
+- Note interne e del rivenditore dove appropriato
 
-**1. `src/components/orders/OrderLinesEditor.tsx`**
-- Aggiungere nel Select IVA l'opzione `"custom"` con etichetta "Personalizzata"
-- Quando l'utente seleziona "Personalizzata", mostrare un `Input` numerico accanto al Select per inserire il valore
-- Se il valore corrente di IVA non corrisponde a 0, 4, 10 o 22, mostrare automaticamente il campo personalizzato
-- Il calcolo del totale resta invariato (usa gia il valore numerico)
+### Dati tecnici
 
-**2. `src/components/orders/NewPreventivoDialog.tsx`**
-- Stessa logica: aggiungere opzione "Personalizzata" nel Select IVA delle righe preventivo
-- Gestire lo stato locale per tracciare se la riga ha IVA custom
-- Mostrare input numerico quando selezionata
-
-**3. `src/components/orders/NewOrderDialog.tsx`**
-- Identica modifica al dialog di creazione ordine
-
-### Comportamento UX
-
-- Le opzioni standard restano: 0% (Reverse Charge), 4%, 10%, 22%
-- In fondo alla lista appare "Personalizzata..."
-- Cliccando "Personalizzata", il Select si nasconde e appare un Input numerico con un bottone per tornare alle opzioni standard
-- Il campo numerico accetta valori da 0 a 100 con decimali
-- Il totale riga si aggiorna in tempo reale
-
-### Dettagli tecnici
-
-- Lo schema Zod gia accetta valori IVA da 0 a 100, quindi nessuna modifica alla validazione
-- Il database (`order_lines.iva`) e di tipo `numeric`, accetta gia qualsiasi valore
-- Non servono migrazioni database
-- Si traccia lo stato custom con una logica locale: se il valore IVA non e tra [0, 4, 10, 22], viene mostrato l'input personalizzato
-
-| File | Modifica |
-|------|----------|
-| `src/components/orders/OrderLinesEditor.tsx` | Aggiungere opzione "Personalizzata" + input numerico |
-| `src/components/orders/NewPreventivoDialog.tsx` | Stessa modifica nelle righe preventivo |
-| `src/components/orders/NewOrderDialog.tsx` | Stessa modifica nelle righe ordine |
-
+- Stato: `preventivo` per tutti
+- `commerciale_id`: Super Admin (5c038f03...) per i suoi dealer, Commerciale Test (1b44ea72...) per i suoi
+- `creato_da_user_id`: stesso del commerciale
+- `data_scadenza_preventivo`: date future realistiche
+- Inserimento tramite query SQL dirette sulle tabelle `orders` e `order_lines`
