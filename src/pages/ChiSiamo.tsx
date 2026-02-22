@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { ArrowRight, CheckCircle2, Users, Award, Factory, Wrench, MapPin, Handshake } from "lucide-react";
+import imgVistaMare from "@/assets/thermodmr-serramenti-vista-mare.jpg";
+import imgInfissiEsterni from "@/assets/thermodmr-infissi-esterni.webp";
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
@@ -34,20 +36,25 @@ const ChiSiamo = () => {
       {/* Hero */}
       <section className="pt-28 sm:pt-32 pb-16 sm:pb-20 bg-[hsl(0,0%,97%)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <motion.div initial="hidden" animate="visible" variants={stagger} className="max-w-3xl">
-            <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
-              Chi Siamo
-            </motion.p>
-            <motion.h1 variants={fadeUp} className="text-4xl sm:text-5xl font-extrabold text-[hsl(0,0%,10%)] leading-tight mb-6">
-              Produciamo Infissi di Qualità per{" "}
-              <span className="text-[hsl(195,85%,45%)]">Far Crescere la Tua Attività</span>
-            </motion.h1>
-            <motion.p variants={fadeUp} className="text-lg text-[hsl(0,0%,40%)] leading-relaxed">
-              Da oltre 10 anni produciamo serramenti internamente, senza intermediari.
-              Questo ci permette di offrirti il prezzo più competitivo sul mercato,
-              tempi di consegna da 2 a 6 settimane e un controllo qualità rigoroso su ogni singolo prodotto.
-            </motion.p>
-          </motion.div>
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <motion.div initial="hidden" animate="visible" variants={stagger} className="max-w-xl">
+              <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
+                Chi Siamo
+              </motion.p>
+              <motion.h1 variants={fadeUp} className="text-4xl sm:text-5xl font-extrabold text-[hsl(0,0%,10%)] leading-tight mb-6">
+                Produciamo Infissi di Qualità per{" "}
+                <span className="text-[hsl(195,85%,45%)]">Far Crescere la Tua Attività</span>
+              </motion.h1>
+              <motion.p variants={fadeUp} className="text-lg text-[hsl(0,0%,40%)] leading-relaxed">
+                Da oltre 10 anni produciamo serramenti internamente, senza intermediari.
+                Questo ci permette di offrirti il prezzo più competitivo sul mercato,
+                tempi di consegna da 2 a 6 settimane e un controllo qualità rigoroso su ogni singolo prodotto.
+              </motion.p>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.3 }}>
+              <img src={imgVistaMare} alt="Serramenti ThermoDMR vista mare" className="w-full rounded-3xl shadow-xl object-cover aspect-[4/3]" />
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -56,7 +63,7 @@ const ChiSiamo = () => {
         <div className="max-w-7xl mx-auto px-6">
           <motion.div initial="hidden" animate={inView1 ? "visible" : "hidden"} variants={stagger} className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div variants={fadeUp}>
-              <img src="/images/chi-siamo.jpg" alt="Produzione ThermoDMR" className="w-full rounded-3xl shadow-xl object-cover aspect-[4/3]" />
+              <img src={imgInfissiEsterni} alt="Infissi esterni ThermoDMR" className="w-full rounded-3xl shadow-xl object-cover aspect-[4/3]" />
             </motion.div>
             <motion.div variants={fadeUp} className="space-y-6">
               <h2 className="text-3xl font-bold text-[hsl(0,0%,10%)]">La Nostra Storia</h2>

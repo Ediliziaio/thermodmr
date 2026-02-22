@@ -8,6 +8,7 @@ import { Layout } from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { HomeRouter } from "./components/HomeRouter";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import ScrollToTop from "./components/ScrollToTop";
 import { Loader2 } from "lucide-react";
 
 // Import immediati per pagine critiche
@@ -58,6 +59,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <AuthProvider>
           <Suspense fallback={<PageLoader />}>
             <Routes>
