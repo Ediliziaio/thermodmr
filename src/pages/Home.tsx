@@ -100,7 +100,7 @@ const Hero = () => {
           </motion.h1>
 
           <motion.p variants={fadeUp} className="text-lg text-white/70 max-w-xl leading-relaxed">
-            Design italiano, isolamento superiore, qualità certificata.{" "}
+            Profilo tedesco, isolamento superiore, qualità certificata.{" "}
             <span className="text-white/90 font-medium">
               Produciamo direttamente, senza intermediari, per offrirti il miglior rapporto qualità-prezzo.
             </span>
@@ -128,7 +128,7 @@ const Hero = () => {
           </motion.div>
 
           <motion.div variants={fadeUp} className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/50 pt-4">
-            {["Made in Italy", "Isolamento Classe A", "Garanzia 15 Anni", "Design Esclusivo"].map((t) => (
+            {["Profilo Tedesco", "Isolamento Classe A", "Garanzia 15 Anni", "Design Esclusivo"].map((t) => (
               <span key={t} className="flex items-center gap-1.5">
                 <CheckCircle2 className="h-4 w-4 text-[hsl(195,85%,55%)]" />
                 {t}
@@ -153,7 +153,7 @@ const Hero = () => {
               Consegna 15gg
             </div>
             <div className="absolute -bottom-3 -left-3 bg-white text-[hsl(0,0%,20%)] text-xs font-bold px-4 py-2 rounded-full shadow-lg border border-[hsl(0,0%,90%)]">
-              Made in Italy
+              Qualità Tedesca
             </div>
           </div>
         </motion.div>
@@ -183,12 +183,12 @@ const ChiSiamo = () => {
             </p>
             <h2 className="text-3xl sm:text-4xl font-bold text-[hsl(0,0%,10%)] leading-tight">
               Produciamo Infissi di Design con{" "}
-              <span className="text-[hsl(195,85%,45%)]">Tecnologia e Passione Italiana</span>
+              <span className="text-[hsl(195,85%,45%)]">Tecnologia e Qualità Tedesca</span>
             </h2>
             <p className="text-[hsl(0,0%,40%)] leading-relaxed text-lg">
               Da oltre 10 anni progettiamo e realizziamo serramenti nel nostro stabilimento produttivo,
               unendo <strong>design contemporaneo</strong> e <strong>tecnologia avanzata</strong>.
-              Ogni finestra nasce dalla cura artigianale italiana e da processi industriali certificati.
+              Ogni finestra nasce da profili tedeschi di prima qualità e processi industriali certificati.
             </p>
             <p className="text-[hsl(0,0%,40%)] leading-relaxed">
               La produzione interna ci permette di garantire <strong>qualità costante</strong>,
@@ -421,13 +421,13 @@ const advantages = [
   },
   {
     icon: Palette,
-    title: "Design Made in Italy",
-    desc: "Linee pulite, finiture curate nei minimi dettagli e un'ampia scelta di colori e stili. Ogni serramento è progettato per valorizzare l'estetica della tua casa.",
+    title: "Profilo Tedesco, Design Esclusivo",
+    desc: "Profili in PVC di produzione tedesca, linee pulite e finiture curate nei minimi dettagli. Un'ampia scelta di colori e stili per valorizzare l'estetica della tua casa.",
   },
   {
     icon: Factory,
     title: "Miglior Rapporto Qualità/Prezzo",
-    desc: "Produzione diretta nel nostro stabilimento, senza intermediari. Ti offriamo il prezzo di fabbrica con la qualità di un prodotto artigianale italiano.",
+    desc: "Produzione diretta nel nostro stabilimento, senza intermediari. Ti offriamo il prezzo di fabbrica con la qualità di un profilo tedesco certificato.",
   },
   {
     icon: Award,
