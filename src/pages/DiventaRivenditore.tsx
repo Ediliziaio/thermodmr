@@ -101,7 +101,7 @@ const DiventaRivenditore = () => {
           <div className="absolute inset-0 bg-gradient-to-br from-[hsl(0,0%,8%)]/85 via-[hsl(210,80%,15%)]/80 to-[hsl(195,85%,25%)]/70" />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 py-24 w-full">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 w-full">
           <motion.div initial="hidden" animate={heroInView ? "visible" : "hidden"} variants={stagger} className="max-w-3xl">
             <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,65%)] uppercase mb-4">
               Partnership
@@ -116,21 +116,21 @@ const DiventaRivenditore = () => {
               Entra nella nostra rete di rivenditori e offri ai tuoi clienti serramenti di qualità superiore
               con profilo tedesco, margini competitivi e supporto dedicato.
             </motion.p>
-            <motion.div variants={fadeUp} className="flex flex-wrap gap-4">
-              <Link to="/contatti">
+            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <Link to="/contatti" className="w-full sm:w-auto">
                 <Button
                   size="lg"
-                  className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-10 text-base shadow-[0_6px_30px_hsl(195,85%,45%,0.4)]"
+                  className="w-full sm:w-auto bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-10 text-base shadow-[0_6px_30px_hsl(195,85%,45%,0.4)] min-h-[48px]"
                 >
                   Candidati Ora
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-              <a href="#vantaggi-rivenditore">
+              <a href="#vantaggi-rivenditore" className="w-full sm:w-auto">
                 <Button
                   size="lg"
                   variant="outline"
-                  className="rounded-full px-8 text-base border-white/40 text-white bg-white/10 hover:bg-white/20 hover:text-white"
+                  className="w-full sm:w-auto rounded-full px-8 text-base border-white/40 text-white bg-white/10 hover:bg-white/20 hover:text-white min-h-[48px]"
                 >
                   Scopri i Vantaggi
                 </Button>
@@ -155,12 +155,12 @@ const DiventaRivenditore = () => {
             </motion.p>
           </motion.div>
 
-          <motion.div initial="hidden" animate={vantaggiInView ? "visible" : "hidden"} variants={stagger} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <motion.div initial="hidden" animate={vantaggiInView ? "visible" : "hidden"} variants={stagger} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             {vantaggi.map((v) => (
               <motion.div
                 key={v.title}
                 variants={fadeUp}
-                className="group p-8 rounded-2xl border border-[hsl(0,0%,90%)] bg-[hsl(0,0%,98%)] hover:shadow-xl hover:border-[hsl(195,85%,45%)]/30 hover:-translate-y-1 transition-all duration-300"
+                className="group p-5 sm:p-8 rounded-2xl border border-[hsl(0,0%,90%)] bg-[hsl(0,0%,98%)] hover:shadow-xl hover:border-[hsl(195,85%,45%)]/30 hover:-translate-y-1 transition-all duration-300"
               >
                 <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[hsl(195,85%,45%)] text-white shadow-[0_4px_20px_hsl(195,85%,45%,0.3)] mb-5">
                   <v.icon className="h-7 w-7" />
@@ -234,10 +234,10 @@ const DiventaRivenditore = () => {
             </motion.div>
 
             <motion.div variants={fadeUp}>
-              <Link to="/contatti">
+              <Link to="/contatti" className="w-full sm:w-auto inline-block">
                 <Button
                   size="lg"
-                  className="bg-white text-[hsl(195,85%,35%)] hover:bg-white/90 font-bold rounded-full px-12 text-base shadow-xl"
+                  className="w-full sm:w-auto bg-white text-[hsl(195,85%,35%)] hover:bg-white/90 font-bold rounded-full px-12 text-base shadow-xl min-h-[48px]"
                 >
                   Candidati Ora
                   <ArrowRight className="ml-2 h-5 w-5" />

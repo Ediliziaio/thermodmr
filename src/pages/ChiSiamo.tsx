@@ -30,8 +30,8 @@ const ChiSiamo = () => {
       <PublicNavbar />
 
       {/* Hero */}
-      <section className="pt-32 pb-20 bg-[hsl(0,0%,97%)]">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="pt-28 sm:pt-32 pb-16 sm:pb-20 bg-[hsl(0,0%,97%)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div initial="hidden" animate="visible" variants={stagger} className="max-w-3xl">
             <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
               Chi Siamo
@@ -87,9 +87,9 @@ const ChiSiamo = () => {
             </motion.div>
             <div className="grid sm:grid-cols-2 gap-8">
               {values.map((v) => (
-                <motion.div key={v.title} variants={fadeUp} className="flex gap-5 p-8 rounded-2xl bg-white border border-[hsl(0,0%,90%)] shadow-sm hover:shadow-md transition-shadow">
-                  <div className="shrink-0 inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[hsl(195,85%,45%)] text-white">
-                    <v.icon className="h-7 w-7" />
+                <motion.div key={v.title} variants={fadeUp} className="flex flex-col sm:flex-row gap-4 sm:gap-5 p-5 sm:p-8 rounded-2xl bg-white border border-[hsl(0,0%,90%)] shadow-sm hover:shadow-md transition-shadow">
+                  <div className="shrink-0 inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[hsl(195,85%,45%)] text-white">
+                    <v.icon className="h-6 w-6 sm:h-7 sm:w-7" />
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-[hsl(0,0%,10%)] mb-2">{v.title}</h3>
@@ -113,7 +113,7 @@ const ChiSiamo = () => {
               { value: "98%", label: "Consegne Puntuali" },
             ].map((s) => (
               <motion.div key={s.label} variants={fadeUp} className="space-y-2">
-                <p className="text-4xl sm:text-5xl font-extrabold text-[hsl(195,85%,55%)]">{s.value}</p>
+                <p className="text-3xl sm:text-5xl font-extrabold text-[hsl(195,85%,55%)]">{s.value}</p>
                 <p className="text-sm text-white/60 font-medium">{s.label}</p>
               </motion.div>
             ))}
