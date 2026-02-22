@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { ArrowRight, CheckCircle2, Shield, Lock, ThermometerSun } from "lucide-react";
+import imgPortoncinoIngresso from "@/assets/thermodmr-portoncino-ingresso.avif";
+import imgPortoncinoModerno from "@/assets/thermodmr-portoncino-moderno.jpeg";
+import imgPortonciniColori from "@/assets/thermodmr-portoncini-colori.jpg";
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
@@ -10,9 +13,9 @@ import ProductGallery from "@/components/products/ProductGallery";
 import RelatedProducts from "@/components/products/RelatedProducts";
 
 const galleryImages = [
-  { src: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1200&q=80", alt: "Portoncino - Ingresso elegante", caption: "Portoncino d'ingresso con pannello decorativo premium" },
-  { src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80", alt: "Portoncino - Facciata", caption: "Integrazione armoniosa con la facciata" },
-  { src: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&q=80", alt: "Portoncino - Vista notturna", caption: "Eleganza anche con illuminazione serale" },
+  { src: imgPortoncinoModerno, alt: "Portoncino moderno in PVC", caption: "Portoncino d'ingresso con pannello decorativo premium" },
+  { src: imgPortonciniColori, alt: "Portoncini disponibili in vari colori", caption: "Ampia gamma di colori e finiture" },
+  { src: imgPortoncinoIngresso, alt: "Portoncino d'ingresso elegante", caption: "Eleganza e sicurezza per ogni ingresso" },
 ];
 
 const fadeUp = {
@@ -63,14 +66,14 @@ const Portoncini = () => {
         title="Portoncini in"
         titleAccent="PVC"
         description="Portoncini d'ingresso in PVC con profondità costruttiva 76-82-92 mm, 6 camere di isolamento e 3 guarnizioni. Uw fino a 0,72 W/m²K, acustica fino a 47 dB, sicurezza fino a RC3."
-        heroImage="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1600&q=80"
+        heroImage={imgPortoncinoIngresso}
       />
 
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="relative rounded-3xl overflow-hidden shadow-xl">
-              <img src="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&q=80" alt="Portoncino d'ingresso elegante" className="w-full aspect-[4/3] object-cover" loading="lazy" />
+              <img src={imgPortoncinoIngresso} alt="Portoncino d'ingresso elegante" className="w-full aspect-[4/3] object-cover" loading="lazy" />
               <div className="absolute bottom-4 left-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[hsl(195,85%,45%)] text-white shadow-lg">
                 <Shield className="h-6 w-6" />
               </div>
