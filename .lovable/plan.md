@@ -1,89 +1,71 @@
 
 
-## Riscrittura Landing Page - ThermoDMR Produttore di Infissi
+## Riscrittura Landing Page - Target Rivenditori
 
-La pagina attuale parla erroneamente di "gestionale", "ordini", "provvigioni". Va riscritta completamente come sito di un **produttore di infissi e serramenti**, con target: clienti finali e rivenditori. Ispirazione diretta da TeknoFinestre.
-
----
-
-### Struttura della nuova pagina (9 sezioni)
-
-**1. Navbar**
-- Logo ThermoDMR a sinistra
-- Link di navigazione: Chi Siamo, Prodotti, Garanzie, Contatti
-- Pulsante "Area Riservata" a destra (link a /auth per rivenditori/dealer)
-- Trasparente su hero, solida allo scroll
-
-**2. Hero a tutto schermo** (stile TeknoFinestre)
-- Background: immagine di interni moderni con finestre luminose (gradiente scuro sovrapposto)
-- Sopratitolo: "THERMODMR - INFISSI E SERRAMENTI DI QUALITA"
-- Titolo: "Sostituisci i Tuoi Vecchi Infissi con ThermoDMR"
-- Sottotitolo: "Produciamo serramenti ad alto isolamento termico con i migliori materiali. Design moderno, resistenza nel tempo e massima efficienza energetica per la tua casa."
-- Due CTA: "Richiedi un Preventivo" (primario) + "Scopri i Prodotti" (secondario, scroll)
-- Immagine decorativa a destra (profilo serramento/finestra)
-
-**3. Vision / Chi Siamo**
-- Layout due colonne
-- Titolo: "Design Moderno e Resistenza nel Tempo"
-- Testo sulla mission aziendale: esperienza, qualita dei materiali, soluzioni personalizzate
-- CTA: "Richiedi una Consulenza Gratuita"
-- Immagine decorativa a destra
-
-**4. Contatori animati (Social Proof)**
-- 4 KPI come TeknoFinestre:
-  - "10+" Anni di Esperienza
-  - "5.000+" Finestre Installate ogni anno
-  - "3.000+" Famiglie Soddisfatte
-  - "98%" Soddisfazione Clienti
-
-**5. Prodotti** (come la sezione "I Nostri Prodotti" di TeknoFinestre)
-- Sopratitolo: "COSA OFFRIAMO"
-- Titolo: "I Nostri Prodotti"
-- 4 card prodotto con icone:
-  - "Finestre in PVC" - Isolamento termico superiore, design elegante, manutenzione zero
-  - "Finestre in Alluminio" - Resistenza, linee sottili, ideali per grandi superfici vetrate
-  - "Porte e Portoncini" - Sicurezza, eleganza e isolamento in un unico prodotto
-  - "Persiane e Oscuranti" - Protezione solare e privacy con stile contemporaneo
-
-**6. Diagnosi Energetica** (come TeknoFinestre)
-- Titolo: "Il Primo Passo Verso un Comfort Abitativo Superiore"
-- Testo sulla diagnosi energetica gratuita
-- 4 contatori: Risparmio Energetico 40%, Comfort Abitativo 95%, Incremento Valore Immobile 20%, Impatto Ambientale Ridotto 35%
-
-**7. Garanzie** (come TeknoFinestre)
-- Titolo: "Cosa Ti Garantiamo"
-- 4 garanzie:
-  - "Garanzia di Soddisfazione Totale"
-  - "Garanzia di Efficienza Energetica"
-  - "Garanzia di Alto Isolamento Termico"
-  - "Garanzia di Assistenza Post-Vendita"
-
-**8. CTA Finale** (come TeknoFinestre)
-- Titolo: "Trasforma la Tua Casa Oggi!"
-- Sottotitolo: "Con ThermoDMR, la sostituzione dei tuoi serramenti diventa un'esperienza semplice e gratificante"
-- Pulsante: "Richiedi un Preventivo Gratuito"
-
-**9. Footer**
-- Logo, copyright
-- Link "Area Riservata" (per rivenditori)
-- Contatti (email, telefono)
+Il copy attuale parla al cliente finale ("la tua casa", "i tuoi vecchi infissi"). Va riscritto completamente per parlare al **rivenditore** che cerca un partner produttore affidabile. I pain point sono quelli del rivenditore: tempi incerti, margini bassi, fornitori inaffidabili.
 
 ---
 
-### Principi di copywriting applicati
+### Cambio di paradigma nel copy
 
-- Parlare al cliente finale: "la tua casa", "i tuoi vecchi infissi", "il tuo comfort"
-- Benefici concreti: risparmio energetico, comfort, valore dell'immobile
-- Social proof con numeri reali (finestre installate, famiglie soddisfatte)
-- Garanzie dettagliate per ridurre l'attrito all'acquisto
-- CTA multipli lungo la pagina
-- "Area Riservata" discretamente presente per i rivenditori/dealer
+| Prima (cliente finale) | Dopo (rivenditore) |
+|---|---|
+| "Sostituisci i tuoi vecchi infissi" | "Trova il Partner Produttore che Ti Fa Guadagnare" |
+| "la tua casa" | "la tua attivita", "i tuoi margini" |
+| "Richiedi un preventivo" | "Diventa Rivenditore ThermoDMR" |
+| "Famiglie soddisfatte" | "Rivenditori attivi" |
+| "Diagnosi energetica" | "Perche Scegliere ThermoDMR" (nuova sezione) |
+
+### Struttura della pagina (9 sezioni)
+
+**1. Navbar** - Come prima ma con colori del logo (rosso/arancio). Link: Chi Siamo, Prodotti, Vantaggi, Garanzie, Contatti. Pulsante "Area Riservata".
+
+**2. Hero** - Riscritto per il rivenditore:
+- Sopratitolo: "THERMODMR - PRODUTTORE DI INFISSI E SERRAMENTI"
+- Titolo: "Il Partner Produttore che Ti Fa Guadagnare di Piu"
+- Sottotitolo: "Tempi certi di consegna, prezzi piu bassi sul mercato e pagamenti flessibili. Smetti di rincorrere fornitori inaffidabili e inizia a far crescere la tua attivita."
+- CTA: "Diventa Rivenditore" + "Scopri i Vantaggi"
+- Badge: "Tempi certi", "Prezzo piu basso", "Pagamenti flessibili", "Margini garantiti"
+
+**3. Chi Siamo** - Riscritto per il rivenditore:
+- Titolo: "Produciamo Infissi di Qualita per Far Crescere la Tua Attivita"
+- Testo su: produzione interna, controllo qualita, supporto al rivenditore
+- CTA: "Richiedi Informazioni Commerciali"
+
+**4. Contatori** - Dati orientati al B2B:
+- "200+" Rivenditori Attivi
+- "10+" Anni di Esperienza
+- "15gg" Tempi Medi di Consegna
+- "98%" Consegne Puntuali
+
+**5. Prodotti** - Stessi 4 prodotti ma con descrizioni orientate ai margini e alla vendibilita per il rivenditore.
+
+**6. NUOVA SEZIONE: "Perche Scegliere ThermoDMR"** (sostituisce Diagnosi Energetica)
+- 4 vantaggi competitivi con icone grandi e testo dettagliato:
+  - "Prezzo Piu Basso sul Mercato" - Produzione interna, nessun intermediario
+  - "Tempi Certi di Consegna" - 15 giorni lavorativi garantiti
+  - "Pagamenti Flessibili" - Condizioni personalizzate per ogni rivenditore
+  - "Il Tuo Successo e il Nostro Obiettivo" - Supporto commerciale, materiale marketing, formazione
+
+**7. Garanzie** - Riscritte per il rivenditore:
+  - "Zero Reclami, Zero Problemi" - Qualita certificata, meno resi
+  - "Consegna Garantita nei Tempi" - Mai piu clienti che aspettano
+  - "Margini Protetti" - Listino riservato e zona esclusiva
+  - "Supporto Commerciale Dedicato" - Un referente sempre disponibile
+
+**8. CTA Finale** - "Inizia a Guadagnare di Piu Oggi" con pulsante "Diventa Rivenditore ThermoDMR"
+
+**9. Footer** - Invariato nella struttura, aggiornato il testo per riflettere il target B2B.
+
+### Colori del logo
+
+I colori usati resteranno quelli attuali basati sul logo (`hsl(10,80%,50%)` rosso/arancio), gia correttamente implementati.
 
 ### Modifiche tecniche
 
 | File | Modifica |
 |------|----------|
-| `src/pages/Home.tsx` | Riscrittura completa - da pagina gestionale a pagina produttore infissi |
+| `src/pages/Home.tsx` | Riscrittura completa di tutto il copy e aggiunta sezione "Perche Scegliere ThermoDMR" al posto della "Diagnosi Energetica" |
 
-Nessun altro file da modificare. Tutte le dipendenze sono gia installate.
+Nessun altro file da modificare.
 
