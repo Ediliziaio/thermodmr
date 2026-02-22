@@ -39,23 +39,23 @@ const stagger = { visible: { transition: { staggerChildren: 0.12 } } };
 const inViewOpts = { triggerOnce: true, threshold: 0.05, rootMargin: "0px 0px -50px 0px" };
 
 const specs = [
-  { label: "Profilo", value: "5 camere" },
+  { label: "Profilo", value: "6 camere" },
   { label: "Classe", value: "A" },
-  { label: "Vetrocamera", value: "Con gas argon" },
-  { label: "Uf (telaio)", value: "1.1 W/m²K" },
+  { label: "Profondità", value: "76 mm" },
+  { label: "Vetrocamera", value: "Doppio vetro Lowe con gas argon" },
   { label: "Uw (finestra)", value: "1.3 W/m²K" },
-  { label: "Abbattimento acustico", value: "38 dB" },
+  { label: "Abbattimento acustico", value: "47 dB" },
 ];
 
 const features = [
-  "Profilo a 5 camere per isolamento termico e acustico superiore",
-  "Battute strette che massimizzano le aree vetrate e la luce naturale",
-  "Battuta centrale estrusa \"safetec inside\" anti-forzatura nella variante MD",
-  "Possibilità di scegliere tra 2 o 3 guarnizioni di tenuta",
-  "Elementi antieffrazione con possibilità di classe RC2",
-  "Vetrocamera con gas argon e vetro basso emissivo",
-  "Finiture Woodec e Aludec per un'estetica unica e personalizzata",
-  "Ferramenta Roto di alta qualità con chiusure perimetrali",
+  "Profilo a 6 camere isolanti per massimo isolamento termico e acustico",
+  "Profondità costruttiva 76 mm con 3 livelli di guarnizione e guarnizione mediana",
+  "Protezione acustica fino a 47 dB (classe 5) per ambienti silenziosi",
+  "Resistenza all'effrazione fino alla classe RC3",
+  "Saldatura invisibile per superficie perfettamente piana e aspetto estetico superiore",
+  "Vetrocamera doppio vetro 3.3.1 Lowe Laminato con gas argon e canalina calda",
+  "Rinforzi in acciaio zincato 1,5–2,5 mm per alta stabilità e lunga durata",
+  "Pellicole di alta qualità in vasta gamma di colori",
 ];
 
 const windowAdvantages = [
@@ -103,9 +103,9 @@ const availableColors = [
 ];
 
 const benefits = [
-  { icon: ThermometerSun, title: "Efficienza Energetica", desc: "Il profilo a 5 camere garantisce un isolamento termico eccellente, riducendo i costi di riscaldamento e raffrescamento." },
-  { icon: Volume2, title: "Silenziosità", desc: "Abbattimento acustico fino a 38 dB grazie alla vetrocamera con gas argon e alla tripla guarnizione." },
-  { icon: Shield, title: "Robustezza", desc: "Ferramenta Roto con punti di chiusura multipli per massima sicurezza e durata nel tempo." },
+  { icon: ThermometerSun, title: "Efficienza Energetica", desc: "Il profilo a 6 camere isolanti con 3 livelli di guarnizione garantisce un isolamento termico eccellente, riducendo i costi energetici." },
+  { icon: Volume2, title: "Silenziosità", desc: "Abbattimento acustico fino a 47 dB (classe 5) grazie alla vetrocamera con gas argon e al triplo livello di guarnizione." },
+  { icon: Shield, title: "Robustezza", desc: "Ferramenta ROTO NX antieffrazione fino a classe RC3 con rinforzi in acciaio zincato per massima sicurezza e durata." },
 ];
 
 const DmrDomus = () => {
@@ -122,7 +122,7 @@ const DmrDomus = () => {
         category="Finestre in PVC"
         title="DMR"
         titleAccent="DOMUS"
-        description="Il best-seller della gamma. Profilo a 5 camere con costruzione multicamera per eccellente isolamento termico e acustico. Battute strette per massimizzare la luce naturale e finiture Woodec e Aludec per un'estetica unica."
+        description="Il best-seller della gamma. Profilo a 6 camere con profondità costruttiva di 76 mm e 3 livelli di guarnizione. Comfort superiore con protezione termica e acustica ottimale fino a 47 dB, massimo grado di sicurezza fino a RC3 e aspetto classico ed elegante con saldatura invisibile."
         heroImage="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1600&q=80"
         badge={{ label: "Best Seller", color: "gold" }}
       />
@@ -139,7 +139,7 @@ const DmrDomus = () => {
             <div className="space-y-6">
               <h2 className="text-3xl font-bold text-[hsl(0,0%,10%)]">Caratteristiche Principali</h2>
               <p className="text-[hsl(0,0%,40%)] leading-relaxed">
-                Il DMR DOMUS offre battute strette che massimizzano le aree vetrate e la luce naturale in ogni ambiente. La costruzione multicamera a 5 camere garantisce eccellente isolamento termico e acustico. La battuta centrale estrusa "safetec inside" nella variante MD rende estremamente difficile la forzatura, con possibilità di raggiungere la classe antieffrazione RC2.
+                Il DMR DOMUS è dotato di un profilo a 6 camere isolanti con profondità costruttiva di 76 mm e 3 livelli di guarnizione con guarnizione mediana per una protezione termica e acustica ottimale fino a 47 dB. La saldatura invisibile garantisce una superficie perfettamente piana e un aspetto estetico superiore. La ferramenta ROTO NX antieffrazione consente di raggiungere fino alla classe RC3, mentre i rinforzi in acciaio zincato assicurano alta stabilità e lunga durata.
               </p>
               <ul className="space-y-3">
                 {features.map((f) => (
@@ -218,7 +218,7 @@ const DmrDomus = () => {
               </div>
               <h2 className="text-3xl font-bold text-[hsl(0,0%,10%)]">Colori Disponibili</h2>
               <p className="text-[hsl(0,0%,45%)] mt-3 max-w-2xl mx-auto">
-                Scegli tra un'ampia gamma di colori e finiture Woodec e Aludec per personalizzare le tue finestre e armonizzarle con lo stile della tua abitazione.
+                Scegli tra un'ampia gamma di pellicole di alta qualità per personalizzare le tue finestre e armonizzarle con lo stile della tua abitazione.
               </p>
             </motion.div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto">
