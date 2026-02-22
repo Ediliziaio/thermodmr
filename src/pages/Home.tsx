@@ -150,7 +150,7 @@ const Hero = () => {
               className="w-[420px] h-[420px] object-cover rounded-3xl shadow-2xl border-4 border-white/20"
             />
             <div className="absolute -top-3 -right-3 bg-[hsl(195,85%,45%)] text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg">
-              Consegna 15gg
+              Consegna 2-6 Settimane
             </div>
             <div className="absolute -bottom-3 -left-3 bg-white text-[hsl(0,0%,20%)] text-xs font-bold px-4 py-2 rounded-full shadow-lg border border-[hsl(0,0%,90%)]">
               Qualità Tedesca
@@ -222,7 +222,7 @@ const ChiSiamo = () => {
 const stats = [
   { value: 50, suffix: ".000+", label: "Finestre Installate" },
   { value: 10, suffix: "+", label: "Anni di Esperienza" },
-  { value: 15, suffix: "gg", label: "Tempi di Consegna" },
+  { value: 6, prefix: "2-", suffix: " sett.", label: "Tempi di Consegna*" },
   { value: 98, suffix: "%", label: "Clienti Soddisfatti" },
 ];
 
@@ -253,15 +253,21 @@ const Stats = () => {
   );
 };
 
-const StatItem = ({ value, suffix, label, inView }: { value: number; suffix: string; label: string; inView: boolean }) => {
+const StatItem = ({ value, suffix, prefix, label, inView }: { value: number; suffix: string; prefix?: string; label: string; inView: boolean }) => {
   const count = useCounter(value, value > 100 ? 2500 : 1800, inView);
+  const isFootnote = label.endsWith("*");
+  const cleanLabel = isFootnote ? label.slice(0, -1) : label;
   return (
     <motion.div variants={fadeUp} className="text-center space-y-2">
       <p className="text-4xl sm:text-5xl font-extrabold text-white">
+        {prefix && <span>{prefix}</span>}
         {count.toLocaleString("it-IT")}
         <span className="text-[hsl(195,85%,55%)]">{suffix}</span>
       </p>
-      <p className="text-sm text-white/60 font-medium">{label}</p>
+      <p className="text-sm text-white/60 font-medium">{cleanLabel}</p>
+      {isFootnote && (
+        <p className="text-xs text-white/40 italic">in base a colori e modello</p>
+      )}
     </motion.div>
   );
 };
@@ -637,7 +643,7 @@ const BecomeDealer = () => {
         </motion.p>
 
         <motion.div variants={fadeUp} className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-white/60 mb-10">
-          {["Prezzi di fabbrica", "Zona esclusiva", "Supporto marketing", "Consegne rapide"].map((t) => (
+          {["Prezzi di fabbrica", "Zona esclusiva", "Supporto marketing", "Consegna in 2-6 settimane"].map((t) => (
             <span key={t} className="flex items-center gap-1.5">
               <CheckCircle2 className="h-4 w-4 text-[hsl(195,85%,55%)]" />
               {t}
