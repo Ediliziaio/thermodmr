@@ -22,6 +22,11 @@ import {
   Palette,
   Factory,
   Award,
+  LayoutGrid,
+  Calendar,
+  Truck,
+  ThumbsUp,
+  Info,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -220,10 +225,10 @@ const ChiSiamo = () => {
    4. CONTATORI
    ═══════════════════════════════════════════ */
 const stats = [
-  { value: 50, suffix: ".000+", label: "Finestre Installate" },
-  { value: 10, suffix: "+", label: "Anni di Esperienza" },
-  { value: 6, prefix: "2-", suffix: " sett.", label: "Tempi di Consegna*" },
-  { value: 98, suffix: "%", label: "Clienti Soddisfatti" },
+  { value: 50, suffix: ".000+", label: "Finestre Installate", icon: LayoutGrid },
+  { value: 10, suffix: "+", label: "Anni di Esperienza", icon: Calendar },
+  { value: 6, prefix: "2-", suffix: " sett.", label: "Tempi di Consegna*", icon: Truck },
+  { value: 98, suffix: "%", label: "Clienti Soddisfatti", icon: ThumbsUp },
 ];
 
 const Stats = () => {
@@ -235,14 +240,14 @@ const Stats = () => {
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: "url('/images/counters-bg.jpg')" }}
       />
-      <div className="absolute inset-0 bg-[hsl(0,0%,8%)]/80" />
+      <div className="absolute inset-0 bg-[hsl(0,0%,8%)]/85" />
 
-      <div className="relative max-w-7xl mx-auto px-6">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         <motion.div
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           variants={stagger}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-8"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
         >
           {stats.map((s) => (
             <StatItem key={s.label} {...s} inView={inView} />
@@ -253,29 +258,40 @@ const Stats = () => {
   );
 };
 
-const StatItem = ({ value, suffix, prefix, label, inView }: { value: number; suffix: string; prefix?: string; label: string; inView: boolean }) => {
+const StatItem = ({ value, suffix, prefix, label, inView, icon: IconComp }: { value: number; suffix: string; prefix?: string; label: string; inView: boolean; icon: React.ElementType }) => {
   const isStatic = !!prefix;
   const count = useCounter(value, value > 100 ? 2500 : 1800, isStatic ? false : inView);
   const isFootnote = label.endsWith("*");
   const cleanLabel = isFootnote ? label.slice(0, -1) : label;
   return (
-    <motion.div variants={fadeUp} className="text-center space-y-2">
-      <p className="text-4xl sm:text-5xl font-extrabold text-white">
+    <motion.div
+      variants={fadeUp}
+      className="text-center space-y-3 rounded-2xl bg-white/5 border border-white/10 p-4 sm:p-6 hover:bg-white/[0.08] hover:border-white/20 hover:scale-[1.02] transition-all duration-300"
+    >
+      <div className="flex justify-center">
+        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[hsl(195,85%,45%)]/20 flex items-center justify-center">
+          <IconComp size={24} className="text-[hsl(195,85%,55%)]" />
+        </div>
+      </div>
+      <p className="text-3xl sm:text-5xl font-extrabold text-white">
         {isStatic ? (
           <>
             <span>{prefix}{value}</span>
-            <span className="text-[hsl(195,85%,55%)]">{suffix}</span>
+            <span className="text-2xl sm:text-3xl text-[hsl(195,85%,55%)]">{suffix}</span>
           </>
         ) : (
           <>
             {count.toLocaleString("it-IT")}
-            <span className="text-[hsl(195,85%,55%)]">{suffix}</span>
+            <span className="text-2xl sm:text-3xl text-[hsl(195,85%,55%)]">{suffix}</span>
           </>
         )}
       </p>
       <p className="text-sm text-white/60 font-medium">{cleanLabel}</p>
       {isFootnote && (
-        <p className="text-xs text-white/40 italic">in base a colori e modello</p>
+        <p className="text-xs text-white/50 italic inline-flex items-center gap-1 justify-center">
+          <Info size={12} className="text-[hsl(195,85%,55%)]/60" />
+          in base a colori e modello
+        </p>
       )}
     </motion.div>
   );
