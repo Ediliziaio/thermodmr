@@ -1,47 +1,53 @@
 
 
-## Immagini Dedicate per Prodotti + Aggiornamento Home Page
+## Galleria Fotografica con Slider per le Pagine Prodotto
 
-### 1. Immagini dedicate per ogni pagina prodotto
+### Cosa verra aggiunto
 
-Attualmente tutte le pagine usano le stesse 4 immagini (`product-pvc.jpg`, `product-porte.jpg`, `product-alluminio.jpg`, `product-persiane.jpg`). Useremo immagini Unsplash diverse per ogni prodotto, inserite direttamente come URL nel codice, cosi ogni pagina avra la sua immagine unica e pertinente.
-
-| Pagina | Immagine attuale | Nuova immagine (Unsplash) |
-|--------|-----------------|--------------------------|
-| DMR CONFORT | product-pvc.jpg | Finestra PVC classica, ambiente luminoso |
-| DMR DOMUS | product-pvc.jpg | Finestra moderna grande vetrata |
-| DMR PASSIVE | product-pvc.jpg | Finestra premium, edificio contemporaneo |
-| Portoncini | product-porte.jpg | Portoncino d'ingresso elegante |
-| Cassonetti | product-pvc.jpg | Cassonetto/avvolgibile coibentato |
-| Tapparelle | product-alluminio.jpg | Tapparella motorizzata su finestra |
-| Persiane | product-persiane.jpg | Persiane in alluminio su facciata |
-
-Le immagini saranno anche aggiornate nella pagina catalogo (`ProdottiPubblico.tsx`).
+Una nuova sezione "Galleria" con uno slider di immagini verra inserita in ognuna delle 7 pagine prodotto, posizionata tra la sezione "Caratteristiche Principali" e le "Specifiche Tecniche". Lo slider permettera di scorrere tra 4-5 immagini per prodotto, con navigazione tramite frecce e indicatori a punti.
 
 ---
 
-### 2. Aggiornamento sezione Prodotti nella Home Page
+### Layout della Galleria
 
-La sezione "I Nostri Prodotti" nella home mostra ancora 4 card generiche ("Finestre PVC", "Finestre Alluminio", "Porte e Portoncini", "Persiane e Oscuranti"). Verra ristrutturata per riflettere i prodotti reali:
+- Titolo "Galleria" centrato con animazione fade-up
+- Slider orizzontale con immagini a piena larghezza (aspect ratio 16:9)
+- Frecce sinistra/destra per navigare
+- Indicatori a punti sotto lo slider per mostrare la slide corrente
+- Sfondo chiaro (`bg-[hsl(0,0%,97%)]`) per alternare con le sezioni bianche
+- Responsive: immagini si adattano a tutte le dimensioni schermo
 
-**Nuovo layout:**
-- Sezione principale "Finestre in PVC" con le 3 sotto-card DMR CONFORT / DMR DOMUS / DMR PASSIVE (cliccabili, linkano alle pagine dedicate)
-- Sotto, griglia 4 colonne con le altre categorie: Portoncini, Cassonetti, Tapparelle, Persiane (cliccabili, linkano alle pagine dedicate)
-- Bottone "Scopri Tutta la Gamma" che linka a `/prodotti-pubblico`
+---
+
+### Immagini per ogni prodotto
+
+Ogni pagina avra 4-5 immagini Unsplash tematiche diverse:
+
+| Prodotto | Temi immagini |
+|----------|--------------|
+| DMR CONFORT | Finestre classiche, interni luminosi, dettaglio profilo, vista esterna |
+| DMR DOMUS | Grandi vetrate, design moderno, dettaglio ferramenta, ambiente living |
+| DMR PASSIVE | Architettura contemporanea, efficienza energetica, vetro triplo, villa moderna |
+| Portoncini | Ingresso elegante, dettaglio serratura, pannello decorativo, vista notturna |
+| Cassonetti | Cassonetto installato, dettaglio coibentazione, sezione tecnica, facciata |
+| Tapparelle | Tapparella motorizzata, telecomando, dettaglio lamella, facciata moderna |
+| Persiane | Persiane aperte, dettaglio lamelle, colori RAL, facciata mediterranea |
 
 ---
 
 ### Dettagli tecnici
 
+Verra utilizzato il componente `Carousel` gia presente nel progetto (`src/components/ui/carousel.tsx`) basato su Embla Carousel, con l'aggiunta degli indicatori a punti (dots) gestiti tramite l'API del carousel.
+
 | File | Modifica |
 |------|----------|
-| `src/pages/Home.tsx` | Riscrittura sezione Products con i 7 prodotti reali (3 PVC + 4 accessori), link alle pagine, immagini Unsplash dedicate |
-| `src/pages/ProdottiPubblico.tsx` | Aggiornamento immagini con URL Unsplash dedicati per ogni categoria |
-| `src/pages/products/DmrConfort.tsx` | Nuova immagine Unsplash dedicata |
-| `src/pages/products/DmrDomus.tsx` | Nuova immagine Unsplash dedicata |
-| `src/pages/products/DmrPassive.tsx` | Nuova immagine Unsplash dedicata |
-| `src/pages/products/Portoncini.tsx` | Nuova immagine Unsplash dedicata |
-| `src/pages/products/Cassonetti.tsx` | Nuova immagine Unsplash dedicata |
-| `src/pages/products/Tapparelle.tsx` | Nuova immagine Unsplash dedicata |
-| `src/pages/products/Persiane.tsx` | Nuova immagine Unsplash dedicata |
+| `src/components/products/ProductGallery.tsx` | NUOVO - Componente riutilizzabile galleria con slider, frecce e indicatori |
+| `src/pages/products/DmrConfort.tsx` | Aggiunta sezione galleria con 4 immagini dedicate |
+| `src/pages/products/DmrDomus.tsx` | Aggiunta sezione galleria con 4 immagini dedicate |
+| `src/pages/products/DmrPassive.tsx` | Aggiunta sezione galleria con 4 immagini dedicate |
+| `src/pages/products/Portoncini.tsx` | Aggiunta sezione galleria con 4 immagini dedicate |
+| `src/pages/products/Cassonetti.tsx` | Aggiunta sezione galleria con 4 immagini dedicate |
+| `src/pages/products/Tapparelle.tsx` | Aggiunta sezione galleria con 4 immagini dedicate |
+| `src/pages/products/Persiane.tsx` | Aggiunta sezione galleria con 4 immagini dedicate |
 
+Il componente `ProductGallery` ricevera un array di `{ src, alt }` come prop e gestira internamente lo stato dello slider, le frecce e i dot indicators.
