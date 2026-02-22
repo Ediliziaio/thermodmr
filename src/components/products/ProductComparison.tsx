@@ -41,7 +41,7 @@ const models: ModelData[] = [
     specs: {
       Camere: "6",
       "Profondità": "76 mm",
-      "Uw": "1.3 W/m²K",
+      "Uw": "1.1 W/m²K",
       Vetro: "Doppio Lowe + argon",
       Acustica: "47 dB",
       Sicurezza: "Fino a RC3",
@@ -55,7 +55,7 @@ const models: ModelData[] = [
     specs: {
       Camere: "7",
       "Profondità": "82 mm",
-      "Uw": "1.3 W/m²K",
+      "Uw": "0.8 W/m²K",
       Vetro: "Triplo basso emissivo",
       Acustica: "45 dB",
       Sicurezza: "RC2 + perimetrale",
