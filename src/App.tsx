@@ -33,6 +33,13 @@ const DealerArea = lazy(() => import("./pages/DealerArea"));
 const DealerPreventivi = lazy(() => import("./pages/DealerPreventivi"));
 const ChiSiamoPage = lazy(() => import("./pages/ChiSiamo"));
 const ProdottiPubblico = lazy(() => import("./pages/ProdottiPubblico"));
+const DmrConfort = lazy(() => import("./pages/products/DmrConfort"));
+const DmrDomus = lazy(() => import("./pages/products/DmrDomus"));
+const DmrPassive = lazy(() => import("./pages/products/DmrPassive"));
+const ProdPortoncini = lazy(() => import("./pages/products/Portoncini"));
+const ProdCassonetti = lazy(() => import("./pages/products/Cassonetti"));
+const ProdTapparelle = lazy(() => import("./pages/products/Tapparelle"));
+const ProdPersiane = lazy(() => import("./pages/products/Persiane"));
 const VantaggiPage = lazy(() => import("./pages/VantaggiPage"));
 const GaranziePage = lazy(() => import("./pages/GaranziePage"));
 const ContattiPage = lazy(() => import("./pages/ContattiPage"));
@@ -213,6 +220,13 @@ const App = () => (
             />
             <Route path="/chi-siamo" element={<ChiSiamoPage />} />
             <Route path="/prodotti-pubblico" element={<ProdottiPubblico />} />
+            <Route path="/prodotti/dmr-confort" element={<DmrConfort />} />
+            <Route path="/prodotti/dmr-domus" element={<DmrDomus />} />
+            <Route path="/prodotti/dmr-passive" element={<DmrPassive />} />
+            <Route path="/prodotti/portoncini" element={<ProdPortoncini />} />
+            <Route path="/prodotti/cassonetti" element={<ProdCassonetti />} />
+            <Route path="/prodotti/tapparelle" element={<ProdTapparelle />} />
+            <Route path="/prodotti/persiane" element={<ProdPersiane />} />
             <Route path="/vantaggi" element={<VantaggiPage />} />
             <Route path="/garanzie" element={<GaranziePage />} />
             <Route path="/contatti" element={<ContattiPage />} />
