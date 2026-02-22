@@ -31,9 +31,10 @@ const PublicFooter = () => (
           <h4 className="text-sm font-bold text-white/80 uppercase tracking-wider">Prodotti</h4>
           <div className="space-y-2 text-sm text-white/40">
             <Link to="/prodotti-pubblico" className="block hover:text-[hsl(195,85%,55%)] transition-colors">Finestre in PVC</Link>
-            <Link to="/prodotti-pubblico" className="block hover:text-[hsl(195,85%,55%)] transition-colors">Finestre in Alluminio</Link>
-            <Link to="/prodotti-pubblico" className="block hover:text-[hsl(195,85%,55%)] transition-colors">Porte e Portoncini</Link>
-            <Link to="/prodotti-pubblico" className="block hover:text-[hsl(195,85%,55%)] transition-colors">Persiane e Oscuranti</Link>
+            <Link to="/prodotti/portoncini" className="block hover:text-[hsl(195,85%,55%)] transition-colors">Portoncini</Link>
+            <Link to="/prodotti/cassonetti" className="block hover:text-[hsl(195,85%,55%)] transition-colors">Cassonetti</Link>
+            <Link to="/prodotti/tapparelle" className="block hover:text-[hsl(195,85%,55%)] transition-colors">Tapparelle</Link>
+            <Link to="/prodotti/persiane" className="block hover:text-[hsl(195,85%,55%)] transition-colors">Persiane</Link>
           </div>
         </div>
 
@@ -68,6 +69,9 @@ const PublicFooter = () => (
             </Link>
             <Link to="/contatti" className="block text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors">
               Contattaci
+            </Link>
+            <Link to="/diventa-rivenditore" className="block text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors">
+              Diventa Rivenditore
             </Link>
           </div>
           <div className="pt-4">

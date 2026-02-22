@@ -346,9 +346,9 @@ const ProdottiPubblico = () => {
               Entra nella rete di rivenditori ThermoDMR e offri ai tuoi clienti serramenti di qualità superiore con margini competitivi e supporto dedicato.
             </motion.p>
             <motion.div variants={fadeUp} className="flex flex-wrap justify-center gap-4">
-              <Link to="/contatti">
+              <Link to="/diventa-rivenditore">
                 <Button size="lg" className="bg-white text-[hsl(195,85%,35%)] hover:bg-white/90 font-bold rounded-full px-10 shadow-xl">
-                  Contattaci Ora <ArrowRight className="ml-2 h-5 w-5" />
+                  Diventa Rivenditore <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link to="/vantaggi">
