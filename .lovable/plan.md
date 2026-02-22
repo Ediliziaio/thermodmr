@@ -1,86 +1,89 @@
 
 
-## Redesign Landing Page ThermoDMR - Stile TeknoFinestre
+## Riscrittura Landing Page - ThermoDMR Produttore di Infissi
 
-Riscrivere completamente `src/pages/Home.tsx` ispirandosi al sito TeknoFinestre, con un approccio da copywriting a risposta diretta e UX professionale del settore serramenti.
+La pagina attuale parla erroneamente di "gestionale", "ordini", "provvigioni". Va riscritta completamente come sito di un **produttore di infissi e serramenti**, con target: clienti finali e rivenditori. Ispirazione diretta da TeknoFinestre.
 
 ---
 
-### Struttura della nuova pagina (7 sezioni)
+### Struttura della nuova pagina (9 sezioni)
 
-**1. Navbar** (invariata nel concetto, migliorata nello stile)
-- Logo a sinistra, pulsante "Area Riservata" a destra
-- Sfondo trasparente che diventa solido allo scroll
+**1. Navbar**
+- Logo ThermoDMR a sinistra
+- Link di navigazione: Chi Siamo, Prodotti, Garanzie, Contatti
+- Pulsante "Area Riservata" a destra (link a /auth per rivenditori/dealer)
+- Trasparente su hero, solida allo scroll
 
-**2. Hero a tutto schermo** (ispirato a TeknoFinestre)
-- Sfondo con gradiente scuro e immagine decorativa di interni con finestre moderne
-- Sopratitolo: "THERMODMR - LEADER NEL SETTORE SERRAMENTI"
-- Titolo principale orientato al beneficio: "Gestisci la Tua Rete di Rivenditori con Precisione e Controllo Totale"
-- Sottotitolo che parla al problema: "Basta fogli Excel, ordini persi e provvigioni calcolate a mano. Un unico gestionale per ordini, pagamenti e performance della tua rete commerciale."
-- Due CTA: "Accedi al Gestionale" (primario) + "Scopri le Funzionalita" (secondario, scroll alla sezione features)
-- Badge di credibilita sotto le CTA
+**2. Hero a tutto schermo** (stile TeknoFinestre)
+- Background: immagine di interni moderni con finestre luminose (gradiente scuro sovrapposto)
+- Sopratitolo: "THERMODMR - INFISSI E SERRAMENTI DI QUALITA"
+- Titolo: "Sostituisci i Tuoi Vecchi Infissi con ThermoDMR"
+- Sottotitolo: "Produciamo serramenti ad alto isolamento termico con i migliori materiali. Design moderno, resistenza nel tempo e massima efficienza energetica per la tua casa."
+- Due CTA: "Richiedi un Preventivo" (primario) + "Scopri i Prodotti" (secondario, scroll)
+- Immagine decorativa a destra (profilo serramento/finestra)
 
-**3. Sezione "Vision / Chi siamo"** (ispirata a TeknoFinestre)
-- Layout a due colonne: testo a sinistra, immagine/illustrazione decorativa a destra
-- Titolo: "Il gestionale pensato da chi conosce il settore serramenti"
-- Testo che descrive il valore unico: gestionale verticale, non generico
-- CTA: "Accedi ora"
+**3. Vision / Chi Siamo**
+- Layout due colonne
+- Titolo: "Design Moderno e Resistenza nel Tempo"
+- Testo sulla mission aziendale: esperienza, qualita dei materiali, soluzioni personalizzate
+- CTA: "Richiedi una Consulenza Gratuita"
+- Immagine decorativa a destra
 
-**4. Numeri / Social proof con contatori animati** (come TeknoFinestre)
-- 4 KPI animati con contatori che salgono:
-  - "500+" Rivenditori gestiti
-  - "10.000+" Ordini processati
-  - "99%" Precisione calcolo provvigioni  
-  - "24/7" Accesso ai dati
+**4. Contatori animati (Social Proof)**
+- 4 KPI come TeknoFinestre:
+  - "10+" Anni di Esperienza
+  - "5.000+" Finestre Installate ogni anno
+  - "3.000+" Famiglie Soddisfatte
+  - "98%" Soddisfazione Clienti
 
-**5. Features / Prodotti** (migliorata)
-- Sopratitolo: "COSA PUOI FARE"
-- Titolo: "Tutto Sotto Controllo, in Un'Unica Piattaforma"
-- 4 card con icone, titoli orientati al beneficio e descrizioni che parlano al dolore:
-  - "Ordini Sempre Sotto Controllo" - Mai piu ordini persi o dimenticati
-  - "Rete Commerciale Organizzata" - Ogni commerciale sa esattamente cosa fare
-  - "Pagamenti e Provvigioni Automatiche" - Zero errori di calcolo, zero discussioni
-  - "Decisioni Basate sui Dati" - KPI in tempo reale, non sensazioni
+**5. Prodotti** (come la sezione "I Nostri Prodotti" di TeknoFinestre)
+- Sopratitolo: "COSA OFFRIAMO"
+- Titolo: "I Nostri Prodotti"
+- 4 card prodotto con icone:
+  - "Finestre in PVC" - Isolamento termico superiore, design elegante, manutenzione zero
+  - "Finestre in Alluminio" - Resistenza, linee sottili, ideali per grandi superfici vetrate
+  - "Porte e Portoncini" - Sicurezza, eleganza e isolamento in un unico prodotto
+  - "Persiane e Oscuranti" - Protezione solare e privacy con stile contemporaneo
 
-**6. Garanzie / Trust** (ispirato a TeknoFinestre)
+**6. Diagnosi Energetica** (come TeknoFinestre)
+- Titolo: "Il Primo Passo Verso un Comfort Abitativo Superiore"
+- Testo sulla diagnosi energetica gratuita
+- 4 contatori: Risparmio Energetico 40%, Comfort Abitativo 95%, Incremento Valore Immobile 20%, Impatto Ambientale Ridotto 35%
+
+**7. Garanzie** (come TeknoFinestre)
 - Titolo: "Cosa Ti Garantiamo"
-- 3 garanzie con icone (Shield, Lock, HeadphonesIcon):
-  - "Dati Sempre Protetti" - Sicurezza enterprise con crittografia e backup
-  - "Accesso Multi-Ruolo" - Admin, commerciali, dealer: ognuno vede solo cio che gli compete
-  - "Supporto Dedicato" - Assistenza per configurazione e utilizzo
+- 4 garanzie:
+  - "Garanzia di Soddisfazione Totale"
+  - "Garanzia di Efficienza Energetica"
+  - "Garanzia di Alto Isolamento Termico"
+  - "Garanzia di Assistenza Post-Vendita"
 
-**7. CTA Finale** (stile TeknoFinestre - "Trasforma la Tua Casa Oggi!")
-- Titolo: "Smetti di Rincorrere Dati. Inizia a Gestire."
-- Sottotitolo orientato all'azione
-- Pulsante prominente
+**8. CTA Finale** (come TeknoFinestre)
+- Titolo: "Trasforma la Tua Casa Oggi!"
+- Sottotitolo: "Con ThermoDMR, la sostituzione dei tuoi serramenti diventa un'esperienza semplice e gratificante"
+- Pulsante: "Richiedi un Preventivo Gratuito"
 
-**8. Footer** (migliorato)
-- Logo, copyright, link "Area Riservata"
+**9. Footer**
+- Logo, copyright
+- Link "Area Riservata" (per rivenditori)
+- Contatti (email, telefono)
 
 ---
 
-### Principi di copywriting a risposta diretta applicati
+### Principi di copywriting applicati
 
-- Titoli orientati al beneficio, non alla funzionalita
-- Sottotitoli che agitano il problema prima di offrire la soluzione
-- Social proof con numeri concreti
-- CTA multipli lungo la pagina (non solo in fondo)
-- Linguaggio diretto: "tu", "tuo", "la tua rete"
-- Garanzie per ridurre l'attrito
-
-### Principi UX applicati
-
-- Hero full-viewport come TeknoFinestre
-- Contatori animati per engagement visivo (useInView + contatore incrementale)
-- Scroll fluido tra sezioni
-- Sezioni alternate chiaro/scuro per ritmo visivo
-- Hover effects sulle card
+- Parlare al cliente finale: "la tua casa", "i tuoi vecchi infissi", "il tuo comfort"
+- Benefici concreti: risparmio energetico, comfort, valore dell'immobile
+- Social proof con numeri reali (finestre installate, famiglie soddisfatte)
+- Garanzie dettagliate per ridurre l'attrito all'acquisto
+- CTA multipli lungo la pagina
+- "Area Riservata" discretamente presente per i rivenditori/dealer
 
 ### Modifiche tecniche
 
 | File | Modifica |
 |------|----------|
-| `src/pages/Home.tsx` | Riscrittura completa con le 8 sezioni descritte sopra |
+| `src/pages/Home.tsx` | Riscrittura completa - da pagina gestionale a pagina produttore infissi |
 
-Nessun altro file da modificare. Tutte le dipendenze necessarie (framer-motion, react-intersection-observer, lucide-react) sono gia installate.
+Nessun altro file da modificare. Tutte le dipendenze sono gia installate.
 
