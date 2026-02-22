@@ -1,40 +1,33 @@
 
 
-## Miglioramento Pagine Prodotto
+## Miglioramento Pagina Catalogo `/prodotti-pubblico`
 
-### Panoramica
-Tutte le 7 pagine prodotto (DMR Confort, Domus, Passive, Portoncini, Cassonetti, Tapparelle, Persiane) e la pagina catalogo `/prodotti` hanno la stessa struttura ripetitiva e usano foto generiche Unsplash. Il piano migliora la UX aggiungendo elementi visivi e informativi che rendono ogni pagina piu coinvolgente.
+### Problema attuale
+La pagina catalogo ha un hero debole (testo su sfondo grigio chiaro) molto diverso dalle pagine dettaglio prodotto che hanno hero con immagini full-width, overlay scuro e breadcrumb. Manca coerenza visiva.
 
 ---
 
-### 1. Hero con immagine a tutta larghezza
-Attualmente l'hero e solo testo su sfondo grigio chiaro. Aggiungere un'immagine hero a tutta larghezza con overlay scuro e testo sopra, simile ai siti premium di serramenti.
+### Modifiche previste
 
-- Sfondo: immagine grande (diversa per ogni prodotto) con overlay gradient scuro
-- Testo: bianco, con badge prodotto (es. "Best Seller" per DOMUS, "Top di Gamma" per PASSIVE)
-- Breadcrumb sotto la navbar: Home > Prodotti > DMR Confort
+#### 1. Hero full-width con immagine e overlay (come le pagine dettaglio)
+- Sostituire l'hero attuale (sfondo grigio, solo testo) con il componente `ProductHero` gia esistente, adattato per la pagina catalogo
+- Immagine di sfondo full-width con overlay gradient scuro
+- Breadcrumb: `Home > Prodotti`
+- Testo bianco su sfondo scuro, stesso stile delle pagine dettaglio
 
-### 2. Breadcrumb di navigazione
-Aggiungere un breadcrumb in cima a ogni pagina prodotto per facilitare la navigazione:
-`Home > Prodotti > DMR CONFORT`
+#### 2. Aggiungere immagini alle card dei 3 modelli PVC
+- Le 3 card DMR CONFORT / DOMUS / PASSIVE attualmente hanno solo icona + testo
+- Aggiungere un'immagine in cima a ogni card per renderle piu visive e cliccabili
+- Aggiungere i badge colorati ("Miglior Prezzo", "Best Seller", "Top di Gamma") come nelle pagine dettaglio
 
-### 3. Badge prodotto
-Aggiungere un badge colorato accanto al nome del prodotto:
-- DMR CONFORT: "Miglior Prezzo" (verde)
-- DMR DOMUS: "Best Seller" (arancione/dorato)
-- DMR PASSIVE: "Top di Gamma" (viola/premium)
+#### 3. Aggiungere immagini piu pertinenti ai prodotti accessori
+- Sostituire le foto Unsplash generiche (uffici, interni generici) con immagini piu pertinenti a portoncini, cassonetti, tapparelle e persiane
 
-### 4. Immagini piu pertinenti
-Sostituire le foto generiche con immagini Unsplash piu pertinenti ai serramenti (finestre, profili PVC, dettagli tecnici, installazioni). Usare foto diverse per ogni prodotto.
+#### 4. Aggiungere sezione CTA finale
+- Prima del footer, aggiungere una sezione CTA con sfondo colorato (come nelle pagine dettaglio) con invito a contattare per preventivo
 
-### 5. Sezione "Confronta i Modelli" (solo pagine PVC)
-Nelle 3 pagine DMR (Confort, Domus, Passive), aggiungere prima del CTA finale una tabella di confronto rapido tra i 3 modelli, con link alle altre pagine. Questo aiuta l'utente a capire le differenze senza tornare al catalogo.
-
-### 6. Navigazione tra prodotti correlati
-Aggiungere una sezione "Scopri anche" prima del footer con card degli altri prodotti della stessa categoria, per facilitare l'esplorazione.
-
-### 7. Migliorare la galleria
-Aggiungere sotto ogni immagine della galleria una didascalia descrittiva per dare contesto alle foto.
+#### 5. Contatore rapido delle categorie
+- Sotto l'hero, aggiungere una barra con 3-4 numeri chiave: "7 Linee di Prodotto", "3 Modelli Finestre", "100+ Colori", "Consegna 2-6 Settimane"
 
 ---
 
@@ -42,17 +35,7 @@ Aggiungere sotto ogni immagine della galleria una didascalia descrittiva per dar
 
 | File | Modifiche |
 |------|-----------|
-| `src/components/products/ProductHero.tsx` | **Nuovo** - Componente hero con immagine full-width, overlay, breadcrumb e badge |
-| `src/components/products/ProductComparison.tsx` | **Nuovo** - Tabella comparativa per i 3 modelli PVC |
-| `src/components/products/RelatedProducts.tsx` | **Nuovo** - Sezione "Scopri anche" con card prodotti correlati |
-| `src/components/products/ProductGallery.tsx` | Aggiunta supporto didascalie sotto le immagini |
-| `src/pages/products/DmrConfort.tsx` | Uso nuovi componenti, immagini aggiornate, badge "Miglior Prezzo" |
-| `src/pages/products/DmrDomus.tsx` | Uso nuovi componenti, immagini aggiornate, badge "Best Seller" |
-| `src/pages/products/DmrPassive.tsx` | Uso nuovi componenti, immagini aggiornate, badge "Top di Gamma" |
-| `src/pages/products/Portoncini.tsx` | Uso nuovi componenti, immagini aggiornate |
-| `src/pages/products/Cassonetti.tsx` | Uso nuovi componenti, immagini aggiornate |
-| `src/pages/products/Tapparelle.tsx` | Uso nuovi componenti, immagini aggiornate |
-| `src/pages/products/Persiane.tsx` | Uso nuovi componenti, immagini aggiornate |
+| `src/pages/ProdottiPubblico.tsx` | Sostituzione hero con versione full-width image + overlay, aggiunta immagini e badge alle card PVC, immagini accessori aggiornate, barra contatori, sezione CTA finale |
 
-Nessuna modifica al database o al routing.
+Nessun nuovo file necessario: si riutilizza lo stile del `ProductHero` direttamente nella pagina (senza il breadcrumb a 3 livelli, solo 2). Nessuna modifica al routing o al database.
 
