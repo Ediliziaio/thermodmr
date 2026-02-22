@@ -1,33 +1,38 @@
 
 
-## Miglioramento Pagina Catalogo `/prodotti-pubblico`
+## Integrazione contenuti Petecki nella pagina DMR CONFORT
 
-### Problema attuale
-La pagina catalogo ha un hero debole (testo su sfondo grigio chiaro) molto diverso dalle pagine dettaglio prodotto che hanno hero con immagini full-width, overlay scuro e breadcrumb. Manca coerenza visiva.
+### Cosa viene preso dalla pagina Petecki e adattato
+
+La pagina Petecki "Impressive Class 72 MD" ha diversi elementi interessanti che mancano alla pagina DMR CONFORT attuale. Ecco cosa verra integrato, riadattato con il nome "DMR CONFORT" e i dati tecnici gia presenti:
 
 ---
 
-### Modifiche previste
+### 1. Immagine sezione profilo (cross-section)
+- L'immagine caricata (sezione trasversale del profilo PVC con finitura legno) verra copiata nel progetto e usata nella sezione "Caratteristiche Principali" al posto della foto Unsplash generica
+- Viene mostrata con sfondo chiaro/neutro per risaltare il dettaglio tecnico del profilo
 
-#### 1. Hero full-width con immagine e overlay (come le pagine dettaglio)
-- Sostituire l'hero attuale (sfondo grigio, solo testo) con il componente `ProductHero` gia esistente, adattato per la pagina catalogo
-- Immagine di sfondo full-width con overlay gradient scuro
-- Breadcrumb: `Home > Prodotti`
-- Testo bianco su sfondo scuro, stesso stile delle pagine dettaglio
+### 2. Nuova sezione "Vantaggi della Finestra" (ispirata a Petecki)
+Petecki mostra 6 vantaggi con foto dettaglio + descrizione. Per DMR CONFORT verranno aggiunti 6 vantaggi tecnici simili, adattati:
+- **Microventilazione** - Funzione che consente di ventilare l'ambiente senza aprire l'anta
+- **Maniglia di sicurezza** - Maniglia in alluminio con funzione di sicurezza
+- **Cerniere 3D regolabili** - Regolabili su tre livelli per una perfetta chiusura
+- **Canalina calda** - Disponibile in acciaio o plastica, ampia gamma di colori
+- **Blocco rotazione maniglia** - Per il corretto posizionamento dell'anta
+- **Braccio oscillo-battente** - Per ventilazione confortevole con funzione microventilazione
 
-#### 2. Aggiungere immagini alle card dei 3 modelli PVC
-- Le 3 card DMR CONFORT / DOMUS / PASSIVE attualmente hanno solo icona + testo
-- Aggiungere un'immagine in cima a ogni card per renderle piu visive e cliccabili
-- Aggiungere i badge colorati ("Miglior Prezzo", "Best Seller", "Top di Gamma") come nelle pagine dettaglio
+Questi verranno mostrati in una griglia 2x3 (desktop) o lista (mobile) con icone al posto delle foto.
 
-#### 3. Aggiungere immagini piu pertinenti ai prodotti accessori
-- Sostituire le foto Unsplash generiche (uffici, interni generici) con immagini piu pertinenti a portoncini, cassonetti, tapparelle e persiane
+### 3. Nuova sezione "Colori Disponibili"
+Petecki mostra 12 colori popolari. Per DMR CONFORT verranno elencati colori comuni per serramenti PVC con nome e swatch colorato:
+- Bianco, Rovere Dorato, Noce, Antracite, Grigio Chiaro, Verde Scuro, Bianco Crema, Jet Black
 
-#### 4. Aggiungere sezione CTA finale
-- Prima del footer, aggiungere una sezione CTA con sfondo colorato (come nelle pagine dettaglio) con invito a contattare per preventivo
-
-#### 5. Contatore rapido delle categorie
-- Sotto l'hero, aggiungere una barra con 3-4 numeri chiave: "7 Linee di Prodotto", "3 Modelli Finestre", "100+ Colori", "Consegna 2-6 Settimane"
+### 4. Descrizione prodotto arricchita
+Il testo descrittivo della sezione hero e della sezione caratteristiche verra arricchito con contenuti ispirati a Petecki ma adattati al DMR CONFORT:
+- Enfasi su luce naturale grazie ai profili sottili
+- Isolamento termico ed efficienza energetica
+- Durabilita e facile manutenzione
+- Versatilita architettonica
 
 ---
 
@@ -35,7 +40,8 @@ La pagina catalogo ha un hero debole (testo su sfondo grigio chiaro) molto diver
 
 | File | Modifiche |
 |------|-----------|
-| `src/pages/ProdottiPubblico.tsx` | Sostituzione hero con versione full-width image + overlay, aggiunta immagini e badge alle card PVC, immagini accessori aggiornate, barra contatori, sezione CTA finale |
+| `src/pages/products/DmrConfort.tsx` | Immagine profilo cross-section al posto della foto generica, nuova sezione "Vantaggi della Finestra" con 6 elementi, nuova sezione "Colori Disponibili" con 8 colori, testi arricchiti |
+| Asset: `src/assets/dmr-confort-profile.webp` | Copia dell'immagine caricata (sezione trasversale profilo) |
 
-Nessun nuovo file necessario: si riutilizza lo stile del `ProductHero` direttamente nella pagina (senza il breadcrumb a 3 livelli, solo 2). Nessuna modifica al routing o al database.
+Nessun nuovo componente, nessuna modifica al routing o al database.
 
