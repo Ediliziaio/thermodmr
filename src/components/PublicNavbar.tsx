@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState, useCallback, useRef, useEffect } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo_Thermodmr.png";
 
@@ -62,6 +63,16 @@ const PublicNavbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
+
   const handleDropdownEnter = () => {
     clearTimeout(dropdownTimeout.current);
     setDesktopDropdownOpen(true);
@@ -73,9 +84,9 @@ const PublicNavbar = () => {
 
   return (
     <nav className="fixed top-0 inset-x-0 z-50 bg-white border-b border-[hsl(0,0%,90%)] shadow-sm">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
         <Link to="/">
-          <img src={logo} alt="ThermoDMR" className="h-10 object-contain" />
+          <img src={logo} alt="ThermoDMR" className="h-9 sm:h-10 object-contain" />
         </Link>
 
         {/* Desktop nav */}
@@ -157,15 +168,16 @@ const PublicNavbar = () => {
           <Link to="/auth">
             <Button
               size="sm"
-              className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-4 md:px-6 shadow-[0_4px_20px_hsl(195,85%,45%,0.3)]"
+              className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-4 md:px-6 shadow-[0_4px_20px_hsl(195,85%,45%,0.3)] min-h-[44px]"
             >
               <span className="md:hidden">Accedi</span>
               <span className="hidden md:inline">Area Riservata</span>
             </Button>
           </Link>
           <button
-            className="md:hidden p-2"
+            className="md:hidden p-2 min-w-[44px] min-h-[44px] flex items-center justify-center"
             onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label={mobileOpen ? "Chiudi menu" : "Apri menu"}
           >
             {mobileOpen ? (
               <X className="h-6 w-6 text-[hsl(0,0%,20%)]" />
@@ -176,69 +188,107 @@ const PublicNavbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-[hsl(0,0%,90%)] shadow-lg">
-          <div className="px-6 py-4 space-y-1">
-            {navLinks.map((item) => {
-              const isActive = item.hasDropdown
-                ? isProductPage
-                : location.pathname === item.to;
+      {/* Mobile overlay + menu */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            {/* Dark overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="md:hidden fixed inset-0 top-[57px] bg-black/40 z-40"
+              onClick={() => setMobileOpen(false)}
+            />
 
-              if (item.hasDropdown) {
-                return (
-                  <div key={item.to}>
-                    <button
-                      onClick={() => setMobileProductsOpen(!mobileProductsOpen)}
-                      className={`flex items-center justify-between w-full text-left text-sm font-medium py-2.5 ${
-                        isActive
-                          ? "text-[hsl(195,85%,45%)] font-bold"
-                          : "text-[hsl(0,0%,30%)]"
-                      }`}
-                    >
-                      {item.label}
-                      <ChevronDown className={`h-4 w-4 transition-transform ${mobileProductsOpen ? "rotate-180" : ""}`} />
-                    </button>
-                    {mobileProductsOpen && (
-                      <div className="pl-4 pb-2 space-y-1 border-l-2 border-[hsl(195,85%,45%)]/20 ml-2">
-                        {productLinks.map((pl) => (
-                          <Link
-                            key={pl.to}
-                            to={pl.to}
-                            onClick={() => setMobileOpen(false)}
-                            className={`block text-sm py-2 ${
-                              location.pathname === pl.to
-                                ? "text-[hsl(195,85%,45%)] font-semibold"
-                                : "text-[hsl(0,0%,40%)] hover:text-[hsl(195,85%,45%)]"
-                            }`}
-                          >
-                            {pl.label}
-                          </Link>
-                        ))}
+            {/* Menu panel */}
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="md:hidden fixed top-[57px] inset-x-0 bg-white border-t border-[hsl(0,0%,90%)] shadow-xl z-50 max-h-[calc(100vh-57px)] overflow-y-auto"
+            >
+              <div className="px-5 py-4 space-y-0.5">
+                {navLinks.map((item, idx) => {
+                  const isActive = item.hasDropdown
+                    ? isProductPage
+                    : location.pathname === item.to;
+
+                  if (item.hasDropdown) {
+                    return (
+                      <div key={item.to}>
+                        <button
+                          onClick={() => setMobileProductsOpen(!mobileProductsOpen)}
+                          className={`flex items-center justify-between w-full text-left text-sm font-medium min-h-[48px] px-2 rounded-xl transition-colors ${
+                            isActive
+                              ? "text-[hsl(195,85%,45%)] font-bold bg-[hsl(195,85%,45%,0.05)]"
+                              : "text-[hsl(0,0%,20%)] active:bg-[hsl(0,0%,95%)]"
+                          }`}
+                        >
+                          {item.label}
+                          <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${mobileProductsOpen ? "rotate-180" : ""}`} />
+                        </button>
+                        <AnimatePresence>
+                          {mobileProductsOpen && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="overflow-hidden"
+                            >
+                              <div className="pl-4 pb-2 space-y-0.5 border-l-2 border-[hsl(195,85%,45%)]/20 ml-4 mt-1">
+                                {productLinks.map((pl) => (
+                                  <Link
+                                    key={pl.to}
+                                    to={pl.to}
+                                    onClick={() => setMobileOpen(false)}
+                                    className={`block text-sm min-h-[44px] flex items-center px-3 rounded-lg transition-colors ${
+                                      location.pathname === pl.to
+                                        ? "text-[hsl(195,85%,45%)] font-semibold bg-[hsl(195,85%,45%,0.05)]"
+                                        : "text-[hsl(0,0%,40%)] active:bg-[hsl(0,0%,95%)]"
+                                    }`}
+                                  >
+                                    {pl.label}
+                                  </Link>
+                                ))}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                        {idx < navLinks.length - 1 && (
+                          <div className="h-px bg-[hsl(0,0%,92%)] mx-2" />
+                        )}
                       </div>
-                    )}
-                  </div>
-                );
-              }
+                    );
+                  }
 
-              return (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  onClick={(e) => { handleNavClick(e, item.to); setMobileOpen(false); }}
-                  className={`block w-full text-left text-sm font-medium py-2.5 ${
-                    isActive
-                      ? "text-[hsl(195,85%,45%)] font-bold"
-                      : "text-[hsl(0,0%,30%)] hover:text-[hsl(195,85%,45%)]"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      )}
+                  return (
+                    <div key={item.to}>
+                      <Link
+                        to={item.to}
+                        onClick={(e) => { handleNavClick(e, item.to); setMobileOpen(false); }}
+                        className={`block w-full text-left text-sm font-medium min-h-[48px] flex items-center px-2 rounded-xl transition-colors ${
+                          isActive
+                            ? "text-[hsl(195,85%,45%)] font-bold bg-[hsl(195,85%,45%,0.05)]"
+                            : "text-[hsl(0,0%,20%)] active:bg-[hsl(0,0%,95%)]"
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
+                      {idx < navLinks.length - 1 && (
+                        <div className="h-px bg-[hsl(0,0%,92%)] mx-2" />
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };

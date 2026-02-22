@@ -3,9 +3,9 @@ import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin } from "lucide-react
 import logo from "@/assets/logo_Thermodmr.png";
 
 const PublicFooter = () => (
-  <footer className="bg-[hsl(0,0%,8%)] py-16 border-t border-white/5">
-    <div className="max-w-7xl mx-auto px-6">
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+  <footer className="bg-[hsl(0,0%,8%)] py-12 sm:py-16 border-t border-white/5">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-12">
         {/* Brand */}
         <div className="space-y-4">
           <img src={logo} alt="ThermoDMR" className="h-10 object-contain brightness-0 invert opacity-90" />
@@ -14,14 +14,14 @@ const PublicFooter = () => (
             Design, isolamento e il miglior prezzo di mercato.
           </p>
           <div className="flex gap-3 pt-2">
-            <a href="#" className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 text-white/50 hover:bg-[hsl(195,85%,45%)] hover:text-white transition-all">
-              <Facebook className="h-4 w-4" />
+            <a href="#" className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white/50 hover:bg-[hsl(195,85%,45%)] hover:text-white transition-all">
+              <Facebook className="h-5 w-5" />
             </a>
-            <a href="#" className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 text-white/50 hover:bg-[hsl(195,85%,45%)] hover:text-white transition-all">
-              <Instagram className="h-4 w-4" />
+            <a href="#" className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white/50 hover:bg-[hsl(195,85%,45%)] hover:text-white transition-all">
+              <Instagram className="h-5 w-5" />
             </a>
-            <a href="#" className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 text-white/50 hover:bg-[hsl(195,85%,45%)] hover:text-white transition-all">
-              <Linkedin className="h-4 w-4" />
+            <a href="#" className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white/50 hover:bg-[hsl(195,85%,45%)] hover:text-white transition-all">
+              <Linkedin className="h-5 w-5" />
             </a>
           </div>
         </div>

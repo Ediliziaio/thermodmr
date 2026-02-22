@@ -80,7 +80,7 @@ const Hero = () => {
       <div className="absolute inset-0 bg-[hsl(0,0%,10%)]/60" />
       <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[hsl(0,0%,10%)]/80 to-transparent" />
 
-      <div className="relative max-w-7xl mx-auto px-6 pt-32 pb-24 grid lg:grid-cols-2 gap-16 items-center w-full">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-28 sm:pt-32 pb-20 sm:pb-24 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center w-full">
         <motion.div initial="hidden" animate="visible" variants={stagger} className="space-y-8">
           <motion.p
             variants={fadeUp}
@@ -91,7 +91,7 @@ const Hero = () => {
 
           <motion.h1
             variants={fadeUp}
-            className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold leading-[1.1] text-white"
+            className="text-3xl sm:text-5xl lg:text-[3.5rem] font-extrabold leading-[1.1] text-white"
           >
             Finestre di Design al{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[hsl(195,85%,50%)] to-[hsl(210,80%,55%)]">
@@ -106,11 +106,11 @@ const Hero = () => {
             </span>
           </motion.p>
 
-          <motion.div variants={fadeUp} className="flex flex-wrap gap-4 pt-2">
-            <a href="#contatti">
+          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2">
+            <a href="#contatti" className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-8 text-base shadow-[0_6px_30px_hsl(195,85%,45%,0.4)] hover:shadow-[0_6px_40px_hsl(195,85%,45%,0.6)] transition-all"
+                className="w-full sm:w-auto bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-8 text-base shadow-[0_6px_30px_hsl(195,85%,45%,0.4)] hover:shadow-[0_6px_40px_hsl(195,85%,45%,0.6)] transition-all min-h-[48px]"
               >
                 Richiedi Preventivo
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -120,7 +120,7 @@ const Hero = () => {
               size="lg"
               variant="outline"
               onClick={scrollToProdotti}
-              className="rounded-full px-8 text-base border-white/50 text-white bg-white/15 hover:bg-white/25 hover:text-white backdrop-blur-sm"
+              className="w-full sm:w-auto rounded-full px-8 text-base border-white/50 text-white bg-white/15 hover:bg-white/25 hover:text-white backdrop-blur-sm min-h-[48px]"
             >
               Scopri i Prodotti
               <ChevronDown className="ml-2 h-4 w-4" />
@@ -147,12 +147,12 @@ const Hero = () => {
             <img
               src="/images/hero-profile.jpg"
               alt="Profilo serramento ThermoDMR"
-              className="w-[280px] h-[280px] lg:w-[420px] lg:h-[420px] object-cover rounded-3xl shadow-2xl border-4 border-white/20"
+              className="w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] lg:w-[420px] lg:h-[420px] object-cover rounded-3xl shadow-2xl border-4 border-white/20"
             />
-            <div className="absolute -top-3 -right-3 bg-[hsl(195,85%,45%)] text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg">
-              Consegna 2-6 Settimane
+            <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 bg-[hsl(195,85%,45%)] text-white text-[10px] sm:text-xs font-bold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-lg">
+              Consegna 2-6 Sett.
             </div>
-            <div className="absolute -bottom-3 -left-3 bg-white text-[hsl(0,0%,20%)] text-xs font-bold px-4 py-2 rounded-full shadow-lg border border-[hsl(0,0%,90%)]">
+            <div className="absolute -bottom-2 -left-2 sm:-bottom-3 sm:-left-3 bg-white text-[hsl(0,0%,20%)] text-[10px] sm:text-xs font-bold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-lg border border-[hsl(0,0%,90%)]">
               Qualità Tedesca
             </div>
           </div>
@@ -485,16 +485,16 @@ const WhyThermoDMR = () => {
             <motion.div
               key={a.title}
               variants={fadeUp}
-              className="p-8 rounded-2xl bg-white/[0.06] border border-white/10 hover:bg-white/[0.1] hover:border-[hsl(195,85%,45%)]/30 transition-all duration-300"
+              className="p-5 sm:p-8 rounded-2xl bg-white/[0.06] border border-white/10 hover:bg-white/[0.1] hover:border-[hsl(195,85%,45%)]/30 transition-all duration-300"
             >
-              <div className="flex gap-5">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
                 <div className="shrink-0">
-                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[hsl(195,85%,45%)] text-white shadow-[0_4px_20px_hsl(195,85%,45%,0.3)]">
-                    <a.icon className="h-7 w-7" />
+                  <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-[hsl(195,85%,45%)] text-white shadow-[0_4px_20px_hsl(195,85%,45%,0.3)]">
+                    <a.icon className="h-6 w-6 sm:h-7 sm:w-7" />
                   </div>
                 </div>
-                <div className="space-y-3">
-                  <h3 className="text-xl font-bold text-white">{a.title}</h3>
+                <div className="space-y-2 sm:space-y-3">
+                  <h3 className="text-lg sm:text-xl font-bold text-white">{a.title}</h3>
                   <p className="text-sm text-white/65 leading-relaxed">{a.desc}</p>
                 </div>
               </div>
@@ -562,10 +562,10 @@ const Guarantees = () => {
             <motion.div
               key={g.title}
               variants={fadeUp}
-              className="flex gap-5 p-6 rounded-2xl bg-[hsl(0,0%,97%)] border-l-4 border-[hsl(195,85%,45%)] hover:shadow-md transition-shadow duration-300"
+              className="flex flex-col sm:flex-row gap-4 sm:gap-5 p-4 sm:p-6 rounded-2xl bg-[hsl(0,0%,97%)] border-l-4 border-[hsl(195,85%,45%)] hover:shadow-md transition-shadow duration-300"
             >
-              <div className="shrink-0 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[hsl(195,85%,45%)] text-white">
-                <g.icon className="h-6 w-6" />
+              <div className="shrink-0 inline-flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-[hsl(195,85%,45%)] text-white">
+                <g.icon className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
               <div className="space-y-2">
                 <h3 className="text-lg font-bold text-[hsl(0,0%,10%)]">{g.title}</h3>
@@ -605,7 +605,7 @@ const FindDealer = () => {
             a consigliarti la soluzione migliore per la tua casa.
           </motion.p>
 
-          <motion.div variants={fadeUp} className="grid sm:grid-cols-3 gap-4 max-w-3xl mx-auto pt-4">
+          <motion.div variants={fadeUp} className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto pt-4">
             {[
               { icon: Headphones, title: "Consulenza Gratuita", desc: "Un esperto ti guida nella scelta migliore" },
               { icon: MapPin, title: "Sopralluogo Dedicato", desc: "Misuriamo e valutiamo sul posto" },
@@ -625,9 +625,10 @@ const FindDealer = () => {
             <a href="#contatti">
               <Button
                 size="lg"
-                className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-8 text-base shadow-[0_4px_20px_hsl(195,85%,45%,0.25)]"
+                className="w-full sm:w-auto bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-8 text-base shadow-[0_4px_20px_hsl(195,85%,45%,0.25)] min-h-[48px]"
               >
-                Contattaci per Trovare il Tuo Rivenditore
+                <span className="sm:hidden">Trova il Rivenditore</span>
+                <span className="hidden sm:inline">Contattaci per Trovare il Tuo Rivenditore</span>
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </a>
@@ -678,10 +679,10 @@ const BecomeDealer = () => {
         </motion.div>
 
         <motion.div variants={fadeUp}>
-          <Link to="/diventa-rivenditore">
+          <Link to="/diventa-rivenditore" className="w-full sm:w-auto inline-block">
             <Button
               size="lg"
-              className="bg-white text-[hsl(195,85%,40%)] hover:bg-white/90 font-bold rounded-full px-12 text-base shadow-xl hover:shadow-2xl transition-all"
+              className="w-full sm:w-auto bg-white text-[hsl(195,85%,40%)] hover:bg-white/90 font-bold rounded-full px-12 text-base shadow-xl hover:shadow-2xl transition-all min-h-[48px]"
             >
               Candidati Ora
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -764,7 +765,7 @@ const ContactForm = () => {
           </motion.div>
 
           <motion.div variants={fadeUp} className="max-w-2xl mx-auto">
-            <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg border border-[hsl(0,0%,90%)] p-8 space-y-5">
+            <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg border border-[hsl(0,0%,90%)] p-5 sm:p-8 space-y-5">
               <div className="grid sm:grid-cols-2 gap-5">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-[hsl(0,0%,20%)]">Nome *</label>
@@ -800,7 +801,7 @@ const ContactForm = () => {
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-[hsl(0,0%,20%)]">Messaggio *</label>
-                <Textarea name="messaggio" value={formData.messaggio} onChange={handleChange} placeholder="Descrivi cosa stai cercando: un preventivo per casa tua, informazioni per diventare rivenditore..." required maxLength={1000} rows={4} />
+                <Textarea name="messaggio" value={formData.messaggio} onChange={handleChange} placeholder="Descrivi cosa stai cercando..." required maxLength={1000} rows={3} className="sm:rows-4" />
               </div>
               <Button
                 type="submit"
