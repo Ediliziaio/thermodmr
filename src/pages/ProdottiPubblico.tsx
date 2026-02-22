@@ -30,6 +30,14 @@ import {
 } from "@/components/ui/breadcrumb";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
+import imgConfort from "@/assets/thermodmr-scorrevoli-terrazza.jpg";
+import imgDomus from "@/assets/thermodmr-finestra-effetto-legno.jpg";
+import imgPassive from "@/assets/thermodmr-serramenti-vista-mare.jpg";
+import imgPortoncini from "@/assets/thermodmr-portoncino-ingresso.avif";
+import imgCassonetti from "@/assets/thermodmr-cassonetto-installato.jpg";
+import imgTapparelle from "@/assets/thermodmr-tapparella-coibentata.webp";
+import imgPersiane from "@/assets/thermodmr-persiana-verde.webp";
+import imgHero from "@/assets/thermodmr-finestre-pvc-interni.webp";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -43,7 +51,7 @@ const pvcModels = [
     icon: Sparkles,
     name: "DMR CONFORT",
     link: "/prodotti/dmr-confort",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
+    image: imgConfort,
     badge: { label: "Miglior Prezzo", color: "green" as const },
     desc: "La soluzione ideale per chi cerca qualità e convenienza. Profilo a 3 camere con ottime prestazioni termiche.",
     features: ["Profilo a 3 camere", "Classe B", "Vetrocamera standard", "Ampia gamma colori"],
@@ -52,7 +60,7 @@ const pvcModels = [
     icon: Zap,
     name: "DMR DOMUS",
     link: "/prodotti/dmr-domus",
-    image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80",
+    image: imgDomus,
     badge: { label: "Best Seller", color: "gold" as const },
     desc: "Il best-seller della gamma. Profilo a 5 camere per un isolamento superiore e massimo comfort abitativo.",
     features: ["Profilo a 5 camere", "Classe A", "Vetrocamera con gas argon", "Ferramenta Roto"],
@@ -61,7 +69,7 @@ const pvcModels = [
     icon: Crown,
     name: "DMR PASSIVE",
     link: "/prodotti/dmr-passive",
-    image: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80",
+    image: imgPassive,
     badge: { label: "Top di Gamma", color: "purple" as const },
     desc: "Il top di gamma per progetti di alto livello. Profilo a 7 camere con prestazioni certificate Passivhaus.",
     features: ["Profilo a 7 camere", "Classe A+", "Triplo vetro basso emissivo", "Design minimale"],
@@ -86,7 +94,7 @@ const otherProducts = [
     icon: Shield,
     title: "Portoncini in PVC",
     link: "/prodotti/portoncini",
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&q=80",
+    image: imgPortoncini,
     desc: "Portoncini d'ingresso in PVC con elevata sicurezza e isolamento termico. Finiture personalizzabili per adattarsi a ogni stile architettonico.",
     features: [
       "Pannelli decorativi personalizzabili",
@@ -100,7 +108,7 @@ const otherProducts = [
     icon: Box,
     title: "Cassonetti",
     link: "/prodotti/cassonetti",
-    image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=80",
+    image: imgCassonetti,
     desc: "Cassonetti coibentati per avvolgibili, progettati per eliminare i ponti termici e garantire il massimo isolamento nella zona del vano avvolgibile.",
     features: [
       "Coibentazione in EPS ad alta densità",
@@ -114,7 +122,7 @@ const otherProducts = [
     icon: Blinds,
     title: "Tapparelle",
     link: "/prodotti/tapparelle",
-    image: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=800&q=80",
+    image: imgTapparelle,
     desc: "Tapparelle in PVC e alluminio coibentato, disponibili con motorizzazione elettrica e predisposizione per la domotica.",
     features: [
       "PVC o alluminio coibentato",
@@ -128,7 +136,7 @@ const otherProducts = [
     icon: SunDim,
     title: "Persiane",
     link: "/prodotti/persiane",
-    image: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&q=80",
+    image: imgPersiane,
     desc: "Persiane in alluminio con lamelle orientabili per un controllo ottimale della luce e della ventilazione. Design elegante e zero manutenzione.",
     features: [
       "Alluminio verniciato a polvere",
@@ -155,7 +163,7 @@ const ProdottiPubblico = () => {
       <section ref={heroRef} className="relative pt-20 min-h-[420px] sm:min-h-[480px] flex items-end overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80"
+            src={imgHero}
             alt="Serramenti in PVC ThermoDMR"
             className="w-full h-full object-cover"
           />
