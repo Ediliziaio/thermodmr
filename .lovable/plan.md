@@ -1,36 +1,34 @@
 
 
-## Migliorare la pagina Chi Siamo
+## Ottimizzare la pagina Chi Siamo e aggiungere scroll-to-top
 
-### Modifiche ai dati esistenti
+### 1. Scroll to top alla navigazione
 
-1. **Tempi di consegna**: cambiare "15gg" in "2-6 sett." nella sezione Numeri (riga 112)
-2. **Hero**: aggiornare il testo per coerenza ("tempi di consegna da 2 a 6 settimane")
+Attualmente quando si cambia pagina, la vista resta nella posizione precedente. Verra creato un componente `ScrollToTop` che usa `useLocation` di react-router-dom per fare `window.scrollTo(0, 0)` ad ogni cambio di route. Verra inserito dentro `BrowserRouter` in `src/App.tsx`.
 
-### Due nuove sezioni prima del footer
+**File nuovo:** `src/components/ScrollToTop.tsx`
+**File modificato:** `src/App.tsx` -- importare e inserire `<ScrollToTop />` subito dopo `<BrowserRouter>`
 
-Dopo la sezione CTA attuale (riga 124-137), aggiungere due nuove sezioni con animazioni coerenti al resto della pagina:
+### 2. Aggiornare immagine nella pagina Chi Siamo
 
-**Sezione "Trova il Rivenditore"**
-- Sfondo chiaro (`bg-[hsl(0,0%,97%)]`)
-- Icona `MapPin`, titolo "Trova il Rivenditore Piu Vicino"
-- Breve testo: invito a trovare un punto vendita autorizzato nella propria zona
-- Pulsante che porta a `/contatti` con label "Trova Rivenditore"
+La sezione "La Nostra Storia" usa `/images/chi-siamo.jpg` (immagine generica dal public folder). Verra sostituita con una delle foto reali gia presenti in `src/assets/`, ad esempio `thermodmr-infissi-esterni.webp` (che mostra infissi installati, coerente con la sezione "storia/produzione").
 
-**Sezione "Diventa Rivenditore"**
-- Sfondo scuro con gradiente (stile simile alla CTA finale della pagina DiventaRivenditore)
-- Icona `Handshake`, titolo "Vuoi Diventare Rivenditore ThermoDMR?"
-- Breve testo sui vantaggi (prezzi di fabbrica, zona esclusiva, supporto completo)
-- Pulsante che porta a `/diventa-rivenditore` con label "Scopri Come"
+Per dare piu impatto visivo, aggiungiamo anche un'immagine nell'hero della pagina usando `thermodmr-serramenti-vista-mare.jpg`, trasformando l'hero in un layout a 2 colonne su desktop (testo a sinistra, immagine a destra).
 
-### Sostituzione della CTA generica
-
-La sezione CTA attuale "Vuoi Saperne di Piu?" (righe 124-137) verra rimossa perche sostituita dalle due nuove sezioni piu specifiche.
+**File modificato:** `src/pages/ChiSiamo.tsx`
+- Importare le immagini da `src/assets/`
+- Hero: aggiungere colonna immagine su desktop
+- Sezione Storia: sostituire `/images/chi-siamo.jpg` con import di `thermodmr-infissi-esterni.webp`
 
 ### Dettaglio tecnico
 
-- File modificato: `src/pages/ChiSiamo.tsx`
-- Import aggiuntivi: `MapPin`, `Handshake` da lucide-react
-- Due nuovi `useInView` hooks per le animazioni delle sezioni aggiunte
-- Layout e stile coerenti con il resto del sito
+**ScrollToTop.tsx:**
+```text
+useEffect con dipendenza su pathname
+-> window.scrollTo(0, 0) ad ogni cambio
+```
 
+**ChiSiamo.tsx modifiche:**
+- Riga 59: `src="/images/chi-siamo.jpg"` diventa `src={imgInfissiEsterni}`
+- Hero (righe 35-52): layout grid 2 colonne su lg, immagine a destra
+- Import di 2 immagini: `thermodmr-infissi-esterni.webp` e `thermodmr-serramenti-vista-mare.jpg`
