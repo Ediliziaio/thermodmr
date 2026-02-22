@@ -1,34 +1,46 @@
 
 
-## Sostituire le immagini della Homepage con le foto caricate
-
-### Cosa resta invariato
-- L'immagine di sfondo dell'Hero (`/images/hero-bg.jpg`) -- come richiesto
-- L'immagine del serramento PVC nella Hero (gia aggiornata)
-- Le immagini di sfondo dei contatori e della CTA
+## Sostituire le immagini nelle pagine prodotto con le foto caricate
 
 ### Immagini da copiare e rinominare
 
-I file caricati verranno copiati in `src/assets/` con nomi neutri (senza riferimenti ad altre aziende):
-
-| File originale | Nuovo nome in `src/assets/` | Destinazione |
+| File originale | Nuovo nome in `src/assets/` | Pagina |
 |---|---|---|
-| `WnD-finestra-pvc-infissi-square-maxi-3G.webp` | `thermodmr-finestre-pvc-interni.webp` | Chi Siamo |
-| `copertina-infissi-pvc.jpg` | `thermodmr-scorrevoli-terrazza.jpg` | PVC Model: DMR CONFORT |
-| `infissi-pacifici-tivoli-finestre-pvc-winbox.jpg` | `thermodmr-finestra-effetto-legno.jpg` | PVC Model: DMR DOMUS |
-| `Serramenti-in-PVC_1.jpg` | `thermodmr-serramenti-vista-mare.jpg` | PVC Model: DMR PASSIVE |
-| `oknoplast-psk-porta-finestra-scorrevole.webp` | `thermodmr-porta-scorrevole.webp` | Accessorio: Portoncini |
-| `alluminia_group_infissi_pvc-821x1024.webp` | `thermodmr-infissi-esterni.webp` | Accessorio: Cassonetti |
-| `bicolore_9fb3b13b-eecd-4d14-b29c-eda2c76d931d.webp` | `thermodmr-finestra-bicolore.webp` | Accessorio: Tapparelle e Persiane (condivisa) |
+| `PORTONCINO.avif` | `thermodmr-portoncino-ingresso.avif` | Portoncini (hero + caratteristiche) |
+| `PORTONCINO_2.jpeg` | `thermodmr-portoncino-moderno.jpeg` | Portoncini (galleria img 1) |
+| `PORTONCINO_3.jpg` | `thermodmr-portoncini-colori.jpg` | Portoncini (galleria img 2) |
+| `CASSONETTO.jpg` | `thermodmr-cassonetto-sezione.jpg` | Cassonetti (hero + caratteristiche) |
+| `cassonetti2.jpg` | `thermodmr-cassonetto-installato.jpg` | Cassonetti (galleria img 1) |
+| `tapparella-alluminio-coibentato-media-celeste.webp` | `thermodmr-tapparella-coibentata.webp` | Tapparelle (hero + caratteristiche + galleria img 1) |
+| `persiana-in-alluminio.webp` | `thermodmr-persiana-verde.webp` | Persiane (hero + caratteristiche) |
+| `persiane_alu_2_1.jpg` | `thermodmr-persiana-legno.jpg` | Persiane (galleria img 1) |
 
-### Modifiche al codice in `src/pages/Home.tsx`
+### Modifiche per ogni pagina
 
-1. **Aggiungere 7 import** per le nuove immagini con nomi neutri
-2. **Chi Siamo** (riga 214): sostituire `/images/chi-siamo.jpg` con l'import della foto interni PVC bianchi
-3. **PVC Models** (righe 310, 317, 324): sostituire le 3 URL Unsplash con le foto importate
-4. **Accessories** (righe 333, 339, 345, 351): sostituire le 4 URL Unsplash con le foto importate (l'immagine bicolore verra usata per 2 accessori)
+**1. `src/pages/products/Portoncini.tsx`**
+- Importare 3 immagini (portoncino-ingresso, portoncino-moderno, portoncini-colori)
+- Hero (riga 66): sostituire URL Unsplash con import portoncino-ingresso
+- Caratteristiche (riga 73): sostituire URL Unsplash con import portoncino-ingresso
+- Galleria (righe 13-15): sostituire le 3 URL Unsplash -- img 1 con portoncino-moderno, img 2 con portoncini-colori, img 3 con portoncino-ingresso
+
+**2. `src/pages/products/Cassonetti.tsx`**
+- Importare 2 immagini (cassonetto-sezione, cassonetto-installato)
+- Hero (riga 65): sostituire con cassonetto-sezione
+- Caratteristiche (riga 72): sostituire con cassonetto-installato
+- Galleria (righe 13-16): sostituire img 1 con cassonetto-installato, img 2 con cassonetto-sezione, le altre 2 restano (solo 2 foto disponibili)
+
+**3. `src/pages/products/Tapparelle.tsx`**
+- Importare 1 immagine (tapparella-coibentata)
+- Hero (riga 65): sostituire con tapparella-coibentata
+- Caratteristiche (riga 72): sostituire con tapparella-coibentata
+- Galleria (riga 13): sostituire img 1 con tapparella-coibentata
+
+**4. `src/pages/products/Persiane.tsx`**
+- Importare 2 immagini (persiana-verde, persiana-legno)
+- Hero (riga 65): sostituire con persiana-verde
+- Caratteristiche (riga 72): sostituire con persiana-legno
+- Galleria (righe 13-14): img 1 con persiana-verde, img 2 con persiana-legno
 
 ### Dettaglio tecnico
-
-Tutte le immagini saranno importate come moduli ES6 (`import nomeImg from "@/assets/..."`) per una migliore ottimizzazione del bundle. I riferimenti Unsplash verranno completamente rimossi dalla homepage.
+Tutte le immagini importate come moduli ES6. I nomi dei file non contengono riferimenti ad altre aziende. Le URL Unsplash rimanenti nella galleria (dove non ci sono abbastanza foto) restano invariate.
 
