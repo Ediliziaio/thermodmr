@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { ArrowRight, CheckCircle2, SunDim, Paintbrush, Wind, Eye } from "lucide-react";
+import imgPersianaVerde from "@/assets/thermodmr-persiana-verde.webp";
+import imgPersianaLegno from "@/assets/thermodmr-persiana-legno.jpg";
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
@@ -10,8 +12,8 @@ import ProductGallery from "@/components/products/ProductGallery";
 import RelatedProducts from "@/components/products/RelatedProducts";
 
 const galleryImages = [
-  { src: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=1200&q=80", alt: "Persiane - Aperte su facciata", caption: "Persiane aperte su facciata in stile mediterraneo" },
-  { src: "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80", alt: "Persiane - Dettaglio lamelle", caption: "Lamelle orientabili in alluminio verniciato" },
+  { src: imgPersianaVerde, alt: "Persiana in alluminio verde", caption: "Persiane in alluminio con finitura classica" },
+  { src: imgPersianaLegno, alt: "Persiane effetto legno", caption: "Lamelle in alluminio con sublimazione effetto legno" },
   { src: "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=1200&q=80", alt: "Persiane - Colori RAL", caption: "Ampia scelta di colori dalla gamma RAL" },
   { src: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&q=80", alt: "Persiane - Facciata mediterranea", caption: "Eleganza senza tempo per ogni facciata" },
 ];
@@ -62,14 +64,14 @@ const Persiane = () => {
         title="Persiane in"
         titleAccent="Alluminio"
         description="Persiane esterne in alluminio con lamelle fisse o orientabili. Sezione profili 56 mm telai e 46 mm anta. Verniciatura RAL a scelta o sublimazione effetto legno."
-        heroImage="https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=1600&q=80"
+        heroImage={imgPersianaVerde}
       />
 
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="relative rounded-3xl overflow-hidden shadow-xl">
-              <img src="https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=800&q=80" alt="Persiane in alluminio" className="w-full aspect-[4/3] object-cover" loading="lazy" />
+              <img src={imgPersianaLegno} alt="Persiane in alluminio" className="w-full aspect-[4/3] object-cover" loading="lazy" />
               <div className="absolute bottom-4 left-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[hsl(195,85%,45%)] text-white shadow-lg">
                 <SunDim className="h-6 w-6" />
               </div>

@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { ArrowRight, CheckCircle2, Box, ThermometerSun, Wrench, Ruler } from "lucide-react";
+import imgCassonettoSezione from "@/assets/thermodmr-cassonetto-sezione.jpg";
+import imgCassonettoInstallato from "@/assets/thermodmr-cassonetto-installato.jpg";
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
@@ -10,8 +12,8 @@ import ProductGallery from "@/components/products/ProductGallery";
 import RelatedProducts from "@/components/products/RelatedProducts";
 
 const galleryImages = [
-  { src: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=1200&q=80", alt: "Cassonetto - Installato", caption: "Cassonetto integrato nella muratura" },
-  { src: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&q=80", alt: "Cassonetto - Dettaglio coibentazione", caption: "Coibentazione in EPS ad alta densità" },
+  { src: imgCassonettoInstallato, alt: "Cassonetto installato", caption: "Cassonetto integrato nella muratura" },
+  { src: imgCassonettoSezione, alt: "Cassonetto sezione tecnica", caption: "Coibentazione in EPS ad alta densità" },
   { src: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=1200&q=80", alt: "Cassonetto - Sezione tecnica", caption: "Ispezione frontale facilitata" },
   { src: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=80", alt: "Cassonetto - Facciata moderna", caption: "Finitura a filo muro per estetica pulita" },
 ];
@@ -62,14 +64,14 @@ const Cassonetti = () => {
         title="Cassonetti"
         titleAccent="Coibentati"
         description="Il cassonetto è il contenitore che ospita l'avvolgibile, posizionato nella parte superiore della finestra. Ruolo fondamentale nell'isolamento termico e acustico: cassonetti non isolati causano dispersioni, ponti termici, condensa e muffa."
-        heroImage="https://images.unsplash.com/photo-1513694203232-719a280e022f?w=1600&q=80"
+        heroImage={imgCassonettoSezione}
       />
 
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="relative rounded-3xl overflow-hidden shadow-xl">
-              <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&q=80" alt="Cassonetto coibentato" className="w-full aspect-[4/3] object-cover" loading="lazy" />
+              <img src={imgCassonettoInstallato} alt="Cassonetto coibentato" className="w-full aspect-[4/3] object-cover" loading="lazy" />
               <div className="absolute bottom-4 left-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[hsl(195,85%,45%)] text-white shadow-lg">
                 <Box className="h-6 w-6" />
               </div>
