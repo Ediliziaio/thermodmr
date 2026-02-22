@@ -31,6 +31,11 @@ const Impostazioni = lazy(() => import("./pages/Impostazioni"));
 const Placeholder = lazy(() => import("./pages/Placeholder"));
 const DealerArea = lazy(() => import("./pages/DealerArea"));
 const DealerPreventivi = lazy(() => import("./pages/DealerPreventivi"));
+const ChiSiamoPage = lazy(() => import("./pages/ChiSiamo"));
+const ProdottiPubblico = lazy(() => import("./pages/ProdottiPubblico"));
+const VantaggiPage = lazy(() => import("./pages/VantaggiPage"));
+const GaranziePage = lazy(() => import("./pages/GaranziePage"));
+const ContattiPage = lazy(() => import("./pages/ContattiPage"));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -206,6 +211,11 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
+            <Route path="/chi-siamo" element={<ChiSiamoPage />} />
+            <Route path="/prodotti-pubblico" element={<ProdottiPubblico />} />
+            <Route path="/vantaggi" element={<VantaggiPage />} />
+            <Route path="/garanzie" element={<GaranziePage />} />
+            <Route path="/contatti" element={<ContattiPage />} />
             <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
