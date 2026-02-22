@@ -5,6 +5,14 @@ import { ArrowRight, CheckCircle2, Sparkles, ThermometerSun, Shield, Volume2 } f
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
+import ProductGallery from "@/components/products/ProductGallery";
+
+const galleryImages = [
+  { src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80", alt: "DMR CONFORT - Finestra PVC classica" },
+  { src: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=1200&q=80", alt: "DMR CONFORT - Interni luminosi" },
+  { src: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&q=80", alt: "DMR CONFORT - Dettaglio profilo" },
+  { src: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=80", alt: "DMR CONFORT - Vista esterna" },
+];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -93,6 +101,8 @@ const DmrConfort = () => {
           </div>
         </div>
       </section>
+
+      <ProductGallery images={galleryImages} />
 
       {/* Specs */}
       <section ref={specsRef} className="py-24 bg-[hsl(0,0%,97%)]">

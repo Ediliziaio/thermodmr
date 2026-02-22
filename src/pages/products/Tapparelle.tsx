@@ -5,6 +5,14 @@ import { ArrowRight, CheckCircle2, Blinds, Zap, Shield, Smartphone } from "lucid
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
+import ProductGallery from "@/components/products/ProductGallery";
+
+const galleryImages = [
+  { src: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80", alt: "Tapparelle - Motorizzate" },
+  { src: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80", alt: "Tapparelle - Telecomando smart" },
+  { src: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&q=80", alt: "Tapparelle - Dettaglio lamella" },
+  { src: "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=1200&q=80", alt: "Tapparelle - Facciata moderna" },
+];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -89,6 +97,8 @@ const Tapparelle = () => {
           </div>
         </div>
       </section>
+
+      <ProductGallery images={galleryImages} />
 
       <section ref={specsRef} className="py-24 bg-[hsl(0,0%,97%)]">
         <div className="max-w-7xl mx-auto px-6">

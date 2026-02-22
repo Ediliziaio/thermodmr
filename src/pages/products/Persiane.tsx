@@ -5,6 +5,14 @@ import { ArrowRight, CheckCircle2, SunDim, Paintbrush, Wind, Eye } from "lucide-
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
+import ProductGallery from "@/components/products/ProductGallery";
+
+const galleryImages = [
+  { src: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=1200&q=80", alt: "Persiane - Aperte su facciata" },
+  { src: "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80", alt: "Persiane - Dettaglio lamelle" },
+  { src: "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=1200&q=80", alt: "Persiane - Colori RAL" },
+  { src: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&q=80", alt: "Persiane - Facciata mediterranea" },
+];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -89,6 +97,8 @@ const Persiane = () => {
           </div>
         </div>
       </section>
+
+      <ProductGallery images={galleryImages} />
 
       <section ref={specsRef} className="py-24 bg-[hsl(0,0%,97%)]">
         <div className="max-w-7xl mx-auto px-6">

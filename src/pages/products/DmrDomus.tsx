@@ -5,6 +5,14 @@ import { ArrowRight, CheckCircle2, Zap, ThermometerSun, Shield, Volume2 } from "
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
+import ProductGallery from "@/components/products/ProductGallery";
+
+const galleryImages = [
+  { src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80", alt: "DMR DOMUS - Grande vetrata moderna" },
+  { src: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&q=80", alt: "DMR DOMUS - Design moderno" },
+  { src: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=1200&q=80", alt: "DMR DOMUS - Dettaglio ferramenta" },
+  { src: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80", alt: "DMR DOMUS - Ambiente living" },
+];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -91,6 +99,8 @@ const DmrDomus = () => {
           </div>
         </div>
       </section>
+
+      <ProductGallery images={galleryImages} />
 
       <section ref={specsRef} className="py-24 bg-[hsl(0,0%,97%)]">
         <div className="max-w-7xl mx-auto px-6">
