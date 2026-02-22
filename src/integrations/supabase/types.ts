@@ -246,6 +246,39 @@ export type Database = {
           },
         ]
       }
+      contact_requests: {
+        Row: {
+          azienda: string | null
+          created_at: string
+          email: string
+          id: string
+          letto: boolean
+          messaggio: string
+          nome: string
+          telefono: string | null
+        }
+        Insert: {
+          azienda?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          letto?: boolean
+          messaggio: string
+          nome: string
+          telefono?: string | null
+        }
+        Update: {
+          azienda?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          letto?: boolean
+          messaggio?: string
+          nome?: string
+          telefono?: string | null
+        }
+        Relationships: []
+      }
       dealers: {
         Row: {
           cap: string

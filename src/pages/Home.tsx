@@ -24,8 +24,18 @@ import {
   Mail,
   Menu,
   X,
+  MapPin,
+  Facebook,
+  Instagram,
+  Linkedin,
+  Send,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo_Thermodmr.png";
 
 /* ─── Animation variants ─── */
@@ -36,6 +46,9 @@ const fadeUp = {
 const stagger = {
   visible: { transition: { staggerChildren: 0.12 } },
 };
+
+/* ─── Shared useInView options to fix visibility bug ─── */
+const inViewOptions = { triggerOnce: true, threshold: 0.05, rootMargin: "0px 0px -50px 0px" };
 
 /* ─── Animated counter hook ─── */
 const useCounter = (end: number, duration = 2000, start = false) => {
@@ -55,14 +68,30 @@ const useCounter = (end: number, duration = 2000, start = false) => {
 };
 
 /* ═══════════════════════════════════════════
-   1. NAVBAR
+   1. NAVBAR — with active link indicator
    ═══════════════════════════════════════════ */
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40);
+      // Detect active section
+      const sections = ["chi-siamo", "prodotti", "vantaggi", "garanzie", "contatti"];
+      let current = "";
+      for (const id of sections) {
+        const el = document.getElementById(id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 150 && rect.bottom > 150) {
+            current = id;
+          }
+        }
+      }
+      setActiveSection(current);
+    };
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -102,13 +131,21 @@ const Navbar = () => {
             <button
               key={item.id}
               onClick={() => scrollTo(item.id)}
-              className={`text-sm font-medium transition-colors ${
+              className={`relative text-sm font-medium transition-colors pb-1 ${
                 scrolled
-                  ? "text-[hsl(0,0%,35%)] hover:text-[hsl(195,85%,45%)]"
-                  : "text-white/80 hover:text-white"
+                  ? activeSection === item.id
+                    ? "text-[hsl(195,85%,45%)]"
+                    : "text-[hsl(0,0%,35%)] hover:text-[hsl(195,85%,45%)]"
+                  : activeSection === item.id
+                    ? "text-white"
+                    : "text-white/80 hover:text-white"
               }`}
             >
               {item.label}
+              {/* Active indicator dot */}
+              {activeSection === item.id && (
+                <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-5 h-0.5 rounded-full bg-[hsl(195,85%,45%)]" />
+              )}
             </button>
           ))}
         </div>
@@ -143,7 +180,11 @@ const Navbar = () => {
               <button
                 key={item.id}
                 onClick={() => scrollTo(item.id)}
-                className="block w-full text-left text-sm font-medium text-[hsl(0,0%,30%)] hover:text-[hsl(195,85%,45%)] py-2"
+                className={`block w-full text-left text-sm font-medium py-2 ${
+                  activeSection === item.id
+                    ? "text-[hsl(195,85%,45%)] font-bold"
+                    : "text-[hsl(0,0%,30%)] hover:text-[hsl(195,85%,45%)]"
+                }`}
               >
                 {item.label}
               </button>
@@ -156,7 +197,7 @@ const Navbar = () => {
 };
 
 /* ═══════════════════════════════════════════
-   2. HERO — Full-screen image like TeknoFinestre
+   2. HERO — with improved secondary button
    ═══════════════════════════════════════════ */
 const Hero = () => {
   const scrollToVantaggi = useCallback(() => {
@@ -165,14 +206,11 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: "url('/images/hero-bg.jpg')" }}
       />
-      {/* Dark overlay for readability */}
       <div className="absolute inset-0 bg-[hsl(0,0%,10%)]/60" />
-      {/* Bottom gradient fade */}
       <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[hsl(0,0%,10%)]/80 to-transparent" />
 
       <div className="relative max-w-7xl mx-auto px-6 pt-32 pb-24 grid lg:grid-cols-2 gap-16 items-center w-full">
@@ -215,7 +253,7 @@ const Hero = () => {
               size="lg"
               variant="outline"
               onClick={scrollToVantaggi}
-              className="rounded-full px-8 text-base border-white/30 text-white hover:bg-white/10 hover:text-white"
+              className="rounded-full px-8 text-base border-white/50 text-white bg-white/15 hover:bg-white/25 hover:text-white backdrop-blur-sm"
             >
               Scopri i Vantaggi
               <ChevronDown className="ml-2 h-4 w-4" />
@@ -232,7 +270,6 @@ const Hero = () => {
           </motion.div>
         </motion.div>
 
-        {/* Hero right — Product profile image like TeknoFinestre */}
         <motion.div
           initial={{ opacity: 0, x: 60 }}
           animate={{ opacity: 1, x: 0 }}
@@ -245,7 +282,6 @@ const Hero = () => {
               alt="Profilo serramento ThermoDMR"
               className="w-[420px] h-[420px] object-cover rounded-3xl shadow-2xl border-4 border-white/20"
             />
-            {/* Floating badges */}
             <div className="absolute -top-3 -right-3 bg-[hsl(195,85%,45%)] text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg">
               Consegna 15gg
             </div>
@@ -260,10 +296,10 @@ const Hero = () => {
 };
 
 /* ═══════════════════════════════════════════
-   3. CHI SIAMO — with real image
+   3. CHI SIAMO
    ═══════════════════════════════════════════ */
 const ChiSiamo = () => {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
+  const [ref, inView] = useInView(inViewOptions);
 
   return (
     <section ref={ref} id="chi-siamo" className="py-24 bg-white">
@@ -314,7 +350,7 @@ const ChiSiamo = () => {
 };
 
 /* ═══════════════════════════════════════════
-   4. CONTATORI — with background image
+   4. CONTATORI
    ═══════════════════════════════════════════ */
 const stats = [
   { value: 200, suffix: "+", label: "Rivenditori Attivi" },
@@ -324,11 +360,10 @@ const stats = [
 ];
 
 const Stats = () => {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.3 });
+  const [ref, inView] = useInView(inViewOptions);
 
   return (
     <section ref={ref} className="py-20 relative overflow-hidden">
-      {/* Background image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: "url('/images/counters-bg.jpg')" }}
@@ -365,7 +400,7 @@ const StatItem = ({ value, suffix, label, inView }: { value: number; suffix: str
 };
 
 /* ═══════════════════════════════════════════
-   5. PRODOTTI — with real images
+   5. PRODOTTI
    ═══════════════════════════════════════════ */
 const products = [
   {
@@ -395,7 +430,7 @@ const products = [
 ];
 
 const Products = () => {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
+  const [ref, inView] = useInView(inViewOptions);
 
   return (
     <section ref={ref} id="prodotti" className="py-24 bg-[hsl(0,0%,97%)]">
@@ -426,12 +461,12 @@ const Products = () => {
               variants={fadeUp}
               className="group rounded-2xl overflow-hidden border border-[hsl(0,0%,90%)] bg-white shadow-sm hover:shadow-xl hover:border-[hsl(195,85%,45%)]/30 hover:-translate-y-1 transition-all duration-300"
             >
-              {/* Product image */}
               <div className="relative h-48 overflow-hidden">
                 <img
                   src={f.image}
                   alt={f.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[hsl(0,0%,0%)]/30 to-transparent" />
                 <div className="absolute bottom-3 left-3 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[hsl(195,85%,45%)] text-white shadow-lg">
@@ -451,36 +486,44 @@ const Products = () => {
 };
 
 /* ═══════════════════════════════════════════
-   6. PERCHÉ SCEGLIERE THERMODMR
+   6. PERCHÉ SCEGLIERE THERMODMR — dark bg, bold cards with key metrics
    ═══════════════════════════════════════════ */
 const advantages = [
   {
     icon: BadgePercent,
+    metric: "-30%",
+    metricLabel: "vs concorrenza",
     title: "Prezzo Più Basso sul Mercato",
-    desc: "Produciamo internamente, senza intermediari. Questo significa prezzi imbattibili per te e margini più alti su ogni vendita. Confronta il nostro listino: la differenza la vedrai subito.",
+    desc: "Produciamo internamente, senza intermediari. Prezzi imbattibili e margini più alti su ogni vendita.",
   },
   {
     icon: Clock,
+    metric: "15gg",
+    metricLabel: "garantiti",
     title: "Tempi Certi di Consegna",
-    desc: "15 giorni lavorativi garantiti dalla conferma d'ordine. Mai più clienti che aspettano, mai più scuse da dare. Pianifica il tuo lavoro con certezza.",
+    desc: "15 giorni lavorativi dalla conferma d'ordine. Mai più clienti che aspettano, mai più scuse da dare.",
   },
   {
     icon: CreditCard,
+    metric: "60gg",
+    metricLabel: "pagamento",
     title: "Pagamenti Flessibili",
-    desc: "Condizioni di pagamento personalizzate per ogni rivenditore. Lavoriamo insieme per trovare la formula che ti permette di gestire al meglio la tua liquidità.",
+    desc: "Condizioni personalizzate per gestire al meglio la tua liquidità. Lavoriamo insieme per la formula giusta.",
   },
   {
     icon: Target,
+    metric: "100%",
+    metricLabel: "dedicato",
     title: "Il Tuo Successo è il Nostro Obiettivo",
-    desc: "Supporto commerciale dedicato, materiale marketing personalizzato, formazione tecnica e un referente sempre disponibile. Cresci tu, cresciamo noi.",
+    desc: "Supporto commerciale, materiale marketing personalizzato, formazione tecnica e referente dedicato.",
   },
 ];
 
 const WhyThermoDMR = () => {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
+  const [ref, inView] = useInView(inViewOptions);
 
   return (
-    <section ref={ref} id="vantaggi" className="py-24 bg-white">
+    <section ref={ref} id="vantaggi" className="py-24 bg-[hsl(0,0%,8%)]">
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
           initial="hidden"
@@ -488,13 +531,13 @@ const WhyThermoDMR = () => {
           variants={stagger}
           className="text-center mb-16"
         >
-          <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
+          <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,55%)] uppercase mb-4">
             I Tuoi Vantaggi Competitivi
           </motion.p>
-          <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-bold text-[hsl(0,0%,10%)] max-w-3xl mx-auto">
+          <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-bold text-white max-w-3xl mx-auto">
             Perché Scegliere ThermoDMR
           </motion.h2>
-          <motion.p variants={fadeUp} className="text-[hsl(0,0%,45%)] text-lg mt-6 max-w-2xl mx-auto leading-relaxed">
+          <motion.p variants={fadeUp} className="text-white/50 text-lg mt-6 max-w-2xl mx-auto leading-relaxed">
             Stanco di fornitori che non rispettano i tempi, con prezzi sempre più alti e zero supporto?
             Con ThermoDMR hai un partner che lavora per farti guadagnare.
           </motion.p>
@@ -504,21 +547,27 @@ const WhyThermoDMR = () => {
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           variants={stagger}
-          className="grid sm:grid-cols-2 gap-8"
+          className="grid sm:grid-cols-2 gap-6"
         >
           {advantages.map((a) => (
             <motion.div
               key={a.title}
               variants={fadeUp}
-              className="p-8 rounded-2xl border border-[hsl(0,0%,90%)] bg-[hsl(0,0%,98%)] hover:shadow-lg hover:border-[hsl(195,85%,45%)]/20 transition-all duration-300"
+              className="p-8 rounded-2xl bg-white/[0.06] border border-white/10 hover:bg-white/[0.1] hover:border-[hsl(195,85%,45%)]/30 transition-all duration-300"
             >
               <div className="flex gap-5">
-                <div className="shrink-0 inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[hsl(195,85%,45%)]/10 text-[hsl(195,85%,45%)]">
-                  <a.icon className="h-7 w-7" />
+                <div className="shrink-0 space-y-3">
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[hsl(195,85%,45%)] text-white shadow-[0_4px_20px_hsl(195,85%,45%,0.3)]">
+                    <a.icon className="h-7 w-7" />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-2xl font-extrabold text-[hsl(195,85%,55%)]">{a.metric}</p>
+                    <p className="text-[10px] text-white/40 uppercase tracking-wider">{a.metricLabel}</p>
+                  </div>
                 </div>
                 <div className="space-y-3">
-                  <h3 className="text-xl font-bold text-[hsl(0,0%,10%)]">{a.title}</h3>
-                  <p className="text-sm text-[hsl(0,0%,45%)] leading-relaxed">{a.desc}</p>
+                  <h3 className="text-xl font-bold text-white">{a.title}</h3>
+                  <p className="text-sm text-white/50 leading-relaxed">{a.desc}</p>
                 </div>
               </div>
             </motion.div>
@@ -530,36 +579,36 @@ const WhyThermoDMR = () => {
 };
 
 /* ═══════════════════════════════════════════
-   7. GARANZIE
+   7. GARANZIE — accent bar layout with badge
    ═══════════════════════════════════════════ */
 const guarantees = [
   {
     icon: Shield,
     title: "Zero Reclami, Zero Problemi",
-    desc: "Qualità certificata e controllo rigoroso su ogni prodotto. Meno resi, meno problemi con i tuoi clienti, più reputazione per la tua attività.",
+    desc: "Qualità certificata e controllo rigoroso su ogni prodotto. Meno resi, più reputazione per la tua attività.",
   },
   {
     icon: Truck,
     title: "Consegna Garantita nei Tempi",
-    desc: "Mai più clienti che aspettano e cantieri fermi. 15 giorni lavorativi dalla conferma d'ordine, sempre. Se non rispettiamo, ti risarciamo.",
+    desc: "Mai più clienti che aspettano. 15 giorni lavorativi dalla conferma d'ordine. Se non rispettiamo, ti risarciamo.",
   },
   {
     icon: BadgePercent,
     title: "Margini Protetti",
-    desc: "Listino riservato e zona esclusiva per proteggere il tuo investimento. Nessuna concorrenza interna tra rivenditori ThermoDMR nella tua area.",
+    desc: "Listino riservato e zona esclusiva. Nessuna concorrenza interna tra rivenditori ThermoDMR nella tua area.",
   },
   {
     icon: Headphones,
     title: "Supporto Commerciale Dedicato",
-    desc: "Un referente sempre disponibile, materiale marketing personalizzato e formazione tecnica continua. Non sei solo: siamo il tuo reparto produzione.",
+    desc: "Un referente sempre disponibile, materiale marketing personalizzato e formazione tecnica continua.",
   },
 ];
 
 const Guarantees = () => {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 });
+  const [ref, inView] = useInView(inViewOptions);
 
   return (
-    <section ref={ref} id="garanzie" className="py-24 bg-[hsl(0,0%,97%)]">
+    <section ref={ref} id="garanzie" className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
           initial="hidden"
@@ -579,19 +628,26 @@ const Guarantees = () => {
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           variants={stagger}
-          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8"
+          className="grid sm:grid-cols-2 gap-6"
         >
           {guarantees.map((g) => (
             <motion.div
               key={g.title}
               variants={fadeUp}
-              className="text-center p-8 rounded-2xl bg-white border border-[hsl(0,0%,90%)] hover:shadow-lg transition-shadow duration-300"
+              className="flex gap-5 p-6 rounded-2xl bg-[hsl(0,0%,97%)] border-l-4 border-[hsl(195,85%,45%)] hover:shadow-md transition-shadow duration-300"
             >
-              <div className="mb-6 inline-flex items-center justify-center w-14 h-14 rounded-full bg-[hsl(195,85%,45%)]/10 text-[hsl(195,85%,45%)]">
-                <g.icon className="h-7 w-7" />
+              <div className="shrink-0 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[hsl(195,85%,45%)] text-white">
+                <g.icon className="h-6 w-6" />
               </div>
-              <h3 className="text-lg font-bold text-[hsl(0,0%,10%)] mb-3">{g.title}</h3>
-              <p className="text-sm text-[hsl(0,0%,45%)] leading-relaxed">{g.desc}</p>
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <h3 className="text-lg font-bold text-[hsl(0,0%,10%)]">{g.title}</h3>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[hsl(195,85%,45%)] bg-[hsl(195,85%,45%)]/10 px-2 py-0.5 rounded-full whitespace-nowrap">
+                    Garantito
+                  </span>
+                </div>
+                <p className="text-sm text-[hsl(0,0%,45%)] leading-relaxed">{g.desc}</p>
+              </div>
             </motion.div>
           ))}
         </motion.div>
@@ -601,14 +657,13 @@ const Guarantees = () => {
 };
 
 /* ═══════════════════════════════════════════
-   8. CTA FINALE — with background image
+   8. CTA FINALE
    ═══════════════════════════════════════════ */
 const FinalCta = () => {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.3 });
+  const [ref, inView] = useInView(inViewOptions);
 
   return (
     <section ref={ref} className="py-28 relative overflow-hidden">
-      {/* Background image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: "url('/images/cta-bg.jpg')" }}
@@ -616,7 +671,6 @@ const FinalCta = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-[hsl(195,85%,35%)]/85 to-[hsl(210,80%,35%)]/85" />
 
       <motion.div
-        ref={ref}
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
         variants={stagger}
@@ -647,43 +701,190 @@ const FinalCta = () => {
 };
 
 /* ═══════════════════════════════════════════
-   9. FOOTER
+   9. CONTACT FORM
+   ═══════════════════════════════════════════ */
+const ContactForm = () => {
+  const [ref, inView] = useInView(inViewOptions);
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    nome: "",
+    azienda: "",
+    email: "",
+    telefono: "",
+    messaggio: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.nome.trim() || !formData.email.trim() || !formData.messaggio.trim()) {
+      toast({ title: "Compila i campi obbligatori", description: "Nome, email e messaggio sono richiesti.", variant: "destructive" });
+      return;
+    }
+    setLoading(true);
+    try {
+      const { error } = await supabase.from("contact_requests").insert({
+        nome: formData.nome.trim(),
+        azienda: formData.azienda.trim() || null,
+        email: formData.email.trim(),
+        telefono: formData.telefono.trim() || null,
+        messaggio: formData.messaggio.trim(),
+      });
+      if (error) throw error;
+      toast({ title: "Richiesta inviata!", description: "Ti ricontatteremo al più presto." });
+      setFormData({ nome: "", azienda: "", email: "", telefono: "", messaggio: "" });
+    } catch {
+      toast({ title: "Errore", description: "Impossibile inviare la richiesta. Riprova.", variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <section ref={ref} id="contatti" className="py-24 bg-[hsl(0,0%,97%)]">
+      <div className="max-w-7xl mx-auto px-6">
+        <motion.div
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          variants={stagger}
+        >
+          <motion.div variants={fadeUp} className="text-center mb-16">
+            <p className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
+              Contattaci
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[hsl(0,0%,10%)]">
+              Diventa Rivenditore ThermoDMR
+            </h2>
+            <p className="text-[hsl(0,0%,45%)] text-lg mt-4 max-w-2xl mx-auto">
+              Compila il form e un nostro commerciale ti ricontatterà entro 24 ore.
+            </p>
+          </motion.div>
+
+          <motion.div variants={fadeUp} className="max-w-2xl mx-auto">
+            <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg border border-[hsl(0,0%,90%)] p-8 space-y-5">
+              <div className="grid sm:grid-cols-2 gap-5">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-[hsl(0,0%,20%)]">Nome *</label>
+                  <Input name="nome" value={formData.nome} onChange={handleChange} placeholder="Mario Rossi" required maxLength={100} />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-[hsl(0,0%,20%)]">Azienda</label>
+                  <Input name="azienda" value={formData.azienda} onChange={handleChange} placeholder="La Tua Azienda Srl" maxLength={100} />
+                </div>
+              </div>
+              <div className="grid sm:grid-cols-2 gap-5">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-[hsl(0,0%,20%)]">Email *</label>
+                  <Input name="email" type="email" value={formData.email} onChange={handleChange} placeholder="info@tuaazienda.it" required maxLength={255} />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-[hsl(0,0%,20%)]">Telefono</label>
+                  <Input name="telefono" type="tel" value={formData.telefono} onChange={handleChange} placeholder="+39 333 123 4567" maxLength={20} />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-[hsl(0,0%,20%)]">Messaggio *</label>
+                <Textarea name="messaggio" value={formData.messaggio} onChange={handleChange} placeholder="Descrivi la tua attività e cosa cerchi in un fornitore..." required maxLength={1000} rows={4} />
+              </div>
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full py-6 text-base shadow-[0_4px_20px_hsl(195,85%,45%,0.3)]"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Invio in corso...
+                  </>
+                ) : (
+                  <>
+                    <Send className="mr-2 h-5 w-5" />
+                    Invia Richiesta
+                  </>
+                )}
+              </Button>
+            </form>
+          </motion.div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+/* ═══════════════════════════════════════════
+   10. FOOTER — 4 columns with full info
    ═══════════════════════════════════════════ */
 const Footer = () => (
-  <footer id="contatti" className="bg-[hsl(0,0%,8%)] py-16 border-t border-white/5">
+  <footer className="bg-[hsl(0,0%,8%)] py-16 border-t border-white/5">
     <div className="max-w-7xl mx-auto px-6">
-      <div className="grid sm:grid-cols-3 gap-12 mb-12">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        {/* Brand */}
         <div className="space-y-4">
           <img src={logo} alt="ThermoDMR" className="h-10 object-contain brightness-0 invert opacity-90" />
           <p className="text-sm text-white/40 leading-relaxed">
             Produciamo serramenti di alta qualità per far crescere la tua attività.
             Il tuo successo è il nostro obiettivo.
           </p>
-        </div>
-
-        <div className="space-y-4">
-          <h4 className="text-sm font-bold text-white/80 uppercase tracking-wider">Contatti</h4>
-          <div className="space-y-3">
-            <a href="tel:+390000000000" className="flex items-center gap-2 text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors">
-              <Phone className="h-4 w-4" />
-              +39 000 000 0000
+          <div className="flex gap-3 pt-2">
+            <a href="#" className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 text-white/50 hover:bg-[hsl(195,85%,45%)] hover:text-white transition-all">
+              <Facebook className="h-4 w-4" />
             </a>
-            <a href="mailto:info@thermodmr.it" className="flex items-center gap-2 text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors">
-              <Mail className="h-4 w-4" />
-              info@thermodmr.it
+            <a href="#" className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 text-white/50 hover:bg-[hsl(195,85%,45%)] hover:text-white transition-all">
+              <Instagram className="h-4 w-4" />
+            </a>
+            <a href="#" className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 text-white/50 hover:bg-[hsl(195,85%,45%)] hover:text-white transition-all">
+              <Linkedin className="h-4 w-4" />
             </a>
           </div>
         </div>
 
+        {/* Prodotti */}
+        <div className="space-y-4">
+          <h4 className="text-sm font-bold text-white/80 uppercase tracking-wider">Prodotti</h4>
+          <div className="space-y-2 text-sm text-white/40">
+            <p>Finestre in PVC</p>
+            <p>Finestre in Alluminio</p>
+            <p>Porte e Portoncini</p>
+            <p>Persiane e Oscuranti</p>
+          </div>
+        </div>
+
+        {/* Contatti */}
+        <div className="space-y-4">
+          <h4 className="text-sm font-bold text-white/80 uppercase tracking-wider">Contatti</h4>
+          <div className="space-y-3">
+            <a href="tel:+390000000000" className="flex items-center gap-2 text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors">
+              <Phone className="h-4 w-4 shrink-0" />
+              +39 000 000 0000
+            </a>
+            <a href="mailto:info@thermodmr.it" className="flex items-center gap-2 text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors">
+              <Mail className="h-4 w-4 shrink-0" />
+              info@thermodmr.it
+            </a>
+            <div className="flex items-start gap-2 text-sm text-white/40">
+              <MapPin className="h-4 w-4 shrink-0 mt-0.5" />
+              <span>Via dell'Industria, 00<br />00000 Città (PR)</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Legal */}
         <div className="space-y-4">
           <h4 className="text-sm font-bold text-white/80 uppercase tracking-wider">Link Utili</h4>
-          <div className="space-y-3">
+          <div className="space-y-2">
             <Link
               to="/auth"
               className="block text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors"
             >
               Area Riservata Rivenditori
             </Link>
+          </div>
+          <div className="pt-4">
+            <p className="text-xs text-white/25">P.IVA: 00000000000</p>
           </div>
         </div>
       </div>
@@ -710,6 +911,7 @@ const Home = () => (
     <WhyThermoDMR />
     <Guarantees />
     <FinalCta />
+    <ContactForm />
     <Footer />
   </div>
 );
