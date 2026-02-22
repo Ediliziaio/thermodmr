@@ -40,55 +40,55 @@ const stagger = { visible: { transition: { staggerChildren: 0.12 } } };
 const inViewOpts = { triggerOnce: true, threshold: 0.05, rootMargin: "0px 0px -50px 0px" };
 
 const specs = [
-  { label: "Profilo", value: "3 camere" },
+  { label: "Profilo", value: "5 camere (telaio/anta)" },
   { label: "Classe", value: "B" },
-  { label: "Vetrocamera", value: "Standard 4/16/4" },
-  { label: "Uf (telaio)", value: "1.3 W/m²K" },
-  { label: "Uw (finestra)", value: "1.4 W/m²K" },
-  { label: "Abbattimento acustico", value: "32 dB" },
+  { label: "Profondità installazione", value: "72 mm" },
+  { label: "Pacchetto vetri", value: "fino a 49 mm" },
+  { label: "Uw (finestra)", value: "0.88 W/m²K" },
+  { label: "Abbattimento acustico", value: "46 dB" },
 ];
 
 const features = [
-  "Profilo a 3 camere con rinforzo in acciaio per massima rigidità",
-  "Profili sottili che massimizzano la superficie vetrata e la luce naturale",
-  "Vetrocamera standard con ottimo rapporto qualità/prezzo",
-  "Ampia gamma di colori e finiture legno per ogni stile architettonico",
+  "Profili alti solo 113 mm per massimizzare la luce naturale negli ambienti",
+  "Pacchetto vetro fino a 49 mm per eccellente isolamento termico",
+  "5 camere nel telaio e nell'anta, 4 camere nel montante",
+  "Protezione acustica fino a 46 dB per ambienti silenziosi anche in centro città",
+  "Durevole e resistente agli agenti esterni per molti anni di utilizzo",
+  "Sistema ecologico sviluppato pensando al riciclaggio",
+  "Forma versatile per progetti architettonici sia moderni che classici",
   "Guarnizioni a doppia battuta per tenuta all'aria e all'acqua",
-  "Ferramenta anti-effrazione di serie per la tua sicurezza",
-  "Facile manutenzione: basta un panno umido per la pulizia",
-  "Drenaggio nascosto dell'acqua piovana",
 ];
 
 const windowAdvantages = [
   {
     icon: Wind,
     title: "Microventilazione",
-    desc: "Funzione che consente di ventilare l'ambiente senza aprire completamente l'anta, garantendo un ricambio d'aria costante anche in assenza.",
+    desc: "Funzione di montaggio che consente di ventilare l'ambiente senza aprire l'anta, garantendo un ricambio d'aria costante anche in assenza.",
   },
   {
     icon: Lock,
     title: "Maniglia di Sicurezza",
-    desc: "Maniglia in alluminio con funzione di sicurezza integrata, disponibile in diverse finiture per adattarsi a ogni stile.",
+    desc: "Maniglia in alluminio con funzione di sicurezza, pulsante o chiave. Disponibile in diverse finiture per adattarsi a ogni stile.",
   },
   {
     icon: Settings2,
     title: "Cerniere 3D Regolabili",
-    desc: "Regolabili su tre livelli (altezza, larghezza, pressione) per una chiusura perfetta e duratura nel tempo.",
+    desc: "Disponibile anche nella versione a scomparsa - Designo. Cerniere 3D regolabili su tre livelli con portata fino a 130 kg.",
   },
   {
     icon: Thermometer,
     title: "Canalina Calda",
-    desc: "Canalina warm-edge che riduce il ponte termico sul bordo del vetro, disponibile in acciaio o plastica con ampia gamma di colori.",
+    desc: "Disponibile in acciaio o in plastica - prodotto con tecnologia polimerica o composita, in un'ampia gamma di colori.",
   },
   {
     icon: RotateCcw,
     title: "Blocco Rotazione Maniglia",
-    desc: "Sistema che impedisce il posizionamento errato dell'anta, prevenendo danni alla ferramenta e garantendo il corretto funzionamento.",
+    desc: "Funzione che impedisce la rotazione incontrollata della maniglia in posizione di ribalta, responsabile del corretto posizionamento dell'anta in posizione di chiusura.",
   },
   {
     icon: Maximize2,
     title: "Braccio Oscillo-Battente",
-    desc: "Permette l'apertura dell'anta sia a battente che a ribalta, con funzione microventilazione integrata per un comfort ottimale.",
+    desc: "Apparecchio per una ventilazione confortevole con funzione aggiuntiva di microventilazione e inclinazione dell'anta regolabile in modalità inverno-estate.",
   },
 ];
 
@@ -104,8 +104,8 @@ const availableColors = [
 ];
 
 const benefits = [
-  { icon: ThermometerSun, title: "Isolamento Termico", desc: "Riduzione dei consumi energetici grazie al profilo multi-camera e alla vetrocamera performante. Mantieni il calore d'inverno e il fresco d'estate." },
-  { icon: Volume2, title: "Comfort Acustico", desc: "Abbattimento acustico fino a 32 dB per ambienti più silenziosi e confortevoli, ideale per abitazioni in zone trafficate." },
+  { icon: ThermometerSun, title: "Isolamento Termico", desc: "Efficace isolamento del calore con bollette più basse e temperature confortevoli tutto l'anno grazie al profilo a 5 camere e al pacchetto vetro fino a 49 mm." },
+  { icon: Volume2, title: "Comfort Acustico", desc: "Riduzione del rumore esterno fino a 46 dB per ambienti silenziosi e confortevoli, ideale per abitazioni in zone trafficate." },
   { icon: Shield, title: "Sicurezza", desc: "Ferramenta anti-effrazione di serie con possibilità di upgrade a classe RC2. Protezione e tranquillità per la tua famiglia." },
 ];
 
@@ -123,7 +123,7 @@ const DmrConfort = () => {
         category="Finestre in PVC"
         title="DMR"
         titleAccent="CONFORT"
-        description="La soluzione ideale per chi cerca qualità e convenienza. Profilo a 3 camere con ottime prestazioni termiche e acustiche, profili sottili per massimizzare la luce naturale e un design versatile che si adatta a ogni contesto architettonico."
+        description="Finestre che combinano design moderno, profili sottili e prestazioni eccellenti. Progettate per fornire la massima luce naturale con elevati livelli di isolamento termico e acustico. Si adattano a progetti architettonici sia classici che moderni: la scelta per chi cerca forma leggera, efficienza energetica e prestazioni affidabili per anni."
         heroImage="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80"
         badge={{ label: "Miglior Prezzo", color: "green" }}
       />
@@ -146,7 +146,7 @@ const DmrConfort = () => {
             <div className="space-y-6">
               <h2 className="text-3xl font-bold text-[hsl(0,0%,10%)]">Caratteristiche Principali</h2>
               <p className="text-[hsl(0,0%,40%)] leading-relaxed">
-                Il DMR CONFORT è progettato per offrire il massimo della luce naturale grazie ai profili sottili e alla grande superficie vetrata. La struttura a 3 camere con rinforzo in acciaio garantisce eccellente isolamento termico e acustico, riducendo i consumi energetici e migliorando il comfort abitativo. Facile da mantenere e resistente nel tempo, è la scelta ideale per ristrutturazioni e nuove costruzioni.
+                Il DMR CONFORT presenta profili alti solo 113 mm e un pacchetto vetro accuratamente selezionato per far entrare molta più luce naturale negli ambienti. Garantisce un efficace isolamento del calore con bollette più basse e temperature confortevoli tutto l'anno, oltre a una riduzione del rumore esterno fino a 46 dB. I profili sono realizzati per molti anni di utilizzo, resistenti agli agenti esterni e di facile manutenzione. Sistema sviluppato pensando al riciclaggio, con una forma versatile per progetti sia moderni che classici.
               </p>
               <ul className="space-y-3">
                 {features.map((f) => (
