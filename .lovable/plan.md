@@ -1,57 +1,40 @@
 
 
-## Miglioramenti UX della Home Page
+## Miglioramento Pagine Prodotto
 
-### Problemi identificati e soluzioni proposte
+### Panoramica
+Tutte le 7 pagine prodotto (DMR Confort, Domus, Passive, Portoncini, Cassonetti, Tapparelle, Persiane) e la pagina catalogo `/prodotti` hanno la stessa struttura ripetitiva e usano foto generiche Unsplash. Il piano migliora la UX aggiungendo elementi visivi e informativi che rendono ogni pagina piu coinvolgente.
 
 ---
 
-### 1. Navbar: logo troppo piccolo su mobile, "Area Riservata" occupa troppo spazio
-- Il bottone "Area Riservata" su mobile appare prima del menu hamburger, spostando il logo troppo a sinistra
-- Ridurre leggermente il padding del bottone su mobile e rendere il testo piu corto ("Accedi") solo su schermi piccoli
+### 1. Hero con immagine a tutta larghezza
+Attualmente l'hero e solo testo su sfondo grigio chiaro. Aggiungere un'immagine hero a tutta larghezza con overlay scuro e testo sopra, simile ai siti premium di serramenti.
 
-### 2. Hero: immagine profilo nascosta su mobile
-- L'immagine del profilo serramento (`hidden lg:flex`) non si vede mai su mobile, perdendo un elemento visivo forte
-- Mostrare l'immagine anche su mobile, ridimensionata, sotto il testo hero (prima dei badge)
+- Sfondo: immagine grande (diversa per ogni prodotto) con overlay gradient scuro
+- Testo: bianco, con badge prodotto (es. "Best Seller" per DOMUS, "Top di Gamma" per PASSIVE)
+- Breadcrumb sotto la navbar: Home > Prodotti > DMR Confort
 
-### 3. Hero: badge "Profilo Tedesco" ecc. poco leggibili su mobile
-- I 4 badge con check sono piccoli e compressi su 2 righe con poco contrasto (text-white/50)
-- Aumentare il contrasto a text-white/70 e dare piu spazio verticale
+### 2. Breadcrumb di navigazione
+Aggiungere un breadcrumb in cima a ogni pagina prodotto per facilitare la navigazione:
+`Home > Prodotti > DMR CONFORT`
 
-### 4. Sezione "Chi Siamo": immagine sotto il testo su mobile senza spazio
-- Aggiungere un gap verticale piu generoso tra testo e immagine su mobile (da gap-16 a gap-10 su mobile, gap-16 su lg)
+### 3. Badge prodotto
+Aggiungere un badge colorato accanto al nome del prodotto:
+- DMR CONFORT: "Miglior Prezzo" (verde)
+- DMR DOMUS: "Best Seller" (arancione/dorato)
+- DMR PASSIVE: "Top di Gamma" (viola/premium)
 
-### 5. Contatori: "2-6 sett." poco chiaro visivamente
-- Il prefisso "2-" non e animato, quindi il contatore parte da "2-0 sett." e anima solo il "6" - un po' confuso
-- Rendere il contatore statico per questo specifico stat: mostrare direttamente "2-6 sett." senza animazione
+### 4. Immagini piu pertinenti
+Sostituire le foto generiche con immagini Unsplash piu pertinenti ai serramenti (finestre, profili PVC, dettagli tecnici, installazioni). Usare foto diverse per ogni prodotto.
 
-### 6. Prodotti: immagine DMR PASSIVE rotta
-- Dallo screenshot, la terza card (DMR PASSIVE) mostra un'immagine grigia/non caricata. L'URL Unsplash potrebbe essere non valido
-- Sostituire con un'immagine Unsplash funzionante
+### 5. Sezione "Confronta i Modelli" (solo pagine PVC)
+Nelle 3 pagine DMR (Confort, Domus, Passive), aggiungere prima del CTA finale una tabella di confronto rapido tra i 3 modelli, con link alle altre pagine. Questo aiuta l'utente a capire le differenze senza tornare al catalogo.
 
-### 7. Sezione Vantaggi (sfondo scuro): testo descrizione poco leggibile
-- Il testo delle descrizioni e `text-white/50` (50% opacita) su sfondo scuro - difficile da leggere
-- Aumentare a `text-white/65` per migliore leggibilita
+### 6. Navigazione tra prodotti correlati
+Aggiungere una sezione "Scopri anche" prima del footer con card degli altri prodotti della stessa categoria, per facilitare l'esplorazione.
 
-### 8. Sezione "Trova il Rivenditore": troppo vuota e generica
-- La sezione e molto semplice con solo icona, titolo, sottotitolo e bottone - visivamente debole
-- Aggiungere 3 mini-card in riga sotto il sottotitolo con vantaggi chiave (es. "Consulenza gratuita", "Sopralluogo dedicato", "Preventivo in 24h") per dare piu sostanza
-
-### 9. Contact Form: titolo duplicato
-- Il label sopra e "Contattaci" e anche l'h2 e "Contattaci" - ridondante
-- Cambiare il label superiore in "Parliamone" o "Scrivici" e lasciare l'h2 "Contattaci"
-
-### 10. Contact Form: campo "Tipo" senza label descrittivo
-- Il select "Tipo" non spiega bene cosa si sta selezionando
-- Rinominare la label in "Chi sei?" per essere piu chiaro e amichevole
-
-### 11. Smooth scroll: i link navbar non scrollano smooth alle sezioni
-- I link nella navbar puntano a pagine separate (/chi-siamo, /vantaggi, /garanzie) invece che alle sezioni della stessa pagina
-- Aggiungere scroll smooth per i link che corrispondono a sezioni presenti nella home (#chi-siamo, #vantaggi, #garanzie, #contatti) quando si e gia sulla homepage
-
-### 12. Footer: testo brand ancora orientato ai rivenditori
-- Il footer dice "Produciamo serramenti di alta qualita per far crescere la tua attivita. Il tuo successo e il nostro obiettivo." - ancora B2B
-- Aggiornare a "Produciamo serramenti di alta qualita con profilo tedesco. Design, isolamento e il miglior prezzo di mercato."
+### 7. Migliorare la galleria
+Aggiungere sotto ogni immagine della galleria una didascalia descrittiva per dare contesto alle foto.
 
 ---
 
@@ -59,9 +42,17 @@
 
 | File | Modifiche |
 |------|-----------|
-| `src/pages/Home.tsx` | Fix immagine DMR PASSIVE, contatore statico per "2-6 sett.", hero image visibile su mobile, contrasto testi migliorato, sezione "Trova Rivenditore" arricchita, fix titolo form duplicato, label "Chi sei?" |
-| `src/components/PublicNavbar.tsx` | Testo bottone responsive ("Accedi" su mobile) |
-| `src/components/PublicFooter.tsx` | Aggiornamento testo brand nel footer |
+| `src/components/products/ProductHero.tsx` | **Nuovo** - Componente hero con immagine full-width, overlay, breadcrumb e badge |
+| `src/components/products/ProductComparison.tsx` | **Nuovo** - Tabella comparativa per i 3 modelli PVC |
+| `src/components/products/RelatedProducts.tsx` | **Nuovo** - Sezione "Scopri anche" con card prodotti correlati |
+| `src/components/products/ProductGallery.tsx` | Aggiunta supporto didascalie sotto le immagini |
+| `src/pages/products/DmrConfort.tsx` | Uso nuovi componenti, immagini aggiornate, badge "Miglior Prezzo" |
+| `src/pages/products/DmrDomus.tsx` | Uso nuovi componenti, immagini aggiornate, badge "Best Seller" |
+| `src/pages/products/DmrPassive.tsx` | Uso nuovi componenti, immagini aggiornate, badge "Top di Gamma" |
+| `src/pages/products/Portoncini.tsx` | Uso nuovi componenti, immagini aggiornate |
+| `src/pages/products/Cassonetti.tsx` | Uso nuovi componenti, immagini aggiornate |
+| `src/pages/products/Tapparelle.tsx` | Uso nuovi componenti, immagini aggiornate |
+| `src/pages/products/Persiane.tsx` | Uso nuovi componenti, immagini aggiornate |
 
-Nessun nuovo file, nessuna modifica al routing o al database.
+Nessuna modifica al database o al routing.
 
