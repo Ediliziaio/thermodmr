@@ -19,6 +19,7 @@ const stagger = { visible: { transition: { staggerChildren: 0.12 } } };
 interface GalleryImage {
   src: string;
   alt: string;
+  caption?: string;
 }
 
 interface ProductGalleryProps {
@@ -57,6 +58,11 @@ const ProductGallery = ({ images }: ProductGalleryProps) => {
                         className="w-full aspect-video object-cover"
                         loading="lazy"
                       />
+                      {img.caption && (
+                        <div className="bg-white px-4 py-3">
+                          <p className="text-xs text-[hsl(0,0%,45%)] font-medium">{img.caption}</p>
+                        </div>
+                      )}
                     </div>
                   </CarouselItem>
                 ))}

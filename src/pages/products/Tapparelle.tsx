@@ -5,13 +5,14 @@ import { ArrowRight, CheckCircle2, Blinds, Zap, Shield, Smartphone } from "lucid
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
+import ProductHero from "@/components/products/ProductHero";
 import ProductGallery from "@/components/products/ProductGallery";
+import RelatedProducts from "@/components/products/RelatedProducts";
 
 const galleryImages = [
-  { src: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80", alt: "Tapparelle - Motorizzate" },
-  { src: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80", alt: "Tapparelle - Telecomando smart" },
-  { src: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&q=80", alt: "Tapparelle - Dettaglio lamella" },
-  { src: "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=1200&q=80", alt: "Tapparelle - Facciata moderna" },
+  { src: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80", alt: "Tapparelle - Motorizzate", caption: "Controllo da remoto con motorizzazione integrata" },
+  { src: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&q=80", alt: "Tapparelle - Dettaglio lamella", caption: "Lamelle in alluminio coibentato ad alta resistenza" },
+  { src: "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=1200&q=80", alt: "Tapparelle - Facciata moderna", caption: "Integrazione estetica con facciate contemporanee" },
 ];
 
 const fadeUp = {
@@ -47,7 +48,6 @@ const benefits = [
 ];
 
 const Tapparelle = () => {
-  const [heroRef, heroInView] = useInView(inViewOpts);
   const [specsRef, specsInView] = useInView(inViewOpts);
   const [benefitsRef, benefitsInView] = useInView(inViewOpts);
 
@@ -55,25 +55,19 @@ const Tapparelle = () => {
     <div className="min-h-screen bg-white">
       <PublicNavbar />
 
-      <section ref={heroRef} className="pt-32 pb-20 bg-[hsl(0,0%,97%)]">
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div initial="hidden" animate={heroInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">I Nostri Prodotti</motion.p>
-            <motion.h1 variants={fadeUp} className="text-4xl sm:text-5xl font-extrabold text-[hsl(0,0%,10%)] leading-tight mb-6">
-              <span className="text-[hsl(195,85%,45%)]">Tapparelle</span>
-            </motion.h1>
-            <motion.p variants={fadeUp} className="text-lg text-[hsl(0,0%,40%)] leading-relaxed max-w-2xl">
-              Tapparelle in PVC e alluminio coibentato, disponibili con motorizzazione elettrica e predisposizione per la domotica.
-            </motion.p>
-          </motion.div>
-        </div>
-      </section>
+      <ProductHero
+        category="I Nostri Prodotti"
+        title=""
+        titleAccent="Tapparelle"
+        description="Tapparelle in PVC e alluminio coibentato, disponibili con motorizzazione elettrica e predisposizione per la domotica."
+        heroImage="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1600&q=80"
+      />
 
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="relative rounded-3xl overflow-hidden shadow-xl">
-              <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80" alt="Tapparelle motorizzate" className="w-full aspect-[4/3] object-cover" loading="lazy" />
+              <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&q=80" alt="Tapparelle motorizzate" className="w-full aspect-[4/3] object-cover" loading="lazy" />
               <div className="absolute bottom-4 left-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[hsl(195,85%,45%)] text-white shadow-lg">
                 <Blinds className="h-6 w-6" />
               </div>
@@ -134,6 +128,8 @@ const Tapparelle = () => {
           </motion.div>
         </div>
       </section>
+
+      <RelatedProducts currentSlug="/prodotti/tapparelle" />
 
       <section className="py-20 bg-[hsl(195,85%,45%)]">
         <div className="max-w-3xl mx-auto px-6 text-center">

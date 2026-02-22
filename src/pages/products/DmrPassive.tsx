@@ -5,13 +5,16 @@ import { ArrowRight, CheckCircle2, Crown, ThermometerSun, Shield, Leaf } from "l
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
+import ProductHero from "@/components/products/ProductHero";
 import ProductGallery from "@/components/products/ProductGallery";
+import ProductComparison from "@/components/products/ProductComparison";
+import RelatedProducts from "@/components/products/RelatedProducts";
 
 const galleryImages = [
-  { src: "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80", alt: "DMR PASSIVE - Architettura contemporanea" },
-  { src: "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=1200&q=80", alt: "DMR PASSIVE - Efficienza energetica" },
-  { src: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&q=80", alt: "DMR PASSIVE - Vetro triplo dettaglio" },
-  { src: "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=1200&q=80", alt: "DMR PASSIVE - Villa moderna" },
+  { src: "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80", alt: "DMR PASSIVE - Architettura contemporanea", caption: "Integrazione perfetta in architetture moderne" },
+  { src: "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=1200&q=80", alt: "DMR PASSIVE - Efficienza energetica", caption: "Prestazioni certificate Passivhaus" },
+  { src: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&q=80", alt: "DMR PASSIVE - Vetro triplo dettaglio", caption: "Triplo vetro basso emissivo con doppio gas argon" },
+  { src: "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=1200&q=80", alt: "DMR PASSIVE - Villa moderna", caption: "Design minimale con profili a vista ridotta" },
 ];
 
 const fadeUp = {
@@ -46,7 +49,6 @@ const benefits = [
 ];
 
 const DmrPassive = () => {
-  const [heroRef, heroInView] = useInView(inViewOpts);
   const [specsRef, specsInView] = useInView(inViewOpts);
   const [benefitsRef, benefitsInView] = useInView(inViewOpts);
 
@@ -54,22 +56,14 @@ const DmrPassive = () => {
     <div className="min-h-screen bg-white">
       <PublicNavbar />
 
-      <section ref={heroRef} className="pt-32 pb-20 bg-[hsl(0,0%,97%)]">
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div initial="hidden" animate={heroInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
-              Finestre in PVC
-            </motion.p>
-            <motion.h1 variants={fadeUp} className="text-4xl sm:text-5xl font-extrabold text-[hsl(0,0%,10%)] leading-tight mb-6">
-              DMR <span className="text-[hsl(195,85%,45%)]">PASSIVE</span>
-            </motion.h1>
-            <motion.p variants={fadeUp} className="text-lg text-[hsl(0,0%,40%)] leading-relaxed max-w-2xl">
-              Il top di gamma per progetti di alto livello. Profilo a 7 camere con prestazioni certificate
-              Passivhaus, per edifici a consumo quasi zero.
-            </motion.p>
-          </motion.div>
-        </div>
-      </section>
+      <ProductHero
+        category="Finestre in PVC"
+        title="DMR"
+        titleAccent="PASSIVE"
+        description="Il top di gamma per progetti di alto livello. Profilo a 7 camere con prestazioni certificate Passivhaus, per edifici a consumo quasi zero."
+        heroImage="https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1600&q=80"
+        badge={{ label: "Top di Gamma", color: "purple" }}
+      />
 
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
@@ -105,9 +99,7 @@ const DmrPassive = () => {
       <section ref={specsRef} className="py-24 bg-[hsl(0,0%,97%)]">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div initial="hidden" animate={specsInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.h2 variants={fadeUp} className="text-3xl font-bold text-[hsl(0,0%,10%)] mb-12 text-center">
-              Specifiche Tecniche
-            </motion.h2>
+            <motion.h2 variants={fadeUp} className="text-3xl font-bold text-[hsl(0,0%,10%)] mb-12 text-center">Specifiche Tecniche</motion.h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {specs.map((s) => (
                 <motion.div key={s.label} variants={fadeUp} className="bg-white rounded-2xl p-6 shadow-sm border border-[hsl(0,0%,92%)]">
@@ -123,9 +115,7 @@ const DmrPassive = () => {
       <section ref={benefitsRef} className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div initial="hidden" animate={benefitsInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.h2 variants={fadeUp} className="text-3xl font-bold text-[hsl(0,0%,10%)] mb-12 text-center">
-              Vantaggi Chiave
-            </motion.h2>
+            <motion.h2 variants={fadeUp} className="text-3xl font-bold text-[hsl(0,0%,10%)] mb-12 text-center">Vantaggi Chiave</motion.h2>
             <div className="grid md:grid-cols-3 gap-8">
               {benefits.map((b) => (
                 <motion.div key={b.title} variants={fadeUp} className="text-center space-y-4">
@@ -140,6 +130,10 @@ const DmrPassive = () => {
           </motion.div>
         </div>
       </section>
+
+      <ProductComparison currentSlug="/prodotti/dmr-passive" />
+
+      <RelatedProducts currentSlug="/prodotti/dmr-passive" />
 
       <section className="py-20 bg-[hsl(195,85%,45%)]">
         <div className="max-w-3xl mx-auto px-6 text-center">
