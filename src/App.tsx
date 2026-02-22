@@ -43,6 +43,7 @@ const ProdPersiane = lazy(() => import("./pages/products/Persiane"));
 const VantaggiPage = lazy(() => import("./pages/VantaggiPage"));
 const GaranziePage = lazy(() => import("./pages/GaranziePage"));
 const ContattiPage = lazy(() => import("./pages/ContattiPage"));
+const DiventaRivenditore = lazy(() => import("./pages/DiventaRivenditore"));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -230,6 +231,7 @@ const App = () => (
             <Route path="/vantaggi" element={<VantaggiPage />} />
             <Route path="/garanzie" element={<GaranziePage />} />
             <Route path="/contatti" element={<ContattiPage />} />
+            <Route path="/diventa-rivenditore" element={<DiventaRivenditore />} />
             <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

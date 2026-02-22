@@ -678,7 +678,7 @@ const BecomeDealer = () => {
         </motion.div>
 
         <motion.div variants={fadeUp}>
-          <a href="#contatti">
+          <Link to="/diventa-rivenditore">
             <Button
               size="lg"
               className="bg-white text-[hsl(195,85%,40%)] hover:bg-white/90 font-bold rounded-full px-12 text-base shadow-xl hover:shadow-2xl transition-all"
@@ -686,7 +686,7 @@ const BecomeDealer = () => {
               Candidati Ora
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
-          </a>
+          </Link>
         </motion.div>
       </motion.div>
     </section>
