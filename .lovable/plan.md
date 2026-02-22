@@ -1,19 +1,17 @@
 
 
-## Rimuovere il colore celeste dalla sezione Contatori
+## Sostituire la foto hero con l'immagine del serramento PVC
 
-### Problema
-Nella sezione Stats (contatori), alcune parti usano il colore celeste `hsl(195,85%,55%)` -- in particolare i suffissi dei numeri (.000+, sett., %), le icone e il badge info. L'utente vuole tutto bianco.
+### Cosa cambia
+L'immagine quadrata nella sezione Hero della homepage (attualmente `hero-profile.jpg` - una foto di interni/corridoio) verra sostituita con la foto del serramento in PVC bianco (Squareline) caricata dall'utente.
 
-### Modifiche
+### Passaggi
 
-**File**: `src/pages/Home.tsx` (sezione StatItem, righe 261-298)
+1. **Copiare l'immagine** dal caricamento utente a `src/assets/serramenti-pvc-squareline.png`
 
-| Elemento | Prima (celeste) | Dopo (bianco) |
-|----------|----------------|---------------|
-| Cerchio icona sfondo | `bg-[hsl(195,85%,45%)]/20` | `bg-white/10` |
-| Icona dentro cerchio | `text-[hsl(195,85%,55%)]` | `text-white/80` |
-| Suffisso numero (riga 280, 285) | `text-[hsl(195,85%,55%)]` | `text-white/70` |
-| Icona Info (riga 292) | `text-[hsl(195,85%,55%)]/60` | `text-white/40` |
+2. **Modificare `src/pages/Home.tsx`**:
+   - Importare l'immagine come modulo ES6: `import heroSerramento from "@/assets/serramenti-pvc-squareline.png"`
+   - Sostituire `src="/images/hero-profile.jpg"` con `src={heroSerramento}`
+   - Aggiornare l'alt text a "Serramento in PVC ThermoDMR"
+   - L'immagine del serramento ha sfondo bianco/chiaro, quindi potrebbe servire aggiungere uno sfondo bianco al contenitore (`bg-white`) per integrarlo meglio con lo sfondo scuro dell'hero
 
-Nessun altro file modificato. Le modifiche riguardano solo 4 classi CSS dentro il componente `StatItem`.
