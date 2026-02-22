@@ -44,7 +44,7 @@ const specs = [
   { label: "Classe", value: "B" },
   { label: "Profondità installazione", value: "72 mm" },
   { label: "Pacchetto vetri", value: "fino a 49 mm" },
-  { label: "Uw (finestra)", value: "0.88 W/m²K" },
+  { label: "Uw (finestra)", value: "1.3 W/m²K" },
   { label: "Abbattimento acustico", value: "46 dB" },
 ];
 

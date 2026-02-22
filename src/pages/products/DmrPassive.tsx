@@ -43,7 +43,7 @@ const specs = [
   { label: "Classe", value: "A+" },
   { label: "Vetrocamera", value: "Triplo vetro basso emissivo" },
   { label: "Uf (telaio)", value: "0.85 W/m²K" },
-  { label: "Uw (finestra)", value: "0.8 W/m²K" },
+  { label: "Uw (finestra)", value: "1.3 W/m²K" },
   { label: "Abbattimento acustico", value: "45 dB" },
 ];
 
@@ -55,7 +55,7 @@ const features = [
   "Battuta ferramenta nell'asse di 13 mm per elementi ROTO più resistenti",
   "Ampia superficie delle camere per ventilazione e raffreddamento efficace",
   "Resistente a radiazioni solari e sollecitazioni meccaniche",
-  "Uw fino a 0.8 W/m²K per edifici NZEB e certificazione Passivhaus",
+  "Uw fino a 1.3 W/m²K per edifici NZEB e certificazione Passivhaus",
 ];
 
 const windowAdvantages = [

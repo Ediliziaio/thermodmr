@@ -43,7 +43,7 @@ const specs = [
   { label: "Classe", value: "A" },
   { label: "Vetrocamera", value: "Con gas argon" },
   { label: "Uf (telaio)", value: "1.1 W/m²K" },
-  { label: "Uw (finestra)", value: "1.1 W/m²K" },
+  { label: "Uw (finestra)", value: "1.3 W/m²K" },
   { label: "Abbattimento acustico", value: "38 dB" },
 ];
 
