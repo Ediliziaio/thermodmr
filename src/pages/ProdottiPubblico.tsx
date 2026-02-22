@@ -54,7 +54,7 @@ const otherProducts = [
     icon: Shield,
     title: "Portoncini in PVC",
     link: "/prodotti/portoncini",
-    image: "/images/product-porte.jpg",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&q=80",
     desc: "Portoncini d'ingresso in PVC con elevata sicurezza e isolamento termico. Finiture personalizzabili per adattarsi a ogni stile architettonico.",
     features: [
       "Pannelli decorativi personalizzabili",
@@ -68,7 +68,7 @@ const otherProducts = [
     icon: Box,
     title: "Cassonetti",
     link: "/prodotti/cassonetti",
-    image: "/images/product-pvc.jpg",
+    image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=800&q=80",
     desc: "Cassonetti coibentati per avvolgibili, progettati per eliminare i ponti termici e garantire il massimo isolamento nella zona del vano avvolgibile.",
     features: [
       "Coibentazione in EPS ad alta densità",
@@ -82,7 +82,7 @@ const otherProducts = [
     icon: Blinds,
     title: "Tapparelle",
     link: "/prodotti/tapparelle",
-    image: "/images/product-alluminio.jpg",
+    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80",
     desc: "Tapparelle in PVC e alluminio coibentato, disponibili con motorizzazione elettrica e predisposizione per la domotica.",
     features: [
       "PVC o alluminio coibentato",
@@ -96,7 +96,7 @@ const otherProducts = [
     icon: SunDim,
     title: "Persiane",
     link: "/prodotti/persiane",
-    image: "/images/product-persiane.jpg",
+    image: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=800&q=80",
     desc: "Persiane in alluminio con lamelle orientabili per un controllo ottimale della luce e della ventilazione. Design elegante e zero manutenzione.",
     features: [
       "Alluminio verniciato a polvere",
@@ -143,7 +143,7 @@ const ProdottiPubblico = () => {
             <div className="grid lg:grid-cols-2 gap-16 items-center mb-16">
               <motion.div variants={fadeUp}>
                 <div className="relative rounded-3xl overflow-hidden shadow-xl">
-                  <img src="/images/product-pvc.jpg" alt="Finestre in PVC" className="w-full aspect-[4/3] object-cover" loading="lazy" />
+                  <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80" alt="Finestre in PVC" className="w-full aspect-[4/3] object-cover" loading="lazy" />
                   <div className="absolute bottom-4 left-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[hsl(195,85%,45%)] text-white shadow-lg">
                     <ThermometerSun className="h-6 w-6" />
                   </div>
