@@ -14,6 +14,7 @@ interface ModelData {
   name: string;
   slug: string;
   badge?: string;
+  badgeColor?: string;
   specs: Record<string, string>;
 }
 
@@ -22,44 +23,47 @@ const models: ModelData[] = [
     name: "DMR CONFORT",
     slug: "/prodotti/dmr-confort",
     badge: "Miglior Prezzo",
+    badgeColor: "hsl(145, 60%, 40%)",
     specs: {
-      Camere: "3",
-      Classe: "B",
-      "Uw": "1.4 W/m²K",
-      Vetro: "Standard 4/16/4",
-      Acustica: "32 dB",
-      Ferramenta: "Anti-effrazione",
+      Camere: "5",
+      "Profondità": "72 mm",
+      "Uw": "1.3 W/m²K",
+      Vetro: "fino a 49 mm",
+      Acustica: "46 dB",
+      Sicurezza: "Anti-effrazione",
     },
   },
   {
     name: "DMR DOMUS",
     slug: "/prodotti/dmr-domus",
     badge: "Best Seller",
+    badgeColor: "hsl(195, 85%, 45%)",
     specs: {
       Camere: "5",
-      Classe: "A",
-      "Uw": "1.1 W/m²K",
+      "Profondità": "76 mm",
+      "Uw": "1.3 W/m²K",
       Vetro: "Gas argon",
       Acustica: "38 dB",
-      Ferramenta: "Roto premium",
+      Sicurezza: "RC2 opzionale",
     },
   },
   {
     name: "DMR PASSIVE",
     slug: "/prodotti/dmr-passive",
     badge: "Top di Gamma",
+    badgeColor: "hsl(40, 70%, 45%)",
     specs: {
       Camere: "7",
-      Classe: "A+",
-      "Uw": "0.8 W/m²K",
+      "Profondità": "82 mm",
+      "Uw": "1.3 W/m²K",
       Vetro: "Triplo basso emissivo",
       Acustica: "45 dB",
-      Ferramenta: "Premium perimetrale",
+      Sicurezza: "RC2 + perimetrale",
     },
   },
 ];
 
-const specKeys = ["Camere", "Classe", "Uw", "Vetro", "Acustica", "Ferramenta"];
+const specKeys = ["Camere", "Profondità", "Uw", "Vetro", "Acustica", "Sicurezza"];
 
 interface ProductComparisonProps {
   currentSlug: string;
@@ -92,7 +96,7 @@ const ProductComparison = ({ currentSlug }: ProductComparisonProps) => {
                     >
                       <p className="text-sm font-bold text-[hsl(0,0%,10%)]">{m.name}</p>
                       {m.badge && (
-                        <span className="inline-block text-[10px] font-bold text-[hsl(195,85%,45%)] mt-1">{m.badge}</span>
+                        <span className="inline-block text-[10px] font-bold mt-1" style={{ color: m.badgeColor || "hsl(195,85%,45%)" }}>{m.badge}</span>
                       )}
                     </th>
                   ))}
@@ -140,10 +144,10 @@ const ProductComparison = ({ currentSlug }: ProductComparisonProps) => {
               <motion.div key={m.name} variants={fadeUp} className="bg-white rounded-2xl p-5 border border-[hsl(0,0%,92%)] shadow-sm">
                 <div className="flex items-center justify-between mb-3">
                   <p className="font-bold text-[hsl(0,0%,10%)]">{m.name}</p>
-                  {m.badge && <span className="text-[10px] font-bold text-[hsl(195,85%,45%)]">{m.badge}</span>}
+                  {m.badge && <span className="text-[10px] font-bold" style={{ color: m.badgeColor || "hsl(195,85%,45%)" }}>{m.badge}</span>}
                 </div>
                 <div className="grid grid-cols-2 gap-2 mb-4">
-                  {specKeys.slice(0, 4).map((key) => (
+                  {specKeys.map((key) => (
                     <div key={key}>
                       <p className="text-[10px] text-[hsl(0,0%,50%)] uppercase tracking-wider">{key}</p>
                       <p className="text-sm font-semibold text-[hsl(0,0%,15%)]">{m.specs[key]}</p>
