@@ -1,38 +1,57 @@
 
 
-## Integrazione contenuti Petecki nella pagina DMR CONFORT
+## Integrazione contenuti Petecki nelle pagine DMR DOMUS e DMR PASSIVE
 
-### Cosa viene preso dalla pagina Petecki e adattato
-
-La pagina Petecki "Impressive Class 72 MD" ha diversi elementi interessanti che mancano alla pagina DMR CONFORT attuale. Ecco cosa verra integrato, riadattato con il nome "DMR CONFORT" e i dati tecnici gia presenti:
+Stesso approccio gia applicato al DMR CONFORT: prendere i contenuti dalle pagine Petecki indicate, riadattarli con il nome del prodotto e integrarli nelle pagine esistenti.
 
 ---
 
-### 1. Immagine sezione profilo (cross-section)
-- L'immagine caricata (sezione trasversale del profilo PVC con finitura legno) verra copiata nel progetto e usata nella sezione "Caratteristiche Principali" al posto della foto Unsplash generica
-- Viene mostrata con sfondo chiaro/neutro per risaltare il dettaglio tecnico del profilo
+### DMR DOMUS (da Petecki "Excellent Style NEO 76")
 
-### 2. Nuova sezione "Vantaggi della Finestra" (ispirata a Petecki)
-Petecki mostra 6 vantaggi con foto dettaglio + descrizione. Per DMR CONFORT verranno aggiunti 6 vantaggi tecnici simili, adattati:
-- **Microventilazione** - Funzione che consente di ventilare l'ambiente senza aprire l'anta
-- **Maniglia di sicurezza** - Maniglia in alluminio con funzione di sicurezza
-- **Cerniere 3D regolabili** - Regolabili su tre livelli per una perfetta chiusura
-- **Canalina calda** - Disponibile in acciaio o plastica, ampia gamma di colori
-- **Blocco rotazione maniglia** - Per il corretto posizionamento dell'anta
-- **Braccio oscillo-battente** - Per ventilazione confortevole con funzione microventilazione
+#### Contenuti presi dalla pagina Petecki e adattati:
 
-Questi verranno mostrati in una griglia 2x3 (desktop) o lista (mobile) con icone al posto delle foto.
+**Descrizione arricchita** (hero e sezione caratteristiche):
+- Battute strette che massimizzano le aree vetrate e la luce naturale
+- La battuta centrale estrusa "safetec inside" nella variante MD rende difficile la forzatura
+- Costruzione multicamera per eccellente isolamento termico e acustico
+- Possibilita di scegliere tra 2 o 3 guarnizioni
+- Elementi antieffrazione con possibilita classe RC2
+- Finiture Woodec e Aludec per un'estetica unica
 
-### 3. Nuova sezione "Colori Disponibili"
-Petecki mostra 12 colori popolari. Per DMR CONFORT verranno elencati colori comuni per serramenti PVC con nome e swatch colorato:
-- Bianco, Rovere Dorato, Noce, Antracite, Grigio Chiaro, Verde Scuro, Bianco Crema, Jet Black
+**Nuova sezione "Vantaggi della Finestra"** (6 elementi, stessa struttura del DMR CONFORT):
+- Clip di Microventilazione
+- Maniglia di Sicurezza
+- Cerniere 3D Regolabili (portata fino a 130 kg, versione a scomparsa Designo)
+- Canalina Calda
+- Blocco Rotazione Maniglia
+- Braccio Oscillo-Battente
 
-### 4. Descrizione prodotto arricchita
-Il testo descrittivo della sezione hero e della sezione caratteristiche verra arricchito con contenuti ispirati a Petecki ma adattati al DMR CONFORT:
-- Enfasi su luce naturale grazie ai profili sottili
-- Isolamento termico ed efficienza energetica
-- Durabilita e facile manutenzione
-- Versatilita architettonica
+**Nuova sezione "Colori Disponibili"** (stessi 8 colori del DMR CONFORT per coerenza di gamma)
+
+---
+
+### DMR PASSIVE (da Petecki "Salamander BluEvolution 82 MD")
+
+#### Contenuti presi dalla pagina Petecki e adattati:
+
+**Descrizione arricchita** (hero e sezione caratteristiche):
+- Struttura a 6 camere in PVC di altissima qualita per eccellente isolamento termico e acustico
+- Profondita di installazione 82 mm con pacchetti di 3 vetri fino a 52 mm
+- Rinforzo anta in acciaio zincato per resistenza statica e sicurezza
+- Ampia superficie delle camere per ventilazione e raffreddamento efficace
+- Tripla guarnizione in gomma siliconica con forma innovativa (riduce forze di apertura/chiusura)
+- Battuta ferramenta nell'asse di 13 mm per elementi ROTO piu resistenti
+- Resistente a radiazioni solari e sollecitazioni meccaniche
+
+**Nuova sezione "Vantaggi della Finestra"** (6 elementi):
+- Clip di Microventilazione
+- Maniglia di Sicurezza
+- Cerniere 3D Regolabili (portata fino a 130 kg)
+- Canalina Calda
+- Blocco Rotazione Maniglia
+- Braccio Oscillo-Battente
+
+**Nuova sezione "Colori Disponibili"** (stessi 8 colori)
 
 ---
 
@@ -40,8 +59,8 @@ Il testo descrittivo della sezione hero e della sezione caratteristiche verra ar
 
 | File | Modifiche |
 |------|-----------|
-| `src/pages/products/DmrConfort.tsx` | Immagine profilo cross-section al posto della foto generica, nuova sezione "Vantaggi della Finestra" con 6 elementi, nuova sezione "Colori Disponibili" con 8 colori, testi arricchiti |
-| Asset: `src/assets/dmr-confort-profile.webp` | Copia dell'immagine caricata (sezione trasversale profilo) |
+| `src/pages/products/DmrDomus.tsx` | Testi arricchiti da Petecki, nuova sezione "Vantaggi della Finestra" (6 elementi con icone), nuova sezione "Colori Disponibili" (8 colori con swatch), features aggiornate |
+| `src/pages/products/DmrPassive.tsx` | Testi arricchiti da Petecki, nuova sezione "Vantaggi della Finestra" (6 elementi con icone), nuova sezione "Colori Disponibili" (8 colori con swatch), features aggiornate |
 
-Nessun nuovo componente, nessuna modifica al routing o al database.
+Nessun nuovo componente, nessuna modifica al routing o al database. Si riutilizza la stessa struttura gia implementata nel DMR CONFORT.
 
