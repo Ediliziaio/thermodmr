@@ -9,8 +9,11 @@ import {
   CheckCircle2,
   ChevronDown,
   ThermometerSun,
-  Layers,
-  DoorOpen,
+  Sparkles,
+  Zap,
+  Crown,
+  Box,
+  Blinds,
   SunDim,
   Clock,
   CreditCard,
@@ -263,32 +266,56 @@ const StatItem = ({ value, suffix, label, inView }: { value: number; suffix: str
 };
 
 /* ═══════════════════════════════════════════
-   5. PRODOTTI
+   5. PRODOTTI — 3 modelli PVC + 4 accessori
    ═══════════════════════════════════════════ */
-const products = [
+const pvcModels = [
   {
-    icon: ThermometerSun,
-    title: "Finestre in PVC",
-    desc: "Il prodotto più richiesto dal mercato. Alto isolamento, manutenzione zero e margini eccellenti per il rivenditore. Ampia gamma di colori e finiture.",
-    image: "/images/product-pvc.jpg",
+    icon: Sparkles,
+    name: "DMR CONFORT",
+    link: "/prodotti/dmr-confort",
+    desc: "Profilo a 3 camere. Qualità e convenienza.",
+    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80",
   },
   {
-    icon: Layers,
-    title: "Finestre in Alluminio",
-    desc: "Linee sottili e grandi superfici vetrate: il prodotto premium che i tuoi clienti cercano. Resistenza e design per progetti di alto livello.",
-    image: "/images/product-alluminio.jpg",
+    icon: Zap,
+    name: "DMR DOMUS",
+    link: "/prodotti/dmr-domus",
+    desc: "Profilo a 5 camere. Il best-seller della gamma.",
+    image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80",
   },
   {
-    icon: DoorOpen,
-    title: "Porte e Portoncini",
-    desc: "Portoncini d'ingresso blindati con finiture personalizzabili. Un prodotto ad alto valore aggiunto che aumenta il ticket medio dei tuoi ordini.",
-    image: "/images/product-porte.jpg",
+    icon: Crown,
+    name: "DMR PASSIVE",
+    link: "/prodotti/dmr-passive",
+    desc: "Profilo a 7 camere. Prestazioni Passivhaus.",
+    image: "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=600&q=80",
+  },
+];
+
+const homeAccessories = [
+  {
+    icon: Shield,
+    title: "Portoncini",
+    link: "/prodotti/portoncini",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&q=80",
+  },
+  {
+    icon: Box,
+    title: "Cassonetti",
+    link: "/prodotti/cassonetti",
+    image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=400&q=80",
+  },
+  {
+    icon: Blinds,
+    title: "Tapparelle",
+    link: "/prodotti/tapparelle",
+    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&q=80",
   },
   {
     icon: SunDim,
-    title: "Persiane e Oscuranti",
-    desc: "Completa la vendita con sistemi oscuranti coordinati. Motorizzazione e domotica disponibili per upselling e margini superiori.",
-    image: "/images/product-persiane.jpg",
+    title: "Persiane",
+    link: "/prodotti/persiane",
+    image: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=400&q=80",
   },
 ];
 
@@ -312,36 +339,70 @@ const Products = () => {
           </motion.h2>
         </motion.div>
 
-        <motion.div
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          variants={stagger}
-          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8"
-        >
-          {products.map((f) => (
-            <motion.div
-              key={f.title}
-              variants={fadeUp}
-              className="group rounded-2xl overflow-hidden border border-[hsl(0,0%,90%)] bg-white shadow-sm hover:shadow-xl hover:border-[hsl(195,85%,45%)]/30 hover:-translate-y-1 transition-all duration-300"
-            >
-              <div className="relative h-48 overflow-hidden">
-                <img
-                  src={f.image}
-                  alt={f.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[hsl(0,0%,0%)]/30 to-transparent" />
-                <div className="absolute bottom-3 left-3 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[hsl(195,85%,45%)] text-white shadow-lg">
-                  <f.icon className="h-5 w-5" />
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-lg font-bold text-[hsl(0,0%,10%)] mb-3">{f.title}</h3>
-                <p className="text-sm text-[hsl(0,0%,45%)] leading-relaxed">{f.desc}</p>
-              </div>
-            </motion.div>
-          ))}
+        <motion.div initial="hidden" animate={inView ? "visible" : "hidden"} variants={stagger}>
+          <motion.h3 variants={fadeUp} className="text-2xl font-bold text-[hsl(0,0%,10%)] mb-8 flex items-center gap-3">
+            <ThermometerSun className="h-6 w-6 text-[hsl(195,85%,45%)]" />
+            Finestre in PVC
+          </motion.h3>
+          <div className="grid sm:grid-cols-3 gap-6 mb-16">
+            {pvcModels.map((m) => (
+              <motion.div key={m.name} variants={fadeUp}>
+                <Link to={m.link} className="block h-full">
+                  <div className="group rounded-2xl overflow-hidden border border-[hsl(0,0%,90%)] bg-white shadow-sm hover:shadow-xl hover:border-[hsl(195,85%,45%)]/30 hover:-translate-y-1 transition-all duration-300 h-full">
+                    <div className="relative h-44 overflow-hidden">
+                      <img src={m.image} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[hsl(0,0%,0%)]/30 to-transparent" />
+                      <div className="absolute bottom-3 left-3 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[hsl(195,85%,45%)] text-white shadow-lg">
+                        <m.icon className="h-5 w-5" />
+                      </div>
+                    </div>
+                    <div className="p-5">
+                      <h4 className="text-lg font-bold text-[hsl(0,0%,10%)] group-hover:text-[hsl(195,85%,45%)] transition-colors mb-2">{m.name}</h4>
+                      <p className="text-sm text-[hsl(0,0%,45%)] leading-relaxed">{m.desc}</p>
+                      <p className="text-sm font-semibold text-[hsl(195,85%,45%)] flex items-center gap-1 mt-3">
+                        Scopri di più <ArrowRight className="h-4 w-4" />
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.h3 variants={fadeUp} className="text-2xl font-bold text-[hsl(0,0%,10%)] mb-8">
+            Complementi e Accessori
+          </motion.h3>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {homeAccessories.map((a) => (
+              <motion.div key={a.title} variants={fadeUp}>
+                <Link to={a.link} className="block h-full">
+                  <div className="group rounded-2xl overflow-hidden border border-[hsl(0,0%,90%)] bg-white shadow-sm hover:shadow-xl hover:border-[hsl(195,85%,45%)]/30 hover:-translate-y-1 transition-all duration-300 h-full">
+                    <div className="relative h-36 overflow-hidden">
+                      <img src={a.image} alt={a.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[hsl(0,0%,0%)]/30 to-transparent" />
+                      <div className="absolute bottom-3 left-3 inline-flex items-center justify-center w-9 h-9 rounded-lg bg-[hsl(195,85%,45%)] text-white shadow-lg">
+                        <a.icon className="h-4 w-4" />
+                      </div>
+                    </div>
+                    <div className="p-4">
+                      <h4 className="text-base font-bold text-[hsl(0,0%,10%)] group-hover:text-[hsl(195,85%,45%)] transition-colors">{a.title}</h4>
+                      <p className="text-xs font-semibold text-[hsl(195,85%,45%)] flex items-center gap-1 mt-2">
+                        Scopri <ArrowRight className="h-3 w-3" />
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div variants={fadeUp} className="text-center">
+            <Link to="/prodotti-pubblico">
+              <Button variant="outline" className="rounded-full px-8 border-[hsl(195,85%,45%)] text-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,45%,0.05)] font-semibold">
+                Scopri Tutta la Gamma <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </motion.div>
         </motion.div>
       </div>
     </section>
