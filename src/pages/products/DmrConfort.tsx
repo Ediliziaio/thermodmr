@@ -5,13 +5,16 @@ import { ArrowRight, CheckCircle2, Sparkles, ThermometerSun, Shield, Volume2 } f
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
+import ProductHero from "@/components/products/ProductHero";
 import ProductGallery from "@/components/products/ProductGallery";
+import ProductComparison from "@/components/products/ProductComparison";
+import RelatedProducts from "@/components/products/RelatedProducts";
 
 const galleryImages = [
-  { src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80", alt: "DMR CONFORT - Finestra PVC classica" },
-  { src: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=1200&q=80", alt: "DMR CONFORT - Interni luminosi" },
-  { src: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&q=80", alt: "DMR CONFORT - Dettaglio profilo" },
-  { src: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=80", alt: "DMR CONFORT - Vista esterna" },
+  { src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80", alt: "DMR CONFORT - Finestra PVC classica", caption: "Finestra a due ante con profilo classico bianco" },
+  { src: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=1200&q=80", alt: "DMR CONFORT - Interni luminosi", caption: "Massima luminosità negli ambienti interni" },
+  { src: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&q=80", alt: "DMR CONFORT - Dettaglio profilo", caption: "Profilo a 3 camere con rinforzo in acciaio" },
+  { src: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=80", alt: "DMR CONFORT - Vista esterna", caption: "Integrazione perfetta con qualsiasi facciata" },
 ];
 
 const fadeUp = {
@@ -46,7 +49,6 @@ const benefits = [
 ];
 
 const DmrConfort = () => {
-  const [heroRef, heroInView] = useInView(inViewOpts);
   const [specsRef, specsInView] = useInView(inViewOpts);
   const [benefitsRef, benefitsInView] = useInView(inViewOpts);
 
@@ -54,23 +56,14 @@ const DmrConfort = () => {
     <div className="min-h-screen bg-white">
       <PublicNavbar />
 
-      {/* Hero */}
-      <section ref={heroRef} className="pt-32 pb-20 bg-[hsl(0,0%,97%)]">
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div initial="hidden" animate={heroInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
-              Finestre in PVC
-            </motion.p>
-            <motion.h1 variants={fadeUp} className="text-4xl sm:text-5xl font-extrabold text-[hsl(0,0%,10%)] leading-tight mb-6">
-              DMR <span className="text-[hsl(195,85%,45%)]">CONFORT</span>
-            </motion.h1>
-            <motion.p variants={fadeUp} className="text-lg text-[hsl(0,0%,40%)] leading-relaxed max-w-2xl">
-              La soluzione ideale per chi cerca qualità e convenienza. Profilo a 3 camere con ottime prestazioni
-              termiche e acustiche, perfetto per ristrutturazioni e nuove costruzioni.
-            </motion.p>
-          </motion.div>
-        </div>
-      </section>
+      <ProductHero
+        category="Finestre in PVC"
+        title="DMR"
+        titleAccent="CONFORT"
+        description="La soluzione ideale per chi cerca qualità e convenienza. Profilo a 3 camere con ottime prestazioni termiche e acustiche, perfetto per ristrutturazioni e nuove costruzioni."
+        heroImage="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80"
+        badge={{ label: "Miglior Prezzo", color: "green" }}
+      />
 
       {/* Image + Features */}
       <section className="py-24 bg-white">
@@ -108,9 +101,7 @@ const DmrConfort = () => {
       <section ref={specsRef} className="py-24 bg-[hsl(0,0%,97%)]">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div initial="hidden" animate={specsInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.h2 variants={fadeUp} className="text-3xl font-bold text-[hsl(0,0%,10%)] mb-12 text-center">
-              Specifiche Tecniche
-            </motion.h2>
+            <motion.h2 variants={fadeUp} className="text-3xl font-bold text-[hsl(0,0%,10%)] mb-12 text-center">Specifiche Tecniche</motion.h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {specs.map((s) => (
                 <motion.div key={s.label} variants={fadeUp} className="bg-white rounded-2xl p-6 shadow-sm border border-[hsl(0,0%,92%)]">
@@ -127,9 +118,7 @@ const DmrConfort = () => {
       <section ref={benefitsRef} className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div initial="hidden" animate={benefitsInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.h2 variants={fadeUp} className="text-3xl font-bold text-[hsl(0,0%,10%)] mb-12 text-center">
-              Vantaggi Chiave
-            </motion.h2>
+            <motion.h2 variants={fadeUp} className="text-3xl font-bold text-[hsl(0,0%,10%)] mb-12 text-center">Vantaggi Chiave</motion.h2>
             <div className="grid md:grid-cols-3 gap-8">
               {benefits.map((b) => (
                 <motion.div key={b.title} variants={fadeUp} className="text-center space-y-4">
@@ -144,6 +133,10 @@ const DmrConfort = () => {
           </motion.div>
         </div>
       </section>
+
+      <ProductComparison currentSlug="/prodotti/dmr-confort" />
+
+      <RelatedProducts currentSlug="/prodotti/dmr-confort" />
 
       {/* CTA */}
       <section className="py-20 bg-[hsl(195,85%,45%)]">

@@ -5,13 +5,15 @@ import { ArrowRight, CheckCircle2, Box, ThermometerSun, Wrench, Ruler } from "lu
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
+import ProductHero from "@/components/products/ProductHero";
 import ProductGallery from "@/components/products/ProductGallery";
+import RelatedProducts from "@/components/products/RelatedProducts";
 
 const galleryImages = [
-  { src: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=1200&q=80", alt: "Cassonetto - Installato" },
-  { src: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&q=80", alt: "Cassonetto - Dettaglio coibentazione" },
-  { src: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=1200&q=80", alt: "Cassonetto - Sezione tecnica" },
-  { src: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=80", alt: "Cassonetto - Facciata moderna" },
+  { src: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=1200&q=80", alt: "Cassonetto - Installato", caption: "Cassonetto integrato nella muratura" },
+  { src: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&q=80", alt: "Cassonetto - Dettaglio coibentazione", caption: "Coibentazione in EPS ad alta densità" },
+  { src: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=1200&q=80", alt: "Cassonetto - Sezione tecnica", caption: "Ispezione frontale facilitata" },
+  { src: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=80", alt: "Cassonetto - Facciata moderna", caption: "Finitura a filo muro per estetica pulita" },
 ];
 
 const fadeUp = {
@@ -47,7 +49,6 @@ const benefits = [
 ];
 
 const Cassonetti = () => {
-  const [heroRef, heroInView] = useInView(inViewOpts);
   const [specsRef, specsInView] = useInView(inViewOpts);
   const [benefitsRef, benefitsInView] = useInView(inViewOpts);
 
@@ -55,19 +56,13 @@ const Cassonetti = () => {
     <div className="min-h-screen bg-white">
       <PublicNavbar />
 
-      <section ref={heroRef} className="pt-32 pb-20 bg-[hsl(0,0%,97%)]">
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div initial="hidden" animate={heroInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">I Nostri Prodotti</motion.p>
-            <motion.h1 variants={fadeUp} className="text-4xl sm:text-5xl font-extrabold text-[hsl(0,0%,10%)] leading-tight mb-6">
-              <span className="text-[hsl(195,85%,45%)]">Cassonetti</span> Coibentati
-            </motion.h1>
-            <motion.p variants={fadeUp} className="text-lg text-[hsl(0,0%,40%)] leading-relaxed max-w-2xl">
-              Cassonetti coibentati per avvolgibili, progettati per eliminare i ponti termici e garantire il massimo isolamento.
-            </motion.p>
-          </motion.div>
-        </div>
-      </section>
+      <ProductHero
+        category="I Nostri Prodotti"
+        title="Cassonetti"
+        titleAccent="Coibentati"
+        description="Cassonetti coibentati per avvolgibili, progettati per eliminare i ponti termici e garantire il massimo isolamento."
+        heroImage="https://images.unsplash.com/photo-1513694203232-719a280e022f?w=1600&q=80"
+      />
 
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
@@ -134,6 +129,8 @@ const Cassonetti = () => {
           </motion.div>
         </div>
       </section>
+
+      <RelatedProducts currentSlug="/prodotti/cassonetti" />
 
       <section className="py-20 bg-[hsl(195,85%,45%)]">
         <div className="max-w-3xl mx-auto px-6 text-center">

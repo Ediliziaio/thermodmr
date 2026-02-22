@@ -5,13 +5,15 @@ import { ArrowRight, CheckCircle2, SunDim, Paintbrush, Wind, Eye } from "lucide-
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
+import ProductHero from "@/components/products/ProductHero";
 import ProductGallery from "@/components/products/ProductGallery";
+import RelatedProducts from "@/components/products/RelatedProducts";
 
 const galleryImages = [
-  { src: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=1200&q=80", alt: "Persiane - Aperte su facciata" },
-  { src: "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80", alt: "Persiane - Dettaglio lamelle" },
-  { src: "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=1200&q=80", alt: "Persiane - Colori RAL" },
-  { src: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&q=80", alt: "Persiane - Facciata mediterranea" },
+  { src: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=1200&q=80", alt: "Persiane - Aperte su facciata", caption: "Persiane aperte su facciata in stile mediterraneo" },
+  { src: "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80", alt: "Persiane - Dettaglio lamelle", caption: "Lamelle orientabili in alluminio verniciato" },
+  { src: "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=1200&q=80", alt: "Persiane - Colori RAL", caption: "Ampia scelta di colori dalla gamma RAL" },
+  { src: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&q=80", alt: "Persiane - Facciata mediterranea", caption: "Eleganza senza tempo per ogni facciata" },
 ];
 
 const fadeUp = {
@@ -47,7 +49,6 @@ const benefits = [
 ];
 
 const Persiane = () => {
-  const [heroRef, heroInView] = useInView(inViewOpts);
   const [specsRef, specsInView] = useInView(inViewOpts);
   const [benefitsRef, benefitsInView] = useInView(inViewOpts);
 
@@ -55,19 +56,13 @@ const Persiane = () => {
     <div className="min-h-screen bg-white">
       <PublicNavbar />
 
-      <section ref={heroRef} className="pt-32 pb-20 bg-[hsl(0,0%,97%)]">
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div initial="hidden" animate={heroInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">I Nostri Prodotti</motion.p>
-            <motion.h1 variants={fadeUp} className="text-4xl sm:text-5xl font-extrabold text-[hsl(0,0%,10%)] leading-tight mb-6">
-              <span className="text-[hsl(195,85%,45%)]">Persiane</span> in Alluminio
-            </motion.h1>
-            <motion.p variants={fadeUp} className="text-lg text-[hsl(0,0%,40%)] leading-relaxed max-w-2xl">
-              Persiane in alluminio con lamelle orientabili per un controllo ottimale della luce e della ventilazione. Design elegante e zero manutenzione.
-            </motion.p>
-          </motion.div>
-        </div>
-      </section>
+      <ProductHero
+        category="I Nostri Prodotti"
+        title="Persiane in"
+        titleAccent="Alluminio"
+        description="Persiane in alluminio con lamelle orientabili per un controllo ottimale della luce e della ventilazione. Design elegante e zero manutenzione."
+        heroImage="https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=1600&q=80"
+      />
 
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
@@ -134,6 +129,8 @@ const Persiane = () => {
           </motion.div>
         </div>
       </section>
+
+      <RelatedProducts currentSlug="/prodotti/persiane" />
 
       <section className="py-20 bg-[hsl(195,85%,45%)]">
         <div className="max-w-3xl mx-auto px-6 text-center">

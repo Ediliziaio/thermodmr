@@ -5,13 +5,14 @@ import { ArrowRight, CheckCircle2, Shield, Lock, ThermometerSun } from "lucide-r
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
+import ProductHero from "@/components/products/ProductHero";
 import ProductGallery from "@/components/products/ProductGallery";
+import RelatedProducts from "@/components/products/RelatedProducts";
 
 const galleryImages = [
-  { src: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1200&q=80", alt: "Portoncino - Ingresso elegante" },
-  { src: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1200&q=80", alt: "Portoncino - Dettaglio serratura" },
-  { src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80", alt: "Portoncino - Pannello decorativo" },
-  { src: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&q=80", alt: "Portoncino - Vista notturna" },
+  { src: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1200&q=80", alt: "Portoncino - Ingresso elegante", caption: "Portoncino d'ingresso con pannello decorativo premium" },
+  { src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80", alt: "Portoncino - Facciata", caption: "Integrazione armoniosa con la facciata" },
+  { src: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&q=80", alt: "Portoncino - Vista notturna", caption: "Eleganza anche con illuminazione serale" },
 ];
 
 const fadeUp = {
@@ -47,7 +48,6 @@ const benefits = [
 ];
 
 const Portoncini = () => {
-  const [heroRef, heroInView] = useInView(inViewOpts);
   const [specsRef, specsInView] = useInView(inViewOpts);
   const [benefitsRef, benefitsInView] = useInView(inViewOpts);
 
@@ -55,22 +55,13 @@ const Portoncini = () => {
     <div className="min-h-screen bg-white">
       <PublicNavbar />
 
-      <section ref={heroRef} className="pt-32 pb-20 bg-[hsl(0,0%,97%)]">
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div initial="hidden" animate={heroInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
-              I Nostri Prodotti
-            </motion.p>
-            <motion.h1 variants={fadeUp} className="text-4xl sm:text-5xl font-extrabold text-[hsl(0,0%,10%)] leading-tight mb-6">
-              Portoncini in <span className="text-[hsl(195,85%,45%)]">PVC</span>
-            </motion.h1>
-            <motion.p variants={fadeUp} className="text-lg text-[hsl(0,0%,40%)] leading-relaxed max-w-2xl">
-              Portoncini d'ingresso in PVC con elevata sicurezza e isolamento termico. 
-              Finiture personalizzabili per adattarsi a ogni stile architettonico.
-            </motion.p>
-          </motion.div>
-        </div>
-      </section>
+      <ProductHero
+        category="I Nostri Prodotti"
+        title="Portoncini in"
+        titleAccent="PVC"
+        description="Portoncini d'ingresso in PVC con elevata sicurezza e isolamento termico. Finiture personalizzabili per adattarsi a ogni stile architettonico."
+        heroImage="https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=1600&q=80"
+      />
 
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
@@ -137,6 +128,8 @@ const Portoncini = () => {
           </motion.div>
         </div>
       </section>
+
+      <RelatedProducts currentSlug="/prodotti/portoncini" />
 
       <section className="py-20 bg-[hsl(195,85%,45%)]">
         <div className="max-w-3xl mx-auto px-6 text-center">
