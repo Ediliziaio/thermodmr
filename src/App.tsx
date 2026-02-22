@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Layout } from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { DashboardRouter } from "./components/DashboardRouter";
+import { HomeRouter } from "./components/HomeRouter";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { Loader2 } from "lucide-react";
 
@@ -49,16 +49,7 @@ const App = () => (
           <Suspense fallback={<PageLoader />}>
             <Routes>
             <Route path="/auth" element={<Auth />} />
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Layout>
-                    <DashboardRouter />
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/" element={<HomeRouter />} />
             <Route
               path="/ordini"
               element={
