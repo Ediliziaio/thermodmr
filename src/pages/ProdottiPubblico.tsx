@@ -28,19 +28,22 @@ const inViewOptions = { triggerOnce: true, threshold: 0.05, rootMargin: "0px 0px
 const pvcModels = [
   {
     icon: Sparkles,
-    name: "Modello Base",
+    name: "DMR CONFORT",
+    link: "/prodotti/dmr-confort",
     desc: "La soluzione ideale per chi cerca qualità e convenienza. Profilo a 3 camere con ottime prestazioni termiche.",
     features: ["Profilo a 3 camere", "Classe B", "Vetrocamera standard", "Ampia gamma colori"],
   },
   {
     icon: Zap,
-    name: "Modello Plus",
+    name: "DMR DOMUS",
+    link: "/prodotti/dmr-domus",
     desc: "Il best-seller della gamma. Profilo a 5 camere per un isolamento superiore e massimo comfort abitativo.",
     features: ["Profilo a 5 camere", "Classe A", "Vetrocamera con gas argon", "Ferramenta Roto"],
   },
   {
     icon: Crown,
-    name: "Modello Premium",
+    name: "DMR PASSIVE",
+    link: "/prodotti/dmr-passive",
     desc: "Il top di gamma per progetti di alto livello. Profilo a 7 camere con prestazioni certificate Passivhaus.",
     features: ["Profilo a 7 camere", "Classe A+", "Triplo vetro basso emissivo", "Design minimale"],
   },
@@ -50,6 +53,7 @@ const otherProducts = [
   {
     icon: Shield,
     title: "Portoncini in PVC",
+    link: "/prodotti/portoncini",
     image: "/images/product-porte.jpg",
     desc: "Portoncini d'ingresso in PVC con elevata sicurezza e isolamento termico. Finiture personalizzabili per adattarsi a ogni stile architettonico.",
     features: [
@@ -63,6 +67,7 @@ const otherProducts = [
   {
     icon: Box,
     title: "Cassonetti",
+    link: "/prodotti/cassonetti",
     image: "/images/product-pvc.jpg",
     desc: "Cassonetti coibentati per avvolgibili, progettati per eliminare i ponti termici e garantire il massimo isolamento nella zona del vano avvolgibile.",
     features: [
@@ -76,6 +81,7 @@ const otherProducts = [
   {
     icon: Blinds,
     title: "Tapparelle",
+    link: "/prodotti/tapparelle",
     image: "/images/product-alluminio.jpg",
     desc: "Tapparelle in PVC e alluminio coibentato, disponibili con motorizzazione elettrica e predisposizione per la domotica.",
     features: [
@@ -89,6 +95,7 @@ const otherProducts = [
   {
     icon: SunDim,
     title: "Persiane",
+    link: "/prodotti/persiane",
     image: "/images/product-persiane.jpg",
     desc: "Persiane in alluminio con lamelle orientabili per un controllo ottimale della luce e della ventilazione. Design elegante e zero manutenzione.",
     features: [
@@ -156,27 +163,32 @@ const ProdottiPubblico = () => {
               </motion.div>
             </div>
 
-            {/* 3 sotto-card modelli */}
+            {/* 3 sotto-card modelli — cliccabili */}
             <div className="grid md:grid-cols-3 gap-8">
               {pvcModels.map((m) => (
                 <motion.div key={m.name} variants={fadeUp}>
-                  <Card className="h-full border-[hsl(0,0%,90%)] hover:shadow-lg transition-shadow duration-300">
-                    <CardContent className="p-6 space-y-4">
-                      <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-[hsl(195,85%,45%,0.1)]">
-                        <m.icon className="h-5 w-5 text-[hsl(195,85%,45%)]" />
-                      </div>
-                      <h3 className="text-xl font-bold text-[hsl(0,0%,10%)]">{m.name}</h3>
-                      <p className="text-sm text-[hsl(0,0%,40%)] leading-relaxed">{m.desc}</p>
-                      <ul className="space-y-2 pt-2">
-                        {m.features.map((f) => (
-                          <li key={f} className="flex items-center gap-2 text-[hsl(0,0%,35%)]">
-                            <CheckCircle2 className="h-4 w-4 text-[hsl(195,85%,45%)] shrink-0" />
-                            <span className="text-sm">{f}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
+                  <Link to={m.link} className="block h-full">
+                    <Card className="h-full border-[hsl(0,0%,90%)] hover:shadow-lg hover:border-[hsl(195,85%,45%,0.3)] transition-all duration-300 group">
+                      <CardContent className="p-6 space-y-4">
+                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-[hsl(195,85%,45%,0.1)]">
+                          <m.icon className="h-5 w-5 text-[hsl(195,85%,45%)]" />
+                        </div>
+                        <h3 className="text-xl font-bold text-[hsl(0,0%,10%)] group-hover:text-[hsl(195,85%,45%)] transition-colors">{m.name}</h3>
+                        <p className="text-sm text-[hsl(0,0%,40%)] leading-relaxed">{m.desc}</p>
+                        <ul className="space-y-2 pt-2">
+                          {m.features.map((f) => (
+                            <li key={f} className="flex items-center gap-2 text-[hsl(0,0%,35%)]">
+                              <CheckCircle2 className="h-4 w-4 text-[hsl(195,85%,45%)] shrink-0" />
+                              <span className="text-sm">{f}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        <p className="text-sm font-semibold text-[hsl(195,85%,45%)] flex items-center gap-1 pt-2">
+                          Scopri di più <ArrowRight className="h-4 w-4" />
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 </motion.div>
               ))}
             </div>
@@ -214,11 +226,18 @@ const ProdottiPubblico = () => {
                     </li>
                   ))}
                 </ul>
-                <Link to="/contatti">
-                  <Button className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-8 mt-2 shadow-[0_4px_20px_hsl(195,85%,45%,0.25)]">
-                    Richiedi Preventivo <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
+                <div className="flex flex-wrap gap-3 pt-2">
+                  <Link to={p.link}>
+                    <Button variant="outline" className="rounded-full px-6 border-[hsl(195,85%,45%)] text-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,45%,0.05)] font-semibold">
+                      Scopri di più <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Link to="/contatti">
+                    <Button className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-8 shadow-[0_4px_20px_hsl(195,85%,45%,0.25)]">
+                      Richiedi Preventivo
+                    </Button>
+                  </Link>
+                </div>
               </motion.div>
             </motion.div>
           ))}
