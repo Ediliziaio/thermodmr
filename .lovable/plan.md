@@ -1,71 +1,48 @@
 
 
-## Riscrittura Landing Page - Target Rivenditori
+## Redesign Landing Page - Stile TeknoFinestre con Colori del Logo e Immagini Reali
 
-Il copy attuale parla al cliente finale ("la tua casa", "i tuoi vecchi infissi"). Va riscritto completamente per parlare al **rivenditore** che cerca un partner produttore affidabile. I pain point sono quelli del rivenditore: tempi incerti, margini bassi, fornitori inaffidabili.
+La pagina attuale ha due problemi principali rispetto a TeknoFinestre:
+1. **Nessuna immagine reale** - Solo forme astratte e icone, mentre TeknoFinestre usa foto reali di interni, finestre e prodotti
+2. **Stile troppo "tech/dark"** - Sfondo nero con blob decorativi, mentre TeknoFinestre ha un aspetto luminoso e professionale con foto a tutto schermo
 
----
+### Cosa cambia
 
-### Cambio di paradigma nel copy
+**Hero** - Da sfondo nero con blob a **foto a tutto schermo** di un interno moderno con grandi finestre luminose (come TeknoFinestre), con overlay scuro semitrasparente per leggibilita del testo. A destra, immagine del profilo di un serramento (come fa TeknoFinestre con il taglio tecnico del profilo).
 
-| Prima (cliente finale) | Dopo (rivenditore) |
-|---|---|
-| "Sostituisci i tuoi vecchi infissi" | "Trova il Partner Produttore che Ti Fa Guadagnare" |
-| "la tua casa" | "la tua attivita", "i tuoi margini" |
-| "Richiedi un preventivo" | "Diventa Rivenditore ThermoDMR" |
-| "Famiglie soddisfatte" | "Rivenditori attivi" |
-| "Diagnosi energetica" | "Perche Scegliere ThermoDMR" (nuova sezione) |
+**Chi Siamo** - Aggiunta immagine reale di infissi/serramenti in alluminio nella colonna destra (come TeknoFinestre), al posto del box astratto "Produzione Interna 100%".
 
-### Struttura della pagina (9 sezioni)
+**Contatori** - Sfondo con immagine reale di infissi installati (come TeknoFinestre che usa una foto di infissi Schuco), con overlay scuro per contrasto.
 
-**1. Navbar** - Come prima ma con colori del logo (rosso/arancio). Link: Chi Siamo, Prodotti, Vantaggi, Garanzie, Contatti. Pulsante "Area Riservata".
+**Prodotti** - Ogni card avra un'immagine reale del prodotto (finestre PVC, alluminio, porte, persiane) invece delle sole icone.
 
-**2. Hero** - Riscritto per il rivenditore:
-- Sopratitolo: "THERMODMR - PRODUTTORE DI INFISSI E SERRAMENTI"
-- Titolo: "Il Partner Produttore che Ti Fa Guadagnare di Piu"
-- Sottotitolo: "Tempi certi di consegna, prezzi piu bassi sul mercato e pagamenti flessibili. Smetti di rincorrere fornitori inaffidabili e inizia a far crescere la tua attivita."
-- CTA: "Diventa Rivenditore" + "Scopri i Vantaggi"
-- Badge: "Tempi certi", "Prezzo piu basso", "Pagamenti flessibili", "Margini garantiti"
+**Perche Scegliere ThermoDMR** - Layout piu visivo con immagini di supporto.
 
-**3. Chi Siamo** - Riscritto per il rivenditore:
-- Titolo: "Produciamo Infissi di Qualita per Far Crescere la Tua Attivita"
-- Testo su: produzione interna, controllo qualita, supporto al rivenditore
-- CTA: "Richiedi Informazioni Commerciali"
+**CTA Finale** - Sfondo con foto reale di showroom/installazione, non gradiente piatto.
 
-**4. Contatori** - Dati orientati al B2B:
-- "200+" Rivenditori Attivi
-- "10+" Anni di Esperienza
-- "15gg" Tempi Medi di Consegna
-- "98%" Consegne Puntuali
+### Colori
 
-**5. Prodotti** - Stessi 4 prodotti ma con descrizioni orientate ai margini e alla vendibilita per il rivenditore.
+I colori principali restano quelli del logo ThermoDMR gia in uso:
+- Rosso/arancio principale: `hsl(10, 80%, 50%)` per CTA, accenti, titoli evidenziati
+- Arancio gradiente: `hsl(25-30, 90%, 55%)` per sfumature
+- Sfondo hero: foto reale con overlay scuro, non sfondo nero piatto
+- Sezioni chiare: bianco e grigio chiaro come TeknoFinestre
 
-**6. NUOVA SEZIONE: "Perche Scegliere ThermoDMR"** (sostituisce Diagnosi Energetica)
-- 4 vantaggi competitivi con icone grandi e testo dettagliato:
-  - "Prezzo Piu Basso sul Mercato" - Produzione interna, nessun intermediario
-  - "Tempi Certi di Consegna" - 15 giorni lavorativi garantiti
-  - "Pagamenti Flessibili" - Condizioni personalizzate per ogni rivenditore
-  - "Il Tuo Successo e il Nostro Obiettivo" - Supporto commerciale, materiale marketing, formazione
+### Immagini (da Unsplash, royalty-free)
 
-**7. Garanzie** - Riscritte per il rivenditore:
-  - "Zero Reclami, Zero Problemi" - Qualita certificata, meno resi
-  - "Consegna Garantita nei Tempi" - Mai piu clienti che aspettano
-  - "Margini Protetti" - Listino riservato e zona esclusiva
-  - "Supporto Commerciale Dedicato" - Un referente sempre disponibile
-
-**8. CTA Finale** - "Inizia a Guadagnare di Piu Oggi" con pulsante "Diventa Rivenditore ThermoDMR"
-
-**9. Footer** - Invariato nella struttura, aggiornato il testo per riflettere il target B2B.
-
-### Colori del logo
-
-I colori usati resteranno quelli attuali basati sul logo (`hsl(10,80%,50%)` rosso/arancio), gia correttamente implementati.
+Tutte le immagini saranno caricate da URL Unsplash per dare un aspetto professionale e reale:
+- Hero background: interno moderno con grandi finestre panoramiche
+- Hero destra: profilo tecnico di un serramento (o finestra aperta)
+- Chi Siamo: installazione di infissi moderni
+- Contatori background: facciata con infissi in alluminio
+- Prodotti: 4 foto specifiche (finestre PVC, alluminio, porta d'ingresso, persiane)
+- CTA finale: showroom di serramenti
 
 ### Modifiche tecniche
 
 | File | Modifica |
 |------|----------|
-| `src/pages/Home.tsx` | Riscrittura completa di tutto il copy e aggiunta sezione "Perche Scegliere ThermoDMR" al posto della "Diagnosi Energetica" |
+| `src/pages/Home.tsx` | Riscrittura completa dello stile visivo: aggiunta immagini reali da Unsplash, layout ispirato a TeknoFinestre, mantenimento del copy B2B per rivenditori e dei colori del logo |
 
-Nessun altro file da modificare.
+Il copy orientato ai rivenditori resta invariato. Cambia solo la presentazione visiva per avvicinarla allo stile TeknoFinestre.
 
