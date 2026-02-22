@@ -62,32 +62,32 @@ const windowAdvantages = [
   {
     icon: Wind,
     title: "Microventilazione",
-    desc: "Clip di microventilazione che consente un ricambio d'aria costante senza aprire completamente l'anta, ideale per mantenere un clima salubre.",
+    desc: "Funzione di montaggio che consente di ventilare l'ambiente senza aprire l'anta, garantendo un ricambio d'aria costante anche in assenza.",
   },
   {
     icon: Lock,
     title: "Maniglia di Sicurezza",
-    desc: "Maniglia in alluminio con funzione di sicurezza integrata, disponibile in diverse finiture per adattarsi a ogni stile d'arredo.",
+    desc: "Maniglia in alluminio con funzione di sicurezza, pulsante o chiave. Disponibile in diverse finiture per adattarsi a ogni stile.",
   },
   {
     icon: Settings2,
     title: "Cerniere 3D Regolabili",
-    desc: "Regolabili su tre livelli con portata fino a 130 kg. Disponibile anche nella versione a scomparsa Designo per un'estetica minimale.",
+    desc: "Disponibile anche nella versione a scomparsa - Designo. Cerniere 3D regolabili su tre livelli con portata fino a 130 kg.",
   },
   {
     icon: Thermometer,
     title: "Canalina Calda",
-    desc: "Canalina warm-edge che riduce il ponte termico sul bordo del vetro, disponibile in acciaio o plastica con ampia gamma di colori.",
+    desc: "Disponibile in acciaio o in plastica - prodotto con tecnologia polimerica o composita, in un'ampia gamma di colori.",
   },
   {
     icon: RotateCcw,
     title: "Blocco Rotazione Maniglia",
-    desc: "Sistema che impedisce il posizionamento errato dell'anta, prevenendo danni alla ferramenta e garantendo il corretto funzionamento.",
+    desc: "Funzione che impedisce la rotazione incontrollata della maniglia in posizione di ribalta, responsabile del corretto posizionamento dell'anta in posizione di chiusura.",
   },
   {
     icon: Maximize2,
     title: "Braccio Oscillo-Battente",
-    desc: "Permette l'apertura dell'anta sia a battente che a ribalta, con funzione microventilazione integrata per un comfort ottimale.",
+    desc: "Apparecchio per una ventilazione confortevole con funzione aggiuntiva di microventilazione e inclinazione dell'anta regolabile in modalità inverno-estate.",
   },
 ];
 
