@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useEffect, useState, useCallback } from "react";
+import heroSerramento from "@/assets/serramenti-pvc-squareline.png";
 import {
   ArrowRight,
   Shield,
@@ -150,9 +151,9 @@ const Hero = () => {
         >
           <div className="relative">
             <img
-              src="/images/hero-profile.jpg"
-              alt="Profilo serramento ThermoDMR"
-              className="w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] lg:w-[420px] lg:h-[420px] object-cover rounded-3xl shadow-2xl border-4 border-white/20"
+              src={heroSerramento}
+              alt="Serramento in PVC ThermoDMR"
+              className="w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] lg:w-[420px] lg:h-[420px] object-cover rounded-3xl shadow-2xl border-4 border-white/20 bg-white"
             />
             <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 bg-[hsl(195,85%,45%)] text-white text-[10px] sm:text-xs font-bold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-lg">
               Consegna 2-6 Sett.
