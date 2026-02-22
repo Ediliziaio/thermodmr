@@ -1,46 +1,22 @@
 
 
-## Sostituire le immagini nelle pagine prodotto con le foto caricate
+## Aggiungere il vantaggio "Piattaforma Ordini" alla pagina Diventa Rivenditore
 
-### Immagini da copiare e rinominare
+### Cosa cambia
 
-| File originale | Nuovo nome in `src/assets/` | Pagina |
-|---|---|---|
-| `PORTONCINO.avif` | `thermodmr-portoncino-ingresso.avif` | Portoncini (hero + caratteristiche) |
-| `PORTONCINO_2.jpeg` | `thermodmr-portoncino-moderno.jpeg` | Portoncini (galleria img 1) |
-| `PORTONCINO_3.jpg` | `thermodmr-portoncini-colori.jpg` | Portoncini (galleria img 2) |
-| `CASSONETTO.jpg` | `thermodmr-cassonetto-sezione.jpg` | Cassonetti (hero + caratteristiche) |
-| `cassonetti2.jpg` | `thermodmr-cassonetto-installato.jpg` | Cassonetti (galleria img 1) |
-| `tapparella-alluminio-coibentato-media-celeste.webp` | `thermodmr-tapparella-coibentata.webp` | Tapparelle (hero + caratteristiche + galleria img 1) |
-| `persiana-in-alluminio.webp` | `thermodmr-persiana-verde.webp` | Persiane (hero + caratteristiche) |
-| `persiane_alu_2_1.jpg` | `thermodmr-persiana-legno.jpg` | Persiane (galleria img 1) |
+Nel file `src/pages/DiventaRivenditore.tsx`, verra aggiunto un nuovo elemento all'array `vantaggi` per evidenziare la piattaforma online dedicata ai rivenditori.
 
-### Modifiche per ogni pagina
+### Dettaglio
 
-**1. `src/pages/products/Portoncini.tsx`**
-- Importare 3 immagini (portoncino-ingresso, portoncino-moderno, portoncini-colori)
-- Hero (riga 66): sostituire URL Unsplash con import portoncino-ingresso
-- Caratteristiche (riga 73): sostituire URL Unsplash con import portoncino-ingresso
-- Galleria (righe 13-15): sostituire le 3 URL Unsplash -- img 1 con portoncino-moderno, img 2 con portoncini-colori, img 3 con portoncino-ingresso
+- **Nuovo vantaggio** da aggiungere dopo "Formazione Tecnica":
+  - **Icona**: `Monitor` (da lucide-react)
+  - **Titolo**: "Piattaforma Online Dedicata"
+  - **Descrizione**: "Accedi alla nostra piattaforma riservata per monitorare lo stato dei tuoi ordini, verificare i pagamenti e gestire i preventivi in tempo reale."
 
-**2. `src/pages/products/Cassonetti.tsx`**
-- Importare 2 immagini (cassonetto-sezione, cassonetto-installato)
-- Hero (riga 65): sostituire con cassonetto-sezione
-- Caratteristiche (riga 72): sostituire con cassonetto-installato
-- Galleria (righe 13-16): sostituire img 1 con cassonetto-installato, img 2 con cassonetto-sezione, le altre 2 restano (solo 2 foto disponibili)
+- Si importa l'icona `Monitor` da lucide-react
+- L'array `vantaggi` passa da 6 a 7 elementi; la griglia 3 colonne si adatta automaticamente
 
-**3. `src/pages/products/Tapparelle.tsx`**
-- Importare 1 immagine (tapparella-coibentata)
-- Hero (riga 65): sostituire con tapparella-coibentata
-- Caratteristiche (riga 72): sostituire con tapparella-coibentata
-- Galleria (riga 13): sostituire img 1 con tapparella-coibentata
+### Sezione CTA finale
 
-**4. `src/pages/products/Persiane.tsx`**
-- Importare 2 immagini (persiana-verde, persiana-legno)
-- Hero (riga 65): sostituire con persiana-verde
-- Caratteristiche (riga 72): sostituire con persiana-legno
-- Galleria (righe 13-14): img 1 con persiana-verde, img 2 con persiana-legno
-
-### Dettaglio tecnico
-Tutte le immagini importate come moduli ES6. I nomi dei file non contengono riferimenti ad altre aziende. Le URL Unsplash rimanenti nella galleria (dove non ci sono abbastanza foto) restano invariate.
+Nella lista dei bullet point della CTA finale (riga 226), si aggiunge anche "Piattaforma online dedicata" tra i vantaggi riassuntivi.
 
