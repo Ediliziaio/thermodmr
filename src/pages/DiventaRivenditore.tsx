@@ -5,6 +5,7 @@ import {
   ArrowRight,
   Factory,
   MapPin,
+  Monitor,
   Megaphone,
   Truck,
   CreditCard,
@@ -56,6 +57,11 @@ const vantaggi = [
     icon: GraduationCap,
     title: "Formazione Tecnica",
     desc: "Corsi di formazione tecnica e commerciale per te e il tuo team. Aggiornamento continuo sui nostri prodotti.",
+  },
+  {
+    icon: Monitor,
+    title: "Piattaforma Online Dedicata",
+    desc: "Accedi alla nostra piattaforma riservata per monitorare lo stato dei tuoi ordini, verificare i pagamenti e gestire i preventivi in tempo reale.",
   },
 ];
 
@@ -225,7 +231,7 @@ const DiventaRivenditore = () => {
             </motion.p>
 
             <motion.div variants={fadeUp} className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-white/70 mb-10">
-              {["Prezzi di fabbrica", "Zona esclusiva", "Supporto marketing", "Formazione tecnica"].map((t) => (
+              {["Prezzi di fabbrica", "Zona esclusiva", "Supporto marketing", "Formazione tecnica", "Piattaforma online dedicata"].map((t) => (
                 <span key={t} className="flex items-center gap-1.5">
                   <CheckCircle2 className="h-4 w-4 text-white" />
                   {t}
