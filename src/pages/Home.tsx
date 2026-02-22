@@ -7,9 +7,10 @@ import imgChiSiamo from "@/assets/thermodmr-finestre-pvc-interni.webp";
 import imgConfort from "@/assets/thermodmr-scorrevoli-terrazza.jpg";
 import imgDomus from "@/assets/thermodmr-finestra-effetto-legno.jpg";
 import imgPassive from "@/assets/thermodmr-serramenti-vista-mare.jpg";
-import imgPortoncini from "@/assets/thermodmr-porta-scorrevole.webp";
-import imgCassonetti from "@/assets/thermodmr-infissi-esterni.webp";
-import imgBicolore from "@/assets/thermodmr-finestra-bicolore.webp";
+import imgPortoncini from "@/assets/thermodmr-portoncino-ingresso.avif";
+import imgCassonetti from "@/assets/thermodmr-cassonetto-installato.jpg";
+import imgTapparelle from "@/assets/thermodmr-tapparella-coibentata.webp";
+import imgPersiane from "@/assets/thermodmr-persiana-verde.webp";
 import {
   ArrowRight,
   Shield,
@@ -349,13 +350,13 @@ const homeAccessories = [
     icon: Blinds,
     title: "Tapparelle",
     link: "/prodotti/tapparelle",
-    image: imgBicolore,
+    image: imgTapparelle,
   },
   {
     icon: SunDim,
     title: "Persiane",
     link: "/prodotti/persiane",
-    image: imgBicolore,
+    image: imgPersiane,
   },
 ];
 
