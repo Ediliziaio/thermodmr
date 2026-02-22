@@ -39,12 +39,12 @@ const models: ModelData[] = [
     badge: "Best Seller",
     badgeColor: "hsl(195, 85%, 45%)",
     specs: {
-      Camere: "5",
+      Camere: "6",
       "Profondità": "76 mm",
       "Uw": "1.3 W/m²K",
-      Vetro: "Gas argon",
-      Acustica: "38 dB",
-      Sicurezza: "RC2 opzionale",
+      Vetro: "Doppio Lowe + argon",
+      Acustica: "47 dB",
+      Sicurezza: "Fino a RC3",
     },
   },
   {
