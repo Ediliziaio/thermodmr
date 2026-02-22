@@ -3,6 +3,13 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useEffect, useState, useCallback } from "react";
 import heroSerramento from "@/assets/serramenti-pvc-squareline.png";
+import imgChiSiamo from "@/assets/thermodmr-finestre-pvc-interni.webp";
+import imgConfort from "@/assets/thermodmr-scorrevoli-terrazza.jpg";
+import imgDomus from "@/assets/thermodmr-finestra-effetto-legno.jpg";
+import imgPassive from "@/assets/thermodmr-serramenti-vista-mare.jpg";
+import imgPortoncini from "@/assets/thermodmr-porta-scorrevole.webp";
+import imgCassonetti from "@/assets/thermodmr-infissi-esterni.webp";
+import imgBicolore from "@/assets/thermodmr-finestra-bicolore.webp";
 import {
   ArrowRight,
   Shield,
@@ -211,7 +218,7 @@ const ChiSiamo = () => {
 
           <motion.div variants={fadeUp} className="flex justify-center">
             <img
-              src="/images/chi-siamo.jpg"
+              src={imgChiSiamo}
               alt="Infissi moderni installati"
               className="w-full max-w-lg rounded-3xl shadow-xl object-cover aspect-[4/3]"
             />
@@ -307,21 +314,21 @@ const pvcModels = [
     name: "DMR CONFORT",
     link: "/prodotti/dmr-confort",
     desc: "Profilo a 3 camere. Qualità e convenienza.",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80",
+    image: imgConfort,
   },
   {
     icon: Zap,
     name: "DMR DOMUS",
     link: "/prodotti/dmr-domus",
     desc: "Profilo a 5 camere. Il best-seller della gamma.",
-    image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80",
+    image: imgDomus,
   },
   {
     icon: Crown,
     name: "DMR PASSIVE",
     link: "/prodotti/dmr-passive",
     desc: "Profilo a 7 camere. Prestazioni Passivhaus.",
-    image: "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=600&q=80",
+    image: imgPassive,
   },
 ];
 
@@ -330,25 +337,25 @@ const homeAccessories = [
     icon: Shield,
     title: "Portoncini",
     link: "/prodotti/portoncini",
-    image: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&q=80",
+    image: imgPortoncini,
   },
   {
     icon: Box,
     title: "Cassonetti",
     link: "/prodotti/cassonetti",
-    image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=400&q=80",
+    image: imgCassonetti,
   },
   {
     icon: Blinds,
     title: "Tapparelle",
     link: "/prodotti/tapparelle",
-    image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&q=80",
+    image: imgBicolore,
   },
   {
     icon: SunDim,
     title: "Persiane",
     link: "/prodotti/persiane",
-    image: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=400&q=80",
+    image: imgBicolore,
   },
 ];
 
