@@ -10,8 +10,8 @@ const PublicFooter = () => (
         <div className="space-y-4">
           <img src={logo} alt="ThermoDMR" className="h-10 object-contain brightness-0 invert opacity-90" />
           <p className="text-sm text-white/40 leading-relaxed">
-            Produciamo serramenti di alta qualità per far crescere la tua attività.
-            Il tuo successo è il nostro obiettivo.
+            Produciamo serramenti di alta qualità con profilo tedesco.
+            Design, isolamento e il miglior prezzo di mercato.
           </p>
           <div className="flex gap-3 pt-2">
             <a href="#" className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/10 text-white/50 hover:bg-[hsl(195,85%,45%)] hover:text-white transition-all">

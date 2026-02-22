@@ -127,7 +127,7 @@ const Hero = () => {
             </Button>
           </motion.div>
 
-          <motion.div variants={fadeUp} className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/50 pt-4">
+          <motion.div variants={fadeUp} className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/70 pt-4">
             {["Profilo Tedesco", "Isolamento Classe A", "Garanzia 15 Anni", "Design Esclusivo"].map((t) => (
               <span key={t} className="flex items-center gap-1.5">
                 <CheckCircle2 className="h-4 w-4 text-[hsl(195,85%,55%)]" />
@@ -141,13 +141,13 @@ const Hero = () => {
           initial={{ opacity: 0, x: 60 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
-          className="hidden lg:flex items-center justify-center"
+          className="flex items-center justify-center mt-8 lg:mt-0"
         >
           <div className="relative">
             <img
               src="/images/hero-profile.jpg"
               alt="Profilo serramento ThermoDMR"
-              className="w-[420px] h-[420px] object-cover rounded-3xl shadow-2xl border-4 border-white/20"
+              className="w-[280px] h-[280px] lg:w-[420px] lg:h-[420px] object-cover rounded-3xl shadow-2xl border-4 border-white/20"
             />
             <div className="absolute -top-3 -right-3 bg-[hsl(195,85%,45%)] text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg">
               Consegna 2-6 Settimane
@@ -175,7 +175,7 @@ const ChiSiamo = () => {
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           variants={stagger}
-          className="grid lg:grid-cols-2 gap-16 items-center"
+          className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center"
         >
           <motion.div variants={fadeUp} className="space-y-6">
             <p className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase">
@@ -254,15 +254,24 @@ const Stats = () => {
 };
 
 const StatItem = ({ value, suffix, prefix, label, inView }: { value: number; suffix: string; prefix?: string; label: string; inView: boolean }) => {
-  const count = useCounter(value, value > 100 ? 2500 : 1800, inView);
+  const isStatic = !!prefix;
+  const count = useCounter(value, value > 100 ? 2500 : 1800, isStatic ? false : inView);
   const isFootnote = label.endsWith("*");
   const cleanLabel = isFootnote ? label.slice(0, -1) : label;
   return (
     <motion.div variants={fadeUp} className="text-center space-y-2">
       <p className="text-4xl sm:text-5xl font-extrabold text-white">
-        {prefix && <span>{prefix}</span>}
-        {count.toLocaleString("it-IT")}
-        <span className="text-[hsl(195,85%,55%)]">{suffix}</span>
+        {isStatic ? (
+          <>
+            <span>{prefix}{value}</span>
+            <span className="text-[hsl(195,85%,55%)]">{suffix}</span>
+          </>
+        ) : (
+          <>
+            {count.toLocaleString("it-IT")}
+            <span className="text-[hsl(195,85%,55%)]">{suffix}</span>
+          </>
+        )}
       </p>
       <p className="text-sm text-white/60 font-medium">{cleanLabel}</p>
       {isFootnote && (
@@ -295,7 +304,7 @@ const pvcModels = [
     name: "DMR PASSIVE",
     link: "/prodotti/dmr-passive",
     desc: "Profilo a 7 camere. Prestazioni Passivhaus.",
-    image: "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=600&q=80",
+    image: "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=600&q=80",
   },
 ];
 
@@ -486,7 +495,7 @@ const WhyThermoDMR = () => {
                 </div>
                 <div className="space-y-3">
                   <h3 className="text-xl font-bold text-white">{a.title}</h3>
-                  <p className="text-sm text-white/50 leading-relaxed">{a.desc}</p>
+                  <p className="text-sm text-white/65 leading-relaxed">{a.desc}</p>
                 </div>
               </div>
             </motion.div>
@@ -578,7 +587,7 @@ const FindDealer = () => {
 
   return (
     <section ref={ref} className="py-24 bg-[hsl(0,0%,97%)]">
-      <div className="max-w-4xl mx-auto px-6">
+      <div className="max-w-5xl mx-auto px-6">
         <motion.div
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
@@ -595,6 +604,23 @@ const FindDealer = () => {
             Una rete di professionisti qualificati su tutto il territorio nazionale, pronti
             a consigliarti la soluzione migliore per la tua casa.
           </motion.p>
+
+          <motion.div variants={fadeUp} className="grid sm:grid-cols-3 gap-4 max-w-3xl mx-auto pt-4">
+            {[
+              { icon: Headphones, title: "Consulenza Gratuita", desc: "Un esperto ti guida nella scelta migliore" },
+              { icon: MapPin, title: "Sopralluogo Dedicato", desc: "Misuriamo e valutiamo sul posto" },
+              { icon: Zap, title: "Preventivo in 24h", desc: "Risposta rapida e senza impegno" },
+            ].map((card) => (
+              <div key={card.title} className="bg-white rounded-2xl p-5 border border-[hsl(0,0%,90%)] shadow-sm text-center space-y-2">
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[hsl(195,85%,45%)]/10 mx-auto">
+                  <card.icon className="h-5 w-5 text-[hsl(195,85%,45%)]" />
+                </div>
+                <h4 className="text-sm font-bold text-[hsl(0,0%,15%)]">{card.title}</h4>
+                <p className="text-xs text-[hsl(0,0%,50%)]">{card.desc}</p>
+              </div>
+            ))}
+          </motion.div>
+
           <motion.div variants={fadeUp}>
             <a href="#contatti">
               <Button
@@ -727,7 +753,7 @@ const ContactForm = () => {
         >
           <motion.div variants={fadeUp} className="text-center mb-16">
             <p className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
-              Contattaci
+              Scrivici
             </p>
             <h2 className="text-3xl sm:text-4xl font-bold text-[hsl(0,0%,10%)]">
               Contattaci
@@ -745,7 +771,7 @@ const ContactForm = () => {
                   <Input name="nome" value={formData.nome} onChange={handleChange} placeholder="Mario Rossi" required maxLength={100} />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-[hsl(0,0%,20%)]">Tipo</label>
+                  <label className="text-sm font-medium text-[hsl(0,0%,20%)]">Chi sei?</label>
                   <Select value={tipoUtente} onValueChange={setTipoUtente}>
                     <SelectTrigger>
                       <SelectValue placeholder="Seleziona..." />
