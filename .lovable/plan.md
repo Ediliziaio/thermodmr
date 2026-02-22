@@ -1,29 +1,47 @@
 
 
-## Inserimento Logo ThermoDMR
+## Landing Page pubblica ThermoDMR
 
-Inserire il logo caricato in due posizioni:
-1. **Sidebar** - In alto a sinistra, al posto del testo "Gestionale Serramenti"
-2. **Pagina Login** - Al posto dell'icona Package e del testo "Gestionale Ordini"
+Creare una landing page moderna e professionale accessibile a `/` per i visitatori non autenticati, con i colori del brand ThermoDMR (rosso/arancio del logo, toni scuri, bianco).
 
-### Modifiche
+---
 
-**Copia del file**
-- Copiare `user-uploads://logo_Thermodmr.png` in `src/assets/logo_Thermodmr.png`
+### Struttura della pagina
 
-**`src/components/Layout.tsx`**
-- Importare il logo: `import logo from "@/assets/logo_Thermodmr.png"`
-- Sostituire il tag `<h1>Gestionale Serramenti</h1>` nella sezione logo della sidebar con un tag `<img>` che mostra il logo, con altezza contenuta (~32-40px) e `object-contain`
+La landing page sara composta da queste sezioni:
 
-**`src/components/auth/AuthHeader.tsx`**
-- Importare il logo: `import logo from "@/assets/logo_Thermodmr.png"`
-- Sostituire il div con l'icona Package e il titolo "Gestionale Ordini" con il logo come immagine, centrato, con altezza ~60-80px
-- Aggiornare il sottotitolo in "Finestre di Design Moderno, Resistenti nel tempo" per coerenza col brand
+1. **Navbar** - Logo ThermoDMR a sinistra, pulsante "Accedi" a destra
+2. **Hero Section** - Grande titolo "Finestre di Design Moderno, Resistenti nel tempo", sottotitolo descrittivo, CTA "Accedi al Gestionale", immagine/illustrazione decorativa con gradiente rosso-arancio
+3. **Features** - 3-4 card con icone che descrivono i vantaggi del gestionale (Gestione Ordini, Rete Rivenditori, Pagamenti e Provvigioni, Analytics)
+4. **CTA finale** - Sezione con sfondo colorato e pulsante per accedere
+5. **Footer** - Logo, copyright, link utili
 
-### Riepilogo
+### Palette colori (ispirata al logo)
+
+- Primario: rosso/arancio (`hsl(10, 80%, 50%)`) per CTA e accenti
+- Sfondo hero: gradiente dal rosso scuro al nero/grigio scurissimo
+- Testi: bianco su sfondi scuri, grigio scuro su bianco
+- Card: bianco con ombra sottile
+
+### Modifiche tecniche
 
 | File | Modifica |
 |------|----------|
-| `src/assets/logo_Thermodmr.png` | Nuovo file (copia del logo caricato) |
-| `src/components/Layout.tsx` | Logo immagine al posto del testo nella sidebar |
-| `src/components/auth/AuthHeader.tsx` | Logo immagine al posto dell'icona nella pagina login |
+| `src/pages/Home.tsx` | Nuovo file - landing page completa con tutte le sezioni |
+| `src/App.tsx` | Aggiungere rotta `/home` per la landing page; modificare `/` per mostrare la landing se non autenticato, altrimenti la dashboard |
+| `src/components/ProtectedRoute.tsx` | Nessuna modifica necessaria |
+
+### Routing
+
+- `/` - Se l'utente e autenticato, mostra la dashboard. Se non autenticato, mostra la landing page
+- `/auth` - Resta la pagina di login/registrazione
+- La landing avra un pulsante "Accedi" che porta a `/auth`
+
+### Dettagli implementativi
+
+- Utilizzo di `framer-motion` (gia installato) per animazioni di entrata delle sezioni
+- `react-intersection-observer` (gia installato) per animazioni on-scroll
+- Il componente `Home.tsx` sara autocontenuto con tutte le sezioni inline
+- Responsive: layout a colonna singola su mobile, multi-colonna su desktop
+- Il logo `logo_Thermodmr.png` sara usato nella navbar e nel footer
+
