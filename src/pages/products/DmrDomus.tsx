@@ -43,7 +43,7 @@ const specs = [
   { label: "Classe", value: "A" },
   { label: "Profondità", value: "76 mm" },
   { label: "Vetrocamera", value: "Doppio vetro Lowe con gas argon" },
-  { label: "Uw (finestra)", value: "1.3 W/m²K" },
+  { label: "Uw (finestra)", value: "1.1 W/m²K" },
   { label: "Abbattimento acustico", value: "47 dB" },
 ];
 
