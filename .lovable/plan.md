@@ -1,46 +1,38 @@
 
 
-## Navbar Sempre Bianca + Pagine Dedicate
+## Ristrutturazione Pagina Prodotti
 
-### 1. Navbar sempre bianca con logo originale
-
-Attualmente la navbar cambia da scura (trasparente su sfondo scuro) a bianca allo scroll, e il logo viene invertito con `brightness-0 invert`. Questo crea problemi di leggibilita.
-
-**Soluzione**: La navbar sara SEMPRE bianca con ombra leggera, il logo sempre nei colori originali, e i link sempre scuri. Niente piu logica `scrolled` per i colori. Resta solo un leggero effetto ombra allo scroll.
-
-Modifiche nel componente `Navbar` in `src/pages/Home.tsx`:
-- Rimuovere la condizione `scrolled` per i colori di sfondo
-- Navbar sempre `bg-white border-b shadow-sm`
-- Logo sempre con colori originali (rimuovere `brightness-0 invert`)
-- Link sempre in colore scuro con accento blu/teal per l'attivo
-- Icona hamburger sempre scura
+### Problema attuale
+La pagina mostra 4 prodotti generici (Finestre PVC, Finestre Alluminio, Porte e Portoncini, Persiane e Oscuranti) senza corrispondenza con i prodotti reali di ThermoDMR. Mancano i modelli specifici e le categorie corrette.
 
 ---
 
-### 2. Pagine dedicate per le sezioni
+### Nuova struttura prodotti
 
-Creare pagine separate accessibili dalla navbar della landing, con layout coerente (navbar + footer condivisi):
+La pagina verra organizzata in **5 categorie principali**, ciascuna con i propri dettagli:
 
-| Pagina | Route | Contenuto |
-|--------|-------|-----------|
-| Chi Siamo | `/chi-siamo` | Storia aziendale, valori, produzione interna, team. Espansione della sezione attuale con piu dettagli |
-| Prodotti | `/prodotti-pubblico` | Catalogo prodotti con schede dettagliate per PVC, Alluminio, Porte, Persiane |
-| Vantaggi | `/vantaggi` | Perche scegliere ThermoDMR - vantaggi competitivi espansi |
-| Garanzie | `/garanzie` | Dettaglio garanzie contrattuali |
-| Contatti | `/contatti` | Form di contatto + mappa + info aziendali |
-
-Ogni pagina avra:
-- La stessa Navbar bianca (estratta come componente condiviso)
-- Lo stesso Footer
-- Contenuto espanso rispetto alla sezione corrispondente nella homepage
+| Categoria | Dettagli |
+|-----------|----------|
+| **Finestre in PVC** | 3 modelli specifici presentati come sotto-card (es. Modello 1, Modello 2, Modello 3 - i nomi placeholder verranno usati finche non forniti quelli reali) |
+| **Portoncini in PVC** | Portoncini d'ingresso in PVC con caratteristiche di sicurezza e isolamento |
+| **Cassonetti** | Cassonetti coibentati per avvolgibili |
+| **Tapparelle** | Tapparelle in PVC e alluminio, motorizzabili |
+| **Persiane** | Persiane in alluminio con lamelle orientabili |
 
 ---
 
-### 3. Aggiornamento navigazione
+### Layout della pagina
 
-- I link nella navbar della landing punteranno alle nuove pagine (con `Link to=`) invece di fare scroll alle sezioni
-- Nella homepage le sezioni restano come anteprima con bottoni "Scopri di piu" che portano alla pagina dedicata
-- Le route vengono aggiunte in `App.tsx`
+**Hero** - Resta uguale, con titolo e sottotitolo aggiornati.
+
+**Sezione per ogni categoria** - Alternanza immagine/testo (come ora), ma:
+- Per le **Finestre in PVC** (la categoria principale), layout espanso con:
+  - Descrizione generale della linea
+  - 3 sotto-card affiancate, una per modello, con nome, breve descrizione e caratteristiche chiave
+  - Ogni card con icona e lista features
+- Per le altre 4 categorie, layout standard immagine + testo + features come attualmente
+
+**CTA finale** - Bottone "Richiedi Preventivo" che porta a `/contatti` su ogni sezione.
 
 ---
 
@@ -48,13 +40,9 @@ Ogni pagina avra:
 
 | File | Modifica |
 |------|----------|
-| `src/pages/Home.tsx` | Navbar sempre bianca, logo originale, link alle pagine invece di scroll |
-| `src/components/PublicNavbar.tsx` | NUOVO - Componente navbar condiviso per tutte le pagine pubbliche |
-| `src/components/PublicFooter.tsx` | NUOVO - Componente footer condiviso |
-| `src/pages/ChiSiamo.tsx` | NUOVO - Pagina dedicata Chi Siamo |
-| `src/pages/ProdottiPubblico.tsx` | NUOVO - Pagina catalogo prodotti |
-| `src/pages/VantaggiPage.tsx` | NUOVO - Pagina vantaggi competitivi |
-| `src/pages/GaranziePage.tsx` | NUOVO - Pagina garanzie |
-| `src/pages/ContattiPage.tsx` | NUOVO - Pagina contatti con form |
-| `src/App.tsx` | Aggiunta route per le 5 nuove pagine pubbliche |
+| `src/pages/ProdottiPubblico.tsx` | Riscrittura completa dei dati prodotto e aggiunta layout a 3 sotto-card per la sezione Finestre PVC |
+
+Le immagini resteranno quelle esistenti (`product-pvc.jpg`, `product-porte.jpg`, `product-persiane.jpg`, `product-alluminio.jpg`) riassegnate alle categorie corrette. Per Cassonetti e Tapparelle verranno usate immagini placeholder o la stessa immagine PVC.
+
+Le icone Lucide verranno aggiornate per riflettere meglio ogni categoria (es. `Shield` per portoncini, `Blinds` per tapparelle, `Box` per cassonetti).
 
