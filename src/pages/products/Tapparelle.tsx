@@ -23,28 +23,30 @@ const stagger = { visible: { transition: { staggerChildren: 0.12 } } };
 const inViewOpts = { triggerOnce: true, threshold: 0.05, rootMargin: "0px 0px -50px 0px" };
 
 const features = [
-  "Disponibili in PVC o alluminio coibentato",
-  "Motorizzazione elettrica integrata",
-  "Predisposizione per domotica e smart home",
-  "Sistema anti-sollevamento di sicurezza",
-  "Colori coordinati con gli infissi",
-  "Lamelle ad alta resistenza meccanica",
-  "Funzionamento silenzioso",
+  "Alluminio leggero e resistente, non teme intemperie né usura",
+  "Isolamento termico superiore: calore in inverno, fresco in estate",
+  "Barriera efficace contro tentativi di intrusione",
+  "Disponibili in versione coibentata con schiuma poliuretanica",
+  "Motorizzazione elettrica con motore tubolare integrato nel rullo",
+  "Predisposizione per domotica e Smart Home",
+  "Abbattimento acustico dei rumori esterni",
+  "Alluminio riciclabile al 100%, scelta sostenibile",
+  "Disponibili senza cassonetto (sistema monoblocco)",
 ];
 
 const specs = [
-  { label: "Materiale", value: "PVC / Alluminio" },
-  { label: "Coibentazione", value: "Schiuma PU" },
-  { label: "Motorizzazione", value: "Elettrica" },
-  { label: "Domotica", value: "Predisposta" },
-  { label: "Sicurezza", value: "Anti-sollevamento" },
-  { label: "Colori", value: "Coordinati RAL" },
+  { label: "Materiale", value: "Alluminio" },
+  { label: "Coibentazione", value: "Schiuma poliuretanica" },
+  { label: "Motorizzazione", value: "Motore tubolare" },
+  { label: "Domotica", value: "Smart Home ready" },
+  { label: "Sostenibilità", value: "100% riciclabile" },
+  { label: "Versioni", value: "Coibentate / Estruse" },
 ];
 
 const benefits = [
-  { icon: Zap, title: "Motorizzazione Smart", desc: "Motorizzazione elettrica con possibilità di integrazione domotica per controllo da remoto." },
-  { icon: Shield, title: "Anti-effrazione", desc: "Sistema anti-sollevamento che impedisce il sollevamento forzato della tapparella dall'esterno." },
-  { icon: Smartphone, title: "Domotica Ready", desc: "Predisposizione per sistemi smart home: controlla le tapparelle da smartphone o assistente vocale." },
+  { icon: Zap, title: "Risparmio Energetico", desc: "L'alluminio coibentato con schiuma poliuretanica trattiene il calore in inverno e respinge il caldo estivo, riducendo i costi in bolletta." },
+  { icon: Shield, title: "Sicurezza Anti-intrusione", desc: "La robustezza dell'alluminio, unita alla struttura coibentata, crea una protezione ulteriore contro tentativi di intrusione." },
+  { icon: Smartphone, title: "Motorizzazione Smart", desc: "Motore tubolare nascosto nel rullo, gestione da remoto tramite domotica. Consumo inferiore a un piccolo elettrodomestico." },
 ];
 
 const Tapparelle = () => {
@@ -59,7 +61,7 @@ const Tapparelle = () => {
         category="I Nostri Prodotti"
         title=""
         titleAccent="Tapparelle"
-        description="Tapparelle in PVC e alluminio coibentato, disponibili con motorizzazione elettrica e predisposizione per la domotica."
+        description="Tapparelle avvolgibili in alluminio: leggerezza, resistenza e isolamento termico superiore. Protezione contro intrusioni, risparmio energetico. Disponibili coibentate, estruse e motorizzate."
         heroImage="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1600&q=80"
       />
 

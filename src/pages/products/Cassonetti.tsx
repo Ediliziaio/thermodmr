@@ -24,28 +24,29 @@ const stagger = { visible: { transition: { staggerChildren: 0.12 } } };
 const inViewOpts = { triggerOnce: true, threshold: 0.05, rootMargin: "0px 0px -50px 0px" };
 
 const features = [
-  "Coibentazione in EPS ad alta densità",
-  "Eliminazione totale dei ponti termici",
-  "Ispezione frontale facilitata",
-  "Compatibili con tapparelle motorizzate",
-  "Dimensioni su misura",
+  "Contenitore per avvolgibile incassato nel muro o a vista",
+  "Coibentazione per eliminare ponti termici e dispersioni",
+  "Prevenzione di condensa e muffa nella zona cassonetto",
+  "Ispezione frontale facilitata per manutenzione e sostituzione tapparella",
+  "Compatibile con tapparelle motorizzate",
+  "Dimensioni su misura per ogni vano murario",
+  "Linee pulite ed essenziali, soluzioni a scomparsa disponibili",
   "Predisposizione per zanzariere",
-  "Guida tapparella integrata",
 ];
 
 const specs = [
+  { label: "Materiale", value: "PVC / Alluminio / Composito" },
   { label: "Coibentazione", value: "EPS alta densità" },
-  { label: "Trasmittanza", value: "0.33 W/m²K" },
   { label: "Ispezione", value: "Frontale" },
   { label: "Motorizzazione", value: "Predisposto" },
+  { label: "Design", value: "A scomparsa disponibile" },
   { label: "Dimensioni", value: "Su misura" },
-  { label: "Materiale", value: "PVC rinforzato" },
 ];
 
 const benefits = [
-  { icon: ThermometerSun, title: "Zero Ponti Termici", desc: "La coibentazione in EPS ad alta densità elimina completamente i ponti termici nella zona del cassonetto." },
-  { icon: Wrench, title: "Manutenzione Facile", desc: "Ispezione frontale facilitata per interventi rapidi senza smontare l'intera struttura." },
-  { icon: Ruler, title: "Su Misura", desc: "Ogni cassonetto viene realizzato su misura per adattarsi perfettamente al vano murario esistente." },
+  { icon: ThermometerSun, title: "Zero Ponti Termici", desc: "Un cassonetto non isolato causa dispersioni termiche in inverno e surriscaldamento in estate. La coibentazione elimina completamente questo problema." },
+  { icon: Wrench, title: "Prevenzione Condensa", desc: "Elimina la formazione di ponti termici con conseguente condensa e muffa, migliorando la salubrità dell'ambiente." },
+  { icon: Ruler, title: "Manutenzione Facile", desc: "Accesso semplice per manutenzione e sostituzione della tapparella, senza interventi invasivi." },
 ];
 
 const Cassonetti = () => {
@@ -60,7 +61,7 @@ const Cassonetti = () => {
         category="I Nostri Prodotti"
         title="Cassonetti"
         titleAccent="Coibentati"
-        description="Cassonetti coibentati per avvolgibili, progettati per eliminare i ponti termici e garantire il massimo isolamento."
+        description="Il cassonetto è il contenitore che ospita l'avvolgibile, posizionato nella parte superiore della finestra. Ruolo fondamentale nell'isolamento termico e acustico: cassonetti non isolati causano dispersioni, ponti termici, condensa e muffa."
         heroImage="https://images.unsplash.com/photo-1513694203232-719a280e022f?w=1600&q=80"
       />
 
