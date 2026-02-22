@@ -269,27 +269,27 @@ const StatItem = ({ value, suffix, prefix, label, inView, icon: IconComp }: { va
       className="text-center space-y-3 rounded-2xl bg-white/5 border border-white/10 p-4 sm:p-6 hover:bg-white/[0.08] hover:border-white/20 hover:scale-[1.02] transition-all duration-300"
     >
       <div className="flex justify-center">
-        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[hsl(195,85%,45%)]/20 flex items-center justify-center">
-          <IconComp size={24} className="text-[hsl(195,85%,55%)]" />
+        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/10 flex items-center justify-center">
+          <IconComp size={24} className="text-white/80" />
         </div>
       </div>
       <p className="text-3xl sm:text-5xl font-extrabold text-white">
         {isStatic ? (
           <>
             <span>{prefix}{value}</span>
-            <span className="text-2xl sm:text-3xl text-[hsl(195,85%,55%)]">{suffix}</span>
+            <span className="text-2xl sm:text-3xl text-white/70">{suffix}</span>
           </>
         ) : (
           <>
             {count.toLocaleString("it-IT")}
-            <span className="text-2xl sm:text-3xl text-[hsl(195,85%,55%)]">{suffix}</span>
+            <span className="text-2xl sm:text-3xl text-white/70">{suffix}</span>
           </>
         )}
       </p>
       <p className="text-sm text-white/60 font-medium">{cleanLabel}</p>
       {isFootnote && (
         <p className="text-xs text-white/50 italic inline-flex items-center gap-1 justify-center">
-          <Info size={12} className="text-[hsl(195,85%,55%)]/60" />
+          <Info size={12} className="text-white/40" />
           in base a colori e modello
         </p>
       )}
