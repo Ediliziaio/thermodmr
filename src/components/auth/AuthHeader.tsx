@@ -1,21 +1,11 @@
-import { Package } from "lucide-react";
+import logo from "@/assets/logo_Thermodmr.png";
 
 export const AuthHeader = () => {
   return (
     <div className="flex flex-col items-center space-y-2 mb-2">
-      {/* Logo */}
-      <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-primary text-primary-foreground shadow-lg">
-        <Package className="w-8 h-8" />
-      </div>
-      
-      {/* Title */}
-      <h1 className="text-2xl font-bold tracking-tight">
-        Gestionale Ordini
-      </h1>
-      
-      {/* Subtitle */}
+      <img src={logo} alt="ThermoDMR" className="h-20 object-contain" />
       <p className="text-sm text-muted-foreground text-center">
-        Gestisci ordini, pagamenti e provvigioni
+        Finestre di Design Moderno, Resistenti nel tempo
       </p>
     </div>
   );

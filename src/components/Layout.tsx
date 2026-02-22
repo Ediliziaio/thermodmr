@@ -1,5 +1,6 @@
 import { ReactNode, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import logo from "@/assets/logo_Thermodmr.png";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -66,7 +67,7 @@ export function Layout({ children }: LayoutProps) {
     <div className="flex h-full flex-col">
       {/* Logo */}
       <div className="flex h-16 items-center border-b px-6">
-        <h1 className="text-lg font-semibold">Gestionale Serramenti</h1>
+        <img src={logo} alt="ThermoDMR" className="h-9 object-contain" />
       </div>
 
       {/* Navigation */}
