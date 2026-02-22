@@ -1,7 +1,21 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { ArrowRight, CheckCircle2, Sparkles, ThermometerSun, Shield, Volume2 } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Sparkles,
+  ThermometerSun,
+  Shield,
+  Volume2,
+  Wind,
+  Lock,
+  Settings2,
+  Thermometer,
+  RotateCcw,
+  Maximize2,
+  Palette,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
@@ -9,6 +23,7 @@ import ProductHero from "@/components/products/ProductHero";
 import ProductGallery from "@/components/products/ProductGallery";
 import ProductComparison from "@/components/products/ProductComparison";
 import RelatedProducts from "@/components/products/RelatedProducts";
+import dmrConfortProfile from "@/assets/dmr-confort-profile.webp";
 
 const galleryImages = [
   { src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80", alt: "DMR CONFORT - Finestra PVC classica", caption: "Finestra a due ante con profilo classico bianco" },
@@ -34,23 +49,71 @@ const specs = [
 ];
 
 const features = [
-  "Profilo a 3 camere con rinforzo in acciaio",
+  "Profilo a 3 camere con rinforzo in acciaio per massima rigidità",
+  "Profili sottili che massimizzano la superficie vetrata e la luce naturale",
   "Vetrocamera standard con ottimo rapporto qualità/prezzo",
-  "Ampia gamma di colori e finiture legno",
-  "Guarnizioni a doppia battuta",
-  "Ferramenta anti-effrazione di serie",
+  "Ampia gamma di colori e finiture legno per ogni stile architettonico",
+  "Guarnizioni a doppia battuta per tenuta all'aria e all'acqua",
+  "Ferramenta anti-effrazione di serie per la tua sicurezza",
+  "Facile manutenzione: basta un panno umido per la pulizia",
   "Drenaggio nascosto dell'acqua piovana",
 ];
 
+const windowAdvantages = [
+  {
+    icon: Wind,
+    title: "Microventilazione",
+    desc: "Funzione che consente di ventilare l'ambiente senza aprire completamente l'anta, garantendo un ricambio d'aria costante anche in assenza.",
+  },
+  {
+    icon: Lock,
+    title: "Maniglia di Sicurezza",
+    desc: "Maniglia in alluminio con funzione di sicurezza integrata, disponibile in diverse finiture per adattarsi a ogni stile.",
+  },
+  {
+    icon: Settings2,
+    title: "Cerniere 3D Regolabili",
+    desc: "Regolabili su tre livelli (altezza, larghezza, pressione) per una chiusura perfetta e duratura nel tempo.",
+  },
+  {
+    icon: Thermometer,
+    title: "Canalina Calda",
+    desc: "Canalina warm-edge che riduce il ponte termico sul bordo del vetro, disponibile in acciaio o plastica con ampia gamma di colori.",
+  },
+  {
+    icon: RotateCcw,
+    title: "Blocco Rotazione Maniglia",
+    desc: "Sistema che impedisce il posizionamento errato dell'anta, prevenendo danni alla ferramenta e garantendo il corretto funzionamento.",
+  },
+  {
+    icon: Maximize2,
+    title: "Braccio Oscillo-Battente",
+    desc: "Permette l'apertura dell'anta sia a battente che a ribalta, con funzione microventilazione integrata per un comfort ottimale.",
+  },
+];
+
+const availableColors = [
+  { name: "Bianco", color: "hsl(0, 0%, 98%)", border: true },
+  { name: "Rovere Dorato", color: "hsl(35, 55%, 55%)" },
+  { name: "Noce", color: "hsl(25, 45%, 35%)" },
+  { name: "Antracite", color: "hsl(0, 0%, 25%)" },
+  { name: "Grigio Chiaro", color: "hsl(0, 0%, 78%)" },
+  { name: "Verde Scuro", color: "hsl(140, 30%, 25%)" },
+  { name: "Bianco Crema", color: "hsl(40, 30%, 90%)", border: true },
+  { name: "Jet Black", color: "hsl(0, 0%, 8%)" },
+];
+
 const benefits = [
-  { icon: ThermometerSun, title: "Isolamento Termico", desc: "Riduzione dei consumi energetici grazie al profilo multi-camera e alla vetrocamera performante." },
-  { icon: Volume2, title: "Comfort Acustico", desc: "Abbattimento acustico fino a 32 dB per ambienti più silenziosi e confortevoli." },
-  { icon: Shield, title: "Sicurezza", desc: "Ferramenta anti-effrazione di serie con possibilità di upgrade a classe RC2." },
+  { icon: ThermometerSun, title: "Isolamento Termico", desc: "Riduzione dei consumi energetici grazie al profilo multi-camera e alla vetrocamera performante. Mantieni il calore d'inverno e il fresco d'estate." },
+  { icon: Volume2, title: "Comfort Acustico", desc: "Abbattimento acustico fino a 32 dB per ambienti più silenziosi e confortevoli, ideale per abitazioni in zone trafficate." },
+  { icon: Shield, title: "Sicurezza", desc: "Ferramenta anti-effrazione di serie con possibilità di upgrade a classe RC2. Protezione e tranquillità per la tua famiglia." },
 ];
 
 const DmrConfort = () => {
   const [specsRef, specsInView] = useInView(inViewOpts);
   const [benefitsRef, benefitsInView] = useInView(inViewOpts);
+  const [advantagesRef, advantagesInView] = useInView(inViewOpts);
+  const [colorsRef, colorsInView] = useInView(inViewOpts);
 
   return (
     <div className="min-h-screen bg-white">
@@ -60,7 +123,7 @@ const DmrConfort = () => {
         category="Finestre in PVC"
         title="DMR"
         titleAccent="CONFORT"
-        description="La soluzione ideale per chi cerca qualità e convenienza. Profilo a 3 camere con ottime prestazioni termiche e acustiche, perfetto per ristrutturazioni e nuove costruzioni."
+        description="La soluzione ideale per chi cerca qualità e convenienza. Profilo a 3 camere con ottime prestazioni termiche e acustiche, profili sottili per massimizzare la luce naturale e un design versatile che si adatta a ogni contesto architettonico."
         heroImage="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80"
         badge={{ label: "Miglior Prezzo", color: "green" }}
       />
@@ -69,14 +132,22 @@ const DmrConfort = () => {
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="relative rounded-3xl overflow-hidden shadow-xl">
-              <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80" alt="DMR CONFORT - Finestra PVC classica" className="w-full aspect-[4/3] object-cover" loading="lazy" />
+            <div className="relative rounded-3xl overflow-hidden shadow-xl bg-[hsl(0,0%,96%)] flex items-center justify-center p-8">
+              <img
+                src={dmrConfortProfile}
+                alt="DMR CONFORT - Sezione trasversale profilo PVC"
+                className="w-full max-w-md object-contain"
+                loading="lazy"
+              />
               <div className="absolute bottom-4 left-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[hsl(195,85%,45%)] text-white shadow-lg">
                 <Sparkles className="h-6 w-6" />
               </div>
             </div>
             <div className="space-y-6">
               <h2 className="text-3xl font-bold text-[hsl(0,0%,10%)]">Caratteristiche Principali</h2>
+              <p className="text-[hsl(0,0%,40%)] leading-relaxed">
+                Il DMR CONFORT è progettato per offrire il massimo della luce naturale grazie ai profili sottili e alla grande superficie vetrata. La struttura a 3 camere con rinforzo in acciaio garantisce eccellente isolamento termico e acustico, riducendo i consumi energetici e migliorando il comfort abitativo. Facile da mantenere e resistente nel tempo, è la scelta ideale per ristrutturazioni e nuove costruzioni.
+              </p>
               <ul className="space-y-3">
                 {features.map((f) => (
                   <li key={f} className="flex items-center gap-3 text-[hsl(0,0%,35%)]">
@@ -107,6 +178,67 @@ const DmrConfort = () => {
                 <motion.div key={s.label} variants={fadeUp} className="bg-white rounded-2xl p-6 shadow-sm border border-[hsl(0,0%,92%)]">
                   <p className="text-xs font-bold tracking-wider text-[hsl(195,85%,45%)] uppercase mb-1">{s.label}</p>
                   <p className="text-2xl font-bold text-[hsl(0,0%,10%)]">{s.value}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Window Advantages - Inspired by Petecki */}
+      <section ref={advantagesRef} className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div initial="hidden" animate={advantagesInView ? "visible" : "hidden"} variants={stagger}>
+            <motion.div variants={fadeUp} className="text-center mb-14">
+              <p className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-3">Dettagli Tecnici</p>
+              <h2 className="text-3xl font-bold text-[hsl(0,0%,10%)]">Vantaggi della Finestra</h2>
+              <p className="text-[hsl(0,0%,45%)] mt-3 max-w-2xl mx-auto">
+                Ogni dettaglio del DMR CONFORT è progettato per garantire funzionalità, sicurezza e comfort abitativo superiore.
+              </p>
+            </motion.div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {windowAdvantages.map((adv) => (
+                <motion.div
+                  key={adv.title}
+                  variants={fadeUp}
+                  className="group bg-[hsl(0,0%,97%)] rounded-2xl p-7 border border-[hsl(0,0%,92%)] hover:border-[hsl(195,85%,45%,0.3)] hover:shadow-lg transition-all duration-300"
+                >
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[hsl(195,85%,45%,0.1)] group-hover:bg-[hsl(195,85%,45%,0.15)] transition-colors mb-4">
+                    <adv.icon className="h-6 w-6 text-[hsl(195,85%,45%)]" />
+                  </div>
+                  <h3 className="text-lg font-bold text-[hsl(0,0%,10%)] mb-2">{adv.title}</h3>
+                  <p className="text-sm text-[hsl(0,0%,40%)] leading-relaxed">{adv.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Available Colors */}
+      <section ref={colorsRef} className="py-24 bg-[hsl(0,0%,97%)]">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div initial="hidden" animate={colorsInView ? "visible" : "hidden"} variants={stagger}>
+            <motion.div variants={fadeUp} className="text-center mb-14">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[hsl(195,85%,45%,0.1)] mb-4">
+                <Palette className="h-6 w-6 text-[hsl(195,85%,45%)]" />
+              </div>
+              <h2 className="text-3xl font-bold text-[hsl(0,0%,10%)]">Colori Disponibili</h2>
+              <p className="text-[hsl(0,0%,45%)] mt-3 max-w-2xl mx-auto">
+                Scegli tra un'ampia gamma di colori e finiture legno per personalizzare le tue finestre e armonizzarle con lo stile della tua abitazione.
+              </p>
+            </motion.div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto">
+              {availableColors.map((c) => (
+                <motion.div key={c.name} variants={fadeUp} className="flex flex-col items-center gap-3">
+                  <div
+                    className="w-20 h-20 rounded-2xl shadow-md transition-transform hover:scale-110"
+                    style={{
+                      backgroundColor: c.color,
+                      border: c.border ? "2px solid hsl(0, 0%, 85%)" : "none",
+                    }}
+                  />
+                  <span className="text-sm font-medium text-[hsl(0,0%,25%)]">{c.name}</span>
                 </motion.div>
               ))}
             </div>
