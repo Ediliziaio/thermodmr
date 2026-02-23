@@ -26,32 +26,24 @@ export const useDashboardKPIs = (startDate?: Date, endDate?: Date) => {
   return useQuery({
     queryKey: ["dashboard-kpis", startDate, endDate],
     queryFn: async (): Promise<DashboardKPIs> => {
-      // Chiama la funzione SQL ottimizzata per KPI
-      const { data: kpisData, error: kpisError } = await supabase.rpc(
-        "get_dashboard_kpis",
-        {
+      const [kpisResult, dealersResult] = await Promise.all([
+        supabase.rpc("get_dashboard_kpis", {
           p_start_date: startDate?.toISOString(),
           p_end_date: endDate?.toISOString(),
           p_commerciale_id: null,
-        }
-      );
-
-      if (kpisError) throw kpisError;
-
-      // Chiama la funzione per top dealers
-      const { data: dealersData, error: dealersError } = await supabase.rpc(
-        "get_top_dealers",
-        {
+        }),
+        supabase.rpc("get_top_dealers", {
           p_limit: 5,
           p_commerciale_id: null,
           p_start_date: startDate?.toISOString(),
           p_end_date: endDate?.toISOString(),
-        }
-      );
+        }),
+      ]);
 
-      if (dealersError) throw dealersError;
+      if (kpisResult.error) throw kpisResult.error;
+      if (dealersResult.error) throw dealersResult.error;
 
-      const kpis = kpisData as any;
+      const kpis = kpisResult.data as any;
       const daSaldare = kpis.totalRevenue - kpis.totalIncassato;
 
       return {
@@ -61,7 +53,7 @@ export const useDashboardKPIs = (startDate?: Date, endDate?: Date) => {
         totalIncassato: kpis.totalIncassato,
         daSaldare,
         ordersByStatus: kpis.ordersByStatus,
-        topDealers: (dealersData || []) as any[],
+        topDealers: (dealersResult.data || []) as any[],
       };
     },
     staleTime: 5 * 60 * 1000, // 5 minuti

@@ -1,3 +1,4 @@
+import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -12,7 +13,7 @@ interface OrderStatusPieChartProps {
   data: OrderStatusData[];
 }
 
-export function OrderStatusPieChart({ data }: OrderStatusPieChartProps) {
+export const OrderStatusPieChart = React.memo(function OrderStatusPieChart({ data }: OrderStatusPieChartProps) {
   const isMobile = useIsMobile();
   const totalOrders = data.reduce((sum, item) => sum + item.value, 0);
 
@@ -62,4 +63,4 @@ export function OrderStatusPieChart({ data }: OrderStatusPieChartProps) {
       </CardContent>
     </Card>
   );
-}
+});
