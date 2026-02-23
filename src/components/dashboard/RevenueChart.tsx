@@ -9,9 +9,10 @@ interface RevenueChartProps {
     acconti: number;
     incassato: number;
   }>;
+  description?: string;
 }
 
-export function RevenueChart({ data }: RevenueChartProps) {
+export function RevenueChart({ data, description }: RevenueChartProps) {
   const isMobile = useIsMobile();
   
   const formatCurrency = (value: number) => {
@@ -27,7 +28,7 @@ export function RevenueChart({ data }: RevenueChartProps) {
     <Card>
       <CardHeader className={isMobile ? "p-4" : ""}>
         <CardTitle className={isMobile ? "text-base" : ""}>Andamento Ricavi</CardTitle>
-        <CardDescription className={isMobile ? "text-xs" : ""}>Ultimi 6 mesi</CardDescription>
+        <CardDescription className={isMobile ? "text-xs" : ""}>{description || "Ultimi 6 mesi"}</CardDescription>
       </CardHeader>
       <CardContent className={isMobile ? "p-4 pt-0" : ""}>
         <ResponsiveContainer width="100%" height={isMobile ? 220 : 300}>

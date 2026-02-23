@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useUpcomingDeadlines } from "@/hooks/useUpcomingDeadlines";
 import { useNavigate } from "react-router-dom";
 import { Clock, AlertTriangle, CalendarClock, Package } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
@@ -16,31 +16,12 @@ interface DeadlinesWidgetProps {
   className?: string;
 }
 
-const getStatusLabel = (status: string): string => {
-  const labels: Record<string, string> = {
-    da_confermare: "Da Confermare",
-    da_pagare_acconto: "Da Pagare Acconto",
-    in_lavorazione: "In Lavorazione",
-    da_consegnare: "Da Consegnare",
-    consegnato: "Consegnato",
-  };
-  return labels[status] || status;
-};
-
 const getUrgencyColor = (daysRemaining: number): string => {
   if (daysRemaining < 0) return "bg-destructive/10 text-destructive border-destructive/20";
   if (daysRemaining === 0) return "bg-destructive/10 text-destructive border-destructive/20";
   if (daysRemaining <= 2) return "bg-orange-500/10 text-orange-600 border-orange-500/20";
   if (daysRemaining <= 5) return "bg-yellow-500/10 text-yellow-600 border-yellow-500/20";
   return "bg-muted text-muted-foreground border-muted";
-};
-
-const formatCurrency = (value: number): string => {
-  return new Intl.NumberFormat("it-IT", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 2,
-  }).format(value);
 };
 
 export function DeadlinesWidget({
