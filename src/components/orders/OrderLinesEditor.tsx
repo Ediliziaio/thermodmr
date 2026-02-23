@@ -19,6 +19,7 @@ interface OrderLinesEditorProps {
   onLinesChange: (lines: OrderLine[]) => void;
   orderStatus?: string;
   readOnly?: boolean;
+  title?: string;
 }
 
 const categories = [
@@ -29,7 +30,7 @@ const categories = [
   "Accessorio",
 ];
 
-export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly = false }: OrderLinesEditorProps) {
+export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly = false, title = "Righe Ordine" }: OrderLinesEditorProps) {
   const [editingLines, setEditingLines] = useState<OrderLine[]>(lines);
   
   const canEdit = !readOnly && (orderStatus === "da_confermare" || !orderStatus);
@@ -92,7 +93,7 @@ export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly =
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Righe Ordine</CardTitle>
+        <CardTitle>{title}</CardTitle>
         {canEdit && (
           <Button onClick={addNewLine} size="sm">
             <Plus className="h-4 w-4 mr-2" />
@@ -238,7 +239,7 @@ export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly =
               <span className="font-medium">{formatCurrency(totalIva)}</span>
             </div>
             <div className="flex justify-between text-lg font-bold pt-2 border-t">
-              <span>Totale Ordine</span>
+              <span>{title.replace("Righe", "Totale")}</span>
               <span>{formatCurrency(totalImporto)}</span>
             </div>
           </div>
