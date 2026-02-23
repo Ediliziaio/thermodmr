@@ -1,83 +1,69 @@
 
 
-## Pulizia e Stabilizzazione - Sezione Ordini
+## Pulizia e Stabilizzazione - Sezione Pagamenti
 
 ### 1. PULIZIA CODICE
 
-#### Duplicati da rimuovere
-
 | Cosa | Dove | Problema |
 |------|------|----------|
-| `formatDate()` locale | `Orders.tsx` righe 27-33 | Duplica `formatDate` da `@/lib/utils.ts`. La versione locale usa `Intl.DateTimeFormat`, quella globale usa `date-fns` con locale italiano -- vanno unificati |
-| `MoreVertical` import | `OrderMobileCard.tsx` riga 5 | Importato ma mai usato nel componente |
-| Stat cards duplicate mobile/desktop | `Orders.tsx` righe 267-370 | Le 4 card statistiche sono scritte 2 volte (una versione mobile, una desktop) con lo stesso identico contenuto. Si puo usare un unico blocco con classi responsive |
-
-#### Dettaglio rimozioni
-
-- **`Orders.tsx`**: Rimuovere `formatDate` locale (righe 27-33), importare `formatDate` da `@/lib/utils`. Nota: il formato cambiera leggermente da "23/02/2026" a "23 feb 2026" per coerenza con il resto dell'app
-- **`OrderMobileCard.tsx`**: Rimuovere `MoreVertical` dall'import di lucide-react (non usato)
-- **`Orders.tsx`**: Unificare le stat cards in un unico blocco con classi responsive (`overflow-x-auto` su mobile, `grid` su desktop)
+| `formatDateLocal()` locale | `Pagamenti.tsx` righe 80-82 | Duplica `formatDate` gia presente in `@/lib/utils.ts`. Stessa identica logica |
+| Stat cards duplicate mobile/desktop | `Pagamenti.tsx` righe 200-242 | Le 4 card statistiche sono scritte 2 volte (mobile scrollabile + desktop grid) con lo stesso contenuto. Unificabili con classi responsive |
+| Import `motion` non usato | `Pagamenti.tsx` riga 31 | `framer-motion` importato ma mai utilizzato nel componente |
+| `MobilePaymentFilters` doppio rendering filtri | `Pagamenti.tsx` righe 267-277 | `MobilePaymentsList` (riga 247) ha gia i propri filtri interni (bottone Filter + Sheet). `MobilePaymentFilters` aggiunge un secondo FAB filtri sovrapposto |
 
 ### 2. FIX FUNZIONALI
 
 | Bug | Dettaglio | Fix |
 |-----|-----------|-----|
-| Error state senza retry | Riga 221-227: solo testo rosso, nessun bottone "Riprova" -- l'utente e bloccato | Aggiungere Card con icona, messaggio chiaro, e bottone "Riprova" che chiama `refetch()` dalla query |
-| `percentuale_pagata` potenziale crash con `.toFixed()` | Riga 518 nella tabella: `order.percentuale_pagata.toFixed(0)` puo crashare se il valore e `null` (dalla view) | Aggiungere guard: `(order.percentuale_pagata ?? 0).toFixed(0)` |
-| Mobile: `MobileOrderFilters` valori `statoPagamento` disallineati | In `MobileOrderFilters.tsx` i valori sono `not_paid/partial/paid` ma in `Orders.tsx` il filtro controlla `pagato/parziale/non_pagato` | Allineare i valori nel mobile filter a `pagato/parziale/non_pagato` per matchare la logica di filtro in `Orders.tsx` |
-| `refetch` non estratto dalla query | `useOrdersInfinite` non espone `refetch` nell'uso corrente | Destrutturare `refetch` dalla query per usarlo nell'error state |
+| Error state usa `window.location.reload()` | Riga 169: ricarica l'intera pagina invece di rilanciare la query | Destrutturare `refetch` dalla query e usare `refetch()` nel bottone "Riprova", con Card strutturata e icona `AlertCircle` (pattern Dashboard/Ordini) |
+| `refetch` non estratto dalla query | `usePaymentsInfinite` non espone `refetch` nell'uso corrente | Aggiungere `refetch` alla destrutturazione a riga 58 |
+| `percentuale_pagata.toFixed(0)` senza guard | `NewPaymentDialog.tsx` riga 228 | Se `percentuale_pagata` e `null`, `.toFixed()` crasha. Fix: `(selectedOrder.percentuale_pagata ?? 0).toFixed(0)` |
+| Metodo pagamento: mismatch valori maiuscolo/minuscolo | `NewPaymentDialog` usa "Bonifico", "Carta di Credito", ecc. mentre i filtri cercano "bonifico", "carta" | Questo potrebbe causare filtri che non trovano risultati. Da verificare che il database salvi il valore cosi com'e -- se i filtri non funzionano, standardizzare a lowercase nel dialog |
 
 ### 3. MIGLIORAMENTI UX
 
 | Miglioramento | Dettaglio |
 |---------------|-----------|
-| Error state con retry | Card strutturata con icona `AlertCircle`, messaggio chiaro, e pulsante "Riprova" -- identico al pattern della Dashboard |
-| Stat cards unificate | Un solo blocco di codice per mobile e desktop con classi responsive, eliminando 50+ righe duplicate |
-| Empty state migliorato | Aggiungere icona e CTA "Crea Ordine" nella sezione vuota (solo per super_admin) invece di solo testo |
-| Loading state piu informativo | Aggiungere testo "Caricamento ordini..." sotto lo spinner |
+| Error state con retry | Card strutturata con icona `AlertCircle`, messaggio chiaro, e pulsante "Riprova" con `refetch()` -- identico al pattern Dashboard e Ordini |
+| Stat cards unificate | Un solo blocco responsive: `grid grid-cols-2 lg:grid-cols-4` con scroll orizzontale su mobile, eliminando ~40 righe duplicate |
+| Rimozione FAB filtri doppio su mobile | Rimuovere `MobilePaymentFilters` dal render mobile perche `MobilePaymentsList` gestisce gia filtri e search nel proprio bottom sheet |
+| Loading state informativo | Aggiungere testo "Caricamento pagamenti..." sotto gli skeleton per feedback utente |
 
 ### 4. RIEPILOGO FILE MODIFICATI
 
 | File | Tipo modifica |
 |------|---------------|
-| `src/pages/Orders.tsx` | Rimuovere `formatDate` locale, importare da utils, unificare stat cards, fix error state con retry, fix `percentuale_pagata` guard, fix empty state, fix loading state |
-| `src/components/orders/OrderMobileCard.tsx` | Rimuovere import `MoreVertical` non usato |
-| `src/components/orders/MobileOrderFilters.tsx` | Allineare valori `statoPagamento` a `pagato/parziale/non_pagato` |
+| `src/pages/Pagamenti.tsx` | Rimuovere `formatDateLocal`, import `motion`, stat cards duplicate, `MobilePaymentFilters` doppio; fix error state con retry; unificare stat cards |
+| `src/components/payments/NewPaymentDialog.tsx` | Guard `percentuale_pagata ?? 0` |
 
 ### 5. DETTAGLIO TECNICO
 
-#### Orders.tsx - Modifiche principali
+#### Pagamenti.tsx - Modifiche principali
 
-**Import**: Rimuovere `formatDate` locale, aggiungere `formatDate` all'import da `@/lib/utils`:
-```text
-// Prima:
-import { formatCurrency, getStatusColor, getStatusLabel, cn } from "@/lib/utils";
-const formatDate = (date: Date) => { ... };
-
-// Dopo:
-import { formatCurrency, formatDate, getStatusColor, getStatusLabel, cn } from "@/lib/utils";
-```
+**Import puliti**: rimuovere `motion` da framer-motion (non usato). Aggiungere `formatDate` all'import da `@/lib/utils`. Rimuovere `formatDateLocal` locale. Aggiungere `AlertCircle` a lucide-react.
 
 **Destrutturazione query**: aggiungere `refetch`:
 ```text
-const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useOrdersInfinite(...);
+const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = usePaymentsInfinite(...);
 ```
 
-**Error state migliorato**:
+**Error state migliorato** (sostituire righe 163-177):
 ```text
 if (error) {
   return (
-    <div className="flex items-center justify-center min-h-[50vh]">
+    <div className="flex items-center justify-center min-h-[50vh] p-6">
       <Card className="max-w-md w-full">
         <CardContent className="flex flex-col items-center gap-4 pt-6">
           <AlertCircle className="h-12 w-12 text-destructive" />
           <div className="text-center">
             <h3 className="font-semibold text-lg">Errore nel caricamento</h3>
             <p className="text-muted-foreground text-sm mt-1">
-              Impossibile caricare gli ordini. Verifica la connessione e riprova.
+              Impossibile caricare i pagamenti. Verifica la connessione e riprova.
             </p>
           </div>
-          <Button onClick={() => refetch()}>Riprova</Button>
+          <Button onClick={() => refetch()}>
+            <RefreshCw className="h-4 w-4 mr-2" />Riprova
+          </Button>
         </CardContent>
       </Card>
     </div>
@@ -85,36 +71,41 @@ if (error) {
 }
 ```
 
-**Stat cards unificate**: Un solo blocco con classi responsive:
+**Stat cards unificate** (sostituire righe 199-242):
 ```text
-<div className="grid grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto">
-  <Card>...</Card>
-  <Card>...</Card>
-  <Card>...</Card>
-  <Card>...</Card>
+<div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+  {[
+    { title: "Totale Incassato", icon: Euro, value: formatCurrency(totaleIncassato), subtitle: `${payments.length} pagamenti` },
+    { title: "Media Importo", icon: TrendingUp, value: formatCurrency(mediaImporto), subtitle: "per pagamento" },
+    { title: "Pagamenti in Attesa", icon: Clock, value: payments.filter(p => p.tipo === "acconto").length, subtitle: "acconti registrati" },
+    { title: "Metodo Piu Usato", icon: CreditCard, value: metodoPiuUsatoNome, subtitle: "piu popolare", capitalize: true }
+  ].map((stat, i) => (
+    <Card key={i}>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
+        <stat.icon className="h-4 w-4 text-muted-foreground" />
+      </CardHeader>
+      <CardContent>
+        <div className={`text-2xl font-bold ${stat.capitalize ? 'capitalize' : ''}`}>{stat.value}</div>
+        <p className="text-xs text-muted-foreground">{stat.subtitle}</p>
+      </CardContent>
+    </Card>
+  ))}
 </div>
 ```
 
-**Guard `percentuale_pagata`**: Nelle righe tabella dove si usa `.toFixed()`:
-```text
-{(order.percentuale_pagata ?? 0).toFixed(0)}%
-```
+**Rimozione `MobilePaymentFilters`**: nel blocco mobile (righe 246-278), rimuovere il componente `<MobilePaymentFilters ... />` perche `MobilePaymentsList` ha gia il proprio sistema di filtri integrato con bottom sheet.
 
-#### MobileOrderFilters.tsx - Fix valori statoPagamento
+**Sostituzione `formatDateLocal`**: nelle righe tabella, usare `formatDate(payment.data_pagamento)` al posto di `formatDateLocal(payment.data_pagamento)`.
 
+#### NewPaymentDialog.tsx - Guard percentuale_pagata
+
+Riga 228, aggiungere guard null:
 ```text
 // Prima:
-<SelectItem value="not_paid">Non Pagato</SelectItem>
-<SelectItem value="partial">Pagamento Parziale</SelectItem>
-<SelectItem value="paid">Pagato</SelectItem>
+{selectedOrder.percentuale_pagata.toFixed(0)}%
 
 // Dopo:
-<SelectItem value="non_pagato">Non Pagato</SelectItem>
-<SelectItem value="parziale">Pagamento Parziale</SelectItem>
-<SelectItem value="pagato">Pagato</SelectItem>
+{(selectedOrder.percentuale_pagata ?? 0).toFixed(0)}%
 ```
-
-#### OrderMobileCard.tsx - Rimozione import morto
-
-Rimuovere `MoreVertical` dalla riga di import lucide-react.
 
