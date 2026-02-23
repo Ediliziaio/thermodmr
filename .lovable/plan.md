@@ -1,44 +1,57 @@
 
 
-## Miglioramento Layout Schermata Dettaglio Preventivo
+## Semplificazione Sezione Preventivo
 
-### Problemi identificati dallo screenshot
+### Cosa cambia
 
-1. **"Stato Preventivo"** occupa solo 1/3 della larghezza, lasciando 2/3 di spazio vuoto a destra
-2. Lo stepper con 6 stati e compresso in una card stretta - difficile da leggere
-3. Il titolo "Righe Ordine" non cambia in "Righe Preventivo" per i preventivi
-4. Il layout generale e sbilanciato per la vista preventivo
+Per i preventivi, la vista attuale mostra troppe sezioni (Stato stepper, Righe Preventivo con tabella complessa, ecc.). L'utente vuole solo:
 
-### Modifiche pianificate
+1. **Descrizione** del preventivo (campo testo)
+2. **Prezzo** (importo totale)
+3. **Carica file** del preventivo (allegati)
 
-#### 1. Layout riorganizzato per la sezione superiore (OrderDetail.tsx)
+### Modifiche su `src/pages/OrderDetail.tsx`
 
-Per i preventivi, la card "Stato Preventivo" diventa **full-width** invece di occupare solo 1 colonna su 3. Lo stepper avra piu spazio per respirare e sara leggibile.
+#### Rimuovere per i preventivi:
+- La card "Stato Preventivo" con lo StatusStepper (non serve per un preventivo)
+- Il componente `OrderLinesEditor` (le righe dettagliate non servono)
+- Il layout a 3 colonne con grid `lg:grid-cols-3` -- usare layout piu semplice
 
-Inoltre, sposto "Riepilogo Preventivo" e "Informazioni Preventivo" accanto allo stato in un layout a 3 colonne sotto il banner scadenza:
+#### Nuovo layout preventivo:
 
 ```text
-[  Stato Preventivo (stepper full-width)         ]
-[  Riepilogo  |  Informazioni  |  Cliente/Note   ]
-[  Righe Preventivo (2/3)      |  Note (1/3)     ]
+[ Titolo + Badge + CTA "Converti in Ordine" ]
+[ Banner scadenza (se presente)              ]
+[ Info preventivo (2 colonne)                ]
+[   - Rivenditore, Cliente, Date             ]
+[   - Importo + Descrizione editabile        ]
+[ Allegati Preventivo (full width)           ]
+[ Note Rivenditore  |  Note Interne          ]
 ```
 
-#### 2. Titolo dinamico "Righe Preventivo" (OrderLinesEditor.tsx)
+#### Dettaglio tecnico:
 
-- Aggiungere una prop opzionale `title?: string` al componente
-- Passare `isPreventivo ? "Righe Preventivo" : "Righe Ordine"` da OrderDetail
-- Stessa cosa per il totale in fondo: "Totale Preventivo" vs "Totale Ordine"
+1. **Rimuovere StatusStepper per preventivi** -- la card "Stato Preventivo" viene nascosta quando `isPreventivo`
+2. **Sostituire OrderLinesEditor** con una card "Descrizione Preventivo" contenente:
+   - Campo `note_rivenditore` usato come descrizione principale del preventivo (gia presente nel DB)
+   - Oppure meglio: usare `note_interna` per la descrizione tecnica e `note_rivenditore` per le note al dealer
+3. **Importo** prominente in una card dedicata con possibilita di modifica (campo editabile per super_admin)
+4. **Allegati** full-width e in evidenza con titolo "Documenti Preventivo"
+5. **Note** in 2 colonne sotto gli allegati
+6. **Riorganizzare** le 3 card info (Riepilogo, Informazioni, Rivenditore) in 2 colonne con le info raggruppate meglio
 
-#### 3. Stato card full-width per preventivi (OrderDetail.tsx)
+### Riepilogo delle modifiche nel file
 
-- Per preventivi: `grid-cols-1` (full width) invece di `grid-cols-1 lg:grid-cols-3`
-- Per ordini: mantenere il layout attuale a 3 colonne
-- Nascondere il dropdown "Modifica Stato" per i preventivi (gia fatto, ma la card resta stretta)
+| Sezione | Preventivo (nuovo) | Ordine (invariato) |
+|---------|-------------------|-------------------|
+| StatusStepper | Nascosto | Visibile |
+| OrderLinesEditor | Nascosto, sostituito da textarea "Descrizione" | Visibile |
+| Info card | 2 colonne: Info + Importo | Layout attuale |
+| Allegati | Full-width, prominente, titolo "Documenti Preventivo" | Invariato |
+| Note | 2 colonne sotto allegati | Layout attuale sidebar |
+| PaymentsSection | Nascosto | Visibile |
 
-### Riepilogo tecnico
+### File modificati
 
-| File | Modifica |
-|------|----------|
-| `src/pages/OrderDetail.tsx` | Card Stato full-width per preventivi, layout riorganizzato |
-| `src/components/orders/OrderLinesEditor.tsx` | Prop `title` per titolo dinamico + "Totale Preventivo" |
+- `src/pages/OrderDetail.tsx` -- unico file da modificare
 
