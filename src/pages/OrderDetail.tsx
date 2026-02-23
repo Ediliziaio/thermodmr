@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -35,7 +35,10 @@ import { formatCurrency, formatDate, getStatusLabel, getStatusColor } from "@/li
 export default function OrderDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { userRole } = useAuth();
+
+  const isDealerArea = location.pathname.includes('/area/');
 
   const { data: order, isLoading: orderLoading } = useOrderById(id || "");
   const { data: orderLines = [] } = useOrderLines(id || "");
@@ -110,7 +113,7 @@ export default function OrderDetail() {
   if (!order) {
     return (
       <div className="space-y-6">
-        <Button variant="ghost" onClick={() => navigate("/ordini")}>
+        <Button variant="ghost" onClick={() => isDealerArea ? navigate(-1) : navigate("/ordini")}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Torna agli Ordini
         </Button>
@@ -128,7 +131,7 @@ export default function OrderDetail() {
 
   return (
     <div className="space-y-6">
-      <Button variant="ghost" onClick={() => navigate("/ordini")}>
+      <Button variant="ghost" onClick={() => isDealerArea ? navigate(-1) : navigate("/ordini")}>
         <ArrowLeft className="mr-2 h-4 w-4" />
         Torna agli Ordini
       </Button>

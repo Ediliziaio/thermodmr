@@ -38,7 +38,7 @@ const navigation = [
   { name: "KPI", href: "/kpi", icon: BarChart3, roles: ["super_admin"] },
   { name: "Audit", href: "/audit", icon: FileText, roles: ["super_admin"] },
   { name: "RLS Test", href: "/rls-test", icon: Shield, roles: ["super_admin"] },
-  { name: "Impostazioni", href: "/impostazioni", icon: Settings, roles: ["super_admin", "commerciale", "rivenditore"] },
+  { name: "Impostazioni", href: "/impostazioni", icon: Settings, roles: ["super_admin"] },
 ];
 
 export function Layout({ children }: LayoutProps) {

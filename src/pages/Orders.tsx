@@ -20,8 +20,6 @@ import { useMemo, useState, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { formatCurrency, getStatusColor, getStatusLabel, cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { supabase } from "@/integrations/supabase/client";
-import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useRealtimeSync } from "@/hooks/useRealtimeSync";
@@ -42,7 +40,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
   useRealtimeSync();
   
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  
   const { userRole } = useAuth();
   const isMobile = useIsMobile();
   const isDealerArea = !!dealerId;
@@ -82,22 +80,6 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
 
   const clearSelection = () => setSelectedOrderIds(new Set());
 
-  // Real-time: Invalida cache ordini quando cambiano i pagamenti
-  useEffect(() => {
-    const channel = supabase
-      .channel('payments-changes')
-      .on('postgres_changes', 
-        { event: '*', schema: 'public', table: 'payments' },
-        () => {
-          queryClient.invalidateQueries({ queryKey: ['orders-infinite'] });
-        }
-      )
-      .subscribe();
-      
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [queryClient]);
 
   // Clear selection when filters change
   useEffect(() => {
@@ -246,21 +228,6 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
 
   const totalCount = data?.pages[0]?.totalCount || 0;
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-destructive">Errore nel caricamento degli ordini</p>
-      </div>
-    );
-  }
 
   return (
     <TooltipProvider>
