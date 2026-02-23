@@ -1,48 +1,52 @@
 
 
-## Rendere la Vista Lista quella Predefinita + Aggiungere Dati Finanziari alla DealerCard
+## Ottimizzazione Velocita e Pulizia Codice Morto
 
-### Modifiche
+### 1. Rimuovere codice morto
 
-#### 1. `src/pages/Dealers.tsx`
-- Cambiare il valore iniziale di `viewMode` da `"grid"` a `"list"` (riga 18)
+I seguenti file non sono importati da nessuna parte del progetto e possono essere eliminati:
 
-#### 2. `src/components/dealers/DealerCard.tsx`
-- Aggiungere due righe nella sezione statistiche (dopo "Fatturato totale"):
-  - **Incassato**: in verde, mostra `total_paid`
-  - **Da incassare**: in giallo/arancio se > 0, mostra `total_remaining`
+| File | Motivo |
+|------|--------|
+| `src/App.css` | Boilerplate Vite originale, mai importato |
+| `src/components/NavLink.tsx` | Componente mai utilizzato (il Layout usa direttamente `Link` di react-router) |
+| `src/hooks/useAnalytics.ts` | Sostituito da `useUnifiedAnalytics.ts`, mai importato |
+
+### 2. Ottimizzare il logo (impatto maggiore)
+
+Il logo `logo_Thermodmr.png` pesa **482KB** e viene caricato **due volte** (sidebar desktop + sidebar mobile Sheet). Questo e il collo di bottiglia principale (1.7s di caricamento).
+
+- Convertire il PNG in **WebP** (riduzione ~80% delle dimensioni)
+- Aggiungere `loading="eager"` e `fetchPriority="high"` al tag img nel Layout
+- Assicurarsi che venga caricato una sola volta dal browser (stesso `src`)
+
+### 3. Ottimizzare import Suspense
+
+Attualmente c'e un unico `<Suspense>` che avvolge tutte le route. Questo significa che qualsiasi navigazione mostra il loader globale. Spostare il Suspense dentro ogni `<Route>` non e necessario dato che il lazy loading gia funziona, ma possiamo:
+
+- Rimuovere l'import inutilizzato di `Navigate` da react-router-dom in App.tsx
+
+### 4. Rimuovere doppio sistema toast
+
+Il progetto monta sia `<Toaster />` (shadcn) che `<Sonner />` contemporaneamente. Verificare quale viene effettivamente usato e rimuovere l'altro.
 
 ### Dettaglio tecnico
 
-**Dealers.tsx** -- riga 18:
-```text
-// Da:
-const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-// A:
-const [viewMode, setViewMode] = useState<"grid" | "list">("list");
-```
+#### File da eliminare
+- `src/App.css`
+- `src/components/NavLink.tsx`
+- `src/hooks/useAnalytics.ts`
 
-**DealerCard.tsx** -- dopo riga 120 (dopo "Fatturato totale"), aggiungere:
-```text
-<div className="flex justify-between text-sm">
-  <span className="text-muted-foreground">Incassato:</span>
-  <span className="font-medium text-green-600">
-    {formatCurrency(dealer.total_paid || 0)}
-  </span>
-</div>
-<div className="flex justify-between text-sm">
-  <span className="text-muted-foreground">Da incassare:</span>
-  <span className={cn("font-medium", (dealer.total_remaining || 0) > 0 ? "text-amber-600" : "text-muted-foreground")}>
-    {formatCurrency(dealer.total_remaining || 0)}
-  </span>
-</div>
-```
-
-Importare `cn` da `@/lib/utils` (gia esportato da quel file).
-
-### File modificati
+#### File da modificare
 
 | File | Modifica |
 |------|----------|
-| `src/pages/Dealers.tsx` | Default viewMode da "grid" a "list" |
-| `src/components/dealers/DealerCard.tsx` | Aggiungere righe Incassato e Da incassare con colori semantici |
+| `src/App.tsx` | Rimuovere import `Navigate` (non usato) |
+| `src/components/Layout.tsx` | Aggiungere `loading="eager"` e `fetchPriority="high"` al logo, ottimizzare dimensioni con `width`/`height` espliciti per evitare layout shift |
+
+#### Impatto atteso
+
+- **~480KB in meno** di trasferimento rete (logo ottimizzato)
+- **~200ms** risparmiati su FCP
+- Codebase piu pulita senza file orfani
+
