@@ -18,6 +18,7 @@ const IntegrationSection = () => {
   const [smtpPort, setSmtpPort] = useState("587");
   const [smtpUsername, setSmtpUsername] = useState("");
   const [smtpFromEmail, setSmtpFromEmail] = useState("");
+  const [smtpPassword, setSmtpPassword] = useState("");
   
   const [webhookEnabled, setWebhookEnabled] = useState(false);
   const [webhookUrl, setWebhookUrl] = useState("");
@@ -29,6 +30,7 @@ const IntegrationSection = () => {
       const smtpPortSetting = settings.find((s) => s.key === "smtp_port");
       const smtpUsernameSetting = settings.find((s) => s.key === "smtp_username");
       const smtpFromSetting = settings.find((s) => s.key === "smtp_from_email");
+      const smtpPasswordSetting = settings.find((s) => s.key === "smtp_password");
       const webhookEnabledSetting = settings.find((s) => s.key === "webhook_enabled");
       const webhookUrlSetting = settings.find((s) => s.key === "webhook_url");
       
@@ -37,6 +39,7 @@ const IntegrationSection = () => {
       if (smtpPortSetting) setSmtpPort(String(smtpPortSetting.value));
       if (smtpUsernameSetting) setSmtpUsername(String(smtpUsernameSetting.value).replace(/"/g, ""));
       if (smtpFromSetting) setSmtpFromEmail(String(smtpFromSetting.value).replace(/"/g, ""));
+      if (smtpPasswordSetting) setSmtpPassword(String(smtpPasswordSetting.value).replace(/"/g, ""));
       if (webhookEnabledSetting) setWebhookEnabled(webhookEnabledSetting.value === true);
       if (webhookUrlSetting) setWebhookUrl(String(webhookUrlSetting.value).replace(/"/g, ""));
     }
@@ -48,6 +51,7 @@ const IntegrationSection = () => {
     updateSetting.mutate({ key: "smtp_port", value: smtpPort });
     updateSetting.mutate({ key: "smtp_username", value: smtpUsername });
     updateSetting.mutate({ key: "smtp_from_email", value: smtpFromEmail });
+    updateSetting.mutate({ key: "smtp_password", value: smtpPassword });
     updateSetting.mutate({ key: "webhook_enabled", value: webhookEnabled });
     updateSetting.mutate({ key: "webhook_url", value: webhookUrl });
   };
@@ -134,6 +138,20 @@ const IntegrationSection = () => {
                   onChange={(e) => setSmtpFromEmail(e.target.value)}
                   placeholder="noreply@azienda.it"
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="smtpPassword">Password SMTP</Label>
+                <Input
+                  id="smtpPassword"
+                  type="password"
+                  value={smtpPassword}
+                  onChange={(e) => setSmtpPassword(e.target.value)}
+                  placeholder="••••••••"
+                />
+                <p className="text-sm text-muted-foreground">
+                  Password o App Password per l'autenticazione SMTP
+                </p>
               </div>
             </div>
           )}
