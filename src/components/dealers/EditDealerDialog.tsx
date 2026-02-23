@@ -10,10 +10,14 @@ import { useUpdateDealer, type DealerWithStats } from "@/hooks/useDealers";
 interface EditDealerDialogProps {
   dealer: DealerWithStats;
   trigger?: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function EditDealerDialog({ dealer, trigger }: EditDealerDialogProps) {
-  const [open, setOpen] = useState(false);
+export function EditDealerDialog({ dealer, trigger, open: controlledOpen, onOpenChange }: EditDealerDialogProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
+  const setOpen = onOpenChange || setInternalOpen;
   const { mutate: updateDealer, isPending } = useUpdateDealer();
 
   const [formData, setFormData] = useState({
@@ -51,13 +55,15 @@ export function EditDealerDialog({ dealer, trigger }: EditDealerDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger || (
-          <Button variant="ghost" size="icon">
-            <Pencil className="h-4 w-4" />
-          </Button>
-        )}
-      </DialogTrigger>
+      {controlledOpen === undefined && (
+        <DialogTrigger asChild>
+          {trigger || (
+            <Button variant="ghost" size="icon">
+              <Pencil className="h-4 w-4" />
+            </Button>
+          )}
+        </DialogTrigger>
+      )}
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Modifica Rivenditore</DialogTitle>
