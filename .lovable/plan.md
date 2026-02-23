@@ -1,100 +1,54 @@
 
 
-## Pulizia, Fix e Miglioramenti UX - Dashboard Super Admin
+## Dashboard: Verifica Completata + Ottimizzazione Velocita
 
-### 1. PULIZIA CODICE
+### Risultati della Verifica
 
-#### Duplicati da rimuovere
+Tutti i componenti della dashboard funzionano correttamente:
 
-| Cosa | Dove | Problema |
-|------|------|----------|
-| `getStatusLabel()` locale | `DeadlinesWidget.tsx` (righe 19-28) | Duplica la funzione gia presente in `src/lib/utils.ts` |
-| `formatCurrency()` locale | `DeadlinesWidget.tsx` (righe 38-44) | Duplica la funzione gia presente in `src/lib/utils.ts` |
-| `useRealtimeDashboard` hook intero | `src/hooks/useRealtimeDashboard.ts` | Duplica quasi interamente `useRealtimeSync` (stesso canale orders/payments/dealers/commissions). La Dashboard dovrebbe usare `useRealtimeSync` |
-| Sezione "Ordini per Stato" (badges) | `Dashboard.tsx` (righe 347-398) | Duplica visivamente il Pie Chart sopra. Informazione ridondante |
-| Pie Chart in grid mezzo vuoto | `Dashboard.tsx` (righe 333-345) | `md:grid-cols-2` con solo 1 elemento = meta pagina vuota |
-| Import `CardDescription` | `Dashboard.tsx` riga 2 | Non usato direttamente nel componente |
-| Import `Badge` | `Dashboard.tsx` riga 3 | Usato solo nella sezione badges ridondante che verra rimossa |
-| Import `Carousel*` | `Dashboard.tsx` riga 8 | Usato solo nella sezione mobile ridondante |
+| Componente | Stato | Note |
+|-----------|-------|------|
+| 4 KPI Cards | OK | Dati corretti, "Da Saldare" rosso se >50% |
+| Filtri data rapidi | OK | Mese Scorso, Anno Corrente testati |
+| Calendar picker | OK | `activeFilter` si resetta correttamente |
+| Reset (X) | OK | Pulisce filtro e active state |
+| Grafico Ricavi | OK | Descrizione dinamica funzionante |
+| Widget Scadenze | OK | 5 scadenze in ritardo con badge urgenza |
+| Pie Chart Ordini | OK | Colori e percentuali corretti |
+| Top 5 Rivenditori | OK | Click naviga a dettaglio dealer |
+| Real-time badge | OK | Indicatore verde pulsante |
+| Console | Pulita | Solo warning postMessage (irrilevanti, iframe) |
 
-#### File da eliminare
-- `src/hooks/useRealtimeDashboard.ts` -- sostituito da `useRealtimeSync`
+### Ottimizzazione Velocita di Caricamento
 
-### 2. FIX FUNZIONALI
+L'analisi performance mostra FCP a 3.4s. Il collo di bottiglia principale e nel data fetching: `useDashboardKPIs` esegue 2 chiamate RPC **in sequenza** (prima KPIs, poi Top Dealers). Parallelizzandole si riduce il tempo di attesa.
 
-| Bug | Dettaglio | Fix |
-|-----|-----------|-----|
-| `activeFilter` non si resetta con il picker | Se selezioni "Mese Scorso" poi usi il calendario manuale, il bottone "Mese Scorso" resta evidenziato | Aggiungere `setActiveFilter(null)` nel `onSelect` del Calendar |
-| `daSaldare` potenzialmente negativo | Se `totalIncassato > totalRevenue` (pagamenti extra), il valore "Da Saldare" diventa negativo | Wrappare con `Math.max(0, ...)` |
-| Percentuale "Da Saldare" puo essere > 100% o NaN | Se totalRevenue e 0 mostra "0% del totale" ma la formula puo dare NaN con dati intermedi | Aggiungere guard clause robusta |
-| Pie Chart colori hardcoded con `.includes()` | `getStatusColor(status).includes('yellow')` e fragile -- i colori possono cambiare | Usare un mapping diretto `status -> chart color` |
-| Error state troppo minimale | Solo testo rosso senza CTA di retry | Aggiungere bottone "Riprova" con `refetch()` |
-| `RevenueChart` dice sempre "Ultimi 6 mesi" | Anche quando il filtro e su "Anno Corrente" la descrizione non cambia | Passare una prop `description` dinamica basata sul filtro attivo |
+#### Modifica: `src/hooks/useDashboard.ts`
 
-### 3. MIGLIORAMENTI UX
+Sostituire le 2 chiamate sequenziali con `Promise.all` per eseguirle in parallelo:
 
-| Miglioramento | Dettaglio |
-|---------------|-----------|
-| Error state con retry | Card con icona, messaggio chiaro, e pulsante "Riprova" al posto del testo rosso senza via d'uscita |
-| Pie Chart full-width con badges integrati | Unire Pie Chart + sezione "Ordini per Stato" in un'unica card full-width, eliminando la duplicazione |
-| Top Dealers cliccabili | Aggiungere `onClick` per navigare a `/rivenditori/:id` per ogni dealer nella lista |
-| KPI "Da Saldare" con colore condizionale | Evidenziare in rosso/warning quando la percentuale da saldare e alta (>50%) |
-| Grafico ricavi: descrizione dinamica | La CardDescription del grafico riflette il filtro attivo (es. "Anno Corrente 2026" invece di "Ultimi 6 mesi") |
-
-### 4. RIEPILOGO FILE MODIFICATI
-
-| File | Tipo modifica |
-|------|---------------|
-| `src/pages/Dashboard.tsx` | Rimuovere sezione badges duplicata, fix activeFilter, fix colori pie, fix error state, unire pie chart in full-width, top dealers cliccabili, descrizione dinamica grafico |
-| `src/components/dashboard/DeadlinesWidget.tsx` | Rimuovere `getStatusLabel` e `formatCurrency` locali, importare da `src/lib/utils.ts` |
-| `src/components/dashboard/RevenueChart.tsx` | Aggiungere prop `description` opzionale |
-| `src/hooks/useRealtimeDashboard.ts` | ELIMINARE -- sostituito da `useRealtimeSync` |
-
-### 5. DETTAGLIO TECNICO
-
-#### Dashboard.tsx - Modifiche principali
-
-**Import puliti**: rimuovere `Carousel*`, `Badge`, `CardDescription` (non piu necessari dopo rimozione sezione duplicata).
-
-**Realtime**: cambiare `useRealtimeDashboard()` in `useRealtimeSync()`.
-
-**Pie Chart**: spostare in una card full-width con mapping colori diretto:
 ```text
-const STATUS_CHART_COLORS: Record<string, string> = {
-  da_confermare: 'hsl(var(--chart-1))',
-  da_pagare_acconto: 'hsl(var(--chart-2))',
-  in_lavorazione: 'hsl(var(--chart-3))',
-  da_consegnare: 'hsl(var(--chart-4))',
-  consegnato: 'hsl(var(--chart-5))',
-};
+// Prima (sequenziale):
+const kpisData = await supabase.rpc("get_dashboard_kpis", ...);
+const dealersData = await supabase.rpc("get_top_dealers", ...);
+
+// Dopo (parallelo):
+const [kpisResult, dealersResult] = await Promise.all([
+  supabase.rpc("get_dashboard_kpis", ...),
+  supabase.rpc("get_top_dealers", ...),
+]);
 ```
 
-**Error state migliorato**:
-```text
-if (kpisError || !kpis) {
-  return (
-    <Card con icona AlertCircle>
-      <Titolo "Errore nel caricamento">
-      <Descrizione "Impossibile caricare i dati della dashboard">
-      <Button onClick={refetch}>Riprova</Button>
-    </Card>
-  );
-}
-```
+Questo riduce il tempo di caricamento del blocco KPI di circa 400-550ms (il tempo della seconda RPC che ora viene eseguita in parallelo con la prima).
 
-**activeFilter fix**: nel `Calendar.onSelect`, aggiungere callback che resetta `activeFilter`:
-```text
-onSelect={(range) => {
-  setDateRange(range);
-  setActiveFilter(null);
-}}
-```
+#### Modifica: `src/components/dashboard/OrderStatusPieChart.tsx`
 
-**Top Dealers cliccabili**: wrappare ogni riga con `onClick={() => navigate(`/rivenditori/${dealer.id}`)}` e aggiungere `cursor-pointer hover:bg-accent/50`.
+Aggiungere `React.memo` per evitare re-render inutili quando i dati non cambiano (es. quando si interagisce con i filtri ma il pie chart non e ancora aggiornato).
 
-#### DeadlinesWidget.tsx - Import fix
-Rimuovere le funzioni locali `getStatusLabel` e `formatCurrency`, importare da `@/lib/utils`.
+### Riepilogo file da modificare
 
-#### RevenueChart.tsx - Prop description
-Aggiungere `description?: string` all'interfaccia props. Usare `props.description || "Ultimi 6 mesi"` nel `CardDescription`.
+| File | Modifica |
+|------|----------|
+| `src/hooks/useDashboard.ts` | `Promise.all` per parallelizzare le 2 RPC calls |
+| `src/components/dashboard/OrderStatusPieChart.tsx` | `React.memo` wrapper |
 
