@@ -1,57 +1,44 @@
 
 
-## Miglioramento Visualizzazione Dettaglio Preventivo
+## Miglioramento Layout Schermata Dettaglio Preventivo
 
-### Problema attuale
-La pagina `OrderDetail.tsx` tratta i preventivi (ID con prefisso `PRV-`) esattamente come un ordine normale:
-- Il titolo dice "Ordine #PRV-2026-0002" invece di "Preventivo #PRV-2026-0002"
-- Le sezioni Pagamenti e Timeline Pagamenti vengono mostrate, ma non hanno senso per un preventivo
-- Il "Riepilogo Economico" mostra acconto/pagato/saldo, irrilevanti in fase preventivo
-- Manca la **data di scadenza del preventivo** in evidenza
-- Manca un pulsante **"Converti in Ordine"** prominente
-- Lo stepper degli stati parte da "Da Confermare" nel dropdown, mancando "Preventivo"
-- Le note interne sono visibili ma non c'e contesto specifico per il preventivo
+### Problemi identificati dallo screenshot
+
+1. **"Stato Preventivo"** occupa solo 1/3 della larghezza, lasciando 2/3 di spazio vuoto a destra
+2. Lo stepper con 6 stati e compresso in una card stretta - difficile da leggere
+3. Il titolo "Righe Ordine" non cambia in "Righe Preventivo" per i preventivi
+4. Il layout generale e sbilanciato per la vista preventivo
 
 ### Modifiche pianificate
 
-#### File: `src/pages/OrderDetail.tsx`
+#### 1. Layout riorganizzato per la sezione superiore (OrderDetail.tsx)
 
-**1. Rilevamento preventivo**
-- Aggiungere `const isPreventivo = order.stato === "preventivo";` dopo il caricamento dell'ordine
+Per i preventivi, la card "Stato Preventivo" diventa **full-width** invece di occupare solo 1 colonna su 3. Lo stepper avra piu spazio per respirare e sara leggibile.
 
-**2. Titolo dinamico**
-- Cambiare "Ordine #" in "Preventivo #" quando `isPreventivo` e true
+Inoltre, sposto "Riepilogo Preventivo" e "Informazioni Preventivo" accanto allo stato in un layout a 3 colonne sotto il banner scadenza:
 
-**3. Banner scadenza preventivo**
-- Aggiungere un banner colorato prominente sotto il titolo che mostra la data di scadenza del preventivo (`order.data_scadenza_preventivo`)
-- Se scaduto: banner rosso con icona AlertTriangle e testo "Preventivo scaduto il ..."
-- Se valido: banner ambra/info con icona Clock e giorni rimanenti "Valido fino al ... (X giorni)"
+```text
+[  Stato Preventivo (stepper full-width)         ]
+[  Riepilogo  |  Informazioni  |  Cliente/Note   ]
+[  Righe Preventivo (2/3)      |  Note (1/3)     ]
+```
 
-**4. CTA "Converti in Ordine"**
-- Per super_admin: aggiungere un pulsante prominente "Converti in Ordine" nella barra azioni (al posto di Esporta PDF / Invia Email che non hanno senso per un preventivo)
-- Con dialog di conferma come gia presente in `DealerPreventivi.tsx`
+#### 2. Titolo dinamico "Righe Preventivo" (OrderLinesEditor.tsx)
 
-**5. Nascondere sezioni irrilevanti per preventivi**
-- Nascondere `PaymentsSection` quando `isPreventivo`
-- Nascondere `PaymentTimelineChart` quando `isPreventivo`
-- Nascondere "Acconto Concordato", "Pagato" e "Saldo" nel Riepilogo Economico, mostrando solo "Importo Preventivo"
+- Aggiungere una prop opzionale `title?: string` al componente
+- Passare `isPreventivo ? "Righe Preventivo" : "Righe Ordine"` da OrderDetail
+- Stessa cosa per il totale in fondo: "Totale Preventivo" vs "Totale Ordine"
 
-**6. Semplificare lo stepper**
-- Lo StatusStepper gia mostra "Preventivo" come step 0, quindi funziona. Ma il dropdown di cambio stato non include "preventivo" - mantenerlo cosi e corretto perche non si torna a preventivo.
+#### 3. Stato card full-width per preventivi (OrderDetail.tsx)
 
-**7. Riepilogo Economico adattato**
-- Per i preventivi, mostrare solo: Importo Totale Preventivo (senza acconto/pagato/saldo)
-- Rinominare la card in "Riepilogo Preventivo"
+- Per preventivi: `grid-cols-1` (full width) invece di `grid-cols-1 lg:grid-cols-3`
+- Per ordini: mantenere il layout attuale a 3 colonne
+- Nascondere il dropdown "Modifica Stato" per i preventivi (gia fatto, ma la card resta stretta)
 
 ### Riepilogo tecnico
 
-| Modifica | Dettaglio |
-|----------|-----------|
-| Titolo dinamico | "Preventivo #" vs "Ordine #" basato su `order.stato` |
-| Banner scadenza | Nuovo componente inline con countdown giorni |
-| CTA Converti | Pulsante + AlertDialog di conferma (solo super_admin) |
-| Sezioni nascoste | PaymentsSection, PaymentTimelineChart nascoste per preventivi |
-| Riepilogo adattato | Solo importo totale per preventivi, senza acconto/pagato/saldo |
-| Import aggiuntivi | `Clock`, `AlertTriangle`, `ArrowRightCircle` da lucide-react; `useMutation` per conversione |
+| File | Modifica |
+|------|----------|
+| `src/pages/OrderDetail.tsx` | Card Stato full-width per preventivi, layout riorganizzato |
+| `src/components/orders/OrderLinesEditor.tsx` | Prop `title` per titolo dinamico + "Totale Preventivo" |
 
-Un unico file modificato: `src/pages/OrderDetail.tsx`
