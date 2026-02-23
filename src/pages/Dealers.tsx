@@ -1,11 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, Building2, Loader2, Plus } from "lucide-react";
+import { AlertCircle, Building2, LayoutGrid, List, Loader2, Plus } from "lucide-react";
 import { useDealersInfinite, type DealerFilters } from "@/hooks/useDealersInfinite";
 import NewDealerDialog from "@/components/dealers/NewDealerDialog";
 import { DealerFilters as DealerFiltersComponent } from "@/components/dealers/DealerFilters";
 import { MobileDealerFilters } from "@/components/dealers/MobileDealerFilters";
 import { DealerCard } from "@/components/dealers/DealerCard";
+import { DealerRowView } from "@/components/dealers/DealerRowView";
 import { MobileDealerCard } from "@/components/dealers/MobileDealerCard";
 import { useInView } from "react-intersection-observer";
 import { useEffect, useMemo, useState } from "react";
@@ -14,6 +15,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function Dealers() {
   const [filters, setFilters] = useState<DealerFilters>({});
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const isMobile = useIsMobile();
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useDealersInfinite(filters);
   const { ref, inView } = useInView();
@@ -159,7 +161,27 @@ export default function Dealers() {
             Gestisci i rivenditori e monitora le loro performance
           </p>
         </div>
-        <NewDealerDialog />
+        <div className="flex items-center gap-2">
+          <div className="flex items-center border rounded-md">
+            <Button
+              variant={viewMode === "grid" ? "default" : "ghost"}
+              size="icon"
+              className="h-9 w-9 rounded-r-none"
+              onClick={() => setViewMode("grid")}
+            >
+              <LayoutGrid className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={viewMode === "list" ? "default" : "ghost"}
+              size="icon"
+              className="h-9 w-9 rounded-l-none"
+              onClick={() => setViewMode("list")}
+            >
+              <List className="h-4 w-4" />
+            </Button>
+          </div>
+          <NewDealerDialog />
+        </div>
       </div>
 
       <DealerFiltersComponent
@@ -169,11 +191,15 @@ export default function Dealers() {
 
       {allDealers.length === 0 ? emptyState : (
         <>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {allDealers.map((dealer) => (
-              <DealerCard key={dealer.id} dealer={dealer} />
-            ))}
-          </div>
+          {viewMode === "grid" ? (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {allDealers.map((dealer) => (
+                <DealerCard key={dealer.id} dealer={dealer} />
+              ))}
+            </div>
+          ) : (
+            <DealerRowView dealers={allDealers} />
+          )}
 
           {hasNextPage && (
             <div ref={ref} className="flex justify-center py-8">
