@@ -1,54 +1,120 @@
 
 
-## Dashboard: Verifica Completata + Ottimizzazione Velocita
+## Pulizia e Stabilizzazione - Sezione Ordini
 
-### Risultati della Verifica
+### 1. PULIZIA CODICE
 
-Tutti i componenti della dashboard funzionano correttamente:
+#### Duplicati da rimuovere
 
-| Componente | Stato | Note |
-|-----------|-------|------|
-| 4 KPI Cards | OK | Dati corretti, "Da Saldare" rosso se >50% |
-| Filtri data rapidi | OK | Mese Scorso, Anno Corrente testati |
-| Calendar picker | OK | `activeFilter` si resetta correttamente |
-| Reset (X) | OK | Pulisce filtro e active state |
-| Grafico Ricavi | OK | Descrizione dinamica funzionante |
-| Widget Scadenze | OK | 5 scadenze in ritardo con badge urgenza |
-| Pie Chart Ordini | OK | Colori e percentuali corretti |
-| Top 5 Rivenditori | OK | Click naviga a dettaglio dealer |
-| Real-time badge | OK | Indicatore verde pulsante |
-| Console | Pulita | Solo warning postMessage (irrilevanti, iframe) |
+| Cosa | Dove | Problema |
+|------|------|----------|
+| `formatDate()` locale | `Orders.tsx` righe 27-33 | Duplica `formatDate` da `@/lib/utils.ts`. La versione locale usa `Intl.DateTimeFormat`, quella globale usa `date-fns` con locale italiano -- vanno unificati |
+| `MoreVertical` import | `OrderMobileCard.tsx` riga 5 | Importato ma mai usato nel componente |
+| Stat cards duplicate mobile/desktop | `Orders.tsx` righe 267-370 | Le 4 card statistiche sono scritte 2 volte (una versione mobile, una desktop) con lo stesso identico contenuto. Si puo usare un unico blocco con classi responsive |
 
-### Ottimizzazione Velocita di Caricamento
+#### Dettaglio rimozioni
 
-L'analisi performance mostra FCP a 3.4s. Il collo di bottiglia principale e nel data fetching: `useDashboardKPIs` esegue 2 chiamate RPC **in sequenza** (prima KPIs, poi Top Dealers). Parallelizzandole si riduce il tempo di attesa.
+- **`Orders.tsx`**: Rimuovere `formatDate` locale (righe 27-33), importare `formatDate` da `@/lib/utils`. Nota: il formato cambiera leggermente da "23/02/2026" a "23 feb 2026" per coerenza con il resto dell'app
+- **`OrderMobileCard.tsx`**: Rimuovere `MoreVertical` dall'import di lucide-react (non usato)
+- **`Orders.tsx`**: Unificare le stat cards in un unico blocco con classi responsive (`overflow-x-auto` su mobile, `grid` su desktop)
 
-#### Modifica: `src/hooks/useDashboard.ts`
+### 2. FIX FUNZIONALI
 
-Sostituire le 2 chiamate sequenziali con `Promise.all` per eseguirle in parallelo:
+| Bug | Dettaglio | Fix |
+|-----|-----------|-----|
+| Error state senza retry | Riga 221-227: solo testo rosso, nessun bottone "Riprova" -- l'utente e bloccato | Aggiungere Card con icona, messaggio chiaro, e bottone "Riprova" che chiama `refetch()` dalla query |
+| `percentuale_pagata` potenziale crash con `.toFixed()` | Riga 518 nella tabella: `order.percentuale_pagata.toFixed(0)` puo crashare se il valore e `null` (dalla view) | Aggiungere guard: `(order.percentuale_pagata ?? 0).toFixed(0)` |
+| Mobile: `MobileOrderFilters` valori `statoPagamento` disallineati | In `MobileOrderFilters.tsx` i valori sono `not_paid/partial/paid` ma in `Orders.tsx` il filtro controlla `pagato/parziale/non_pagato` | Allineare i valori nel mobile filter a `pagato/parziale/non_pagato` per matchare la logica di filtro in `Orders.tsx` |
+| `refetch` non estratto dalla query | `useOrdersInfinite` non espone `refetch` nell'uso corrente | Destrutturare `refetch` dalla query per usarlo nell'error state |
 
+### 3. MIGLIORAMENTI UX
+
+| Miglioramento | Dettaglio |
+|---------------|-----------|
+| Error state con retry | Card strutturata con icona `AlertCircle`, messaggio chiaro, e pulsante "Riprova" -- identico al pattern della Dashboard |
+| Stat cards unificate | Un solo blocco di codice per mobile e desktop con classi responsive, eliminando 50+ righe duplicate |
+| Empty state migliorato | Aggiungere icona e CTA "Crea Ordine" nella sezione vuota (solo per super_admin) invece di solo testo |
+| Loading state piu informativo | Aggiungere testo "Caricamento ordini..." sotto lo spinner |
+
+### 4. RIEPILOGO FILE MODIFICATI
+
+| File | Tipo modifica |
+|------|---------------|
+| `src/pages/Orders.tsx` | Rimuovere `formatDate` locale, importare da utils, unificare stat cards, fix error state con retry, fix `percentuale_pagata` guard, fix empty state, fix loading state |
+| `src/components/orders/OrderMobileCard.tsx` | Rimuovere import `MoreVertical` non usato |
+| `src/components/orders/MobileOrderFilters.tsx` | Allineare valori `statoPagamento` a `pagato/parziale/non_pagato` |
+
+### 5. DETTAGLIO TECNICO
+
+#### Orders.tsx - Modifiche principali
+
+**Import**: Rimuovere `formatDate` locale, aggiungere `formatDate` all'import da `@/lib/utils`:
 ```text
-// Prima (sequenziale):
-const kpisData = await supabase.rpc("get_dashboard_kpis", ...);
-const dealersData = await supabase.rpc("get_top_dealers", ...);
+// Prima:
+import { formatCurrency, getStatusColor, getStatusLabel, cn } from "@/lib/utils";
+const formatDate = (date: Date) => { ... };
 
-// Dopo (parallelo):
-const [kpisResult, dealersResult] = await Promise.all([
-  supabase.rpc("get_dashboard_kpis", ...),
-  supabase.rpc("get_top_dealers", ...),
-]);
+// Dopo:
+import { formatCurrency, formatDate, getStatusColor, getStatusLabel, cn } from "@/lib/utils";
 ```
 
-Questo riduce il tempo di caricamento del blocco KPI di circa 400-550ms (il tempo della seconda RPC che ora viene eseguita in parallelo con la prima).
+**Destrutturazione query**: aggiungere `refetch`:
+```text
+const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useOrdersInfinite(...);
+```
 
-#### Modifica: `src/components/dashboard/OrderStatusPieChart.tsx`
+**Error state migliorato**:
+```text
+if (error) {
+  return (
+    <div className="flex items-center justify-center min-h-[50vh]">
+      <Card className="max-w-md w-full">
+        <CardContent className="flex flex-col items-center gap-4 pt-6">
+          <AlertCircle className="h-12 w-12 text-destructive" />
+          <div className="text-center">
+            <h3 className="font-semibold text-lg">Errore nel caricamento</h3>
+            <p className="text-muted-foreground text-sm mt-1">
+              Impossibile caricare gli ordini. Verifica la connessione e riprova.
+            </p>
+          </div>
+          <Button onClick={() => refetch()}>Riprova</Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+```
 
-Aggiungere `React.memo` per evitare re-render inutili quando i dati non cambiano (es. quando si interagisce con i filtri ma il pie chart non e ancora aggiornato).
+**Stat cards unificate**: Un solo blocco con classi responsive:
+```text
+<div className="grid grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto">
+  <Card>...</Card>
+  <Card>...</Card>
+  <Card>...</Card>
+  <Card>...</Card>
+</div>
+```
 
-### Riepilogo file da modificare
+**Guard `percentuale_pagata`**: Nelle righe tabella dove si usa `.toFixed()`:
+```text
+{(order.percentuale_pagata ?? 0).toFixed(0)}%
+```
 
-| File | Modifica |
-|------|----------|
-| `src/hooks/useDashboard.ts` | `Promise.all` per parallelizzare le 2 RPC calls |
-| `src/components/dashboard/OrderStatusPieChart.tsx` | `React.memo` wrapper |
+#### MobileOrderFilters.tsx - Fix valori statoPagamento
+
+```text
+// Prima:
+<SelectItem value="not_paid">Non Pagato</SelectItem>
+<SelectItem value="partial">Pagamento Parziale</SelectItem>
+<SelectItem value="paid">Pagato</SelectItem>
+
+// Dopo:
+<SelectItem value="non_pagato">Non Pagato</SelectItem>
+<SelectItem value="parziale">Pagamento Parziale</SelectItem>
+<SelectItem value="pagato">Pagato</SelectItem>
+```
+
+#### OrderMobileCard.tsx - Rimozione import morto
+
+Rimuovere `MoreVertical` dalla riga di import lucide-react.
 
