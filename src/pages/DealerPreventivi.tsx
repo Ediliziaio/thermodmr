@@ -27,6 +27,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { userRole } = useAuth();
+  const canManage = userRole === "super_admin" || userRole === "commerciale";
   const [convertId, setConvertId] = useState<string | null>(null);
   const [preventivoDialogOpen, setPreventivoDialogOpen] = useState(false);
   const [duplicateData, setDuplicateData] = useState<PreventivoDefaultValues | undefined>(undefined);
@@ -152,7 +153,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
             Gestisci i tuoi preventivi e convertili in ordini
           </p>
         </div>
-        {(userRole === "super_admin" || userRole === "commerciale") && (
+        {canManage && (
           <Button onClick={() => { setDuplicateData(undefined); setPreventivoDialogOpen(true); }}>
             <Plus className="mr-2 h-4 w-4" />
             Nuovo Preventivo
@@ -214,32 +215,34 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                         </div>
                       )}
                     </div>
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="flex-1"
-                        disabled={isDuplicating}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDuplicate(p.id);
-                        }}
-                      >
-                        <Copy className="h-4 w-4 mr-2" />
-                        Duplica
-                      </Button>
-                      <Button
-                        size="sm"
-                        className="flex-1"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setConvertId(p.id);
-                        }}
-                      >
-                        <ArrowRightCircle className="h-4 w-4 mr-2" />
-                        Converti
-                      </Button>
-                    </div>
+                    {canManage && (
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="flex-1"
+                          disabled={isDuplicating}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDuplicate(p.id);
+                          }}
+                        >
+                          <Copy className="h-4 w-4 mr-2" />
+                          Duplica
+                        </Button>
+                        <Button
+                          size="sm"
+                          className="flex-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setConvertId(p.id);
+                          }}
+                        >
+                          <ArrowRightCircle className="h-4 w-4 mr-2" />
+                          Converti
+                        </Button>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               );
@@ -257,7 +260,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                     <TableHead>Importo Totale</TableHead>
                     <TableHead>Scadenza</TableHead>
                     <TableHead>Stato</TableHead>
-                    <TableHead className="text-right">Azioni</TableHead>
+                    {canManage && <TableHead className="text-right">Azioni</TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -293,41 +296,43 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                             </Badge>
                           )}
                         </TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                navigate(`${basePath}/ordini/${p.id}`);
-                              }}
-                            >
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              disabled={isDuplicating}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDuplicate(p.id);
-                              }}
-                            >
-                              <Copy className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setConvertId(p.id);
-                              }}
-                            >
-                              <ArrowRightCircle className="h-4 w-4 mr-1" />
-                              Converti
-                            </Button>
-                          </div>
-                        </TableCell>
+                        {canManage && (
+                          <TableCell className="text-right">
+                            <div className="flex items-center justify-end gap-2">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigate(`${basePath}/ordini/${p.id}`);
+                                }}
+                              >
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                disabled={isDuplicating}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDuplicate(p.id);
+                                }}
+                              >
+                                <Copy className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setConvertId(p.id);
+                                }}
+                              >
+                                <ArrowRightCircle className="h-4 w-4 mr-1" />
+                                Converti
+                              </Button>
+                            </div>
+                          </TableCell>
+                        )}
                       </TableRow>
                     );
                   })}
@@ -342,19 +347,23 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
             <FileText className="h-12 w-12 mx-auto mb-3 text-muted-foreground opacity-50" />
             <p className="text-muted-foreground font-medium">Nessun preventivo</p>
             <p className="text-sm text-muted-foreground mt-1">
-              I preventivi appariranno qui quando verranno creati
+              {canManage
+                ? "I preventivi appariranno qui quando verranno creati"
+                : "I preventivi verranno creati dal tuo commerciale di riferimento"}
             </p>
           </CardContent>
         </Card>
       )}
 
       {/* Preventivo Dialog (create or duplicate) */}
-      <NewPreventivoDialog
-        open={preventivoDialogOpen}
-        onOpenChange={handleDialogClose}
-        defaultDealerId={dealerId}
-        defaultValues={duplicateData}
-      />
+      {canManage && (
+        <NewPreventivoDialog
+          open={preventivoDialogOpen}
+          onOpenChange={handleDialogClose}
+          defaultDealerId={dealerId}
+          defaultValues={duplicateData}
+        />
+      )}
 
       {/* Confirm Conversion Dialog */}
       <AlertDialog open={!!convertId} onOpenChange={() => setConvertId(null)}>
