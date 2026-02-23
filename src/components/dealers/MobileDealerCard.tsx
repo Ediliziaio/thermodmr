@@ -8,17 +8,11 @@ import { EditDealerDialog } from "./EditDealerDialog";
 import { DeleteDealerDialog } from "./DeleteDealerDialog";
 import type { DealerWithStats } from "@/hooks/useDealers";
 import { useNavigate } from "react-router-dom";
+import { formatCurrency } from "@/lib/utils";
 
 interface MobileDealerCardProps {
   dealer: DealerWithStats;
 }
-
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat("it-IT", {
-    style: "currency",
-    currency: "EUR",
-  }).format(amount);
-};
 
 export function MobileDealerCard({ dealer }: MobileDealerCardProps) {
   const [showEditDialog, setShowEditDialog] = useState(false);
@@ -157,41 +151,17 @@ export function MobileDealerCard({ dealer }: MobileDealerCardProps) {
         </Card>
       </motion.div>
 
-      {/* Dialogs */}
+      {/* Controlled dialogs for swipe actions */}
       <EditDealerDialog
         dealer={dealer}
-        trigger={null}
+        open={showEditDialog}
+        onOpenChange={setShowEditDialog}
       />
       <DeleteDealerDialog
         dealer={dealer}
-        trigger={null}
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
       />
-
-      {/* Hidden triggers for dialogs controlled by swipe */}
-      {showEditDialog && (
-        <EditDealerDialog
-          dealer={dealer}
-          trigger={
-            <button
-              className="hidden"
-              onClick={() => setShowEditDialog(false)}
-              autoFocus
-            />
-          }
-        />
-      )}
-      {showDeleteDialog && (
-        <DeleteDealerDialog
-          dealer={dealer}
-          trigger={
-            <button
-              className="hidden"
-              onClick={() => setShowDeleteDialog(false)}
-              autoFocus
-            />
-          }
-        />
-      )}
     </>
   );
 }

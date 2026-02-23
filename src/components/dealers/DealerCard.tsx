@@ -13,17 +13,11 @@ import { EditDealerDialog } from "./EditDealerDialog";
 import { DeleteDealerDialog } from "./DeleteDealerDialog";
 import type { DealerWithStats } from "@/hooks/useDealers";
 import { useNavigate } from "react-router-dom";
+import { formatCurrency } from "@/lib/utils";
 
 interface DealerCardProps {
   dealer: DealerWithStats;
 }
-
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat("it-IT", {
-    style: "currency",
-    currency: "EUR",
-  }).format(amount);
-};
 
 export function DealerCard({ dealer }: DealerCardProps) {
   const navigate = useNavigate();
