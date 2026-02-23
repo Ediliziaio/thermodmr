@@ -6,29 +6,24 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PaymentFilters } from "@/components/payments/PaymentFilters";
-import { MobilePaymentFilters } from "@/components/payments/MobilePaymentFilters";
 import { NewPaymentDialog } from "@/components/payments/NewPaymentDialog";
 import { MobilePaymentsList } from "@/components/payments/MobilePaymentsList";
 import { BulkDeletePaymentsDialog } from "@/components/payments/BulkDeletePaymentsDialog";
 import { PaymentsTimeline } from "@/components/payments/PaymentsTimeline";
 import { PaymentTrendsChart } from "@/components/payments/PaymentTrendsChart";
 import { usePaymentsInfinite } from "@/hooks/usePaymentsInfinite";
-import { format } from "date-fns";
-import { it } from "date-fns/locale";
 import { DateRange } from "react-day-picker";
 import { useNavigate } from "react-router-dom";
-import { Euro, TrendingUp, Clock, CreditCard, Download, Trash2, X, List, Calendar as CalendarIcon, Loader2, RefreshCw, Plus } from "lucide-react";
+import { Euro, TrendingUp, Clock, CreditCard, Download, Trash2, X, List, Calendar as CalendarIcon, Loader2, RefreshCw, Plus, AlertCircle } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useDeletePayment, useBulkDeletePayments } from "@/hooks/usePayments";
 import { useRealtimeSync } from "@/hooks/useRealtimeSync";
 import { useAuth } from "@/contexts/AuthContext";
-import { formatCurrency } from "@/lib/utils";
-import { cn } from "@/lib/utils";
+import { formatCurrency, formatDate, cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { useInView } from "react-intersection-observer";
 import { exportPaymentsCustom, PAYMENT_COLUMNS } from "@/lib/exportUtils";
 import { ExportColumnsDialog } from "@/components/export/ExportColumnsDialog";
-import { motion } from "framer-motion";
 
 interface PagamentiProps {
   dealerId?: string;
@@ -55,7 +50,7 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
 
   // Infinite scroll
-  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = usePaymentsInfinite({
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = usePaymentsInfinite({
     dateRange,
     tipoFilter,
     metodoFilter,
@@ -77,9 +72,6 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const formatDateLocal = (dateString: string) => {
-    return format(new Date(dateString), "dd MMM yyyy", { locale: it });
-  };
 
   const getTipoBadgeVariant = (tipo: string) => {
     switch (tipo) {
@@ -156,22 +148,28 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
           ))}
         </div>
         <Skeleton className="h-96" />
+        <p className="text-center text-muted-foreground text-sm">Caricamento pagamenti...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="space-y-6 p-6">
-        <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <p className="text-muted-foreground mb-4">Errore nel caricamento dei pagamenti</p>
-            <Button onClick={() => window.location.reload()}>
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Ricarica
+      <div className="flex items-center justify-center min-h-[50vh] p-6">
+        <Card className="max-w-md w-full">
+          <CardContent className="flex flex-col items-center gap-4 pt-6">
+            <AlertCircle className="h-12 w-12 text-destructive" />
+            <div className="text-center">
+              <h3 className="font-semibold text-lg">Errore nel caricamento</h3>
+              <p className="text-muted-foreground text-sm mt-1">
+                Impossibile caricare i pagamenti. Verifica la connessione e riprova.
+              </p>
+            </div>
+            <Button onClick={() => refetch()}>
+              <RefreshCw className="h-4 w-4 mr-2" />Riprova
             </Button>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -197,37 +195,19 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
       </div>
 
       {/* Stats Cards */}
-      {isMobile ? (
-        <div className="overflow-x-auto -mx-6 px-6">
-          <div className="flex gap-4 pb-4" style={{ minWidth: 'max-content' }}>
-            {[
-              { title: "Totale Incassato", icon: Euro, value: formatCurrency(totaleIncassato), subtitle: `${payments.length} pagamenti` },
-              { title: "Media Importo", icon: TrendingUp, value: formatCurrency(mediaImporto), subtitle: "per pagamento" },
-              { title: "Pagamenti in Attesa", icon: Clock, value: payments.filter(p => p.tipo === "acconto").length, subtitle: "acconti registrati" },
-              { title: "Metodo Più Usato", icon: CreditCard, value: metodoPiuUsatoNome, subtitle: "più popolare", capitalize: true }
-            ].map((stat, i) => (
-              <Card key={i} className="min-w-[160px]">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-                  <stat.icon className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className={`text-2xl font-bold ${stat.capitalize ? 'capitalize' : ''}`}>{stat.value}</div>
-                  <p className="text-xs text-muted-foreground">{stat.subtitle}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-4">
+      <div className={cn(
+        isMobile ? "overflow-x-auto -mx-6 px-6" : ""
+      )}>
+        <div className={cn(
+          isMobile ? "flex gap-4 pb-4" : "grid gap-4 md:grid-cols-4"
+        )} style={isMobile ? { minWidth: 'max-content' } : undefined}>
           {[
             { title: "Totale Incassato", icon: Euro, value: formatCurrency(totaleIncassato), subtitle: `${payments.length} pagamenti` },
             { title: "Media Importo", icon: TrendingUp, value: formatCurrency(mediaImporto), subtitle: "per pagamento" },
             { title: "Pagamenti in Attesa", icon: Clock, value: payments.filter(p => p.tipo === "acconto").length, subtitle: "acconti registrati" },
             { title: "Metodo Più Usato", icon: CreditCard, value: metodoPiuUsatoNome, subtitle: "più popolare", capitalize: true }
           ].map((stat, i) => (
-            <Card key={i}>
+            <Card key={i} className={isMobile ? "min-w-[160px]" : ""}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
                 <stat.icon className="h-4 w-4 text-muted-foreground" />
@@ -239,7 +219,7 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
             </Card>
           ))}
         </div>
-      )}
+      </div>
 
       {/* Views */}
       {isMobile ? (
@@ -263,17 +243,6 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
             hasNextPage={hasNextPage}
             isFetchingNextPage={isFetchingNextPage}
             scrollRef={ref}
-          />
-          <MobilePaymentFilters
-            dateRange={dateRange}
-            onDateRangeChange={setDateRange}
-            tipoFilter={tipoFilter}
-            onTipoFilterChange={setTipoFilter}
-            metodoFilter={metodoFilter}
-            onMetodoFilterChange={setMetodoFilter}
-            searchQuery={searchQuery}
-            onSearchQueryChange={setSearchQuery}
-            onReset={handleResetFilters}
           />
         </>
       ) : (
@@ -332,7 +301,7 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
                     payments.map((payment) => (
                       <TableRow key={payment.id} className={selectedPaymentIds.has(payment.id) ? 'bg-muted/50' : ''}>
                         <TableCell><Checkbox checked={selectedPaymentIds.has(payment.id)} onCheckedChange={() => togglePaymentSelection(payment.id)} /></TableCell>
-                        <TableCell>{formatDateLocal(payment.data_pagamento)}</TableCell>
+                        <TableCell>{formatDate(payment.data_pagamento)}</TableCell>
                         <TableCell><button onClick={() => isDealerArea ? navigate(`../ordini/${payment.ordine_id}`, { relative: 'path' }) : navigate(`/ordini/${payment.ordine_id}`)} className="font-medium hover:underline text-primary">{payment.ordine_id}</button></TableCell>
                         <TableCell>{payment.orders.dealers.ragione_sociale}</TableCell>
                         <TableCell><Badge variant={getTipoBadgeVariant(payment.tipo)}>{payment.tipo}</Badge></TableCell>

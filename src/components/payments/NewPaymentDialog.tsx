@@ -225,7 +225,7 @@ export function NewPaymentDialog({ open: controlledOpen, onOpenChange }: NewPaym
                   <div className="flex justify-between text-xs">
                     <span className="text-muted-foreground">Pagato</span>
                     <span className="font-medium">
-                      {selectedOrder.percentuale_pagata.toFixed(0)}%
+                      {(selectedOrder.percentuale_pagata ?? 0).toFixed(0)}%
                     </span>
                   </div>
                   <Progress value={selectedOrder.percentuale_pagata} className="h-2" />
