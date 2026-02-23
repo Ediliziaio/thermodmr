@@ -270,149 +270,168 @@ export default function OrderDetail() {
         </div>
       )}
 
-      {/* Stato - full width per preventivi */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Stato {entityLabel}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <StatusStepper currentStatus={order.stato as any} />
-          
-          {!isPreventivo && (
-            <div className="space-y-2">
-              <Label htmlFor="status-select">
-                Modifica Stato {!isSuperAdmin && "(Solo Super Admin)"}
-              </Label>
-              <Select
-                value={order.stato}
-                onValueChange={handleStatusChange}
-                disabled={!isSuperAdmin}
-              >
-                <SelectTrigger id="status-select">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="da_confermare">Da Confermare</SelectItem>
-                  <SelectItem value="da_pagare_acconto">Da Pagare Acconto</SelectItem>
-                  <SelectItem value="in_lavorazione">In Lavorazione</SelectItem>
-                  <SelectItem value="da_consegnare">Da Consegnare</SelectItem>
-                  <SelectItem value="consegnato">Consegnato</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Riepilogo + Info in riga per preventivi */}
-      {isPreventivo && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Riepilogo Preventivo</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Importo Preventivo:</span>
-                <span className="text-lg font-bold text-foreground">
-                  {formatCurrency(Number(order.importo_totale))}
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Informazioni Preventivo</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm">
-              <div>
-                <span className="text-muted-foreground">Data Inserimento:</span>
-                <p className="font-medium text-foreground">
-                  {formatDate(new Date(order.data_inserimento))}
-                </p>
-              </div>
-              {scadenzaDate && (
+      {isPreventivo ? (
+        <>
+          {/* Layout semplificato preventivo */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Dettagli Preventivo</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4 text-sm">
                 <div>
-                  <span className="text-muted-foreground">Data Scadenza:</span>
+                  <span className="text-muted-foreground">Rivenditore:</span>
                   <p className="font-medium text-foreground">
-                    {formatDate(scadenzaDate)}
+                    {order.dealers?.ragione_sociale || "N/D"}
                   </p>
                 </div>
-              )}
-              <div>
-                <span className="text-muted-foreground">Cliente Finale:</span>
-                <p className="font-medium text-foreground">
-                  {order.clients
-                    ? `${order.clients.nome} ${order.clients.cognome}`
-                    : "Non specificato"}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+                <div>
+                  <span className="text-muted-foreground">Cliente Finale:</span>
+                  <p className="font-medium text-foreground">
+                    {order.clients
+                      ? `${order.clients.nome} ${order.clients.cognome}`
+                      : "Non specificato"}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Data Inserimento:</span>
+                  <p className="font-medium text-foreground">
+                    {formatDate(new Date(order.data_inserimento))}
+                  </p>
+                </div>
+                {scadenzaDate && (
+                  <div>
+                    <span className="text-muted-foreground">Data Scadenza:</span>
+                    <p className="font-medium text-foreground">
+                      {formatDate(scadenzaDate)}
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
+            <Card>
+              <CardHeader>
+                <CardTitle>Importo Preventivo</CardTitle>
+              </CardHeader>
+              <CardContent className="flex items-center justify-center">
+                <span className="text-4xl font-bold text-foreground">
+                  {formatCurrency(Number(order.importo_totale))}
+                </span>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Descrizione preventivo */}
           <Card>
             <CardHeader>
-              <CardTitle>Rivenditore</CardTitle>
+              <CardTitle>Descrizione</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm">
-              <div>
-                <span className="text-muted-foreground">Ragione Sociale:</span>
-                <p className="font-medium text-foreground">
-                  {order.dealers?.ragione_sociale || "N/D"}
-                </p>
-              </div>
-              <div>
-                <span className="text-muted-foreground">Email:</span>
-                <p className="font-medium text-foreground">
-                  {order.dealers?.email || "N/D"}
-                </p>
-              </div>
-              <div>
-                <span className="text-muted-foreground">Telefono:</span>
-                <p className="font-medium text-foreground">
-                  {order.dealers?.telefono || "N/D"}
-                </p>
+            <CardContent className="space-y-2">
+              <Textarea
+                placeholder="Descrizione del preventivo..."
+                className="min-h-[120px]"
+                value={noteRivenditore}
+                onChange={(e) => setNoteRivenditore(e.target.value)}
+              />
+              <Button
+                size="sm"
+                onClick={() => handleNoteSave("rivenditore")}
+                disabled={updateNotesMutation.isPending}
+              >
+                {updateNotesMutation.isPending ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
+                ) : "Salva Descrizione"}
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Documenti preventivo */}
+          <AttachmentsSection orderId={order.id} attachments={orderAttachments as any} />
+
+          {/* Note interne */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Note Interne</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Textarea
+                placeholder="Note interne (non visibili al rivenditore)..."
+                className="min-h-[100px]"
+                value={noteInterna}
+                onChange={(e) => setNoteInterna(e.target.value)}
+              />
+              <Button
+                size="sm"
+                onClick={() => handleNoteSave("interna")}
+                disabled={updateNotesMutation.isPending}
+              >
+                {updateNotesMutation.isPending ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
+                ) : "Salva Note"}
+              </Button>
+            </CardContent>
+          </Card>
+        </>
+      ) : (
+        <>
+          {/* Layout ordine - invariato */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Stato Ordine</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <StatusStepper currentStatus={order.stato as any} />
+              <div className="space-y-2">
+                <Label htmlFor="status-select">
+                  Modifica Stato {!isSuperAdmin && "(Solo Super Admin)"}
+                </Label>
+                <Select
+                  value={order.stato}
+                  onValueChange={handleStatusChange}
+                  disabled={!isSuperAdmin}
+                >
+                  <SelectTrigger id="status-select">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="da_confermare">Da Confermare</SelectItem>
+                    <SelectItem value="da_pagare_acconto">Da Pagare Acconto</SelectItem>
+                    <SelectItem value="in_lavorazione">In Lavorazione</SelectItem>
+                    <SelectItem value="da_consegnare">Da Consegnare</SelectItem>
+                    <SelectItem value="consegnato">Consegnato</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </CardContent>
           </Card>
-        </div>
-      )}
 
-      {/* Payment Timeline Chart - solo per ordini */}
-      {!isPreventivo && orderPayments && orderPayments.length > 0 && (
-        <PaymentTimelineChart
-          payments={orderPayments}
-          totalAmount={order.importo_totale}
-          title="Timeline Pagamenti"
-        />
-      )}
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          <OrderLinesEditor 
-            lines={orderLines as any} 
-            onLinesChange={() => {}} 
-            orderStatus={order.stato}
-            readOnly={!isSuperAdmin}
-            title={isPreventivo ? "Righe Preventivo" : "Righe Ordine"}
-          />
-          
-          {/* Pagamenti - solo per ordini */}
-          {!isPreventivo && (
-            <PaymentsSection 
-              orderId={order.id} 
-              payments={orderPayments as any}
-              totalAmount={Number(order.importo_totale)}
+          {orderPayments && orderPayments.length > 0 && (
+            <PaymentTimelineChart
+              payments={orderPayments}
+              totalAmount={order.importo_totale}
+              title="Timeline Pagamenti"
             />
           )}
-          
-          <AttachmentsSection orderId={order.id} attachments={orderAttachments as any} />
-        </div>
 
-        <div className="space-y-6">
-          {!isPreventivo && (
-            <>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <OrderLinesEditor 
+                lines={orderLines as any} 
+                onLinesChange={() => {}} 
+                orderStatus={order.stato}
+                readOnly={!isSuperAdmin}
+                title="Righe Ordine"
+              />
+              <PaymentsSection 
+                orderId={order.id} 
+                payments={orderPayments as any}
+                totalAmount={Number(order.importo_totale)}
+              />
+              <AttachmentsSection orderId={order.id} attachments={orderAttachments as any} />
+            </div>
+
+            <div className="space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle>Riepilogo Economico</CardTitle>
@@ -475,56 +494,56 @@ export default function OrderDetail() {
                   </div>
                 </CardContent>
               </Card>
-            </>
-          )}
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Note Rivenditore</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Textarea
-                placeholder="Note visibili al rivenditore..."
-                className="min-h-[100px]"
-                value={noteRivenditore}
-                onChange={(e) => setNoteRivenditore(e.target.value)}
-              />
-              <Button
-                size="sm"
-                onClick={() => handleNoteSave("rivenditore")}
-                disabled={updateNotesMutation.isPending}
-              >
-                {updateNotesMutation.isPending ? (
-                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
-                ) : "Salva Note"}
-              </Button>
-            </CardContent>
-          </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Note Rivenditore</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <Textarea
+                    placeholder="Note visibili al rivenditore..."
+                    className="min-h-[100px]"
+                    value={noteRivenditore}
+                    onChange={(e) => setNoteRivenditore(e.target.value)}
+                  />
+                  <Button
+                    size="sm"
+                    onClick={() => handleNoteSave("rivenditore")}
+                    disabled={updateNotesMutation.isPending}
+                  >
+                    {updateNotesMutation.isPending ? (
+                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
+                    ) : "Salva Note"}
+                  </Button>
+                </CardContent>
+              </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Note Interne</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Textarea
-                placeholder="Note interne (non visibili al rivenditore)..."
-                className="min-h-[100px]"
-                value={noteInterna}
-                onChange={(e) => setNoteInterna(e.target.value)}
-              />
-              <Button
-                size="sm"
-                onClick={() => handleNoteSave("interna")}
-                disabled={updateNotesMutation.isPending}
-              >
-                {updateNotesMutation.isPending ? (
-                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
-                ) : "Salva Note"}
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Note Interne</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <Textarea
+                    placeholder="Note interne (non visibili al rivenditore)..."
+                    className="min-h-[100px]"
+                    value={noteInterna}
+                    onChange={(e) => setNoteInterna(e.target.value)}
+                  />
+                  <Button
+                    size="sm"
+                    onClick={() => handleNoteSave("interna")}
+                    disabled={updateNotesMutation.isPending}
+                  >
+                    {updateNotesMutation.isPending ? (
+                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
+                    ) : "Salva Note"}
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Dialog conferma conversione */}
       <AlertDialog open={showConvertDialog} onOpenChange={setShowConvertDialog}>
