@@ -1,52 +1,28 @@
 
 
-## Ottimizzazione Velocita e Pulizia Codice Morto
+## Fix Logo: Ripristinare Trasparenza
 
-### 1. Rimuovere codice morto
+### Problema
+La conversione del logo da PNG a WebP ha perso il canale alfa (trasparenza). Il risultato e un logo con sfondo nero visibile nella sidebar, navbar e pagina di login.
 
-I seguenti file non sono importati da nessuna parte del progetto e possono essere eliminati:
+### Soluzione
+Il file PNG originale (`src/assets/logo_Thermodmr.png`) esiste ancora nel progetto. La soluzione piu rapida e affidabile e tornare a usare il PNG originale, dato che la conversione WebP automatica non ha preservato la trasparenza.
 
-| File | Motivo |
-|------|--------|
-| `src/App.css` | Boilerplate Vite originale, mai importato |
-| `src/components/NavLink.tsx` | Componente mai utilizzato (il Layout usa direttamente `Link` di react-router) |
-| `src/hooks/useAnalytics.ts` | Sostituito da `useUnifiedAnalytics.ts`, mai importato |
+### Modifiche
 
-### 2. Ottimizzare il logo (impatto maggiore)
-
-Il logo `logo_Thermodmr.png` pesa **482KB** e viene caricato **due volte** (sidebar desktop + sidebar mobile Sheet). Questo e il collo di bottiglia principale (1.7s di caricamento).
-
-- Convertire il PNG in **WebP** (riduzione ~80% delle dimensioni)
-- Aggiungere `loading="eager"` e `fetchPriority="high"` al tag img nel Layout
-- Assicurarsi che venga caricato una sola volta dal browser (stesso `src`)
-
-### 3. Ottimizzare import Suspense
-
-Attualmente c'e un unico `<Suspense>` che avvolge tutte le route. Questo significa che qualsiasi navigazione mostra il loader globale. Spostare il Suspense dentro ogni `<Route>` non e necessario dato che il lazy loading gia funziona, ma possiamo:
-
-- Rimuovere l'import inutilizzato di `Navigate` da react-router-dom in App.tsx
-
-### 4. Rimuovere doppio sistema toast
-
-Il progetto monta sia `<Toaster />` (shadcn) che `<Sonner />` contemporaneamente. Verificare quale viene effettivamente usato e rimuovere l'altro.
-
-### Dettaglio tecnico
-
-#### File da eliminare
-- `src/App.css`
-- `src/components/NavLink.tsx`
-- `src/hooks/useAnalytics.ts`
-
-#### File da modificare
+Ripristinare l'import del PNG in tutti i 5 file che sono stati modificati:
 
 | File | Modifica |
 |------|----------|
-| `src/App.tsx` | Rimuovere import `Navigate` (non usato) |
-| `src/components/Layout.tsx` | Aggiungere `loading="eager"` e `fetchPriority="high"` al logo, ottimizzare dimensioni con `width`/`height` espliciti per evitare layout shift |
+| `src/components/Layout.tsx` | `import logo from "@/assets/logo_Thermodmr.png"` |
+| `src/components/PublicNavbar.tsx` | `import logo from "@/assets/logo_Thermodmr.png"` |
+| `src/components/PublicFooter.tsx` | `import logo from "@/assets/logo_Thermodmr.png"` |
+| `src/components/auth/AuthHeader.tsx` | `import logo from "@/assets/logo_Thermodmr.png"` |
+| `src/pages/Home.tsx` | `import logo from "@/assets/logo_Thermodmr.png"` |
 
-#### Impatto atteso
+Dopo il ripristino, eliminare il file WebP difettoso (`src/assets/logo_Thermodmr.webp`).
 
-- **~480KB in meno** di trasferimento rete (logo ottimizzato)
-- **~200ms** risparmiati su FCP
-- Codebase piu pulita senza file orfani
+Le ottimizzazioni di `loading="eager"`, `fetchPriority="high"` e `width`/`height` espliciti aggiunte in precedenza al tag `img` nel Layout verranno mantenute -- queste continuano a migliorare le performance di caricamento anche con il PNG.
 
+### Nota
+Per ottenere una vera conversione WebP con trasparenza in futuro, il logo dovrebbe essere convertito con uno strumento esterno (es. Squoosh, cwebp) che preservi il canale alfa, e poi caricato manualmente nel progetto.
