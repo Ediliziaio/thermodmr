@@ -1,93 +1,48 @@
 
 
-## Arricchire la Vista Riga Rivenditori con Dati Ordini e Pagamenti
+## Rendere la Vista Lista quella Predefinita + Aggiungere Dati Finanziari alla DealerCard
 
-### Obiettivo
+### Modifiche
 
-Aggiungere alla riga di ogni rivenditore le informazioni su: importo incassato, importo da incassare, e nella sezione espansa mostrare il dettaglio degli ordini con stato e importi.
+#### 1. `src/pages/Dealers.tsx`
+- Cambiare il valore iniziale di `viewMode` da `"grid"` a `"list"` (riga 18)
 
-### 1. Aggiornare la view `dealers_with_stats`
+#### 2. `src/components/dealers/DealerCard.tsx`
+- Aggiungere due righe nella sezione statistiche (dopo "Fatturato totale"):
+  - **Incassato**: in verde, mostra `total_paid`
+  - **Da incassare**: in giallo/arancio se > 0, mostra `total_remaining`
 
-Estendere la view PostgreSQL per includere le statistiche sui pagamenti, aggregando i dati dalla tabella `payments` tramite `orders`:
+### Dettaglio tecnico
 
-Nuove colonne:
-- `total_paid` (totale incassato)
-- `total_remaining` (totale da incassare = total_revenue - total_paid)
-- `orders_da_confermare` (conteggio ordini per stato)
-- `orders_confermato` 
-- `orders_in_produzione`
-- `orders_consegnato`
-
-### 2. Aggiornare il tipo `DealerWithStats`
-
-In `src/hooks/useDealers.ts`, aggiungere i nuovi campi all'interfaccia:
-
+**Dealers.tsx** -- riga 18:
 ```text
-export interface DealerWithStats extends Tables<"dealers"> {
-  orders_count?: number;
-  total_revenue?: number;
-  total_paid?: number;       // NUOVO
-  total_remaining?: number;  // NUOVO
-}
+// Da:
+const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+// A:
+const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 ```
 
-### 3. Aggiornare `DealerRowView.tsx`
-
-**Riga principale** -- aggiungere colonne "Incassato" e "Da Incassare":
-
+**DealerCard.tsx** -- dopo riga 120 (dopo "Fatturato totale"), aggiungere:
 ```text
-Ragione Sociale | P.IVA | Ordini | Fatturato | Incassato | Da Incassare | Comm. | [v]
+<div className="flex justify-between text-sm">
+  <span className="text-muted-foreground">Incassato:</span>
+  <span className="font-medium text-green-600">
+    {formatCurrency(dealer.total_paid || 0)}
+  </span>
+</div>
+<div className="flex justify-between text-sm">
+  <span className="text-muted-foreground">Da incassare:</span>
+  <span className={cn("font-medium", (dealer.total_remaining || 0) > 0 ? "text-amber-600" : "text-muted-foreground")}>
+    {formatCurrency(dealer.total_remaining || 0)}
+  </span>
+</div>
 ```
 
-- "Incassato" in verde
-- "Da Incassare" in giallo/arancio se > 0
+Importare `cn` da `@/lib/utils` (gia esportato da quel file).
 
-**Sezione espansa** -- aggiungere una riga di mini-KPI prima dei contatti:
-
-```text
-+--------------------------------------------------+
-| Ordini: 4 | Incassato: 45.000 | Residuo: 18.530  |
-| Email: ...  Telefono: ...  Indirizzo: ...         |
-| [Dettaglio] [Modifica] [Elimina] [Accedi Area]    |
-+--------------------------------------------------+
-```
-
-### 4. Aggiornare il grid layout
-
-Il grid passa da 5 a 7 colonne:
-```text
-grid-cols-[2fr_1.2fr_0.6fr_1fr_1fr_1fr_0.6fr]
-```
-
-### File da modificare
+### File modificati
 
 | File | Modifica |
 |------|----------|
-| Migration SQL | Ricreare view `dealers_with_stats` con colonne pagamento |
-| `src/hooks/useDealers.ts` | Aggiungere campi `total_paid`, `total_remaining` al tipo |
-| `src/components/dealers/DealerRowView.tsx` | Aggiungere colonne incassato/da incassare, mini-KPI nell'espansione |
-
-### Dettaglio SQL
-
-```text
-CREATE OR REPLACE VIEW dealers_with_stats AS
-SELECT 
-  d.*,
-  COALESCE(stats.orders_count, 0) AS orders_count,
-  COALESCE(stats.total_revenue, 0) AS total_revenue,
-  COALESCE(stats.total_paid, 0) AS total_paid,
-  COALESCE(stats.total_revenue, 0) - COALESCE(stats.total_paid, 0) AS total_remaining
-FROM dealers d
-LEFT JOIN LATERAL (
-  SELECT 
-    count(o.id) AS orders_count,
-    sum(o.importo_totale) AS total_revenue,
-    COALESCE(sum(p.paid), 0) AS total_paid
-  FROM orders o
-  LEFT JOIN LATERAL (
-    SELECT COALESCE(sum(pay.importo), 0) AS paid
-    FROM payments pay WHERE pay.ordine_id = o.id
-  ) p ON true
-  WHERE o.dealer_id = d.id
-) stats ON true;
-```
+| `src/pages/Dealers.tsx` | Default viewMode da "grid" a "list" |
+| `src/components/dealers/DealerCard.tsx` | Aggiungere righe Incassato e Da incassare con colori semantici |
