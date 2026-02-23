@@ -1,42 +1,56 @@
 
+## Correzioni Preventivi nell'Area Rivenditore + Pulizia UX
 
-## Correzioni Menu + Pagine Vantaggi e Garanzie
+### Problema principale
+Il rivenditore nella pagina Preventivi vede i pulsanti **"Duplica"** e **"Converti in Ordine"** che non dovrebbe poter usare:
+- **"Nuovo Preventivo"** e gia correttamente nascosto per i rivenditori (riga 155 di `DealerPreventivi.tsx`)
+- **"Duplica"** crea un nuovo preventivo, operazione riservata a super_admin e commerciale
+- **"Converti in Ordine"** cambia lo stato dell'ordine, operazione riservata al solo super_admin
 
-### 1. Fix navigazione menu
+Inoltre, il rivenditore vedra errori RLS se prova a usare questi pulsanti perche le policy di UPDATE/INSERT non glielo permettono.
 
-**Problema**: nel `PublicNavbar.tsx` c'e una logica (`handleNavClick` + `sectionMap`) che, quando sei sulla homepage, intercetta i click su "Chi Siamo", "Vantaggi", "Garanzie" e "Contatti" e scrolla alla sezione della homepage invece di navigare alla pagina dedicata. Questo crea confusione perche le pagine dedicate esistono ma non vengono raggiunte.
+### Correzioni pianificate
 
-**Soluzione**: rimuovere completamente il `sectionMap` e la funzione `handleNavClick`, cosi tutti i link navigano sempre alle pagine dedicate. Rimuovere anche il `onClick={(e) => handleNavClick(e, item.to)}` dai link desktop e mobile.
+#### 1. Nascondere "Duplica" e "Converti" per il rivenditore
+**File:** `src/pages/DealerPreventivi.tsx`
 
-**File**: `src/components/PublicNavbar.tsx`
+- Aggiungere un controllo `canManage` basato su `userRole`: solo `super_admin` e `commerciale` vedono i pulsanti "Duplica" e "Converti"
+- Nella versione mobile (card): nascondere l'intera sezione pulsanti per i rivenditori
+- Nella versione desktop (tabella): nascondere la colonna "Azioni" per i rivenditori oppure mostrare solo il pulsante "Visualizza"
+- Rimuovere il rendering di `NewPreventivoDialog` quando l'utente e rivenditore (evita caricamento inutile)
 
----
+#### 2. Miglioramenti UX per il rivenditore
+- Aggiornare il messaggio vuoto "I preventivi appariranno qui quando verranno creati" in qualcosa piu specifico per il rivenditore: "I preventivi verranno creati dal tuo commerciale di riferimento"
+- Il rivenditore mantiene la possibilita di **visualizzare** i dettagli del preventivo cliccando sulla riga
 
-### 2. Aggiornare pagina Vantaggi
+#### 3. Pulizia codice minore
+- L'import di `Plus` da lucide-react e usato solo nel pulsante "Nuovo Preventivo" che il rivenditore non vede; ma verra mantenuto perche usato anche da altri ruoli
+- L'import di `Copy` e `ArrowRightCircle` sara condizionato alla visibilita dei pulsanti
 
-**File**: `src/pages/VantaggiPage.tsx`
+### Dettaglio tecnico
 
-Modifiche:
-- **Tempi di consegna** (riga 26-29): cambiare `metric: "15gg"` in `"2-6 sett."` e aggiornare la descrizione con "da 2 a 6 settimane dalla conferma d'ordine"
-- **Rimuovere card "Pagamenti Flessibili"** (righe 31-37): eliminare completamente il blocco con `metric: "60gg"` dall'array `mainAdvantages`. Rimuovere anche l'import di `CreditCard` da lucide-react
-- L'array `mainAdvantages` passera da 4 a 3 elementi
+```text
+DealerPreventivi.tsx:
+  const canManage = userRole === "super_admin" || userRole === "commerciale";
 
----
+  Mobile cards:
+    - {canManage && <div className="flex gap-2">...Duplica...Converti...</div>}
+  
+  Desktop table:
+    - Colonna "Azioni": mostra Duplica/Converti solo se canManage
+    - Il click sulla riga per visualizzare resta per tutti
+  
+  Dialog preventivo:
+    - {canManage && <NewPreventivoDialog ... />}
+  
+  Empty state:
+    - Messaggio differenziato per ruolo
+```
 
-### 3. Aggiornare pagina Garanzie
-
-**File**: `src/pages/GaranziePage.tsx`
-
-Modifiche:
-- **Descrizione consegna** (riga 31): cambiare "15 giorni lavorativi dalla conferma d'ordine" in "Da 2 a 6 settimane dalla conferma d'ordine"
-- **Dettaglio consegna** (riga 33): cambiare "15 giorni lavorativi garantiti contrattualmente" in "Da 2 a 6 settimane garantite contrattualmente"
-
----
-
-### Riepilogo file modificati
+### Riepilogo modifiche
 
 | File | Modifica |
 |------|----------|
-| `src/components/PublicNavbar.tsx` | Rimuovere `sectionMap`, `handleNavClick` e relativi `onClick` |
-| `src/pages/VantaggiPage.tsx` | Tempi 2-6 sett., rimuovere card 60gg pagamenti |
-| `src/pages/GaranziePage.tsx` | Tempi 2-6 settimane nella sezione consegna |
+| `src/pages/DealerPreventivi.tsx` | Nascondere Duplica/Converti/Nuovo per rivenditori, UX empty state migliorata, pulizia rendering condizionale |
+
+Nessuna modifica al database o alle RLS policy necessaria: le policy esistenti gia impediscono le operazioni non autorizzate lato backend. Questa correzione allinea il frontend alle regole di sicurezza.
