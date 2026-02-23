@@ -835,6 +835,8 @@ export type Database = {
           provincia: string | null
           ragione_sociale: string | null
           telefono: string | null
+          total_paid: number | null
+          total_remaining: number | null
           total_revenue: number | null
           updated_at: string | null
         }

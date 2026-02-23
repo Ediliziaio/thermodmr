@@ -7,6 +7,8 @@ import type { Tables, TablesInsert } from "@/integrations/supabase/types";
 export interface DealerWithStats extends Tables<"dealers"> {
   orders_count?: number;
   total_revenue?: number;
+  total_paid?: number;
+  total_remaining?: number;
 }
 
 export const useCreateDealer = () => {
