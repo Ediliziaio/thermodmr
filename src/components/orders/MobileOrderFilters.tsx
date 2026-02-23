@@ -211,9 +211,9 @@ export function MobileOrderFilters({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Tutti</SelectItem>
-                  <SelectItem value="not_paid">Non Pagato</SelectItem>
-                  <SelectItem value="partial">Pagamento Parziale</SelectItem>
-                  <SelectItem value="paid">Pagato</SelectItem>
+                  <SelectItem value="non_pagato">Non Pagato</SelectItem>
+                  <SelectItem value="parziale">Pagamento Parziale</SelectItem>
+                  <SelectItem value="pagato">Pagato</SelectItem>
                 </SelectContent>
               </Select>
             </div>

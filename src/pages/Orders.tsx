@@ -18,19 +18,12 @@ import { toast } from "@/hooks/use-toast";
 import { useDealersInfinite } from "@/hooks/useDealersInfinite";
 import { useMemo, useState, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-import { formatCurrency, getStatusColor, getStatusLabel, cn } from "@/lib/utils";
+import { formatCurrency, formatDate, getStatusColor, getStatusLabel, cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useRealtimeSync } from "@/hooks/useRealtimeSync";
 
-const formatDate = (date: Date) => {
-  return new Intl.DateTimeFormat("it-IT", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  }).format(date);
-};
 
 interface OrdersProps {
   dealerId?: string;
@@ -45,7 +38,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
   const isMobile = useIsMobile();
   const isDealerArea = !!dealerId;
   const [searchQuery, setSearchQuery] = useState("");
-  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useOrdersInfinite({ searchQuery, dealerId });
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useOrdersInfinite({ searchQuery, dealerId });
   const { data: dealersData } = useDealersInfinite();
   const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
   const [filters, setFilters] = useState<OrderFiltersState>({});
@@ -212,16 +205,28 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
 
   if (isLoading && !data) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="flex flex-col items-center justify-center min-h-[50vh] gap-3">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="text-sm text-muted-foreground">Caricamento ordini...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-destructive">Errore nel caricamento degli ordini</p>
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <Card className="max-w-md w-full">
+          <CardContent className="flex flex-col items-center gap-4 pt-6">
+            <AlertCircle className="h-12 w-12 text-destructive" />
+            <div className="text-center">
+              <h3 className="font-semibold text-lg">Errore nel caricamento</h3>
+              <p className="text-muted-foreground text-sm mt-1">
+                Impossibile caricare gli ordini. Verifica la connessione e riprova.
+              </p>
+            </div>
+            <Button onClick={() => refetch()}>Riprova</Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -263,111 +268,61 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
           )}
         </div>
 
-      {/* Statistiche Header - Swipeable su mobile */}
-      {isMobile ? (
-        <div className="overflow-x-auto -mx-6 px-6">
-          <div className="flex gap-4 pb-4" style={{ minWidth: 'max-content' }}>
-            <Card className="min-w-[200px]">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Totale Ordini
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-2xl font-bold">{stats.totalOrders}</p>
-              </CardContent>
-            </Card>
-            <Card className="min-w-[200px]">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Valore Totale
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-2xl font-bold">
-                  {formatCurrency(stats.totalValue)}
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="min-w-[200px]">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Da Incassare
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-2xl font-bold text-orange-600">
-                  {formatCurrency(stats.totalToCollect)}
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="min-w-[200px]">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Ordini con Saldo
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-2xl font-bold text-red-600">
-                  {stats.ordersWithBalance}
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+      {/* Statistiche Header */}
+      <div className={cn(
+        isMobile 
+          ? "overflow-x-auto -mx-6 px-6" 
+          : "grid grid-cols-2 lg:grid-cols-4 gap-4"
+      )}>
+        <div className={cn(isMobile && "flex gap-4 pb-4")} style={isMobile ? { minWidth: 'max-content' } : undefined}>
+          <Card className={cn(isMobile && "min-w-[200px]")}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Totale Ordini
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">{stats.totalOrders}</p>
+            </CardContent>
+          </Card>
+          <Card className={cn(isMobile && "min-w-[200px]")}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Valore Totale
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">
+                {formatCurrency(stats.totalValue)}
+              </p>
+            </CardContent>
+          </Card>
+          <Card className={cn(isMobile && "min-w-[200px]")}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Da Incassare
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold text-orange-600">
+                {formatCurrency(stats.totalToCollect)}
+              </p>
+            </CardContent>
+          </Card>
+          <Card className={cn(isMobile && "min-w-[200px]")}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Ordini con Saldo
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold text-red-600">
+                {stats.ordersWithBalance}
+              </p>
+            </CardContent>
+          </Card>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Totale Ordini
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{stats.totalOrders}</p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Valore Totale
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">
-              {formatCurrency(stats.totalValue)}
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Da Incassare
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold text-orange-600">
-              {formatCurrency(stats.totalToCollect)}
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Ordini con Saldo
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold text-red-600">
-              {stats.ordersWithBalance}
-            </p>
-          </CardContent>
-        </Card>
-        </div>
-      )}
+      </div>
 
       {/* Vista Condizionale: Mobile vs Desktop */}
       {isMobile ? (
@@ -515,7 +470,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                                   </div>
                                   
                                   <p className="text-xs text-muted-foreground">
-                                    {order.numero_pagamenti} pag. • {order.percentuale_pagata.toFixed(0)}%
+                                    {order.numero_pagamenti} pag. • {(order.percentuale_pagata ?? 0).toFixed(0)}%
                                   </p>
                                 </div>
                               </TooltipTrigger>
@@ -558,17 +513,26 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
               </table>
             </div>
           ) : (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <div className="rounded-full bg-muted p-4 mb-4">
+                <FileText className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">
                 {allOrders && allOrders.length > 0
-                  ? "Nessun ordine corrisponde ai filtri selezionati"
+                  ? "Nessun ordine corrisponde ai filtri"
                   : "Nessun ordine trovato"}
-              </p>
-              <p className="text-sm text-muted-foreground mt-2">
+              </h3>
+              <p className="text-sm text-muted-foreground max-w-sm mb-6">
                 {allOrders && allOrders.length > 0
                   ? "Prova a modificare i filtri di ricerca"
                   : "Crea il tuo primo ordine per iniziare"}
               </p>
+              {!allOrders?.length && userRole === 'super_admin' && (
+                <Button onClick={() => setNewOrderDialogOpen(true)}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Crea Ordine
+                </Button>
+              )}
             </div>
           )}
 
