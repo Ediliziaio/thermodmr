@@ -1,145 +1,89 @@
 
 
-## Pulizia e Stabilizzazione - Sezione Dealers
+## Miglioramento Sezione Rivenditori - Vista Riga con Espansione
 
-### 1. PULIZIA CODICE
+### Obiettivo
 
-| Cosa | Dove | Problema |
-|------|------|----------|
-| `formatCurrency()` locale | `DealerCard.tsx` righe 21-26 | Duplica `formatCurrency` da `@/lib/utils.ts` |
-| `formatCurrency()` locale | `MobileDealerCard.tsx` righe 16-21 | Stessa duplicazione |
-| `showNewDealerDialog` stato inutilizzato | `Dealers.tsx` riga 17 | Dichiarato ma mai usato |
-| `PROVINCE_ITALIANE` duplicato | `DealerFilters.tsx` righe 23-32 e `MobileDealerFilters.tsx` righe 29-38 | Array identico copiato in 2 file. Da estrarre in costante condivisa |
+Aggiungere una **vista a righe (tabella)** alternativa alla vista a griglia (card) attuale, con un toggle per passare da una all'altra. Nella vista riga, ogni rivenditore mostra i dati principali in una singola riga compatta. Cliccando su una freccia/chevron la riga si espande per mostrare i dettagli aggiuntivi (contatti, indirizzo, azioni).
 
-### 2. FIX FUNZIONALI
+### Come funzionera
 
-| Bug | Dettaglio | Fix |
-|-----|-----------|-----|
-| Error state senza retry | `Dealers.tsx` righe 40-45: solo testo rosso, nessun bottone "Riprova" | Card strutturata con `AlertCircle`, messaggio chiaro, e bottone "Riprova" con `refetch()` (pattern Ordini/Pagamenti) |
-| `refetch` non estratto | `Dealers.tsx` riga 19 | Aggiungere `refetch` alla destrutturazione |
-| Swipe dialogs rotti su mobile | `MobileDealerCard.tsx` righe 161-194: i dialog con `trigger={null}` non fanno nulla, e i dialog condizionali con bottoni hidden non aprono correttamente i dialog | Usare stato `open` controllato per `EditDealerDialog` e `DeleteDealerDialog`, eliminando i trigger fantasma |
-
-### 3. MIGLIORAMENTI UX
-
-| Miglioramento | Dettaglio |
-|---------------|-----------|
-| Error state con retry | Card strutturata con icona, messaggio, e pulsante "Riprova" -- identico al pattern Ordini e Pagamenti |
-| Loading state informativo | Aggiungere testo "Caricamento rivenditori..." sotto lo spinner |
-| Empty state migliorato | Aggiungere icona `Building2` e CTA "Nuovo Rivenditore" nello stato vuoto |
-
-### 4. RIEPILOGO FILE MODIFICATI
-
-| File | Tipo modifica |
-|------|---------------|
-| `src/pages/Dealers.tsx` | Rimuovere stato `showNewDealerDialog`, fix error state con retry, fix loading state, fix empty state con CTA |
-| `src/components/dealers/DealerCard.tsx` | Rimuovere `formatCurrency` locale, importare da `@/lib/utils` |
-| `src/components/dealers/MobileDealerCard.tsx` | Rimuovere `formatCurrency` locale, importare da `@/lib/utils`; fix swipe dialogs con stato controllato |
-| `src/lib/dealerConstants.ts` | Nuovo file: costante `PROVINCE_ITALIANE` condivisa |
-| `src/components/dealers/DealerFilters.tsx` | Importare `PROVINCE_ITALIANE` dal file condiviso |
-| `src/components/dealers/MobileDealerFilters.tsx` | Importare `PROVINCE_ITALIANE` dal file condiviso |
-
-### 5. DETTAGLIO TECNICO
-
-#### Dealers.tsx - Modifiche principali
-
-**Rimuovere stato inutilizzato**:
 ```text
-// Rimuovere:
-const [showNewDealerDialog, setShowNewDealerDialog] = useState(false);
++-------------------------------------------------------------+
+| Ragione Sociale | P.IVA | Ordini | Fatturato | Comm. | [v]  |
++-------------------------------------------------------------+
+|  (espanso)                                                   |
+|  Email: ...   Telefono: ...                                  |
+|  Indirizzo: ...                                              |
+|  [Dettaglio] [Modifica] [Email] [Chiama] [Elimina] [Accedi]  |
++-------------------------------------------------------------+
 ```
 
-**Destrutturazione query**: aggiungere `refetch`:
-```text
-const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useDealersInfinite(filters);
-```
+- **Toggle vista**: due icone (griglia / lista) nell'header accanto al pulsante "Nuovo Rivenditore"
+- **Riga compatta**: ragione sociale, P.IVA, ordini, fatturato, commissione, chevron per espandere
+- **Riga espansa**: email, telefono, indirizzo completo, pulsanti azione (dettaglio, modifica, elimina, accedi area)
+- **Solo desktop**: su mobile resta la vista card attuale (le righe non funzionano bene su schermi piccoli)
 
-**Error state migliorato** (sostituire righe 40-46):
+### File da modificare/creare
+
+| File | Modifica |
+|------|----------|
+| `src/components/dealers/DealerRowView.tsx` | **Nuovo** - Componente vista riga con Collapsible per l'espansione |
+| `src/pages/Dealers.tsx` | Aggiungere stato `viewMode` ("grid" / "list"), toggle nell'header, rendering condizionale |
+
+### Dettaglio tecnico
+
+#### 1. Nuovo componente: `DealerRowView.tsx`
+
+- Usa `Collapsible` da Radix (gia installato) per l'espansione riga
+- Ogni riga e un componente `DealerRow` che riceve il dealer
+- **Riga chiusa**: layout flex/grid con colonne allineate:
+  - Ragione Sociale (bold)
+  - P.IVA (testo piccolo)
+  - Ordini (numero)
+  - Fatturato (formattato)
+  - Commissione (badge, se presente)
+  - ChevronDown che ruota quando aperto
+- **Riga aperta** (`CollapsibleContent`): sezione con padding che mostra:
+  - Email (con icona Mail, cliccabile mailto)
+  - Telefono (con icona Phone, cliccabile tel)
+  - Indirizzo completo (con icona MapPin)
+  - Riga di azioni: Visualizza Dettaglio, Modifica (EditDealerDialog), Invia Email, Chiama, Elimina (DeleteDealerDialog), Accedi Area Rivenditore
+- Struttura con header fisso (intestazioni colonne) e righe scrollabili
+- Stesse azioni del DealerCard (navigate, edit, delete, email, tel)
+
+#### 2. Modifica: `Dealers.tsx`
+
+- Aggiungere stato: `const [viewMode, setViewMode] = useState<"grid" | "list">("grid")`
+- Nell'header desktop, accanto a `NewDealerDialog`, aggiungere toggle con due Button icon:
+  - `LayoutGrid` (icona griglia) - attivo quando viewMode === "grid"
+  - `List` (icona lista) - attivo quando viewMode === "list"
+- Nel rendering desktop, condizionare:
+  - `viewMode === "grid"` -> griglia attuale con `DealerCard`
+  - `viewMode === "list"` -> nuovo `DealerRowView` con lista di righe espandibili
+- La preferenza di vista non necessita di persistenza (stato locale e sufficiente)
+
+#### 3. Struttura riga espandibile
+
+Ogni riga usa il pattern Collapsible di Radix:
+
 ```text
-if (error) {
-  return (
-    <div className="flex items-center justify-center min-h-[50vh] p-6">
-      <Card className="max-w-md w-full">
-        <CardContent className="flex flex-col items-center gap-4 pt-6">
-          <AlertCircle className="h-12 w-12 text-destructive" />
-          <div className="text-center">
-            <h3 className="font-semibold text-lg">Errore nel caricamento</h3>
-            <p className="text-muted-foreground text-sm mt-1">
-              Impossibile caricare i rivenditori. Verifica la connessione e riprova.
-            </p>
-          </div>
-          <Button onClick={() => refetch()}>Riprova</Button>
-        </CardContent>
-      </Card>
+<Collapsible>
+  <div className="flex items-center border-b px-4 py-3 hover:bg-muted/50">
+    <div className="flex-1 grid grid-cols-5 gap-4 items-center">
+      <span>Ragione Sociale</span>
+      <span>P.IVA</span>
+      <span>Ordini</span>
+      <span>Fatturato</span>
+      <span>Commissione</span>
     </div>
-  );
-}
+    <CollapsibleTrigger>
+      <ChevronDown className="transition-transform" />
+    </CollapsibleTrigger>
+  </div>
+  <CollapsibleContent>
+    <!-- dettagli contatto + azioni -->
+  </CollapsibleContent>
+</Collapsible>
 ```
-
-**Loading state con testo**:
-```text
-if (isLoading && !data) {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-[50vh] gap-3">
-      <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      <p className="text-sm text-muted-foreground">Caricamento rivenditori...</p>
-    </div>
-  );
-}
-```
-
-**Empty state con icona e CTA**: aggiungere `Building2` e `NewDealerDialog` come CTA nello stato vuoto (sia mobile che desktop).
-
-#### DealerCard.tsx e MobileDealerCard.tsx - Rimuovere formatCurrency locale
-
-```text
-// Rimuovere (righe 21-26 in DealerCard, 16-21 in MobileDealerCard):
-const formatCurrency = (amount: number) => { ... };
-
-// Aggiungere all'import:
-import { formatCurrency } from "@/lib/utils";
-```
-
-#### MobileDealerCard.tsx - Fix swipe dialogs
-
-Sostituire il sistema di dialog rotto (trigger={null} + hidden buttons, righe 161-194) con dialog a stato controllato:
-
-```text
-// I dialog EditDealerDialog e DeleteDealerDialog ricevono gia prop "trigger" opzionale.
-// Pero servono anche prop open/onOpenChange per controllare apertura esterna.
-// Verificare se i dialog supportano open controllato:
-// - EditDealerDialog: usa stato interno open, non accetta open da props
-// - DeleteDealerDialog: usa stato interno open, non accetta open da props
-
-// Soluzione: aggiungere prop open/onOpenChange opzionali a entrambi i dialog
-// oppure usare un approccio piu semplice con ref/click programmatico.
-
-// Approccio scelto: aggiungere prop opzionali open/onOpenChange ai dialog,
-// e in MobileDealerCard controllare l'apertura via stato.
-```
-
-I dialog `EditDealerDialog` e `DeleteDealerDialog` vanno modificati per accettare `open`/`onOpenChange` opzionali (controlled mode). In `MobileDealerCard`, i dialog fantasma (righe 161-194) vengono sostituiti con:
-```text
-<EditDealerDialog
-  dealer={dealer}
-  open={showEditDialog}
-  onOpenChange={setShowEditDialog}
-/>
-<DeleteDealerDialog
-  dealer={dealer}
-  open={showDeleteDialog}
-  onOpenChange={setShowDeleteDialog}
-/>
-```
-
-#### Nuovo file: src/lib/dealerConstants.ts
-
-```text
-export const PROVINCE_ITALIANE = [
-  "AG", "AL", "AN", "AO", ... "VT"
-];
-```
-
-#### DealerFilters.tsx e MobileDealerFilters.tsx
-
-Rimuovere array `PROVINCE_ITALIANE` locale, importare da `@/lib/dealerConstants`.
 
