@@ -270,40 +270,114 @@ export default function OrderDetail() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Stato {entityLabel}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <StatusStepper currentStatus={order.stato as any} />
-            
-            {!isPreventivo && (
-              <div className="space-y-2">
-                <Label htmlFor="status-select">
-                  Modifica Stato {!isSuperAdmin && "(Solo Super Admin)"}
-                </Label>
-                <Select
-                  value={order.stato}
-                  onValueChange={handleStatusChange}
-                  disabled={!isSuperAdmin}
-                >
-                  <SelectTrigger id="status-select">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="da_confermare">Da Confermare</SelectItem>
-                    <SelectItem value="da_pagare_acconto">Da Pagare Acconto</SelectItem>
-                    <SelectItem value="in_lavorazione">In Lavorazione</SelectItem>
-                    <SelectItem value="da_consegnare">Da Consegnare</SelectItem>
-                    <SelectItem value="consegnato">Consegnato</SelectItem>
-                  </SelectContent>
-                </Select>
+      {/* Stato - full width per preventivi */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Stato {entityLabel}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <StatusStepper currentStatus={order.stato as any} />
+          
+          {!isPreventivo && (
+            <div className="space-y-2">
+              <Label htmlFor="status-select">
+                Modifica Stato {!isSuperAdmin && "(Solo Super Admin)"}
+              </Label>
+              <Select
+                value={order.stato}
+                onValueChange={handleStatusChange}
+                disabled={!isSuperAdmin}
+              >
+                <SelectTrigger id="status-select">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="da_confermare">Da Confermare</SelectItem>
+                  <SelectItem value="da_pagare_acconto">Da Pagare Acconto</SelectItem>
+                  <SelectItem value="in_lavorazione">In Lavorazione</SelectItem>
+                  <SelectItem value="da_consegnare">Da Consegnare</SelectItem>
+                  <SelectItem value="consegnato">Consegnato</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Riepilogo + Info in riga per preventivi */}
+      {isPreventivo && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Riepilogo Preventivo</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Importo Preventivo:</span>
+                <span className="text-lg font-bold text-foreground">
+                  {formatCurrency(Number(order.importo_totale))}
+                </span>
               </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Informazioni Preventivo</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm">
+              <div>
+                <span className="text-muted-foreground">Data Inserimento:</span>
+                <p className="font-medium text-foreground">
+                  {formatDate(new Date(order.data_inserimento))}
+                </p>
+              </div>
+              {scadenzaDate && (
+                <div>
+                  <span className="text-muted-foreground">Data Scadenza:</span>
+                  <p className="font-medium text-foreground">
+                    {formatDate(scadenzaDate)}
+                  </p>
+                </div>
+              )}
+              <div>
+                <span className="text-muted-foreground">Cliente Finale:</span>
+                <p className="font-medium text-foreground">
+                  {order.clients
+                    ? `${order.clients.nome} ${order.clients.cognome}`
+                    : "Non specificato"}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Rivenditore</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm">
+              <div>
+                <span className="text-muted-foreground">Ragione Sociale:</span>
+                <p className="font-medium text-foreground">
+                  {order.dealers?.ragione_sociale || "N/D"}
+                </p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Email:</span>
+                <p className="font-medium text-foreground">
+                  {order.dealers?.email || "N/D"}
+                </p>
+              </div>
+              <div>
+                <span className="text-muted-foreground">Telefono:</span>
+                <p className="font-medium text-foreground">
+                  {order.dealers?.telefono || "N/D"}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Payment Timeline Chart - solo per ordini */}
       {!isPreventivo && orderPayments && orderPayments.length > 0 && (
@@ -321,6 +395,7 @@ export default function OrderDetail() {
             onLinesChange={() => {}} 
             orderStatus={order.stato}
             readOnly={!isSuperAdmin}
+            title={isPreventivo ? "Righe Preventivo" : "Righe Ordine"}
           />
           
           {/* Pagamenti - solo per ordini */}
@@ -336,21 +411,19 @@ export default function OrderDetail() {
         </div>
 
         <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>{isPreventivo ? "Riepilogo Preventivo" : "Riepilogo Economico"}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">
-                  {isPreventivo ? "Importo Preventivo:" : "Totale Ordine:"}
-                </span>
-                <span className="font-medium text-foreground">
-                  {formatCurrency(Number(order.importo_totale))}
-                </span>
-              </div>
-              {!isPreventivo && (
-                <>
+          {!isPreventivo && (
+            <>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Riepilogo Economico</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Totale Ordine:</span>
+                    <span className="font-medium text-foreground">
+                      {formatCurrency(Number(order.importo_totale))}
+                    </span>
+                  </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Acconto Concordato:</span>
                     <span className="font-medium text-foreground">
@@ -370,50 +443,40 @@ export default function OrderDetail() {
                       {formatCurrency(saldo)}
                     </span>
                   </div>
-                </>
-              )}
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Informazioni {entityLabel}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm">
-              <div>
-                <span className="text-muted-foreground">Data Inserimento:</span>
-                <p className="font-medium text-foreground">
-                  {formatDate(new Date(order.data_inserimento))}
-                </p>
-              </div>
-              {isPreventivo && scadenzaDate && (
-                <div>
-                  <span className="text-muted-foreground">Data Scadenza:</span>
-                  <p className="font-medium text-foreground">
-                    {formatDate(scadenzaDate)}
-                  </p>
-                </div>
-              )}
-              {!isPreventivo && (
-                <div>
-                  <span className="text-muted-foreground">Data Consegna Prevista:</span>
-                  <p className="font-medium text-foreground">
-                    {order.data_consegna_prevista
-                      ? formatDate(new Date(order.data_consegna_prevista))
-                      : "Da definire"}
-                  </p>
-                </div>
-              )}
-              <div>
-                <span className="text-muted-foreground">Cliente Finale:</span>
-                <p className="font-medium text-foreground">
-                  {order.clients
-                    ? `${order.clients.nome} ${order.clients.cognome}`
-                    : "Non specificato"}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Informazioni Ordine</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3 text-sm">
+                  <div>
+                    <span className="text-muted-foreground">Data Inserimento:</span>
+                    <p className="font-medium text-foreground">
+                      {formatDate(new Date(order.data_inserimento))}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Data Consegna Prevista:</span>
+                    <p className="font-medium text-foreground">
+                      {order.data_consegna_prevista
+                        ? formatDate(new Date(order.data_consegna_prevista))
+                        : "Da definire"}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Cliente Finale:</span>
+                    <p className="font-medium text-foreground">
+                      {order.clients
+                        ? `${order.clients.nome} ${order.clients.cognome}`
+                        : "Non specificato"}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </>
+          )}
 
           <Card>
             <CardHeader>
