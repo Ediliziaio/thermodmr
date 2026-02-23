@@ -271,10 +271,9 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
       {/* Statistiche Header */}
       <div className={cn(
         isMobile 
-          ? "overflow-x-auto -mx-6 px-6" 
+          ? "flex gap-4 overflow-x-auto -mx-6 px-6 pb-4" 
           : "grid grid-cols-2 lg:grid-cols-4 gap-4"
-      )}>
-        <div className={cn(isMobile && "flex gap-4 pb-4")} style={isMobile ? { minWidth: 'max-content' } : undefined}>
+      )} style={isMobile ? { minWidth: 'max-content' } : undefined}>
           <Card className={cn(isMobile && "min-w-[200px]")}>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -321,7 +320,6 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
               </p>
             </CardContent>
           </Card>
-        </div>
       </div>
 
       {/* Vista Condizionale: Mobile vs Desktop */}
