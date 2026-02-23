@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { FileText, Save, Upload } from "lucide-react";
 import { useSettings, useUpdateSetting } from "@/hooks/useSettings";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "@/hooks/use-toast";
 
 const PDFTemplateSection = () => {
   const { data: settings, isLoading } = useSettings("pdf_template");
@@ -15,23 +16,54 @@ const PDFTemplateSection = () => {
   const [logoUrl, setLogoUrl] = useState("");
   const [companyName, setCompanyName] = useState("Azienda Serramenti");
   const [companyAddress, setCompanyAddress] = useState("");
+  const [companyVat, setCompanyVat] = useState("");
+  const [companyCf, setCompanyCf] = useState("");
+  const [companyPhone, setCompanyPhone] = useState("");
+  const [companyEmail, setCompanyEmail] = useState("");
+  const [companySdi, setCompanySdi] = useState("");
+  const [footerNotes, setFooterNotes] = useState("");
 
   useEffect(() => {
     if (settings) {
-      const logoSetting = settings.find((s) => s.key === "pdf_template_logo_url");
-      const nameSetting = settings.find((s) => s.key === "pdf_template_company_name");
-      const addressSetting = settings.find((s) => s.key === "pdf_template_company_address");
-      
-      if (logoSetting) setLogoUrl(String(logoSetting.value).replace(/"/g, ""));
-      if (nameSetting) setCompanyName(String(nameSetting.value).replace(/"/g, ""));
-      if (addressSetting) setCompanyAddress(String(addressSetting.value).replace(/"/g, ""));
+      const get = (key: string) => {
+        const s = settings.find((s) => s.key === key);
+        return s ? String(s.value).replace(/"/g, "") : "";
+      };
+      setLogoUrl(get("pdf_template_logo_url"));
+      setCompanyName(get("pdf_template_company_name") || "Azienda Serramenti");
+      setCompanyAddress(get("pdf_template_company_address"));
+      setCompanyVat(get("pdf_template_company_vat"));
+      setCompanyCf(get("pdf_template_company_cf"));
+      setCompanyPhone(get("pdf_template_company_phone"));
+      setCompanyEmail(get("pdf_template_company_email"));
+      setCompanySdi(get("pdf_template_company_sdi"));
+      setFooterNotes(get("pdf_template_footer_notes"));
     }
   }, [settings]);
 
+  const validate = () => {
+    if (companyEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(companyEmail)) {
+      toast({ title: "Errore", description: "Email aziendale non valida", variant: "destructive" });
+      return false;
+    }
+    if (logoUrl && !/^https?:\/\/.+/.test(logoUrl)) {
+      toast({ title: "Errore", description: "URL logo non valido (deve iniziare con http:// o https://)", variant: "destructive" });
+      return false;
+    }
+    return true;
+  };
+
   const handleSave = () => {
+    if (!validate()) return;
     updateSetting.mutate({ key: "pdf_template_logo_url", value: logoUrl });
     updateSetting.mutate({ key: "pdf_template_company_name", value: companyName });
     updateSetting.mutate({ key: "pdf_template_company_address", value: companyAddress });
+    updateSetting.mutate({ key: "pdf_template_company_vat", value: companyVat });
+    updateSetting.mutate({ key: "pdf_template_company_cf", value: companyCf });
+    updateSetting.mutate({ key: "pdf_template_company_phone", value: companyPhone });
+    updateSetting.mutate({ key: "pdf_template_company_email", value: companyEmail });
+    updateSetting.mutate({ key: "pdf_template_company_sdi", value: companySdi });
+    updateSetting.mutate({ key: "pdf_template_footer_notes", value: footerNotes });
   };
 
   if (isLoading) {
@@ -80,8 +112,64 @@ const PDFTemplateSection = () => {
             value={companyAddress}
             onChange={(e) => setCompanyAddress(e.target.value)}
             placeholder="Via Roma 123, 20100 Milano (MI)"
-            rows={3}
+            rows={2}
           />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="companyVat">Partita IVA</Label>
+            <Input
+              id="companyVat"
+              value={companyVat}
+              onChange={(e) => setCompanyVat(e.target.value)}
+              placeholder="IT01234567890"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="companyCf">Codice Fiscale</Label>
+            <Input
+              id="companyCf"
+              value={companyCf}
+              onChange={(e) => setCompanyCf(e.target.value)}
+              placeholder="01234567890"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="companyPhone">Telefono</Label>
+            <Input
+              id="companyPhone"
+              value={companyPhone}
+              onChange={(e) => setCompanyPhone(e.target.value)}
+              placeholder="+39 02 1234567"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="companyEmail">Email Aziendale</Label>
+            <Input
+              id="companyEmail"
+              type="email"
+              value={companyEmail}
+              onChange={(e) => setCompanyEmail(e.target.value)}
+              placeholder="info@azienda.it"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="companySdi">Codice SDI / PEC</Label>
+          <Input
+            id="companySdi"
+            value={companySdi}
+            onChange={(e) => setCompanySdi(e.target.value)}
+            placeholder="ABCDEFG oppure pec@azienda.it"
+          />
+          <p className="text-sm text-muted-foreground">
+            Codice destinatario SDI (7 caratteri) o indirizzo PEC per la fatturazione elettronica
+          </p>
         </div>
 
         <div className="space-y-2">
@@ -115,6 +203,20 @@ const PDFTemplateSection = () => {
             />
           </div>
         )}
+
+        <div className="space-y-2">
+          <Label htmlFor="footerNotes">Condizioni di Vendita / Note a piè di pagina</Label>
+          <Textarea
+            id="footerNotes"
+            value={footerNotes}
+            onChange={(e) => setFooterNotes(e.target.value)}
+            placeholder="Condizioni generali di vendita, termini di pagamento, garanzie..."
+            rows={3}
+          />
+          <p className="text-sm text-muted-foreground">
+            Questo testo verrà inserito in calce a tutti i documenti PDF generati
+          </p>
+        </div>
 
         <div className="flex justify-end">
           <Button onClick={handleSave} disabled={updateSetting.isPending}>

@@ -4,7 +4,8 @@ import CommissionSettingsSection from "@/components/settings/CommissionSettingsS
 import OrderNumberingSection from "@/components/settings/OrderNumberingSection";
 import PDFTemplateSection from "@/components/settings/PDFTemplateSection";
 import IntegrationSection from "@/components/settings/IntegrationSection";
-import { Settings } from "lucide-react";
+import AuditLogSection from "@/components/settings/AuditLogSection";
+import { Settings, Users, Percent, Hash, FileText, Plug, ClipboardList } from "lucide-react";
 
 const Impostazioni = () => {
   return (
@@ -20,12 +21,37 @@ const Impostazioni = () => {
       </div>
 
       <Tabs defaultValue="users" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="users">Utenti e Ruoli</TabsTrigger>
-          <TabsTrigger value="commissions">Commissioni</TabsTrigger>
-          <TabsTrigger value="numbering">Numerazione</TabsTrigger>
-          <TabsTrigger value="pdf">Template PDF</TabsTrigger>
-          <TabsTrigger value="integrations">Integrazioni</TabsTrigger>
+        <TabsList className="flex w-full overflow-x-auto">
+          <TabsTrigger value="users" className="flex items-center gap-1.5 min-w-fit">
+            <Users className="h-4 w-4" />
+            <span className="hidden sm:inline">Utenti e Ruoli</span>
+            <span className="sm:hidden">Utenti</span>
+          </TabsTrigger>
+          <TabsTrigger value="commissions" className="flex items-center gap-1.5 min-w-fit">
+            <Percent className="h-4 w-4" />
+            <span className="hidden sm:inline">Commissioni</span>
+            <span className="sm:hidden">Comm.</span>
+          </TabsTrigger>
+          <TabsTrigger value="numbering" className="flex items-center gap-1.5 min-w-fit">
+            <Hash className="h-4 w-4" />
+            <span className="hidden sm:inline">Numerazione</span>
+            <span className="sm:hidden">Num.</span>
+          </TabsTrigger>
+          <TabsTrigger value="pdf" className="flex items-center gap-1.5 min-w-fit">
+            <FileText className="h-4 w-4" />
+            <span className="hidden sm:inline">Template PDF</span>
+            <span className="sm:hidden">PDF</span>
+          </TabsTrigger>
+          <TabsTrigger value="integrations" className="flex items-center gap-1.5 min-w-fit">
+            <Plug className="h-4 w-4" />
+            <span className="hidden sm:inline">Integrazioni</span>
+            <span className="sm:hidden">Integ.</span>
+          </TabsTrigger>
+          <TabsTrigger value="audit" className="flex items-center gap-1.5 min-w-fit">
+            <ClipboardList className="h-4 w-4" />
+            <span className="hidden sm:inline">Audit Log</span>
+            <span className="sm:hidden">Audit</span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="users" className="space-y-4">
@@ -46,6 +72,10 @@ const Impostazioni = () => {
 
         <TabsContent value="integrations" className="space-y-4">
           <IntegrationSection />
+        </TabsContent>
+
+        <TabsContent value="audit" className="space-y-4">
+          <AuditLogSection />
         </TabsContent>
       </Tabs>
     </div>
