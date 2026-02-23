@@ -1,6 +1,6 @@
 import { ReactNode, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import logo from "@/assets/logo_Thermodmr.webp";
+import logo from "@/assets/logo_Thermodmr.png";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
