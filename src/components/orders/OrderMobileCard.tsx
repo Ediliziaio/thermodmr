@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, MoreVertical, Calendar, Euro, AlertCircle } from "lucide-react";
+import { Eye, Calendar, Euro, AlertCircle } from "lucide-react";
 import { motion, PanInfo, useMotionValue, useTransform } from "framer-motion";
 import { formatCurrency, getStatusColor, getStatusLabel } from "@/lib/utils";
 import { OrderWithDetails } from "@/hooks/useOrdersInfinite";
