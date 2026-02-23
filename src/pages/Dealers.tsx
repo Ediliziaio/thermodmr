@@ -15,7 +15,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function Dealers() {
   const [filters, setFilters] = useState<DealerFilters>({});
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const isMobile = useIsMobile();
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useDealersInfinite(filters);
   const { ref, inView } = useInView();

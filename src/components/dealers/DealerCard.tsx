@@ -13,7 +13,7 @@ import { EditDealerDialog } from "./EditDealerDialog";
 import { DeleteDealerDialog } from "./DeleteDealerDialog";
 import type { DealerWithStats } from "@/hooks/useDealers";
 import { useNavigate } from "react-router-dom";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, cn } from "@/lib/utils";
 
 interface DealerCardProps {
   dealer: DealerWithStats;
@@ -117,6 +117,18 @@ export function DealerCard({ dealer }: DealerCardProps) {
             <span className="text-muted-foreground">Fatturato totale:</span>
             <span className="font-semibold">
               {formatCurrency(dealer.total_revenue || 0)}
+            </span>
+          </div>
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">Incassato:</span>
+            <span className="font-medium text-green-600">
+              {formatCurrency(dealer.total_paid || 0)}
+            </span>
+          </div>
+          <div className="flex justify-between text-sm">
+            <span className="text-muted-foreground">Da incassare:</span>
+            <span className={cn("font-medium", (dealer.total_remaining || 0) > 0 ? "text-amber-600" : "text-muted-foreground")}>
+              {formatCurrency(dealer.total_remaining || 0)}
             </span>
           </div>
           {dealer.commissione_personalizzata && (
