@@ -1,4 +1,4 @@
-import logo from "@/assets/logo_Thermodmr.webp";
+import logo from "@/assets/logo_Thermodmr.png";
 
 export const AuthHeader = () => {
   return (
