@@ -12,7 +12,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, FileDown, Send, Loader2, Edit2, Check, X } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { ArrowLeft, FileDown, Send, Loader2, Edit2, Check, X, Clock, AlertTriangle, ArrowRightCircle } from "lucide-react";
 import { StatusStepper } from "@/components/orders/StatusStepper";
 import type { Database } from "@/integrations/supabase/types";
 import { OrderLinesEditor } from "@/components/orders/OrderLinesEditor";
@@ -21,6 +31,9 @@ import { AttachmentsSection } from "@/components/orders/AttachmentsSection";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { PaymentTimelineChart } from "@/components/analytics/charts/PaymentTimelineChart";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import {
   useOrderById,
   useOrderLines,
@@ -31,12 +44,14 @@ import {
   useUpdateOrderId,
 } from "@/hooks/useOrders";
 import { formatCurrency, formatDate, getStatusLabel, getStatusColor } from "@/lib/utils";
+import { differenceInDays, isPast, parseISO } from "date-fns";
 
 export default function OrderDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const location = useLocation();
   const { userRole } = useAuth();
+  const queryClient = useQueryClient();
 
   const isDealerArea = location.pathname.includes('/area/');
 
@@ -53,8 +68,8 @@ export default function OrderDetail() {
   const [noteRivenditore, setNoteRivenditore] = useState("");
   const [isEditingOrderId, setIsEditingOrderId] = useState(false);
   const [editedOrderId, setEditedOrderId] = useState("");
+  const [showConvertDialog, setShowConvertDialog] = useState(false);
 
-  // Update local state when order data loads
   useEffect(() => {
     if (order) {
       setNoteInterna(order.note_interna || "");
@@ -63,7 +78,27 @@ export default function OrderDetail() {
     }
   }, [order]);
 
+  const isPreventivo = order?.stato === "preventivo";
   const isSuperAdmin = userRole === "super_admin";
+
+  const convertMutation = useMutation({
+    mutationFn: async (orderId: string) => {
+      const { error } = await supabase
+        .from("orders")
+        .update({ stato: "da_confermare" as any })
+        .eq("id", orderId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Preventivo convertito in ordine con successo");
+      queryClient.invalidateQueries({ queryKey: ["order", id] });
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      setShowConvertDialog(false);
+    },
+    onError: () => {
+      toast.error("Errore durante la conversione del preventivo");
+    },
+  });
 
   const handleStatusChange = (newStatus: Database["public"]["Tables"]["orders"]["Row"]["stato"]) => {
     if (id && isSuperAdmin) {
@@ -73,7 +108,6 @@ export default function OrderDetail() {
 
   const handleNoteSave = (type: "interna" | "rivenditore") => {
     if (!id) return;
-
     if (type === "interna") {
       updateNotesMutation.mutate({ orderId: id, noteInterna });
     } else {
@@ -86,17 +120,15 @@ export default function OrderDetail() {
       setIsEditingOrderId(false);
       return;
     }
-
     updateOrderIdMutation.mutate(
       { oldId: id, newId: editedOrderId },
       {
         onSuccess: (data) => {
           setIsEditingOrderId(false);
-          // Navigate to new order ID
           navigate(`/ordini/${data.id}`, { replace: true });
         },
         onError: () => {
-          setEditedOrderId(id); // Reset on error
+          setEditedOrderId(id);
         },
       }
     );
@@ -129,6 +161,13 @@ export default function OrderDetail() {
   const totalePagato = orderPayments.reduce((sum, p) => sum + Number(p.importo), 0);
   const saldo = Number(order.importo_totale) - totalePagato;
 
+  // Scadenza preventivo
+  const scadenzaDate = order.data_scadenza_preventivo ? parseISO(order.data_scadenza_preventivo) : null;
+  const isScaduto = scadenzaDate ? isPast(scadenzaDate) : false;
+  const giorniRimanenti = scadenzaDate ? differenceInDays(scadenzaDate, new Date()) : 0;
+
+  const entityLabel = isPreventivo ? "Preventivo" : "Ordine";
+
   return (
     <div className="space-y-6">
       <Button variant="ghost" onClick={() => isDealerArea ? navigate(-1) : navigate("/ordini")}>
@@ -136,12 +175,12 @@ export default function OrderDetail() {
         Torna agli Ordini
       </Button>
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-wrap">
             {isEditingOrderId ? (
               <div className="flex items-center gap-2">
-                <h1 className="text-3xl font-bold text-foreground">Ordine #</h1>
+                <h1 className="text-3xl font-bold text-foreground">{entityLabel} #</h1>
                 <Input
                   value={editedOrderId}
                   onChange={(e) => setEditedOrderId(e.target.value)}
@@ -155,39 +194,18 @@ export default function OrderDetail() {
                   }}
                   autoFocus
                 />
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={handleOrderIdSave}
-                  disabled={updateOrderIdMutation.isPending}
-                >
-                  {updateOrderIdMutation.isPending ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Check className="h-4 w-4" />
-                  )}
+                <Button size="sm" variant="ghost" onClick={handleOrderIdSave} disabled={updateOrderIdMutation.isPending}>
+                  {updateOrderIdMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
                 </Button>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => {
-                    setEditedOrderId(order.id);
-                    setIsEditingOrderId(false);
-                  }}
-                  disabled={updateOrderIdMutation.isPending}
-                >
+                <Button size="sm" variant="ghost" onClick={() => { setEditedOrderId(order.id); setIsEditingOrderId(false); }} disabled={updateOrderIdMutation.isPending}>
                   <X className="h-4 w-4" />
                 </Button>
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <h1 className="text-3xl font-bold text-foreground">Ordine #{order.id}</h1>
+                <h1 className="text-3xl font-bold text-foreground">{entityLabel} #{order.id}</h1>
                 {isSuperAdmin && (
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => setIsEditingOrderId(true)}
-                  >
+                  <Button size="sm" variant="ghost" onClick={() => setIsEditingOrderId(true)}>
                     <Edit2 className="h-4 w-4" />
                   </Button>
                 )}
@@ -203,52 +221,92 @@ export default function OrderDetail() {
         </div>
 
         <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <FileDown className="mr-2 h-4 w-4" />
-            Esporta PDF
-          </Button>
-          <Button variant="outline" size="sm">
-            <Send className="mr-2 h-4 w-4" />
-            Invia Email
-          </Button>
+          {isPreventivo ? (
+            <>
+              {isSuperAdmin && (
+                <Button onClick={() => setShowConvertDialog(true)} className="gap-2">
+                  <ArrowRightCircle className="h-4 w-4" />
+                  Converti in Ordine
+                </Button>
+              )}
+            </>
+          ) : (
+            <>
+              <Button variant="outline" size="sm">
+                <FileDown className="mr-2 h-4 w-4" />
+                Esporta PDF
+              </Button>
+              <Button variant="outline" size="sm">
+                <Send className="mr-2 h-4 w-4" />
+                Invia Email
+              </Button>
+            </>
+          )}
         </div>
       </div>
+
+      {/* Banner scadenza preventivo */}
+      {isPreventivo && scadenzaDate && (
+        <div className={`flex items-center gap-3 rounded-lg border px-4 py-3 text-sm ${
+          isScaduto
+            ? "border-destructive/50 bg-destructive/10 text-destructive"
+            : giorniRimanenti <= 7
+              ? "border-yellow-500/50 bg-yellow-500/10 text-yellow-700 dark:text-yellow-400"
+              : "border-blue-500/50 bg-blue-500/10 text-blue-700 dark:text-blue-400"
+        }`}>
+          {isScaduto ? (
+            <>
+              <AlertTriangle className="h-5 w-5 shrink-0" />
+              <span className="font-medium">Preventivo scaduto il {formatDate(scadenzaDate)}</span>
+            </>
+          ) : (
+            <>
+              <Clock className="h-5 w-5 shrink-0" />
+              <span className="font-medium">
+                Valido fino al {formatDate(scadenzaDate)} ({giorniRimanenti} {giorniRimanenti === 1 ? "giorno" : "giorni"} rimanenti)
+              </span>
+            </>
+          )}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Stato Ordine</CardTitle>
+            <CardTitle>Stato {entityLabel}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <StatusStepper currentStatus={order.stato as any} />
             
-            <div className="space-y-2">
-              <Label htmlFor="status-select">
-                Modifica Stato {!isSuperAdmin && "(Solo Super Admin)"}
-              </Label>
-              <Select
-                value={order.stato}
-                onValueChange={handleStatusChange}
-                disabled={!isSuperAdmin}
-              >
-                <SelectTrigger id="status-select">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="da_confermare">Da Confermare</SelectItem>
-                  <SelectItem value="da_pagare_acconto">Da Pagare Acconto</SelectItem>
-                  <SelectItem value="in_lavorazione">In Lavorazione</SelectItem>
-                  <SelectItem value="da_consegnare">Da Consegnare</SelectItem>
-                  <SelectItem value="consegnato">Consegnato</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            {!isPreventivo && (
+              <div className="space-y-2">
+                <Label htmlFor="status-select">
+                  Modifica Stato {!isSuperAdmin && "(Solo Super Admin)"}
+                </Label>
+                <Select
+                  value={order.stato}
+                  onValueChange={handleStatusChange}
+                  disabled={!isSuperAdmin}
+                >
+                  <SelectTrigger id="status-select">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="da_confermare">Da Confermare</SelectItem>
+                    <SelectItem value="da_pagare_acconto">Da Pagare Acconto</SelectItem>
+                    <SelectItem value="in_lavorazione">In Lavorazione</SelectItem>
+                    <SelectItem value="da_consegnare">Da Consegnare</SelectItem>
+                    <SelectItem value="consegnato">Consegnato</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
 
-      {/* Payment Timeline Chart */}
-      {orderPayments && orderPayments.length > 0 && (
+      {/* Payment Timeline Chart - solo per ordini */}
+      {!isPreventivo && orderPayments && orderPayments.length > 0 && (
         <PaymentTimelineChart
           payments={orderPayments}
           totalAmount={order.importo_totale}
@@ -265,11 +323,14 @@ export default function OrderDetail() {
             readOnly={!isSuperAdmin}
           />
           
-          <PaymentsSection 
-            orderId={order.id} 
-            payments={orderPayments as any}
-            totalAmount={Number(order.importo_totale)}
-          />
+          {/* Pagamenti - solo per ordini */}
+          {!isPreventivo && (
+            <PaymentsSection 
+              orderId={order.id} 
+              payments={orderPayments as any}
+              totalAmount={Number(order.importo_totale)}
+            />
+          )}
           
           <AttachmentsSection orderId={order.id} attachments={orderAttachments as any} />
         </div>
@@ -277,40 +338,46 @@ export default function OrderDetail() {
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Riepilogo Economico</CardTitle>
+              <CardTitle>{isPreventivo ? "Riepilogo Preventivo" : "Riepilogo Economico"}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Totale Ordine:</span>
+                <span className="text-muted-foreground">
+                  {isPreventivo ? "Importo Preventivo:" : "Totale Ordine:"}
+                </span>
                 <span className="font-medium text-foreground">
                   {formatCurrency(Number(order.importo_totale))}
                 </span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Acconto Concordato:</span>
-                <span className="font-medium text-foreground">
-                  {formatCurrency(Number(order.importo_acconto))}
-                </span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Pagato:</span>
-                <span className="font-medium text-foreground">
-                  {formatCurrency(totalePagato)}
-                </span>
-              </div>
-              <div className="h-px bg-border" />
-              <div className="flex justify-between">
-                <span className="font-medium text-foreground">Saldo:</span>
-                <span className="text-lg font-bold text-foreground">
-                  {formatCurrency(saldo)}
-                </span>
-              </div>
+              {!isPreventivo && (
+                <>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Acconto Concordato:</span>
+                    <span className="font-medium text-foreground">
+                      {formatCurrency(Number(order.importo_acconto))}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Pagato:</span>
+                    <span className="font-medium text-foreground">
+                      {formatCurrency(totalePagato)}
+                    </span>
+                  </div>
+                  <div className="h-px bg-border" />
+                  <div className="flex justify-between">
+                    <span className="font-medium text-foreground">Saldo:</span>
+                    <span className="text-lg font-bold text-foreground">
+                      {formatCurrency(saldo)}
+                    </span>
+                  </div>
+                </>
+              )}
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Informazioni Ordine</CardTitle>
+              <CardTitle>Informazioni {entityLabel}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">
               <div>
@@ -319,14 +386,24 @@ export default function OrderDetail() {
                   {formatDate(new Date(order.data_inserimento))}
                 </p>
               </div>
-              <div>
-                <span className="text-muted-foreground">Data Consegna Prevista:</span>
-                <p className="font-medium text-foreground">
-                  {order.data_consegna_prevista
-                    ? formatDate(new Date(order.data_consegna_prevista))
-                    : "Da definire"}
-                </p>
-              </div>
+              {isPreventivo && scadenzaDate && (
+                <div>
+                  <span className="text-muted-foreground">Data Scadenza:</span>
+                  <p className="font-medium text-foreground">
+                    {formatDate(scadenzaDate)}
+                  </p>
+                </div>
+              )}
+              {!isPreventivo && (
+                <div>
+                  <span className="text-muted-foreground">Data Consegna Prevista:</span>
+                  <p className="font-medium text-foreground">
+                    {order.data_consegna_prevista
+                      ? formatDate(new Date(order.data_consegna_prevista))
+                      : "Da definire"}
+                  </p>
+                </div>
+              )}
               <div>
                 <span className="text-muted-foreground">Cliente Finale:</span>
                 <p className="font-medium text-foreground">
@@ -355,13 +432,8 @@ export default function OrderDetail() {
                 disabled={updateNotesMutation.isPending}
               >
                 {updateNotesMutation.isPending ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Salvataggio...
-                  </>
-                ) : (
-                  "Salva Note"
-                )}
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
+                ) : "Salva Note"}
               </Button>
             </CardContent>
           </Card>
@@ -383,18 +455,35 @@ export default function OrderDetail() {
                 disabled={updateNotesMutation.isPending}
               >
                 {updateNotesMutation.isPending ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Salvataggio...
-                  </>
-                ) : (
-                  "Salva Note"
-                )}
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
+                ) : "Salva Note"}
               </Button>
             </CardContent>
           </Card>
         </div>
       </div>
+
+      {/* Dialog conferma conversione */}
+      <AlertDialog open={showConvertDialog} onOpenChange={setShowConvertDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Converti in Ordine</AlertDialogTitle>
+            <AlertDialogDescription>
+              Sei sicuro di voler convertire questo preventivo in un ordine?
+              Il preventivo passerà allo stato "Da Confermare" e apparirà nella sezione Ordini.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annulla</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => id && convertMutation.mutate(id)}
+              disabled={convertMutation.isPending}
+            >
+              {convertMutation.isPending ? "Conversione..." : "Conferma Conversione"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
