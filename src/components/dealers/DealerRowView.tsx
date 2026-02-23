@@ -7,7 +7,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ChevronDown, Eye, LogIn, Mail, MapPin, Pencil, Phone, Trash2 } from "lucide-react";
+import { ChevronDown, Eye, LogIn, Mail, MapPin, Pencil, Phone, Trash2, TrendingUp, TrendingDown, ShoppingCart } from "lucide-react";
 import { EditDealerDialog } from "./EditDealerDialog";
 import { DeleteDealerDialog } from "./DeleteDealerDialog";
 import type { DealerWithStats } from "@/hooks/useDealers";
@@ -23,6 +23,9 @@ function DealerRow({ dealer }: { dealer: DealerWithStats }) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
+  const totalPaid = dealer.total_paid || 0;
+  const totalRemaining = dealer.total_remaining || 0;
+
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <div
@@ -31,11 +34,22 @@ function DealerRow({ dealer }: { dealer: DealerWithStats }) {
           isOpen && "bg-muted/30"
         )}
       >
-        <div className="flex-1 grid grid-cols-[2fr_1.2fr_0.8fr_1fr_0.8fr] gap-4 items-center min-w-0">
+        <div className="flex-1 grid grid-cols-[2fr_1.2fr_0.6fr_1fr_1fr_1fr_0.6fr] gap-4 items-center min-w-0">
           <span className="font-medium truncate">{dealer.ragione_sociale}</span>
           <span className="text-sm text-muted-foreground truncate">{dealer.p_iva}</span>
           <span className="text-sm text-center">{dealer.orders_count || 0}</span>
           <span className="text-sm font-semibold">{formatCurrency(dealer.total_revenue || 0)}</span>
+          <span className="text-sm font-semibold text-green-600 dark:text-green-400">
+            {formatCurrency(totalPaid)}
+          </span>
+          <span className={cn(
+            "text-sm font-semibold",
+            totalRemaining > 0
+              ? "text-amber-600 dark:text-amber-400"
+              : "text-muted-foreground"
+          )}>
+            {formatCurrency(totalRemaining)}
+          </span>
           <span className="text-center">
             {dealer.commissione_personalizzata ? (
               <Badge variant="secondary" className="text-xs">
@@ -60,6 +74,27 @@ function DealerRow({ dealer }: { dealer: DealerWithStats }) {
 
       <CollapsibleContent>
         <div className="px-4 py-4 bg-muted/20 border-b space-y-4">
+          {/* Mini KPI */}
+          <div className="flex items-center gap-6 text-sm">
+            <div className="flex items-center gap-2">
+              <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground">Ordini:</span>
+              <span className="font-semibold">{dealer.orders_count || 0}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 text-green-600 dark:text-green-400" />
+              <span className="text-muted-foreground">Incassato:</span>
+              <span className="font-semibold text-green-600 dark:text-green-400">{formatCurrency(totalPaid)}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <TrendingDown className={cn("h-4 w-4", totalRemaining > 0 ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground")} />
+              <span className="text-muted-foreground">Residuo:</span>
+              <span className={cn("font-semibold", totalRemaining > 0 ? "text-amber-600 dark:text-amber-400" : "text-muted-foreground")}>
+                {formatCurrency(totalRemaining)}
+              </span>
+            </div>
+          </div>
+
           {/* Contact details */}
           <div className="grid grid-cols-3 gap-4 text-sm">
             <a
@@ -148,11 +183,13 @@ export function DealerRowView({ dealers }: DealerRowViewProps) {
     <Card className="overflow-hidden">
       {/* Header */}
       <div className="flex items-center border-b px-4 py-2.5 bg-muted/50">
-        <div className="flex-1 grid grid-cols-[2fr_1.2fr_0.8fr_1fr_0.8fr] gap-4 items-center">
+        <div className="flex-1 grid grid-cols-[2fr_1.2fr_0.6fr_1fr_1fr_1fr_0.6fr] gap-4 items-center">
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Ragione Sociale</span>
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">P.IVA</span>
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider text-center">Ordini</span>
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Fatturato</span>
+          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Incassato</span>
+          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Da Incassare</span>
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider text-center">Comm.</span>
         </div>
         <div className="w-8 ml-2 shrink-0" />
