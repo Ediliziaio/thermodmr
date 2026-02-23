@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin } from "lucide-react";
-import logo from "@/assets/logo_Thermodmr.png";
+import logo from "@/assets/logo_Thermodmr.webp";
 
 const PublicFooter = () => (
   <footer className="bg-[hsl(0,0%,8%)] py-12 sm:py-16 border-t border-white/5">

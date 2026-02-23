@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/logo_Thermodmr.png";
+import logo from "@/assets/logo_Thermodmr.webp";
 
 const productLinks = [
   { label: "Finestre in PVC", to: "/prodotti-pubblico" },
