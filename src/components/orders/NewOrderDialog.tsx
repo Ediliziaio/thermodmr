@@ -34,6 +34,7 @@ import { useCreateOrder } from "@/hooks/useOrders";
 import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { formatCurrency } from "@/lib/utils";
 import { IvaSelector } from "./IvaSelector";
 
 const orderLineSchema = z.object({
@@ -408,7 +409,7 @@ export function NewOrderDialog({ open: controlledOpen, onOpenChange: controlledO
                             </FormItem>
                           )} />
                           <span className="font-semibold whitespace-nowrap">
-                            Totale: {new Intl.NumberFormat("it-IT", { style: "currency", currency: "EUR" }).format(calculateLineTotal(watchedLines[index]))}
+                            Totale: {formatCurrency(calculateLineTotal(watchedLines[index]))}
                           </span>
                         </div>
                       </CardContent>
@@ -483,12 +484,7 @@ export function NewOrderDialog({ open: controlledOpen, onOpenChange: controlledO
             <div className="space-y-2 bg-muted/50 p-4 rounded-lg">
               <div className="flex justify-between text-lg font-semibold">
                 <span>Importo Totale Ordine:</span>
-                <span>
-                  {new Intl.NumberFormat("it-IT", {
-                    style: "currency",
-                    currency: "EUR",
-                  }).format(importoTotale)}
-                </span>
+                <span>{formatCurrency(importoTotale)}</span>
               </div>
             </div>
 

@@ -15,7 +15,7 @@ import {
 import { FileText, ArrowRightCircle, Eye, AlertTriangle, CheckCircle2, Plus, Copy } from "lucide-react";
 import { formatCurrency, formatDate, cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { NewPreventivoDialog, type PreventivoDefaultValues } from "@/components/orders/NewPreventivoDialog";
 
@@ -60,13 +60,13 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("Preventivo convertito in ordine con successo");
+      toast({ title: "Preventivo convertito in ordine con successo" });
       queryClient.invalidateQueries({ queryKey: ["dealer-preventivi"] });
       queryClient.invalidateQueries({ queryKey: ["dealer-order-stats"] });
       setConvertId(null);
     },
     onError: () => {
-      toast.error("Errore nella conversione del preventivo");
+      toast({ title: "Errore nella conversione del preventivo", variant: "destructive" });
     },
   });
 
@@ -124,7 +124,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
       });
       setPreventivoDialogOpen(true);
     } catch {
-      toast.error("Errore nel caricamento dei dati per la duplicazione");
+      toast({ title: "Errore nel caricamento dei dati per la duplicazione", variant: "destructive" });
     } finally {
       setIsDuplicating(false);
     }

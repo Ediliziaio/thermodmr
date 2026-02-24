@@ -33,7 +33,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { PaymentTimelineChart } from "@/components/analytics/charts/PaymentTimelineChart";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 import {
   useOrderById,
   useOrderLines,
@@ -90,13 +90,13 @@ export default function OrderDetail() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("Preventivo convertito in ordine con successo");
+      toast({ title: "Preventivo convertito in ordine con successo" });
       queryClient.invalidateQueries({ queryKey: ["order", id] });
       queryClient.invalidateQueries({ queryKey: ["orders"] });
       setShowConvertDialog(false);
     },
     onError: () => {
-      toast.error("Errore durante la conversione del preventivo");
+      toast({ title: "Errore durante la conversione del preventivo", variant: "destructive" });
     },
   });
 
