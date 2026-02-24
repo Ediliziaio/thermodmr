@@ -33,6 +33,10 @@ export const useRealtimeSync = () => {
           
           // Invalida dashboard
           queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
+          queryClient.invalidateQueries({ queryKey: ["commerciale-dashboard"] });
+          queryClient.invalidateQueries({ queryKey: ["dealer-order-stats"] });
+          queryClient.invalidateQueries({ queryKey: ["dealer-recent-activity"] });
+          queryClient.invalidateQueries({ queryKey: ["upcoming-deadlines"] });
         }
       )
       .on(
@@ -57,6 +61,11 @@ export const useRealtimeSync = () => {
           // Invalida dashboard
           queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
           queryClient.invalidateQueries({ queryKey: ["revenue-data"] });
+          queryClient.invalidateQueries({ queryKey: ["commerciale-dashboard"] });
+          queryClient.invalidateQueries({ queryKey: ["dealer-order-stats"] });
+          queryClient.invalidateQueries({ queryKey: ["dealer-recent-activity"] });
+          queryClient.invalidateQueries({ queryKey: ["dealer-payment-reminders"] });
+          queryClient.invalidateQueries({ queryKey: ["upcoming-deadlines"] });
         }
       )
       .on(
@@ -73,6 +82,7 @@ export const useRealtimeSync = () => {
           
           // Invalida dashboard (per top dealers)
           queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
+          queryClient.invalidateQueries({ queryKey: ["commerciale-dashboard"] });
         }
       )
       .subscribe();

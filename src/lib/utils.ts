@@ -18,6 +18,18 @@ export const formatCurrency = (value: number) => {
 };
 
 /**
+ * Formatta un valore numerico come valuta EUR in formato compatto (es. 1,2K €)
+ */
+export const formatCurrencyCompact = (value: number) => {
+  return new Intl.NumberFormat("it-IT", {
+    style: "currency",
+    currency: "EUR",
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(value);
+};
+
+/**
  * Formatta una percentuale
  */
 export const formatPercentage = (value: number) => {

@@ -10,13 +10,15 @@ import {
   Package,
   DollarSign,
   FileText,
-  Plus
+  Plus,
+  AlertCircle,
+  RefreshCw
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { DeadlinesWidget } from "@/components/dashboard/DeadlinesWidget";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency, getStatusLabel } from "@/lib/utils";
 import {
   LineChart,
   Line,
@@ -34,6 +36,7 @@ import {
 } from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { CardDescription } from "@/components/ui/card";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
@@ -57,21 +60,11 @@ const STATUS_COLORS: Record<string, string> = {
   annullato: COLORS.error,
 };
 
-const STATUS_LABELS: Record<string, string> = {
-  da_confermare: "Da Confermare",
-  confermato: "Confermato",
-  da_pagare_acconto: "Da Pagare Acconto",
-  in_lavorazione: "In Lavorazione",
-  pronto: "Pronto",
-  consegnato: "Consegnato",
-  annullato: "Annullato",
-};
-
 export default function CommercialeDashboard() {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { data, isLoading } = useCommercialeDashboard(user?.id);
+  const { data, isLoading, error, refetch } = useCommercialeDashboard(user?.id);
 
   if (isLoading) {
     return (
@@ -86,10 +79,30 @@ export default function CommercialeDashboard() {
     );
   }
 
-  if (!data) return null;
+  if (error || !data) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px] p-4 md:p-6">
+        <Card className="max-w-md w-full">
+          <CardHeader className="text-center">
+            <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-2" />
+            <CardTitle>Errore nel caricamento</CardTitle>
+            <CardDescription>
+              Impossibile caricare i dati della dashboard. Verifica la connessione e riprova.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex justify-center">
+            <Button onClick={() => refetch()} variant="default">
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Riprova
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const statusChartData = Object.entries(data.ordersByStatus).map(([status, count]) => ({
-    name: STATUS_LABELS[status] || status,
+    name: getStatusLabel(status),
     value: count,
     color: STATUS_COLORS[status] || COLORS.muted,
   }));
@@ -136,7 +149,7 @@ export default function CommercialeDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              €{data.totalRevenue.toLocaleString("it-IT", { minimumFractionDigits: 2 })}
+              {formatCurrency(data.totalRevenue)}
             </div>
           </CardContent>
         </Card>
@@ -148,7 +161,7 @@ export default function CommercialeDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-warning">
-              €{data.commissionsDovute.toLocaleString("it-IT", { minimumFractionDigits: 2 })}
+              {formatCurrency(data.commissionsDovute)}
             </div>
           </CardContent>
         </Card>
@@ -160,7 +173,7 @@ export default function CommercialeDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-success">
-              €{data.commissionsLiquidate.toLocaleString("it-IT", { minimumFractionDigits: 2 })}
+              {formatCurrency(data.commissionsLiquidate)}
             </div>
           </CardContent>
         </Card>
@@ -189,9 +202,7 @@ export default function CommercialeDashboard() {
                 <XAxis dataKey="month" />
                 <YAxis />
                 <Tooltip
-                  formatter={(value: number) =>
-                    `€${value.toLocaleString("it-IT", { minimumFractionDigits: 2 })}`
-                  }
+                  formatter={(value: number) => formatCurrency(value)}
                 />
                 <Legend />
                 <Line
@@ -217,9 +228,7 @@ export default function CommercialeDashboard() {
                 <XAxis dataKey="month" />
                 <YAxis />
                 <Tooltip
-                  formatter={(value: number) =>
-                    `€${value.toLocaleString("it-IT", { minimumFractionDigits: 2 })}`
-                  }
+                  formatter={(value: number) => formatCurrency(value)}
                 />
                 <Legend />
                 <Bar dataKey="dovute" fill={COLORS.warning} name="Dovute" />
@@ -290,9 +299,7 @@ export default function CommercialeDashboard() {
                     borderRadius: '8px',
                     fontSize: isMobile ? '11px' : '13px',
                   }}
-                  formatter={(value: number) =>
-                    `€${value.toLocaleString("it-IT", { minimumFractionDigits: 2 })}`
-                  }
+                  formatter={(value: number) => formatCurrency(value)}
                 />
                 <Bar 
                   dataKey="revenue" 
@@ -344,7 +351,7 @@ export default function CommercialeDashboard() {
                         </p>
                       </div>
                       <Badge variant="outline" className="text-xs">
-                        {STATUS_LABELS[order.stato] || order.stato}
+                        {getStatusLabel(order.stato)}
                       </Badge>
                     </div>
                     
@@ -352,7 +359,7 @@ export default function CommercialeDashboard() {
                       <div>
                         <p className="text-muted-foreground text-xs">Importo</p>
                         <p className="font-bold text-lg">
-                          €{Number(order.importo_totale).toLocaleString("it-IT", { minimumFractionDigits: 2 })}
+                          {formatCurrency(Number(order.importo_totale))}
                         </p>
                       </div>
                       <div>
@@ -390,12 +397,10 @@ export default function CommercialeDashboard() {
                   </div>
                   <div className="text-right">
                     <p className="font-bold">
-                      €{Number(order.importo_totale).toLocaleString("it-IT", {
-                        minimumFractionDigits: 2,
-                      })}
+                      {formatCurrency(Number(order.importo_totale))}
                     </p>
                     <Badge variant="outline" className="mt-1">
-                      {STATUS_LABELS[order.stato] || order.stato}
+                      {getStatusLabel(order.stato)}
                     </Badge>
                   </div>
                 </div>

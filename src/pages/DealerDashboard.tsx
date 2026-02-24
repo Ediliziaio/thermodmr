@@ -14,14 +14,15 @@ import {
   Plus,
   ExternalLink,
   CreditCard,
-  FileText
+  FileText,
+  RefreshCw
 } from "lucide-react";
 import { formatCurrency, getStatusColor, getStatusLabel, cn } from "@/lib/utils";
 import { useDealerOrderStats, useRecentActivity, usePaymentReminders } from "@/hooks/useDealerDashboard";
 import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { it } from "date-fns/locale";
-import { ArrowLeft } from "lucide-react";
+
 
 interface DealerDashboardProps {
   dealerId?: string;
@@ -49,8 +50,22 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
 
   if (!stats) {
     return (
-      <div className="text-center py-12">
-        <p className="text-destructive">Errore nel caricamento dei dati</p>
+      <div className="flex items-center justify-center min-h-[400px] p-4 md:p-6">
+        <Card className="max-w-md w-full">
+          <CardHeader className="text-center">
+            <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-2" />
+            <CardTitle>Errore nel caricamento</CardTitle>
+            <CardDescription>
+              Impossibile caricare i dati della dashboard. Verifica la connessione e riprova.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex justify-center">
+            <Button onClick={() => window.location.reload()} variant="default">
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Riprova
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
