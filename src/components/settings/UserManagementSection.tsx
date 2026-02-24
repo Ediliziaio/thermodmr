@@ -31,18 +31,8 @@ const UserManagementSection = () => {
     [users]
   );
 
-  const getRoleLabel = (role: string) => {
-    switch (role) {
-      case "super_admin":
-        return "Super Admin";
-      case "commerciale":
-        return "Commerciale";
-      case "rivenditore":
-        return "Rivenditore";
-      default:
-        return role;
-    }
-  };
+
+
 
   const renderUserCard = (user: any) => (
     <div
