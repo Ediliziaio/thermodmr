@@ -5,21 +5,10 @@ import { Phone, Mail, Edit, Trash2, Eye } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { motion, useMotionValue, useTransform, PanInfo } from "framer-motion";
 import { useState } from "react";
-
-interface CommercialWithStats {
-  id: string;
-  display_name: string;
-  email: string;
-  is_active: boolean;
-  dealers_count: number;
-  ordini_count: number;
-  fatturato_totale: number;
-  provvigioni_dovute: number;
-  provvigioni_liquidate: number;
-}
+import type { CommercialeStats } from "@/hooks/useCommerciali";
 
 interface MobileCommercialCardProps {
-  commercial: CommercialWithStats;
+  commercial: CommercialeStats;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
   onViewDetail?: (id: string) => void;

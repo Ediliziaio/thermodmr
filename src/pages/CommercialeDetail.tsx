@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { useInView } from "react-intersection-observer";
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,18 +7,15 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Users, ShoppingCart, Euro, TrendingUp, ArrowRightLeft } from "lucide-react";
 import { AssignDealersDialog } from "@/components/commerciali/AssignDealersDialog";
 import { useCommercialeById } from "@/hooks/useCommerciali";
-import { useDealersInfinite } from "@/hooks/useDealersInfinite";
 import { useCommissionsByCommerciale } from "@/hooks/useCommissions";
-import { useOrdersInfinite } from "@/hooks/useOrdersInfinite";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useMemo } from "react";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, formatDate } from "@/lib/utils";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { format } from "date-fns";
-import { it } from "date-fns/locale";
 import { RevenueTimelineChart } from "@/components/analytics/charts/RevenueTimelineChart";
 import { OrdersDistributionChart } from "@/components/analytics/charts/OrdersDistributionChart";
 import { PerformanceComparisonChart } from "@/components/analytics/charts/PerformanceComparisonChart";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const CommercialeDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,29 +26,37 @@ const CommercialeDetail = () => {
   } | null>(null);
   
   const { data: commerciale, isLoading: isLoadingCommerciale } = useCommercialeById(id);
-  const { data: dealersData, isLoading: isLoadingDealers, fetchNextPage: fetchNextDealers, hasNextPage: hasNextDealers } = useDealersInfinite();
   const { data: commissions = [], isLoading: isLoadingCommissions } = useCommissionsByCommerciale(id || "");
-  const { data: ordersData, isLoading: isLoadingOrders, fetchNextPage: fetchNextOrders, hasNextPage: hasNextOrders } = useOrdersInfinite();
-  const { ref: dealersRef, inView: dealersInView } = useInView();
-  const { ref: ordersRef, inView: ordersInView } = useInView();
 
-  useEffect(() => {
-    if (dealersInView && hasNextDealers) fetchNextDealers();
-  }, [dealersInView, hasNextDealers, fetchNextDealers]);
+  // Query diretta: solo dealers di questo commerciale
+  const { data: commercialeDealers = [], isLoading: isLoadingDealers } = useQuery({
+    queryKey: ["commerciale-dealers", id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("dealers_with_stats")
+        .select("*")
+        .eq("commerciale_owner_id", id!);
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!id,
+  });
 
-  useEffect(() => {
-    if (ordersInView && hasNextOrders) fetchNextOrders();
-  }, [ordersInView, hasNextOrders, fetchNextOrders]);
+  // Query diretta: solo ordini di questo commerciale
+  const { data: commercialeOrders = [], isLoading: isLoadingOrders } = useQuery({
+    queryKey: ["commerciale-orders", id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("orders")
+        .select("id, importo_totale, stato, data_inserimento, commerciale_id, dealers(ragione_sociale)")
+        .eq("commerciale_id", id!)
+        .order("data_inserimento", { ascending: false });
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!id,
+  });
 
-  const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
-  const orders = useMemo(() => ordersData?.pages.flatMap(p => p.data) || [], [ordersData]);
-
-  const commercialeDealers = dealers.filter((d) => d.commerciale_owner_id === id);
-  const commercialeOrders = orders.filter((o) => o.commerciale_id === id);
-
-  const formatDate = (dateString: string) => {
-    return format(new Date(dateString), "dd MMM yyyy", { locale: it });
-  };
 
   const totaleFatturato = commercialeOrders.reduce((sum, o) => sum + Number(o.importo_totale), 0);
   const provvigioniDovute = commissions

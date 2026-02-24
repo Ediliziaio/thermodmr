@@ -8,7 +8,7 @@ import { it } from "date-fns/locale";
 interface OrderData {
   data_inserimento: string;
   importo_totale: number;
-  importo_pagato: number;
+  importo_pagato?: number;
 }
 
 interface RevenueTimelineChartProps {
@@ -35,7 +35,7 @@ export function RevenueTimelineChart({ orders, months = 6, title = "Trend Fattur
     });
 
     const totalRevenue = ordersInMonth.reduce((sum, o) => sum + Number(o.importo_totale), 0);
-    const totalPaid = ordersInMonth.reduce((sum, o) => sum + Number(o.importo_pagato), 0);
+    const totalPaid = ordersInMonth.reduce((sum, o) => sum + Number(o.importo_pagato || 0), 0);
 
     return {
       month: format(monthDate, "MMM yyyy", { locale: it }),
