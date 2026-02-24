@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus, Trash2 } from "lucide-react";
+import { formatCurrency } from "@/lib/utils";
 
 interface OrderLine {
   id: string;
@@ -47,12 +48,6 @@ export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly =
   
   const canEdit = !readOnly && (orderStatus === "da_confermare" || !orderStatus);
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("it-IT", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  };
 
   const calculateLineTotal = (line: OrderLine) => {
     const subtotal = line.quantita * line.prezzoUnitario;

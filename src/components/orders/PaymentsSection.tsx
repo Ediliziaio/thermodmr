@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus } from "lucide-react";
+import { formatCurrency, formatDate } from "@/lib/utils";
 
 enum PaymentType {
   ACCONTO = "ACCONTO",
@@ -61,20 +62,6 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
   });
   const createPayment = useCreatePayment();
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("it-IT", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  };
-
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat("it-IT", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    }).format(date);
-  };
 
   const totalPaid = payments.reduce((sum, p) => sum + p.importo, 0);
   const remaining = totalAmount - totalPaid;

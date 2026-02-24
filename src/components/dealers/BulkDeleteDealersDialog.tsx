@@ -9,7 +9,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { Loader2, AlertTriangle } from "lucide-react";
@@ -53,13 +53,13 @@ export function BulkDeleteDealersDialog({
 
       if (error) throw error;
 
-      toast.success(`${dealerIds.length} rivenditori eliminati con successo`);
+      toast({ title: `${dealerIds.length} rivenditori eliminati con successo` });
       queryClient.invalidateQueries({ queryKey: ["dealers-infinite"] });
       onSuccess?.();
       onOpenChange(false);
     } catch (error: any) {
       console.error("Error deleting dealers:", error);
-      toast.error(error.message || "Errore durante l'eliminazione");
+      toast({ title: error.message || "Errore durante l'eliminazione", variant: "destructive" });
     } finally {
       setIsDeleting(false);
     }

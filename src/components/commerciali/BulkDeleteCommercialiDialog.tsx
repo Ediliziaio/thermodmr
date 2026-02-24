@@ -9,7 +9,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { Loader2, AlertTriangle } from "lucide-react";
@@ -56,13 +56,13 @@ export function BulkDeleteCommercialiDialog({
         await supabase.auth.admin.deleteUser(commercialeIds[i]);
       }
 
-      toast.success(`${commercialeIds.length} commerciali eliminati con successo`);
+      toast({ title: `${commercialeIds.length} commerciali eliminati con successo` });
       queryClient.invalidateQueries({ queryKey: ["commerciali-infinite"] });
       onSuccess?.();
       onOpenChange(false);
     } catch (error: any) {
       console.error("Error deleting commerciali:", error);
-      toast.error(error.message || "Errore durante l'eliminazione");
+      toast({ title: error.message || "Errore durante l'eliminazione", variant: "destructive" });
     } finally {
       setIsDeleting(false);
     }

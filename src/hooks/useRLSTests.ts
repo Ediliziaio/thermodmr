@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 
 interface TestResult {
   test: string;
@@ -184,7 +184,7 @@ export const useRLSTests = () => {
     try {
       const { data: { user: originalUser } } = await supabase.auth.getUser();
       if (!originalUser) {
-        toast.error("You must be logged in as super_admin to run tests");
+        toast({ title: "You must be logged in as super_admin to run tests", variant: "destructive" });
         return;
       }
 
@@ -196,7 +196,7 @@ export const useRLSTests = () => {
         .single();
 
       if (!adminRole) {
-        toast.error("Only super_admins can run RLS tests");
+        toast({ title: "Only super_admins can run RLS tests", variant: "destructive" });
         return;
       }
 
@@ -380,13 +380,13 @@ export const useRLSTests = () => {
       const failedCount = results.filter((r) => r.status === "fail").length;
 
       if (failedCount === 0) {
-        toast.success(`All ${passedCount} RLS policy tests passed!`);
+        toast({ title: `All ${passedCount} RLS policy tests passed!` });
       } else {
-        toast.error(`${failedCount} tests failed, ${passedCount} passed`);
+        toast({ title: `${failedCount} tests failed, ${passedCount} passed`, variant: "destructive" });
       }
     } catch (error: any) {
       console.error("Error running tests:", error);
-      toast.error(`Test suite failed: ${error.message}`);
+      toast({ title: `Test suite failed: ${error.message}`, variant: "destructive" });
       addResult({
         test: "Test Suite",
         table: "all",

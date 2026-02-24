@@ -52,7 +52,7 @@ export const useOrdersInfinite = ({ searchQuery, dealerId }: UseOrdersInfinitePa
       if (error) throw error;
 
       // Debug logging (solo in development)
-      if (process.env.NODE_ENV === "development") {
+      if (import.meta.env.DEV) {
         console.log("[useOrdersInfinite] Orders fetched:", {
           pageParam,
           ordersCount: data?.length,
