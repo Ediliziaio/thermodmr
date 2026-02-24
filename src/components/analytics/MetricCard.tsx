@@ -14,9 +14,7 @@ export function MetricCard({ title, value, change, icon, formatAsPercentage }: M
   const isPositive = change > 0;
   const isNeutral = change === 0;
   
-  const changeDisplay = formatAsPercentage 
-    ? `${change > 0 ? '+' : ''}${change.toFixed(1)}%`
-    : `${change > 0 ? '+' : ''}${change.toFixed(1)}%`;
+  const changeDisplay = `${change > 0 ? '+' : ''}${change.toFixed(1)}%`;
 
   return (
     <Card>

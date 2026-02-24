@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 import { Euro } from "lucide-react";
+import { formatCurrencyCompact } from "@/lib/utils";
 
 interface PaymentTrendData {
   month: string;
@@ -16,14 +17,6 @@ interface PaymentTrendsDetailedChartProps {
 }
 
 export function PaymentTrendsDetailedChart({ data, title = "Trend Pagamenti Mensili" }: PaymentTrendsDetailedChartProps) {
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("it-IT", {
-      style: "currency",
-      currency: "EUR",
-      notation: "compact",
-      maximumFractionDigits: 1,
-    }).format(value);
-  };
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -32,11 +25,11 @@ export function PaymentTrendsDetailedChart({ data, title = "Trend Pagamenti Mens
           <p className="font-semibold mb-2">{label}</p>
           {payload.map((entry: any, index: number) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
-              {entry.name}: {formatCurrency(entry.value)}
+              {entry.name}: {formatCurrencyCompact(entry.value)}
             </p>
           ))}
           <p className="text-sm font-bold mt-2 border-t pt-1">
-            Totale: {formatCurrency(payload.reduce((sum: number, p: any) => sum + p.value, 0))}
+            Totale: {formatCurrencyCompact(payload.reduce((sum: number, p: any) => sum + p.value, 0))}
           </p>
         </div>
       );
@@ -71,19 +64,19 @@ export function PaymentTrendsDetailedChart({ data, title = "Trend Pagamenti Mens
           <div className="text-center p-3 rounded-lg bg-accent/50">
             <p className="text-xs text-muted-foreground mb-1">Acconti</p>
             <p className="text-lg font-bold" style={{ color: "hsl(var(--chart-1))" }}>
-              {formatCurrency(data.reduce((sum, d) => sum + d.acconti, 0))}
+              {formatCurrencyCompact(data.reduce((sum, d) => sum + d.acconti, 0))}
             </p>
           </div>
           <div className="text-center p-3 rounded-lg bg-accent/50">
             <p className="text-xs text-muted-foreground mb-1">Parziali</p>
             <p className="text-lg font-bold" style={{ color: "hsl(var(--chart-2))" }}>
-              {formatCurrency(data.reduce((sum, d) => sum + d.parziali, 0))}
+              {formatCurrencyCompact(data.reduce((sum, d) => sum + d.parziali, 0))}
             </p>
           </div>
           <div className="text-center p-3 rounded-lg bg-accent/50">
             <p className="text-xs text-muted-foreground mb-1">Saldi</p>
             <p className="text-lg font-bold" style={{ color: "hsl(var(--chart-3))" }}>
-              {formatCurrency(data.reduce((sum, d) => sum + d.saldi, 0))}
+              {formatCurrencyCompact(data.reduce((sum, d) => sum + d.saldi, 0))}
             </p>
           </div>
         </div>

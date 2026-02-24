@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, TrendingUp, Euro, Package, Target, Download, Users } from "lucide-react";
+import { formatCurrencyCompact } from "@/lib/utils";
 import { useUnifiedAnalytics } from "@/hooks/useUnifiedAnalytics";
 import { MetricCard } from "@/components/analytics/MetricCard";
 import { OrderTrendsChart } from "@/components/analytics/OrderTrendsChart";
@@ -39,14 +40,6 @@ export default function Analytics() {
     [dealersData]
   );
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("it-IT", {
-      style: "currency",
-      currency: "EUR",
-      notation: "compact",
-      maximumFractionDigits: 1,
-    }).format(value);
-  };
 
   const handleExportData = () => {
     if (!analytics) return;
@@ -178,19 +171,19 @@ export default function Analytics() {
         />
         <MetricCard
           title="Ricavi Totali"
-          value={formatCurrency(analytics.summary.totalRevenue)}
+          value={formatCurrencyCompact(analytics.summary.totalRevenue)}
           change={0}
           icon={<Euro className="h-4 w-4 text-muted-foreground" />}
         />
         <MetricCard
           title="Pagamenti Incassati"
-          value={formatCurrency(analytics.summary.totalPayments)}
+          value={formatCurrencyCompact(analytics.summary.totalPayments)}
           change={0}
           icon={<TrendingUp className="h-4 w-4 text-muted-foreground" />}
         />
         <MetricCard
           title="Ticket Medio"
-          value={formatCurrency(analytics.summary.averageTicket)}
+          value={formatCurrencyCompact(analytics.summary.averageTicket)}
           change={0}
           icon={<Target className="h-4 w-4 text-muted-foreground" />}
         />
