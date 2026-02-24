@@ -19,8 +19,7 @@ export const useRealtimeSync = () => {
           schema: "public",
           table: "orders",
         },
-        (payload) => {
-          console.log("🔄 Orders changed:", payload);
+        () => {
           
           // Invalida queries ordini
           queryClient.invalidateQueries({ queryKey: ["orders"] });
@@ -43,8 +42,7 @@ export const useRealtimeSync = () => {
           schema: "public",
           table: "payments",
         },
-        (payload) => {
-          console.log("💰 Payments changed:", payload);
+        () => {
           
           // Invalida queries pagamenti
           queryClient.invalidateQueries({ queryKey: ["allPayments"] });
@@ -68,8 +66,7 @@ export const useRealtimeSync = () => {
           schema: "public",
           table: "dealers",
         },
-        (payload) => {
-          console.log("🏢 Dealers changed:", payload);
+        () => {
           
           // Invalida queries dealers
           queryClient.invalidateQueries({ queryKey: ["dealers-infinite"] });

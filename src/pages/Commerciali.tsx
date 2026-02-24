@@ -14,14 +14,9 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { exportCommerciali } from "@/lib/exportUtils";
-import { toast } from "sonner";
-
-const formatCurrency = (value: number) => {
-  return new Intl.NumberFormat("it-IT", {
-    style: "currency",
-    currency: "EUR",
-  }).format(value);
-};
+import { formatCurrency } from "@/lib/utils";
+import { toast } from "@/hooks/use-toast";
+import { AlertCircle, RefreshCw } from "lucide-react";
 
 export default function Commerciali() {
   const isMobile = useIsMobile();
@@ -96,7 +91,7 @@ export default function Commerciali() {
   const handleBulkExport = () => {
     const selected = filteredCommerciali.filter(c => selectedIds.has(c.id));
     exportCommerciali(selected);
-    toast.success(`${selected.length} commerciali esportati`);
+    toast({ title: `${selected.length} commerciali esportati` });
   };
 
   if (isLoading && !data) {
@@ -109,8 +104,21 @@ export default function Commerciali() {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-destructive">Errore nel caricamento dei commerciali</p>
+      <div className="flex items-center justify-center min-h-[50vh] p-6">
+        <Card className="max-w-md w-full">
+          <CardContent className="flex flex-col items-center gap-4 pt-6">
+            <AlertCircle className="h-12 w-12 text-destructive" />
+            <div className="text-center">
+              <h3 className="font-semibold text-lg">Errore nel caricamento</h3>
+              <p className="text-muted-foreground text-sm mt-1">
+                Impossibile caricare i commerciali. Verifica la connessione e riprova.
+              </p>
+            </div>
+            <Button onClick={() => window.location.reload()}>
+              <RefreshCw className="h-4 w-4 mr-2" />Riprova
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }

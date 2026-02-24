@@ -11,7 +11,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus, Trash2 } from "lucide-react";
-import { OrderLine } from "@/types";
+
+interface OrderLine {
+  id: string;
+  ordineId: string;
+  categoria: string;
+  descrizione: string;
+  quantita: number;
+  prezzoUnitario: number;
+  sconto: number;
+  iva: number;
+  totaleRiga: number;
+  misure?: Record<string, any>;
+}
 import { IvaSelector } from "./IvaSelector";
 
 interface OrderLinesEditorProps {
