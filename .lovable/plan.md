@@ -1,111 +1,105 @@
 
-## Audit Dashboard Section - Report AS-IS e Piano Interventi
+
+## Audit Sezione Ordini - Report e Piano Interventi
 
 ---
 
-### A) MAPPA ARCHITETTURA DASHBOARD
-
-La sezione Dashboard e composta da 4 componenti-pagina e 3 hook dedicati:
+### A) MAPPA ARCHITETTURA ORDINI
 
 ```text
-SmartDashboard (router per ruolo)
-  |-- Dashboard.tsx (super_admin)
-  |     |-- useDashboardKPIs + useRevenueData (hooks)
-  |     |-- RevenueChart, OrderStatusPieChart, DeadlinesWidget (componenti)
-  |
-  |-- CommercialeDashboard.tsx (commerciale)
-  |     |-- useCommercialeDashboard (hook con 4 query parallele)
-  |     |-- recharts inline (LineChart, BarChart, PieChart)
-  |     |-- DeadlinesWidget, EmptyState
-  |
-  |-- DealerDashboard.tsx (rivenditore, via DealerArea)
-        |-- useDealerOrderStats, useRecentActivity, usePaymentReminders (3 hooks)
-        |-- Progress bars, activity timeline, payment reminders
+Orders.tsx (lista ordini, infinite scroll, filtri, bulk actions)
+  |-- useOrdersInfinite (query view orders_with_payment_stats)
+  |-- OrderFilters / MobileOrderFilters (filtri avanzati + quick filters)
+  |-- MobileOrdersList -> OrderMobileCard (swipe cards)
+  |-- NewOrderDialog / NewPreventivoDialog (form creazione)
+  |-- BulkUpdateStatusDialog / BulkDeleteOrdersDialog
+  |-- ExportColumnsDialog
+
+OrderDetail.tsx (dettaglio singolo ordine)
+  |-- useOrderById, useOrderLines, useOrderPayments, useOrderAttachments
+  |-- StatusStepper, OrderLinesEditor, PaymentsSection, AttachmentsSection
+  |-- PaymentTimelineChart
+
+DealerPreventivi.tsx (lista preventivi per dealer)
+  |-- Query diretta su orders con stato="preventivo"
+  |-- NewPreventivoDialog (duplica/crea)
+
+useOrders.ts (hook principale: 10 export tra query e mutation)
+useOrdersInfinite.ts (infinite scroll con view)
 ```
 
-**Flussi utente:**
-- super_admin -> Dashboard con KPI, grafici ricavi, pie chart stati, top dealers, scadenze
-- commerciale -> CommercialeDashboard con KPI, grafici fatturato/provvigioni, pie chart, top dealers, ultimi ordini, scadenze
-- rivenditore -> Redirect a /ordini (SmartDashboard) oppure DealerDashboard (via DealerArea)
-
-**Database/RPC utilizzate:**
-- `get_dashboard_kpis` (SECURITY DEFINER)
-- `get_top_dealers` (SECURITY DEFINER)
-- `get_revenue_by_month` (SECURITY DEFINER)
-- `get_commerciale_stats` (SECURITY DEFINER)
-- `get_upcoming_deadlines` (SECURITY DEFINER)
-- Query dirette su `orders`, `commissions`, `payments`, `orders_with_payment_stats`
+**Componenti:** 15 file nella sezione ordini
+**Hook:** 2 file dedicati (useOrders.ts ~570 righe, useOrdersInfinite.ts ~74 righe)
 
 ---
 
-### B) PROBLEMI IDENTIFICATI E PRIORITA
+### B) PROBLEMI IDENTIFICATI
 
 #### P0 - CRITICI
 
 | # | Problema | Dettaglio | Intervento |
 |---|----------|-----------|------------|
-| 1 | **CommercialeDashboard: 4 query sequenziali** | `useCommercialeDashboard` fa 4 chiamate sequenziali (stats, revenue, topDealers, latestOrders + commissions). Ogni fallimento blocca tutto. | Parallelizzare con `Promise.all` le 3 RPC indipendenti (stats, revenue, topDealers). Tenere orders e commissions sequenziali solo se necessario |
-| 2 | **CommercialeDashboard: nessun error state** | Se `data` e null dopo il loading, ritorna `null` (riga 89). Nessun messaggio di errore, nessun pulsante Riprova | Aggiungere error state coerente con pattern Card + AlertCircle + Button "Riprova" |
-| 3 | **DealerDashboard: 3 query separate non parallelizzate** | `useDealerOrderStats`, `useRecentActivity`, `usePaymentReminders` sono 3 hook separati che fanno query indipendenti. Non c'e parallelizzazione nativa (React Query le lancia in parallelo, ma non c'e gestione unificata errori) | Accettabile per React Query, ma aggiungere error state mancante |
-| 4 | **DealerDashboard: error state debole** | Se stats e null, mostra solo `<p className="text-destructive">Errore</p>`. Nessun pulsante Riprova, nessuna Card | Uniformare con pattern standard |
+| 1 | **`toast` da "sonner" in OrderDetail.tsx** | Usa `import { toast } from "sonner"` (toast.success/toast.error) mentre il resto del progetto usa `@/hooks/use-toast`. Incoerenza + due sistemi toast in parallelo | Sostituire con `toast` da `@/hooks/use-toast` |
+| 2 | **`toast` da "sonner" in DealerPreventivi.tsx** | Stesso problema: `toast.success()` e `toast.error()` da sonner | Sostituire con pattern `toast({ title, description })` |
+| 3 | **`toast` da "sonner" in BulkDeleteDealersDialog.tsx e BulkDeleteCommercialiDialog.tsx** | Stessi file usano sonner | Standardizzare |
+| 4 | **`process.env.NODE_ENV` in useOrdersInfinite.ts** | Vite non espone `process.env`. Dovrebbe usare `import.meta.env.DEV` | Correggere il check del dev logging |
+| 5 | **`formatCurrency` duplicata in PaymentsSection.tsx** | Definisce la propria `formatCurrency` locale (riga 64-69) identica a quella in `@/lib/utils` | Importare da utils |
+| 6 | **`formatCurrency` duplicata in OrderLinesEditor.tsx** | Definisce la propria `formatCurrency` locale (riga 50-55) identica a quella in utils | Importare da utils |
+| 7 | **`formatDate` duplicata in PaymentsSection.tsx** | Definisce la propria `formatDate` locale (riga 71-77) identica a quella in utils | Importare da utils |
+| 8 | **Inline `Intl.NumberFormat` in NewOrderDialog.tsx** | Usa `new Intl.NumberFormat("it-IT", ...)` inline (riga 411) invece di `formatCurrency` | Importare da utils |
+| 9 | **Inline `Intl.NumberFormat` in NewPreventivoDialog.tsx** | Usa `new Intl.NumberFormat("it-IT", ...)` inline (righe 315, 344) | Importare da utils |
 
-#### P1 - IMPORTANTI (Performance + Duplicazioni)
-
-| # | Problema | Dettaglio | Intervento |
-|---|----------|-----------|------------|
-| 5 | **`formatCurrency` duplicata in RevenueChart** | `RevenueChart.tsx` definisce la propria `formatCurrency` locale (righe 18-25) con `Intl.NumberFormat` notation compact, invece di importare da `@/lib/utils` | Importare `formatCurrency` da `@/lib/utils` oppure creare una variante `formatCurrencyCompact` in utils |
-| 6 | **`getStatusLabel` duplicata in CommercialeDashboard** | `CommercialeDashboard.tsx` definisce un proprio `STATUS_LABELS` (righe 60-68) invece di usare `getStatusLabel` da `@/lib/utils` | Sostituire con import da `@/lib/utils` |
-| 7 | **CommercialeDashboard: valuta formattata inline** | Usa `€{value.toLocaleString("it-IT")}` ripetuto 6+ volte invece di `formatCurrency` centralizzato | Sostituire con `formatCurrency` da utils |
-| 8 | **`useCommercialeDashboard`: fetcha TUTTE le commissions** | Riga 103-106: `supabase.from("commissions").select("*")` senza `.limit()`. Se un commerciale ha migliaia di commissioni, scarica tutto | Aggiungere `.limit(100)` o creare RPC server-side per aggregazione mensile |
-| 9 | **`useDealerDashboard`: `getStatusLabel` duplicata** | Il hook definisce una propria funzione `getStatusLabel` (righe 200-209) identica a quella in utils | Rimuovere e importare da `@/lib/utils` |
-| 10 | **`useDealerDashboard`: fetch tutti ordini in memoria** | `useDealerOrderStats` scarica TUTTI gli ordini dalla view `orders_with_payment_stats` e calcola statistiche client-side (righe 51-74). Dovrebbe usare un RPC server-side | Creare RPC `get_dealer_order_stats` oppure usare `get_dashboard_kpis` con filtro dealer |
-| 11 | **Realtime non invalida tutte le query dashboard** | `useRealtimeSync` invalida `dashboard-kpis` e `revenue-data` ma non `commerciale-dashboard`, `dealer-order-stats`, `upcoming-deadlines`, `dealer-recent-activity`, `dealer-payment-reminders` | Aggiungere invalidazione per tutte le query dashboard |
-
-#### P2 - MIGLIORAMENTI (UX + Coerenza)
+#### P1 - IMPORTANTI (Performance + Architettura)
 
 | # | Problema | Dettaglio | Intervento |
 |---|----------|-----------|------------|
-| 12 | **CommercialeDashboard: grafici recharts inline** | A differenza della Dashboard super_admin che usa componenti dedicati (RevenueChart, OrderStatusPieChart), la CommercialeDashboard ha 3 grafici recharts inline (~120 righe di JSX) | Estrarre in componenti riusabili o riusare quelli esistenti |
-| 13 | **SmartDashboard: error state non standard** | Il fallback "Accesso Negato" (righe 34-43) non usa Card/AlertCircle pattern | Uniformare con pattern standard |
-| 14 | **DealerDashboard: import duplicato ArrowLeft** | Importa `ArrowLeft` (riga 24) che non viene mai usato nel componente | Rimuovere import inutile |
-| 15 | **Dashboard: quick filters duplicati** | I filtri rapidi sono definiti due volte: nella barra superiore (righe 158-170) e dentro il Popover del calendario (righe 201-213) con label diverse | Estrarre array costante condiviso |
+| 10 | **Filtri client-side su dati gia paginati** | `Orders.tsx` carica con infinite scroll (50 per pagina) ma filtra client-side. Se l'utente filtra per stato "consegnato" e ci sono 200 ordini, potrebbe non vedere risultati finche non carica abbastanza pagine | Documentare come limitazione nota. Il filtering server-side richiederebbe un refactor significativo dell'infinite scroll. I filtri funzionano correttamente sulle pagine gia caricate |
+| 11 | **`useOrdersInfinite` query view con JOIN** | Fa SELECT su `orders_with_payment_stats` (view) con JOIN `dealers` e `clients`. Le views con JOIN sono piu lente delle tabelle dirette | Accettabile: la view e ottimizzata e l'indice su `data_inserimento` copre l'ORDER BY. Non cambiare |
+| 12 | **`NewOrderDialog` e `NewPreventivoDialog`: form duplicati ~80%** | I due dialog condividono ~80% del codice (schema Zod, selezione dealer, sezione cliente, sezione righe ordine). Solo la sezione "data scadenza" e l'ID sono diversi | Valutare estrazione di un componente condiviso `OrderFormFields` in futuro (P2) |
+| 13 | **`useRLSTests.ts` usa sonner** | Import da sonner invece di use-toast | Standardizzare |
+
+#### P2 - MIGLIORAMENTI (UX + Pulizia)
+
+| # | Problema | Dettaglio | Intervento |
+|---|----------|-----------|------------|
+| 14 | **Categories non allineate tra componenti** | `NewOrderDialog` usa ["Infissi", "Porte", "Accessori", "Altro"]. `OrderLinesEditor` usa ["Finestra", "Portafinestra", "Scorrevole", "Porta", "Accessorio"]. Incoerenza nelle categorie disponibili | Estrarre costante condivisa `ORDER_CATEGORIES` in un file di costanti |
+| 15 | **`OrderDetail.tsx`: `convertMutation` inline** | Definisce una mutation inline (`useMutation`) per convertire preventivo, duplicando logica che potrebbe stare in `useOrders.ts` | Spostare in useOrders.ts come `useConvertPreventivo` |
+| 16 | **`Separator` importato ma non usato in NewOrderDialog** | Import `Separator` (riga 36) non utilizzato nel JSX del form visibile | Verificare se usato piu in basso nel file |
 
 ---
 
 ### C) PIANO DI IMPLEMENTAZIONE
 
-#### Fase 1: Performance Backend
+#### Fase 1: Standardizzazione Toast (P0)
 
-1. **Parallelizzare `useCommercialeDashboard`**: wrappare `stats`, `revenue`, `topDealers` in `Promise.all` (come gia fatto in `useDashboardKPIs`)
-2. **Limitare fetch commissions**: aggiungere `.limit(100)` e filtrare per data (ultimi 6 mesi) nella query commissions
-3. **Ottimizzare `useDealerOrderStats`**: valutare l'uso di `get_dashboard_kpis` con parametro dealer o creare aggregazione server-side per evitare di scaricare tutti gli ordini
+Sostituire `import { toast } from "sonner"` con `import { toast } from "@/hooks/use-toast"` nei seguenti file, adattando le chiamate da `toast.success("msg")` a `toast({ title: "msg" })`:
 
-#### Fase 2: Cleanup Duplicazioni
+1. `src/pages/OrderDetail.tsx`
+2. `src/pages/DealerPreventivi.tsx`
+3. `src/components/dealers/BulkDeleteDealersDialog.tsx`
+4. `src/components/commerciali/BulkDeleteCommercialiDialog.tsx`
+5. `src/hooks/useRLSTests.ts`
 
-1. **RevenueChart.tsx**: rimuovere `formatCurrency` locale, creare `formatCurrencyCompact` in `@/lib/utils` (perche serve la notazione compatta per gli assi Y dei grafici)
-2. **CommercialeDashboard.tsx**: sostituire `STATUS_LABELS` con `getStatusLabel` da utils, sostituire formattazione valuta inline con `formatCurrency`
-3. **useDealerDashboard.ts**: rimuovere `getStatusLabel` locale, importare da utils
-4. **DealerDashboard.tsx**: rimuovere import `ArrowLeft` inutilizzato
+#### Fase 2: Rimozione Duplicazioni formatCurrency/formatDate (P0)
 
-#### Fase 3: Error State Coerenti
+1. `src/components/orders/PaymentsSection.tsx`: rimuovere `formatCurrency` (riga 64-69) e `formatDate` (riga 71-77) locali, importare da `@/lib/utils`
+2. `src/components/orders/OrderLinesEditor.tsx`: rimuovere `formatCurrency` locale (riga 50-55), importare da `@/lib/utils`
+3. `src/components/orders/NewOrderDialog.tsx`: sostituire `new Intl.NumberFormat(...)` inline con `formatCurrency` da utils
+4. `src/components/orders/NewPreventivoDialog.tsx`: sostituire `new Intl.NumberFormat(...)` inline (2 occorrenze) con `formatCurrency` da utils
 
-1. **CommercialeDashboard**: sostituire `if (!data) return null` con Card + AlertCircle + Button "Riprova" (come Dashboard.tsx)
-2. **DealerDashboard**: sostituire il semplice `<p>Errore</p>` con pattern standard
-3. **SmartDashboard**: uniformare il fallback "Accesso Negato" con Card standard
+#### Fase 3: Fix process.env (P0)
 
-#### Fase 4: Realtime Sync Completo
+In `src/hooks/useOrdersInfinite.ts` (riga 55): sostituire `process.env.NODE_ENV === "development"` con `import.meta.env.DEV`
 
-Aggiungere in `useRealtimeSync` l'invalidazione delle query:
-- `commerciale-dashboard`
-- `dealer-order-stats`
-- `dealer-recent-activity`
-- `dealer-payment-reminders`
-- `upcoming-deadlines`
+#### Fase 4: Costanti Condivise (P2)
 
-#### Fase 5: Refactor Componenti (P2)
+Creare `src/lib/orderConstants.ts` con:
+- `ORDER_CATEGORIES` (lista unificata categorie prodotti)
+- Valutare consolidamento delle categorie diverse tra NewOrderDialog e OrderLinesEditor
 
-1. Estrarre i filtri rapidi di Dashboard in una costante condivisa
-2. Valutare l'estrazione dei grafici inline di CommercialeDashboard in componenti dedicati (opzionale, migliora leggibilita ma non cambia comportamento)
+#### Fase 5: Refactor convertMutation (P2, opzionale)
+
+Spostare la mutation di conversione preventivo da `OrderDetail.tsx` inline a `useOrders.ts` come `useConvertPreventivo`, per riusabilita (anche `DealerPreventivi.tsx` ha la stessa mutation).
 
 ---
 
@@ -113,16 +107,14 @@ Aggiungere in `useRealtimeSync` l'invalidazione delle query:
 
 | Categoria | Interventi | File toccati |
 |-----------|-----------|--------------|
-| Performance | Parallelizzazione RPC, limit commissions, ottimizzazione dealer stats | `useCommercialeDashboard.ts`, `useDealerDashboard.ts` |
-| Duplicazioni | 3 formatCurrency/getStatusLabel locali rimosse | `RevenueChart.tsx`, `CommercialeDashboard.tsx`, `useDealerDashboard.ts` |
-| Dead code | 1 import inutilizzato rimosso | `DealerDashboard.tsx` |
-| Error handling | 3 error state uniformati | `CommercialeDashboard.tsx`, `DealerDashboard.tsx`, `SmartDashboard.tsx` |
-| Realtime | 5 query key aggiunte a invalidazione | `useRealtimeSync.ts` |
-| UX | Filtri rapidi consolidati | `Dashboard.tsx` |
+| Toast standardizzazione | 5 file migrati da sonner a use-toast | OrderDetail, DealerPreventivi, BulkDeleteDealersDialog, BulkDeleteCommercialiDialog, useRLSTests |
+| Duplicazioni rimosse | 4 formatCurrency + 1 formatDate locali rimosse, 3 Intl.NumberFormat inline sostituiti | PaymentsSection, OrderLinesEditor, NewOrderDialog, NewPreventivoDialog |
+| Fix build | process.env -> import.meta.env.DEV | useOrdersInfinite |
+| Costanti | Categorie prodotto unificate | Nuovo file orderConstants.ts |
 
-**Stima miglioramento performance:**
-- CommercialeDashboard: ~30-40% riduzione tempo caricamento iniziale (parallelizzazione 3 RPC)
-- DealerDashboard: riduzione payload (limit su query commissions)
-- Realtime: aggiornamento immediato di tutte le dashboard su modifica dati
+**Stima impatto:**
+- Zero rischio di regressione funzionale (solo standardizzazione import e rimozione duplicazioni)
+- Console piu pulita (nessun warning process.env)
+- Codebase piu coerente (un solo sistema toast, un solo formatCurrency)
+- ~50 righe di codice duplicato rimosse
 
-**Nessuna funzionalita esistente viene modificata. Tutti gli interventi sono behavior-preserving.**
