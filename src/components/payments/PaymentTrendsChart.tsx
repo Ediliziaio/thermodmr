@@ -1,25 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid } from "recharts";
 import { formatCurrency } from "@/lib/utils";
-
-interface PaymentWithDetails {
-  id: string;
-  tipo: string;
-  importo: number;
-  metodo: string;
-  data_pagamento: string;
-  riferimento: string | null;
-  ordine_id: string;
-  orders: {
-    id: string;
-    stato: string;
-    importo_totale: number;
-    dealer_id: string;
-    dealers: {
-      ragione_sociale: string;
-    };
-  };
-}
+import type { PaymentWithDetails } from "@/lib/paymentConstants";
 
 interface PaymentTrendsChartProps {
   payments: PaymentWithDetails[];

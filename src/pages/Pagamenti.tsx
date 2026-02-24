@@ -30,6 +30,7 @@ import { useDeletePayment, useBulkDeletePayments } from "@/hooks/usePayments";
 import { useRealtimeSync } from "@/hooks/useRealtimeSync";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatCurrency, formatDate, cn } from "@/lib/utils";
+import { getTipoBadgeVariant } from "@/lib/paymentConstants";
 import { toast } from "@/hooks/use-toast";
 import { useInView } from "react-intersection-observer";
 import { exportPaymentsCustom, PAYMENT_COLUMNS } from "@/lib/exportUtils";
@@ -83,14 +84,6 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
 
-  const getTipoBadgeVariant = (tipo: string) => {
-    switch (tipo) {
-      case "acconto": return "secondary";
-      case "saldo": return "default";
-      case "parziale": return "outline";
-      default: return "outline";
-    }
-  };
 
   const totaleIncassato = payments.reduce((sum, p) => sum + Number(p.importo), 0);
   const mediaImporto = payments.length > 0 ? totaleIncassato / payments.length : 0;

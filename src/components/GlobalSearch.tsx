@@ -5,7 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Search, X, FileText, Euro, Loader2 } from "lucide-react";
 import { useOrdersInfinite, OrderWithDetails } from "@/hooks/useOrdersInfinite";
-import { usePaymentsInfinite, PaymentWithDetails } from "@/hooks/usePaymentsInfinite";
+import { usePaymentsInfinite } from "@/hooks/usePaymentsInfinite";
+import type { PaymentWithDetails } from "@/lib/paymentConstants";
+import { getTipoBadgeVariant } from "@/lib/paymentConstants";
 import { useNavigate } from "react-router-dom";
 import { formatCurrency, getStatusColor, getStatusLabel } from "@/lib/utils";
 import { format } from "date-fns";
@@ -96,14 +98,6 @@ const OrderResult = ({ order, query, onClick }: { order: OrderWithDetails; query
 };
 
 const PaymentResult = ({ payment, query, onClick }: { payment: PaymentWithDetails; query: string; onClick: () => void }) => {
-  const getTipoBadgeVariant = (tipo: string): "default" | "secondary" | "outline" => {
-    switch (tipo) {
-      case "acconto": return "secondary";
-      case "saldo": return "default";
-      case "parziale": return "outline";
-      default: return "outline";
-    }
-  };
 
   return (
     <Card 

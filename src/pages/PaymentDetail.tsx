@@ -4,61 +4,61 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Euro, Calendar, CreditCard, FileText, Receipt, Building2, ShoppingCart, Eye } from "lucide-react";
-import { usePaymentsInfinite } from "@/hooks/usePaymentsInfinite";
-import { useOrdersInfinite } from "@/hooks/useOrdersInfinite";
-import { formatCurrency, getStatusColor, getStatusLabel } from "@/lib/utils";
-import { format } from "date-fns";
-import { it } from "date-fns/locale";
+import { ArrowLeft, Euro, Calendar, CreditCard, FileText, Receipt, ShoppingCart, Eye, AlertCircle, RefreshCw } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { formatCurrency, formatDate, getStatusColor, getStatusLabel } from "@/lib/utils";
+import { getTipoBadgeColor, getPaymentTypeLabel } from "@/lib/paymentConstants";
 
 export default function PaymentDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { data: paymentsData, isLoading: isLoadingPayments } = usePaymentsInfinite({
-    tipoFilter: "all",
-    metodoFilter: "all"
+
+  // Query diretta per singolo pagamento (invece di caricare TUTTI i pagamenti)
+  const { data: payment, isLoading: isLoadingPayment, error: paymentError, refetch: refetchPayment } = useQuery({
+    queryKey: ["payment-detail", id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("payments")
+        .select(`
+          *,
+          orders!inner(
+            id, stato, importo_totale, dealer_id,
+            dealers!inner(ragione_sociale)
+          )
+        `)
+        .eq("id", id!)
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!id,
   });
-  const allPayments = paymentsData?.pages.flatMap((p) => p.data) || [];
-  const payment = allPayments.find((p) => p.id === id);
-  const { data: ordersData, isLoading: isLoadingOrder } = useOrdersInfinite();
-  const allOrders = ordersData?.pages.flatMap((p) => p.data) || [];
-  const order = allOrders.find((o) => o.id === payment?.ordine_id);
 
-  const formatDate = (dateString: string) => {
-    return format(new Date(dateString), "dd MMMM yyyy", { locale: it });
-  };
+  // Query diretta per ordine con stats (solo se payment è caricato)
+  const { data: order, isLoading: isLoadingOrder } = useQuery({
+    queryKey: ["order-for-payment", payment?.ordine_id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("orders_with_payment_stats")
+        .select("*, dealers(ragione_sociale, email), clients(nome, cognome)")
+        .eq("id", payment!.ordine_id)
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!payment?.ordine_id,
+  });
 
-  const getPaymentTypeLabel = (tipo: string) => {
-    const labels: Record<string, string> = {
-      acconto: "Acconto",
-      saldo: "Saldo",
-      parziale: "Parziale",
-    };
-    return labels[tipo] || tipo;
-  };
-
-  const getPaymentTypeBadge = (tipo: string) => {
-    const variants: Record<string, string> = {
-      acconto: "bg-blue-100 text-blue-800 hover:bg-blue-100",
-      saldo: "bg-green-100 text-green-800 hover:bg-green-100",
-      parziale: "bg-orange-100 text-orange-800 hover:bg-orange-100",
-    };
-    return variants[tipo] || "default";
-  };
-
-  if (isLoadingPayments || isLoadingOrder) {
+  if (isLoadingPayment || isLoadingOrder) {
     return (
       <div className="space-y-6 p-6">
         <Skeleton className="h-12 w-64" />
         <div className="grid gap-4 md:grid-cols-3">
           {[1, 2, 3].map((i) => (
             <Card key={i}>
-              <CardHeader>
-                <Skeleton className="h-4 w-24" />
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-8 w-16" />
-              </CardContent>
+              <CardHeader><Skeleton className="h-4 w-24" /></CardHeader>
+              <CardContent><Skeleton className="h-8 w-16" /></CardContent>
             </Card>
           ))}
         </div>
@@ -66,20 +66,28 @@ export default function PaymentDetail() {
     );
   }
 
-  if (!payment) {
+  if (paymentError || !payment) {
     return (
-      <div className="space-y-6 p-6">
-        <div>
-          <Link to="/pagamenti">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Torna ai pagamenti
-            </Button>
-          </Link>
-        </div>
-        <Card>
-          <CardContent className="py-8 text-center">
-            <p className="text-muted-foreground">Pagamento non trovato</p>
+      <div className="flex items-center justify-center min-h-[50vh] p-6">
+        <Card className="max-w-md w-full">
+          <CardContent className="flex flex-col items-center gap-4 pt-6">
+            <AlertCircle className="h-12 w-12 text-destructive" />
+            <div className="text-center">
+              <h3 className="font-semibold text-lg">Pagamento non trovato</h3>
+              <p className="text-muted-foreground text-sm mt-1">
+                {paymentError ? "Errore nel caricamento del pagamento." : "Il pagamento richiesto non esiste."}
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => refetchPayment()}>
+                <RefreshCw className="h-4 w-4 mr-2" />Riprova
+              </Button>
+              <Link to="/pagamenti">
+                <Button variant="ghost">
+                  <ArrowLeft className="h-4 w-4 mr-2" />Torna ai pagamenti
+                </Button>
+              </Link>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -94,12 +102,11 @@ export default function PaymentDetail() {
           <div className="flex items-center gap-3">
             <Link to="/pagamenti">
               <Button variant="ghost" size="sm">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Indietro
+                <ArrowLeft className="h-4 w-4 mr-2" />Indietro
               </Button>
             </Link>
             <h1 className="text-3xl font-bold tracking-tight">Pagamento #{payment.id.slice(0, 8)}</h1>
-            <Badge className={getPaymentTypeBadge(payment.tipo)}>
+            <Badge className={getTipoBadgeColor(payment.tipo)}>
               {getPaymentTypeLabel(payment.tipo)}
             </Badge>
           </div>
@@ -112,8 +119,7 @@ export default function PaymentDetail() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Euro className="h-4 w-4" />
-              Importo
+              <Euro className="h-4 w-4" />Importo
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -124,8 +130,7 @@ export default function PaymentDetail() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              Data Pagamento
+              <Calendar className="h-4 w-4" />Data Pagamento
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -136,8 +141,7 @@ export default function PaymentDetail() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <CreditCard className="h-4 w-4" />
-              Metodo
+              <CreditCard className="h-4 w-4" />Metodo
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -159,15 +163,14 @@ export default function PaymentDetail() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Receipt className="h-5 w-5" />
-                Dettagli Pagamento
+                <Receipt className="h-5 w-5" />Dettagli Pagamento
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Tipo Pagamento</p>
-                  <Badge className={getPaymentTypeBadge(payment.tipo)}>
+                  <Badge className={getTipoBadgeColor(payment.tipo)}>
                     {getPaymentTypeLabel(payment.tipo)}
                   </Badge>
                 </div>
@@ -200,8 +203,7 @@ export default function PaymentDetail() {
                   <p className="text-sm font-medium text-muted-foreground mb-2">Ricevuta</p>
                   <Button variant="outline" size="sm" asChild>
                     <a href={payment.ricevuta_url} target="_blank" rel="noopener noreferrer">
-                      <FileText className="h-4 w-4 mr-2" />
-                      Visualizza Ricevuta
+                      <FileText className="h-4 w-4 mr-2" />Visualizza Ricevuta
                     </a>
                   </Button>
                 </div>
@@ -216,16 +218,15 @@ export default function PaymentDetail() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <ShoppingCart className="h-5 w-5" />
-                  Ordine #{order.id}
+                  <ShoppingCart className="h-5 w-5" />Ordine #{order.id}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Stato Ordine</p>
-                    <Badge className={getStatusColor(order.stato)}>
-                      {getStatusLabel(order.stato)}
+                    <Badge className={getStatusColor(order.stato!)}>
+                      {getStatusLabel(order.stato!)}
                     </Badge>
                   </div>
                   <div>
@@ -259,21 +260,18 @@ export default function PaymentDetail() {
                     <div className="flex-1 bg-muted rounded-full h-3">
                       <div
                         className="bg-green-500 h-3 rounded-full transition-all"
-                        style={{
-                          width: `${order.percentuale_pagata}%`,
-                        }}
+                        style={{ width: `${order.percentuale_pagata ?? 0}%` }}
                       />
                     </div>
                     <span className="text-sm font-medium min-w-[60px]">
-                      {order.percentuale_pagata.toFixed(0)}%
+                      {(order.percentuale_pagata ?? 0).toFixed(0)}%
                     </span>
                   </div>
                 </div>
 
                 <div className="pt-4 flex gap-2">
                   <Button variant="default" onClick={() => navigate(`/ordini/${order.id}`)}>
-                    <Eye className="h-4 w-4 mr-2" />
-                    Visualizza Ordine Completo
+                    <Eye className="h-4 w-4 mr-2" />Visualizza Ordine Completo
                   </Button>
                 </div>
               </CardContent>
@@ -293,8 +291,7 @@ export default function PaymentDetail() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <FileText className="h-5 w-5" />
-                  Ricevuta Pagamento
+                  <FileText className="h-5 w-5" />Ricevuta Pagamento
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -305,14 +302,12 @@ export default function PaymentDetail() {
                   <div className="flex gap-2">
                     <Button variant="default" asChild>
                       <a href={payment.ricevuta_url} target="_blank" rel="noopener noreferrer">
-                        <Eye className="h-4 w-4 mr-2" />
-                        Visualizza
+                        <Eye className="h-4 w-4 mr-2" />Visualizza
                       </a>
                     </Button>
                     <Button variant="outline" asChild>
                       <a href={payment.ricevuta_url} download>
-                        <Receipt className="h-4 w-4 mr-2" />
-                        Scarica
+                        <Receipt className="h-4 w-4 mr-2" />Scarica
                       </a>
                     </Button>
                   </div>

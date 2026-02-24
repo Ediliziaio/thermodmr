@@ -4,28 +4,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { motion, PanInfo, useMotionValue, useTransform } from "framer-motion";
 import { Eye, Trash2, Calendar, CreditCard, Building2 } from "lucide-react";
-import { formatCurrency } from "@/lib/utils";
-import { format } from "date-fns";
-import { it } from "date-fns/locale";
-
-interface PaymentWithDetails {
-  id: string;
-  tipo: string;
-  importo: number;
-  metodo: string;
-  data_pagamento: string;
-  riferimento: string | null;
-  ordine_id: string;
-  orders: {
-    id: string;
-    stato: string;
-    importo_totale: number;
-    dealer_id: string;
-    dealers: {
-      ragione_sociale: string;
-    };
-  };
-}
+import { formatCurrency, formatDate } from "@/lib/utils";
+import type { PaymentWithDetails } from "@/lib/paymentConstants";
+import { getTipoBadgeColor, getMetodoIcon } from "@/lib/paymentConstants";
 
 interface PaymentMobileCardProps {
   payment: PaymentWithDetails;
@@ -62,28 +43,6 @@ export function PaymentMobileCard({
     }
   };
 
-  const getTipoBadgeColor = (tipo: string) => {
-    switch (tipo) {
-      case "acconto": return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300";
-      case "saldo": return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300";
-      case "parziale": return "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300";
-      default: return "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-300";
-    }
-  };
-
-  const getMetodoIcon = (metodo: string) => {
-    const icons: Record<string, string> = {
-      bonifico: "🏦",
-      carta: "💳",
-      contanti: "💵",
-      assegno: "📝"
-    };
-    return icons[metodo.toLowerCase()] || "💰";
-  };
-
-  const formatDate = (dateString: string) => {
-    return format(new Date(dateString), "dd MMM yyyy", { locale: it });
-  };
 
   return (
     <motion.div
