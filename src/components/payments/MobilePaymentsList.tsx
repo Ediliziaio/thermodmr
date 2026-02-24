@@ -6,25 +6,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { PaymentFilters } from "./PaymentFilters";
 import { DateRange } from "react-day-picker";
 import { useState } from "react";
-
-interface PaymentWithDetails {
-  id: string;
-  tipo: string;
-  importo: number;
-  metodo: string;
-  data_pagamento: string;
-  riferimento: string | null;
-  ordine_id: string;
-  orders: {
-    id: string;
-    stato: string;
-    importo_totale: number;
-    dealer_id: string;
-    dealers: {
-      ragione_sociale: string;
-    };
-  };
-}
+import type { PaymentWithDetails } from "@/lib/paymentConstants";
 
 interface MobilePaymentsListProps {
   payments: PaymentWithDetails[];

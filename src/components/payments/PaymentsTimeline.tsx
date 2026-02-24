@@ -1,27 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/utils";
-import { format } from "date-fns";
-import { it } from "date-fns/locale";
-
-interface PaymentWithDetails {
-  id: string;
-  tipo: string;
-  importo: number;
-  metodo: string;
-  data_pagamento: string;
-  riferimento: string | null;
-  ordine_id: string;
-  orders: {
-    id: string;
-    stato: string;
-    importo_totale: number;
-    dealer_id: string;
-    dealers: {
-      ragione_sociale: string;
-    };
-  };
-}
+import type { PaymentWithDetails } from "@/lib/paymentConstants";
+import { getTipoBadgeColor, getMetodoIcon } from "@/lib/paymentConstants";
 
 interface PaymentsTimelineProps {
   payments: PaymentWithDetails[];
@@ -37,24 +18,6 @@ export function PaymentsTimeline({ payments, onViewOrder }: PaymentsTimelineProp
     return acc;
   }, {} as Record<string, PaymentWithDetails[]>);
 
-  const getTipoBadgeColor = (tipo: string) => {
-    switch (tipo) {
-      case "acconto": return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300";
-      case "saldo": return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300";
-      case "parziale": return "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300";
-      default: return "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-300";
-    }
-  };
-
-  const getMetodoIcon = (metodo: string) => {
-    const icons: Record<string, string> = {
-      bonifico: "🏦",
-      carta: "💳",
-      contanti: "💵",
-      assegno: "📝"
-    };
-    return icons[metodo.toLowerCase()] || "💰";
-  };
 
   return (
     <div className="space-y-6">
