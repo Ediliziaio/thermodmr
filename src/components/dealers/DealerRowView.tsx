@@ -12,8 +12,7 @@ import { EditDealerDialog } from "./EditDealerDialog";
 import { DeleteDealerDialog } from "./DeleteDealerDialog";
 import type { DealerWithStats } from "@/hooks/useDealers";
 import { useNavigate } from "react-router-dom";
-import { formatCurrency } from "@/lib/utils";
-import { cn } from "@/lib/utils";
+import { formatCurrency, cn } from "@/lib/utils";
 
 interface DealerRowViewProps {
   dealers: DealerWithStats[];
