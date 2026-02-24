@@ -1,18 +1,20 @@
-import { OrderStatus } from "@/types";
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
+import type { Database } from "@/integrations/supabase/types";
+
+type OrderStatus = Database["public"]["Enums"]["order_status"];
 
 interface StatusStepperProps {
   currentStatus: OrderStatus;
 }
 
-const steps = [
-  { status: OrderStatus.PREVENTIVO, label: "Preventivo", number: 0 },
-  { status: OrderStatus.DA_CONFERMARE, label: "Da Confermare", number: 1 },
-  { status: OrderStatus.DA_PAGARE_ACCONTO, label: "Da Pagare Acconto", number: 2 },
-  { status: OrderStatus.IN_LAVORAZIONE, label: "In Lavorazione", number: 3 },
-  { status: OrderStatus.DA_CONSEGNARE, label: "Da Consegnare", number: 4 },
-  { status: OrderStatus.CONSEGNATO, label: "Consegnato", number: 5 },
+const steps: { status: OrderStatus; label: string; number: number }[] = [
+  { status: "preventivo", label: "Preventivo", number: 0 },
+  { status: "da_confermare", label: "Da Confermare", number: 1 },
+  { status: "da_pagare_acconto", label: "Da Pagare Acconto", number: 2 },
+  { status: "in_lavorazione", label: "In Lavorazione", number: 3 },
+  { status: "da_consegnare", label: "Da Consegnare", number: 4 },
+  { status: "consegnato", label: "Consegnato", number: 5 },
 ];
 
 export function StatusStepper({ currentStatus }: StatusStepperProps) {

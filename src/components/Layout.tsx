@@ -67,7 +67,7 @@ export function Layout({ children }: LayoutProps) {
     <div className="flex h-full flex-col">
       {/* Logo */}
       <div className="flex h-16 items-center border-b px-6">
-        <img src={logo} alt="ThermoDMR" className="h-9 object-contain" width={160} height={36} loading="eager" fetchPriority="high" />
+        <img src={logo} alt="ThermoDMR" className="h-9 object-contain" width={160} height={36} loading="eager" />
       </div>
 
       {/* Navigation */}

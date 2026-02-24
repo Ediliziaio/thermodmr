@@ -1,4 +1,14 @@
 import { useState, useEffect, useMemo } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -115,9 +125,16 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
 
   const clearSelection = () => setSelectedPaymentIds(new Set());
 
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+
   const handleDeletePayment = (id: string) => {
-    if (confirm("Sei sicuro di voler eliminare questo pagamento?")) {
-      deletePaymentMutation.mutate(id);
+    setDeleteConfirmId(id);
+  };
+
+  const confirmDeletePayment = () => {
+    if (deleteConfirmId) {
+      deletePaymentMutation.mutate(deleteConfirmId);
+      setDeleteConfirmId(null);
     }
   };
 
@@ -380,6 +397,24 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
         filename="pagamenti"
         onExport={handleExportCSV}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deleteConfirmId} onOpenChange={(open) => !open && setDeleteConfirmId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Conferma eliminazione</AlertDialogTitle>
+            <AlertDialogDescription>
+              Sei sicuro di voler eliminare questo pagamento? L'azione non può essere annullata.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annulla</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeletePayment} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Elimina
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

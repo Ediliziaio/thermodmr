@@ -1,19 +1,22 @@
 project_id = "wkinpwoqgevbntfuiejd"
 
 [functions.notify-dealer-reassignment]
-verify_jwt = true
+verify_jwt = false
 
 [functions.create-user]
-verify_jwt = true
+verify_jwt = false
 
 [functions.reset-user-password]
-verify_jwt = true
+verify_jwt = false
 
 [functions.update-commerciale]
-verify_jwt = true
+verify_jwt = false
 
 [functions.delete-commerciale]
-verify_jwt = true
+verify_jwt = false
 
 [functions.seed-test-data]
-verify_jwt = true
+verify_jwt = false
+
+[functions.run-rls-tests]
+verify_jwt = false

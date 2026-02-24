@@ -20,7 +20,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus } from "lucide-react";
-import { Payment, PaymentType } from "@/types";
+
+enum PaymentType {
+  ACCONTO = "ACCONTO",
+  SALDO = "SALDO",
+  PARZIALE = "PARZIALE",
+}
+
+interface Payment {
+  id: string;
+  ordineId: string;
+  tipo: PaymentType;
+  importo: number;
+  dataPagamento: Date;
+  metodo: string;
+  riferimento?: string;
+  ricevutaURL?: string;
+}
 import { useCreatePayment } from "@/hooks/usePayments";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";

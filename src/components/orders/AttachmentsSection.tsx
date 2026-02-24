@@ -1,8 +1,28 @@
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Upload, FileText, Image, Download, Trash2, Loader2 } from "lucide-react";
-import { Attachment } from "@/types";
+
+interface Attachment {
+  id: string;
+  ordineId: string;
+  uploadedByUserId: string;
+  nomeFile: string;
+  tipoMime: string;
+  url: string;
+  dimensione: number;
+  createdAt: Date;
+}
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useState } from "react";
@@ -105,8 +125,16 @@ export function AttachmentsSection({ orderId, attachments }: AttachmentsSectionP
     window.open(attachment.url, "_blank");
   };
 
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+
   const handleDelete = async (attachmentId: string) => {
-    if (!confirm("Sei sicuro di voler eliminare questo allegato?")) return;
+    setDeleteConfirmId(attachmentId);
+  };
+
+  const confirmDelete = async () => {
+    const attachmentId = deleteConfirmId;
+    if (!attachmentId) return;
+    setDeleteConfirmId(null);
 
     setDeleting(attachmentId);
 
@@ -223,6 +251,24 @@ export function AttachmentsSection({ orderId, attachments }: AttachmentsSectionP
           </div>
         )}
       </CardContent>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deleteConfirmId} onOpenChange={(open) => !open && setDeleteConfirmId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Conferma eliminazione</AlertDialogTitle>
+            <AlertDialogDescription>
+              Sei sicuro di voler eliminare questo allegato? L'azione non può essere annullata.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annulla</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Elimina
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }
