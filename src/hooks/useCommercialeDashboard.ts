@@ -53,58 +53,43 @@ export const useCommercialeDashboard = (commercialeId?: string) => {
     queryFn: async (): Promise<CommercialeStats> => {
       if (!commercialeId) throw new Error("Commerciale ID is required");
 
-      // Usa la funzione RPC ottimizzata get_commerciale_stats
-      const { data: stats, error: statsError } = await supabase.rpc(
-        "get_commerciale_stats",
-        { p_commerciale_id: commercialeId }
-      );
+      // Parallelizza le 3 RPC indipendenti
+      const [statsResult, revenueResult, topDealersResult] = await Promise.all([
+        supabase.rpc("get_commerciale_stats", { p_commerciale_id: commercialeId }),
+        supabase.rpc("get_revenue_by_month", { p_months: 6, p_commerciale_id: commercialeId }),
+        supabase.rpc("get_top_dealers", { p_limit: 5, p_commerciale_id: commercialeId }),
+      ]);
 
-      if (statsError) throw statsError;
+      if (statsResult.error) throw statsResult.error;
+      if (revenueResult.error) throw revenueResult.error;
+      if (topDealersResult.error) throw topDealersResult.error;
 
-      // Usa get_revenue_by_month per i dati mensili
-      const { data: revenueData, error: revenueError } = await supabase.rpc(
-        "get_revenue_by_month",
-        { 
-          p_months: 6, 
-          p_commerciale_id: commercialeId 
-        }
-      );
+      const stats = statsResult.data;
+      const revenueData = revenueResult.data;
+      const topDealersData = topDealersResult.data;
 
-      if (revenueError) throw revenueError;
+      // Fetch ultimi 5 ordini e commissioni in parallelo
+      const sixMonthsAgo = new Date();
+      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
-      // Usa get_top_dealers per i top dealers
-      const { data: topDealersData, error: topDealersError } = await supabase.rpc(
-        "get_top_dealers",
-        {
-          p_limit: 5,
-          p_commerciale_id: commercialeId,
-        }
-      );
+      const [ordersResult, commissionsResult] = await Promise.all([
+        supabase
+          .from("orders")
+          .select(`id, importo_totale, stato, data_inserimento, dealers (ragione_sociale)`)
+          .eq("commerciale_id", commercialeId)
+          .order("data_inserimento", { ascending: false })
+          .limit(5),
+        supabase
+          .from("commissions")
+          .select("importo_calcolato, stato_liquidazione, orders!inner(data_inserimento)")
+          .eq("commerciale_id", commercialeId)
+          .gte("orders.data_inserimento", sixMonthsAgo.toISOString()),
+      ]);
 
-      if (topDealersError) throw topDealersError;
-
-      // Fetch ultimi 5 ordini (query semplice, non serve RPC)
-      const { data: latestOrders, error: ordersError } = await supabase
-        .from("orders")
-        .select(`
-          id,
-          importo_totale,
-          stato,
-          data_inserimento,
-          dealers (ragione_sociale)
-        `)
-        .eq("commerciale_id", commercialeId)
-        .order("data_inserimento", { ascending: false })
-        .limit(5);
-
+      const { data: latestOrders, error: ordersError } = ordersResult;
       if (ordersError) throw ordersError;
 
-      // Fetch commissioni per mese (aggregazione manuale)
-      const { data: commissions, error: commissionsError } = await supabase
-        .from("commissions")
-        .select("*, orders!inner(data_inserimento)")
-        .eq("commerciale_id", commercialeId);
-
+      const { data: commissions, error: commissionsError } = commissionsResult;
       if (commissionsError) throw commissionsError;
 
       // Calcola commissioni per mese

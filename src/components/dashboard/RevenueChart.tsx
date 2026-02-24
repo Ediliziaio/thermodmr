@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { formatCurrencyCompact } from "@/lib/utils";
 
 interface RevenueChartProps {
   data: Array<{
@@ -15,14 +16,6 @@ interface RevenueChartProps {
 export function RevenueChart({ data, description }: RevenueChartProps) {
   const isMobile = useIsMobile();
   
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("it-IT", {
-      style: "currency",
-      currency: "EUR",
-      notation: "compact",
-      maximumFractionDigits: 1,
-    }).format(value);
-  };
 
   return (
     <Card>
@@ -47,12 +40,12 @@ export function RevenueChart({ data, description }: RevenueChartProps) {
             />
             <YAxis 
               className="text-xs"
-              tickFormatter={formatCurrency}
+              tickFormatter={formatCurrencyCompact}
               tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: isMobile ? 10 : 12 }}
               width={isMobile ? 50 : 60}
             />
             <Tooltip
-              formatter={(value: number) => formatCurrency(value)}
+              formatter={(value: number) => formatCurrencyCompact(value)}
               contentStyle={{
                 backgroundColor: 'hsl(var(--card))',
                 border: '1px solid hsl(var(--border))',

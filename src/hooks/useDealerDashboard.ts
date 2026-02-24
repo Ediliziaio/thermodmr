@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { getStatusLabel } from "@/lib/utils";
 
 interface DealerOrderStats {
   totalOrders: number;
@@ -197,14 +198,3 @@ export const usePaymentReminders = (dealerId?: string) => {
   });
 };
 
-const getStatusLabel = (status: string) => {
-  const labels: Record<string, string> = {
-    preventivo: "Preventivo",
-    da_confermare: "Da Confermare",
-    da_pagare_acconto: "Da Pagare Acconto",
-    in_lavorazione: "In Lavorazione",
-    da_consegnare: "Da Consegnare",
-    consegnato: "Consegnato",
-  };
-  return labels[status] || status;
-};
