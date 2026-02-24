@@ -160,11 +160,11 @@ export function PerformanceComparisonChart({
                 <p className="text-sm font-medium text-muted-foreground">{item.metric}</p>
                 <div className="flex items-center gap-2">
                   {isPositive ? (
-                    <TrendingUp className="h-4 w-4 text-green-600" />
+                    <TrendingUp className="h-4 w-4 text-chart-3" />
                   ) : (
-                    <TrendingDown className="h-4 w-4 text-red-600" />
+                    <TrendingDown className="h-4 w-4 text-destructive" />
                   )}
-                  <span className={`text-lg font-bold ${isPositive ? "text-green-600" : "text-red-600"}`}>
+                  <span className={`text-lg font-bold ${isPositive ? "text-chart-3" : "text-destructive"}`}>
                     {isPositive ? "+" : ""}{item.change.toFixed(1)}%
                   </span>
                 </div>

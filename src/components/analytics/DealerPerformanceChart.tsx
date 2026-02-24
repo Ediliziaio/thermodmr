@@ -3,6 +3,7 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 import { Users, TrendingUp, Package } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { formatCurrencyCompact } from "@/lib/utils";
 
 interface DealerPerformance {
   dealer: string;
@@ -26,14 +27,6 @@ const COLORS = [
 ];
 
 export function DealerPerformanceChart({ data, title = "Performance Dealers" }: DealerPerformanceChartProps) {
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("it-IT", {
-      style: "currency",
-      currency: "EUR",
-      notation: "compact",
-      maximumFractionDigits: 1,
-    }).format(value);
-  };
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
@@ -43,8 +36,8 @@ export function DealerPerformanceChart({ data, title = "Performance Dealers" }: 
           <p className="font-semibold text-sm">{data.dealer}</p>
           <div className="space-y-1 text-xs">
             <p><span className="text-muted-foreground">Ordini:</span> <span className="font-medium">{data.ordini}</span></p>
-            <p><span className="text-muted-foreground">Valore:</span> <span className="font-medium">{formatCurrency(data.valore)}</span></p>
-            <p><span className="text-muted-foreground">Ticket Medio:</span> <span className="font-medium">{formatCurrency(data.ticketMedio)}</span></p>
+            <p><span className="text-muted-foreground">Valore:</span> <span className="font-medium">{formatCurrencyCompact(data.valore)}</span></p>
+            <p><span className="text-muted-foreground">Ticket Medio:</span> <span className="font-medium">{formatCurrencyCompact(data.ticketMedio)}</span></p>
             <p><span className="text-muted-foreground">Tasso Consegna:</span> <span className="font-medium">{data.tassoConsegna.toFixed(1)}%</span></p>
           </div>
         </div>
@@ -107,11 +100,11 @@ export function DealerPerformanceChart({ data, title = "Performance Dealers" }: 
                     <span className="text-muted-foreground flex items-center gap-1">
                       <TrendingUp className="h-3 w-3" /> Valore
                     </span>
-                    <span className="font-semibold">{formatCurrency(dealer.valore)}</span>
+                    <span className="font-semibold">{formatCurrencyCompact(dealer.valore)}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">Ticket Medio</span>
-                    <span className="font-semibold">{formatCurrency(dealer.ticketMedio)}</span>
+                    <span className="font-semibold">{formatCurrencyCompact(dealer.ticketMedio)}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">Consegne</span>
@@ -155,7 +148,7 @@ export function DealerPerformanceChart({ data, title = "Performance Dealers" }: 
                   </div>
                   <div className="flex items-center gap-4 text-xs">
                     <span className="text-muted-foreground">{dealer.ordini} ordini</span>
-                    <span className="font-semibold">{formatCurrency(dealer.valore)}</span>
+                    <span className="font-semibold">{formatCurrencyCompact(dealer.valore)}</span>
                   </div>
                 </div>
               ))}

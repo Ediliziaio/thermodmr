@@ -61,7 +61,7 @@ export function RevenueTimelineChart({ orders, months = 6, title = "Trend Fattur
             <TrendingUp className="h-5 w-5" />
             {title}
           </span>
-          <span className={`text-sm font-medium ${isPositiveTrend ? "text-green-600" : "text-red-600"}`}>
+          <span className={`text-sm font-medium ${isPositiveTrend ? "text-chart-3" : "text-destructive"}`}>
             {isPositiveTrend ? "+" : ""}{trend}% vs media
           </span>
         </CardTitle>
@@ -100,9 +100,9 @@ export function RevenueTimelineChart({ orders, months = 6, title = "Trend Fattur
             <Line
               type="monotone"
               dataKey="incassato"
-              stroke="hsl(142, 76%, 36%)"
+              stroke="hsl(var(--chart-3))"
               strokeWidth={2}
-              dot={{ fill: "hsl(142, 76%, 36%)" }}
+              dot={{ fill: "hsl(var(--chart-3))" }}
               name="Incassato"
             />
           </LineChart>

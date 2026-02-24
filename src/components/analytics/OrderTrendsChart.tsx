@@ -3,6 +3,7 @@ import { ResponsiveContainer, LineChart, Line, BarChart, Bar, XAxis, YAxis, Cart
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { TrendingUp } from "lucide-react";
+import { formatCurrencyCompact } from "@/lib/utils";
 
 interface OrderTrendsChartProps {
   data: Array<{
@@ -19,14 +20,6 @@ type ChartType = "line" | "bar" | "area";
 export function OrderTrendsChart({ data, title = "Trend Ordini" }: OrderTrendsChartProps) {
   const [chartType, setChartType] = useState<ChartType>("line");
   
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("it-IT", {
-      style: "currency",
-      currency: "EUR",
-      notation: "compact",
-      maximumFractionDigits: 1,
-    }).format(value);
-  };
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -35,7 +28,7 @@ export function OrderTrendsChart({ data, title = "Trend Ordini" }: OrderTrendsCh
           <p className="font-semibold mb-2">{label}</p>
           {payload.map((entry: any, index: number) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
-              {entry.name}: {entry.dataKey === 'valore' ? formatCurrency(entry.value) : entry.value}
+              {entry.name}: {entry.dataKey === 'valore' ? formatCurrencyCompact(entry.value) : entry.value}
             </p>
           ))}
         </div>
