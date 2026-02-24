@@ -1,51 +1,55 @@
-import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { useInView } from "react-intersection-observer";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Building2, MapPin, Phone, Mail, FileText, ShoppingCart, Euro, TrendingUp, Calendar, Eye } from "lucide-react";
-import { useDealersInfinite } from "@/hooks/useDealersInfinite";
-import { useOrdersInfinite } from "@/hooks/useOrdersInfinite";
-import { formatCurrency, getStatusColor, getStatusLabel } from "@/lib/utils";
-import { format } from "date-fns";
-import { it } from "date-fns/locale";
-import { useNavigate } from "react-router-dom";
+import { ArrowLeft, AlertCircle, Building2, MapPin, Phone, Mail, FileText, ShoppingCart, Euro, TrendingUp, Calendar, Eye } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { formatCurrency, formatDate, getStatusColor, getStatusLabel } from "@/lib/utils";
 import { RevenueTimelineChart } from "@/components/analytics/charts/RevenueTimelineChart";
 import { OrdersDistributionChart } from "@/components/analytics/charts/OrdersDistributionChart";
 
 export default function DealerDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { data: dealersData, isLoading: isLoadingDealer, fetchNextPage: fetchDealersNextPage, hasNextPage: hasDealersNextPage } = useDealersInfinite();
-  const { data: ordersData, isLoading: isLoadingOrders, fetchNextPage, hasNextPage } = useOrdersInfinite();
-  const { ref: dealersRef, inView: dealersInView } = useInView();
-  const { ref, inView } = useInView();
 
-  useEffect(() => {
-    if (dealersInView && hasDealersNextPage) fetchDealersNextPage();
-  }, [dealersInView, hasDealersNextPage, fetchDealersNextPage]);
+  // Direct query for the specific dealer
+  const { data: dealer, isLoading: isLoadingDealer, error: dealerError, refetch: refetchDealer } = useQuery({
+    queryKey: ["dealer-detail", id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("dealers_with_stats")
+        .select("*")
+        .eq("id", id!)
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!id,
+  });
 
-  useEffect(() => {
-    if (inView && hasNextPage) fetchNextPage();
-  }, [inView, hasNextPage, fetchNextPage]);
+  // Direct query for this dealer's orders only
+  const { data: dealerOrders = [], isLoading: isLoadingOrders } = useQuery({
+    queryKey: ["dealer-orders", id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("orders_with_payment_stats")
+        .select("*")
+        .eq("dealer_id", id!)
+        .order("data_inserimento", { ascending: false });
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!id,
+  });
 
-  const allDealers = dealersData?.pages.flatMap((p) => p.data) || [];
-  const dealer = allDealers.find((d) => d.id === id);
-  const allOrders = ordersData?.pages.flatMap((p) => p.data) || [];
-  const dealerOrders = allOrders.filter((o) => o.dealer_id === id);
-
-  const formatDate = (dateString: string) => {
-    return format(new Date(dateString), "dd MMM yyyy", { locale: it });
-  };
-
-  // Calcola KPI
-  const totalRevenue = dealerOrders.reduce((sum, o) => sum + Number(o.importo_totale), 0);
-  const totalPaid = dealerOrders.reduce((sum, o) => sum + Number(o.importo_pagato), 0);
-  const totalToPay = dealerOrders.reduce((sum, o) => sum + Number(o.importo_da_pagare), 0);
+  // KPI from pre-calculated stats + orders
+  const totalRevenue = dealer?.total_revenue || 0;
+  const totalPaid = dealer?.total_paid || 0;
+  const totalToPay = dealer?.total_remaining || 0;
   const avgTicket = dealerOrders.length > 0 ? totalRevenue / dealerOrders.length : 0;
 
   const ordersByStatus = {
@@ -63,12 +67,8 @@ export default function DealerDetail() {
         <div className="grid gap-4 md:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
             <Card key={i}>
-              <CardHeader>
-                <Skeleton className="h-4 w-24" />
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-8 w-16" />
-              </CardContent>
+              <CardHeader><Skeleton className="h-4 w-24" /></CardHeader>
+              <CardContent><Skeleton className="h-8 w-16" /></CardContent>
             </Card>
           ))}
         </div>
@@ -76,20 +76,25 @@ export default function DealerDetail() {
     );
   }
 
-  if (!dealer) {
+  if (dealerError || !dealer) {
     return (
       <div className="space-y-6 p-6">
-        <div>
-          <Link to="/rivenditori">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Torna ai rivenditori
-            </Button>
-          </Link>
-        </div>
-        <Card>
-          <CardContent className="py-8 text-center">
-            <p className="text-muted-foreground">Rivenditore non trovato</p>
+        <Link to="/rivenditori">
+          <Button variant="ghost" size="sm">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Torna ai rivenditori
+          </Button>
+        </Link>
+        <Card className="max-w-md mx-auto">
+          <CardContent className="flex flex-col items-center gap-4 pt-6">
+            <AlertCircle className="h-12 w-12 text-destructive" />
+            <div className="text-center">
+              <h3 className="font-semibold text-lg">Rivenditore non trovato</h3>
+              <p className="text-muted-foreground text-sm mt-1">
+                {dealerError ? "Errore nel caricamento dei dati." : "Il rivenditore richiesto non esiste."}
+              </p>
+            </div>
+            <Button onClick={() => refetchDealer()}>Riprova</Button>
           </CardContent>
         </Card>
       </div>
@@ -128,7 +133,7 @@ export default function DealerDetail() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{dealerOrders.length}</p>
+            <p className="text-2xl font-bold">{dealer.orders_count || 0}</p>
           </CardContent>
         </Card>
 
@@ -164,7 +169,7 @@ export default function DealerDetail() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-orange-600">{formatCurrency(totalToPay)}</p>
+            <p className="text-2xl font-bold text-amber-600">{formatCurrency(totalToPay)}</p>
           </CardContent>
         </Card>
       </div>
@@ -174,7 +179,7 @@ export default function DealerDetail() {
         <TabsList>
           <TabsTrigger value="info">Informazioni</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="orders">Ordini ({dealerOrders.length})</TabsTrigger>
+          <TabsTrigger value="orders">Ordini ({dealer.orders_count || 0})</TabsTrigger>
           <TabsTrigger value="stats">Statistiche</TabsTrigger>
         </TabsList>
 
@@ -252,18 +257,16 @@ export default function DealerDetail() {
 
         {/* Tab: Analytics */}
         <TabsContent value="analytics" className="space-y-4">
-          <div className="grid gap-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <RevenueTimelineChart 
-                orders={dealerOrders}
-                months={6}
-                title="Trend Fatturato (6 Mesi)"
-              />
-              <OrdersDistributionChart 
-                orders={dealerOrders}
-                title="Distribuzione Ordini per Stato"
-              />
-            </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <RevenueTimelineChart
+              orders={dealerOrders}
+              months={6}
+              title="Trend Fatturato (6 Mesi)"
+            />
+            <OrdersDistributionChart
+              orders={dealerOrders}
+              title="Distribuzione Ordini per Stato"
+            />
           </div>
         </TabsContent>
 
@@ -301,16 +304,16 @@ export default function DealerDetail() {
                       {dealerOrders.map((order) => (
                         <TableRow key={order.id}>
                           <TableCell className="font-medium">{order.id}</TableCell>
-                          <TableCell>{formatDate(order.data_inserimento)}</TableCell>
+                          <TableCell>{formatDate(order.data_inserimento || "")}</TableCell>
                           <TableCell>
-                            <Badge className={getStatusColor(order.stato)}>
-                              {getStatusLabel(order.stato)}
+                            <Badge className={getStatusColor(order.stato || "")}>
+                              {getStatusLabel(order.stato || "")}
                             </Badge>
                           </TableCell>
-                          <TableCell className="text-right">{formatCurrency(order.importo_totale)}</TableCell>
-                          <TableCell className="text-right">{formatCurrency(order.importo_pagato)}</TableCell>
-                          <TableCell className="text-right text-orange-600 font-medium">
-                            {formatCurrency(order.importo_da_pagare)}
+                          <TableCell className="text-right">{formatCurrency(order.importo_totale || 0)}</TableCell>
+                          <TableCell className="text-right">{formatCurrency(order.importo_pagato || 0)}</TableCell>
+                          <TableCell className="text-right text-amber-600 font-medium">
+                            {formatCurrency(order.importo_da_pagare || 0)}
                           </TableCell>
                           <TableCell>
                             <Button
@@ -332,12 +335,6 @@ export default function DealerDetail() {
                   <p className="text-muted-foreground">Nessun ordine trovato</p>
                 </div>
               )}
-
-              {hasNextPage && (
-                <div ref={ref} className="flex justify-center py-4">
-                  <Skeleton className="h-6 w-6 rounded-full" />
-                </div>
-              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -356,11 +353,9 @@ export default function DealerDetail() {
                 <div className="space-y-3">
                   {Object.entries(ordersByStatus).map(([status, count]) => (
                     <div key={status} className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className={getStatusColor(status)}>
-                          {getStatusLabel(status)}
-                        </Badge>
-                      </div>
+                      <Badge variant="outline" className={getStatusColor(status)}>
+                        {getStatusLabel(status)}
+                      </Badge>
                       <span className="text-2xl font-bold">{count}</span>
                     </div>
                   ))}
@@ -387,7 +382,7 @@ export default function DealerDetail() {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Da Incassare</p>
-                    <p className="text-2xl font-bold text-orange-600">{formatCurrency(totalToPay)}</p>
+                    <p className="text-2xl font-bold text-amber-600">{formatCurrency(totalToPay)}</p>
                   </div>
                   <div className="pt-4 border-t">
                     <p className="text-sm font-medium text-muted-foreground">Percentuale Incassata</p>
