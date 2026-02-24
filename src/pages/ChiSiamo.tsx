@@ -8,12 +8,7 @@ import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
-};
-const stagger = { visible: { transition: { staggerChildren: 0.12 } } };
-const inViewOptions = { triggerOnce: true, threshold: 0.05, rootMargin: "0px 0px -50px 0px" };
+import { fadeUp, stagger, inViewOptions } from "@/lib/animations";
 
 const values = [
   { icon: Factory, title: "Produzione Interna", desc: "Nessun intermediario. Controlliamo ogni fase della produzione per garantirti il miglior rapporto qualità-prezzo." },

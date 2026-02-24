@@ -16,12 +16,7 @@ const galleryImages = [
   { src: "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=1200&q=80", alt: "Tapparelle - Facciata moderna", caption: "Integrazione estetica con facciate contemporanee" },
 ];
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
-};
-const stagger = { visible: { transition: { staggerChildren: 0.12 } } };
-const inViewOpts = { triggerOnce: true, threshold: 0.05, rootMargin: "0px 0px -50px 0px" };
+import { fadeUp, stagger, inViewOptions as inViewOpts } from "@/lib/animations";
 
 const features = [
   "Alluminio leggero e resistente, non teme intemperie né usura",

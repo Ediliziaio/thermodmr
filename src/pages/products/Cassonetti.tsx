@@ -18,12 +18,7 @@ const galleryImages = [
   { src: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=80", alt: "Cassonetto - Facciata moderna", caption: "Finitura a filo muro per estetica pulita" },
 ];
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
-};
-const stagger = { visible: { transition: { staggerChildren: 0.12 } } };
-const inViewOpts = { triggerOnce: true, threshold: 0.05, rootMargin: "0px 0px -50px 0px" };
+import { fadeUp, stagger, inViewOptions as inViewOpts } from "@/lib/animations";
 
 const features = [
   "Contenitore per avvolgibile incassato nel muro o a vista",

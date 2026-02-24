@@ -9,11 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
-};
-const stagger = { visible: { transition: { staggerChildren: 0.12 } } };
+import { fadeUp, stagger } from "@/lib/animations";
 
 const ContattiPage = () => {
   const { toast } = useToast();

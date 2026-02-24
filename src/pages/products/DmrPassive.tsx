@@ -31,12 +31,7 @@ const galleryImages = [
   { src: "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=1200&q=80", alt: "DMR PASSIVE - Villa moderna", caption: "Design minimale con profili a vista ridotta" },
 ];
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
-};
-const stagger = { visible: { transition: { staggerChildren: 0.12 } } };
-const inViewOpts = { triggerOnce: true, threshold: 0.05, rootMargin: "0px 0px -50px 0px" };
+import { fadeUp, stagger, inViewOptions as inViewOpts } from "@/lib/animations";
 
 const specs = [
   { label: "Profilo", value: "7 camere" },

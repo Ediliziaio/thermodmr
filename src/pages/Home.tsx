@@ -45,17 +45,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo_Thermodmr.png";
 
-/* ─── Animation variants ─── */
-const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
-};
-const stagger = {
-  visible: { transition: { staggerChildren: 0.12 } },
-};
-
-/* ─── Shared useInView options ─── */
-const inViewOptions = { triggerOnce: true, threshold: 0.05, rootMargin: "0px 0px -50px 0px" };
+import { fadeUp, stagger, inViewOptions } from "@/lib/animations";
 
 /* ─── Animated counter hook ─── */
 const useCounter = (end: number, duration = 2000, start = false) => {

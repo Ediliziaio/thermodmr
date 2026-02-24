@@ -39,12 +39,7 @@ import imgTapparelle from "@/assets/thermodmr-tapparella-coibentata.webp";
 import imgPersiane from "@/assets/thermodmr-persiana-verde.webp";
 import imgHero from "@/assets/thermodmr-finestre-pvc-interni.webp";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
-};
-const stagger = { visible: { transition: { staggerChildren: 0.12 } } };
-const inViewOptions = { triggerOnce: true, threshold: 0.05, rootMargin: "0px 0px -50px 0px" };
+import { fadeUp, stagger, inViewOptions } from "@/lib/animations";
 
 const pvcModels = [
   {

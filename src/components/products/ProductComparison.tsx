@@ -4,11 +4,7 @@ import { useInView } from "react-intersection-observer";
 import { CheckCircle2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
-};
-const stagger = { visible: { transition: { staggerChildren: 0.08 } } };
+import { fadeUp, stagger } from "@/lib/animations";
 
 interface ModelData {
   name: string;
