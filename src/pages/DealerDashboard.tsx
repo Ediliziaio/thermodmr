@@ -31,7 +31,7 @@ interface DealerDashboardProps {
 
 export default function DealerDashboard({ dealerId, dealerName }: DealerDashboardProps) {
   const navigate = useNavigate();
-  const { data: stats, isLoading: statsLoading } = useDealerOrderStats(dealerId);
+  const { data: stats, isLoading: statsLoading, refetch: refetchStats } = useDealerOrderStats(dealerId);
   const { data: activities, isLoading: activitiesLoading } = useRecentActivity(dealerId);
   const { data: reminders, isLoading: remindersLoading } = usePaymentReminders(dealerId);
 
@@ -60,7 +60,7 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
             </CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center">
-            <Button onClick={() => window.location.reload()} variant="default">
+            <Button onClick={() => refetchStats()} variant="default">
               <RefreshCw className="h-4 w-4 mr-2" />
               Riprova
             </Button>

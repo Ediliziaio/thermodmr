@@ -1,5 +1,5 @@
 import { useAuth } from "@/contexts/AuthContext";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCommercialeDashboard } from "@/hooks/useCommercialeDashboard";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { 
@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 import { DeadlinesWidget } from "@/components/dashboard/DeadlinesWidget";
-import { cn, formatCurrency, getStatusLabel } from "@/lib/utils";
+import { cn, formatCurrency, formatDate, getStatusLabel } from "@/lib/utils";
 import {
   LineChart,
   Line,
@@ -36,9 +36,7 @@ import {
 } from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { CardDescription } from "@/components/ui/card";
-import { format } from "date-fns";
-import { it } from "date-fns/locale";
+
 
 const COLORS = {
   primary: "hsl(var(--chart-1))",
@@ -46,8 +44,8 @@ const COLORS = {
   accent: "hsl(var(--chart-3))",
   muted: "hsl(var(--muted))",
   success: "hsl(var(--chart-2))",
-  warning: "hsl(142 76% 36%)",
-  error: "hsl(0 84% 60%)",
+  warning: "hsl(var(--chart-4))",
+  error: "hsl(var(--destructive))",
 };
 
 const STATUS_COLORS: Record<string, string> = {
@@ -365,7 +363,7 @@ export default function CommercialeDashboard() {
                       <div>
                         <p className="text-muted-foreground text-xs">Data</p>
                         <p className="font-medium">
-                          {format(new Date(order.data_inserimento), "dd MMM yyyy", { locale: it })}
+                          {formatDate(order.data_inserimento)}
                         </p>
                       </div>
                     </div>
@@ -389,9 +387,7 @@ export default function CommercialeDashboard() {
                         {order.dealer_name}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {format(new Date(order.data_inserimento), "dd MMM yyyy, HH:mm", {
-                          locale: it,
-                        })}
+                        {formatDate(order.data_inserimento, "dd MMM yyyy HH:mm")}
                       </p>
                     </div>
                   </div>
