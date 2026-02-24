@@ -5,6 +5,7 @@ import { CommercialeStats } from "@/hooks/useCommerciali";
 import { useNavigate } from "react-router-dom";
 import { EditCommercialeDialog } from "./EditCommercialeDialog";
 import { DeleteCommercialeDialog } from "./DeleteCommercialeDialog";
+import { formatCurrency } from "@/lib/utils";
 
 interface CommercialeCardProps {
   commerciale: CommercialeStats;
@@ -12,13 +13,6 @@ interface CommercialeCardProps {
 
 export const CommercialeCard = ({ commerciale }: CommercialeCardProps) => {
   const navigate = useNavigate();
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("it-IT", {
-      style: "currency",
-      currency: "EUR",
-    }).format(value);
-  };
 
   return (
     <Card className="hover:shadow-lg transition-shadow">
