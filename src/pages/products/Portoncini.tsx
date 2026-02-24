@@ -18,12 +18,7 @@ const galleryImages = [
   { src: imgPortoncinoIngresso, alt: "Portoncino d'ingresso elegante", caption: "Eleganza e sicurezza per ogni ingresso" },
 ];
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
-};
-const stagger = { visible: { transition: { staggerChildren: 0.12 } } };
-const inViewOpts = { triggerOnce: true, threshold: 0.05, rootMargin: "0px 0px -50px 0px" };
+import { fadeUp, stagger, inViewOptions as inViewOpts } from "@/lib/animations";
 
 const features = [
   "Profondità costruttiva disponibile in 76, 82 e 92 mm",
