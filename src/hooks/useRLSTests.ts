@@ -360,8 +360,11 @@ export const useRLSTests = () => {
         });
       }
 
-      // Restore original session
-      await signInAsTestUser(originalUser.email!, testUsers.super_admin.password);
+      // NOTE: Session restore is intentionally skipped here.
+      // The previous approach used testUsers.super_admin.password (the test user's password),
+      // not the original admin's password, which would always fail.
+      // After running RLS tests, the user must re-authenticate manually.
+      // This is acceptable because RLS tests are dev-only.
 
       // Cleanup
       await supabase.from("orders").delete().eq("id", orderId);

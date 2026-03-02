@@ -51,16 +51,6 @@ export const useOrdersInfinite = ({ searchQuery, dealerId }: UseOrdersInfinitePa
 
       if (error) throw error;
 
-      // Debug logging (solo in development)
-      if (import.meta.env.DEV) {
-        console.log("[useOrdersInfinite] Orders fetched:", {
-          pageParam,
-          ordersCount: data?.length,
-          totalCount: count,
-          searchQuery,
-        });
-      }
-
       return {
         data: data as OrderWithPaymentStats[],
         nextPage: data.length === PAGE_SIZE ? pageParam + 1 : undefined,
