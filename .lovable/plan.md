@@ -1,120 +1,201 @@
 
 
-## Audit Sezione Ordini - Report e Piano Interventi
+# AUDIT TECNICO ENTERPRISE — REPORT AS-IS + PIANO INTERVENTI
 
 ---
 
-### A) MAPPA ARCHITETTURA ORDINI
+## A) MAPPA ARCHITETTURALE AS-IS
+
+### Moduli Principali
 
 ```text
-Orders.tsx (lista ordini, infinite scroll, filtri, bulk actions)
-  |-- useOrdersInfinite (query view orders_with_payment_stats)
-  |-- OrderFilters / MobileOrderFilters (filtri avanzati + quick filters)
-  |-- MobileOrdersList -> OrderMobileCard (swipe cards)
-  |-- NewOrderDialog / NewPreventivoDialog (form creazione)
-  |-- BulkUpdateStatusDialog / BulkDeleteOrdersDialog
-  |-- ExportColumnsDialog
-
-OrderDetail.tsx (dettaglio singolo ordine)
-  |-- useOrderById, useOrderLines, useOrderPayments, useOrderAttachments
-  |-- StatusStepper, OrderLinesEditor, PaymentsSection, AttachmentsSection
-  |-- PaymentTimelineChart
-
-DealerPreventivi.tsx (lista preventivi per dealer)
-  |-- Query diretta su orders con stato="preventivo"
-  |-- NewPreventivoDialog (duplica/crea)
-
-useOrders.ts (hook principale: 10 export tra query e mutation)
-useOrdersInfinite.ts (infinite scroll con view)
+┌─────────────────────────────────────────────────────────┐
+│                     FRONTEND (React/Vite)                │
+├──────────┬──────────┬──────────┬──────────┬─────────────┤
+│  Public  │  Auth    │  Admin   │ Commerc. │ Rivenditore │
+│  Pages   │  (login) │  Panel   │  Panel   │  Panel      │
+│  (13pg)  │          │ (8 sect) │ (dashb)  │ (orders)    │
+├──────────┴──────────┴──────────┴──────────┴─────────────┤
+│  Shared: Layout, Navbar, Footer, GlobalSearch,          │
+│          ErrorBoundary, ProtectedRoute                  │
+├─────────────────────────────────────────────────────────┤
+│  Hooks: 21 files — data fetching, realtime, analytics   │
+│  Lib: utils, animations, constants (4 domain files)     │
+├─────────────────────────────────────────────────────────┤
+│                 BACKEND (Lovable Cloud)                  │
+├──────────┬──────────┬──────────┬──────────┬─────────────┤
+│ 7 Edge   │ _shared/ │ 12 DB    │ 16 DB    │ RLS + has_  │
+│ Functions│ (auth,   │ Tables   │ Functions│ role()      │
+│          │ cors,..) │ + Views  │          │             │
+└──────────┴──────────┴──────────┴──────────┴─────────────┘
 ```
 
-**Componenti:** 15 file nella sezione ordini
-**Hook:** 2 file dedicati (useOrders.ts ~570 righe, useOrdersInfinite.ts ~74 righe)
+### Flussi Utente
+- **Super Admin**: Dashboard KPIs → Ordini CRUD → Pagamenti → Rivenditori → Commerciali → Provvigioni → Analytics → Impostazioni
+- **Commerciale**: Dashboard personale → Ordini propri → Rivenditori assegnati → Provvigioni proprie
+- **Rivenditore**: Redirect a Ordini → Visualizzazione ordini propri → Preventivi
+- **Pubblico**: Home → Chi Siamo → Prodotti (7 dettagli) → Vantaggi → Garanzie → Contatti → Diventa Rivenditore
+
+### Entità DB e Relazioni
+- `profiles` ← `user_roles` (via user_id)
+- `dealers` → `orders` → `order_lines`, `payments`, `attachments`, `commissions`
+- `clients` → `orders`
+- Views: `orders_with_payment_stats`, `dealers_with_stats`, `commerciali_with_stats`
+- Supporto: `settings`, `audit_log`, `kpi_snapshots`, `rls_test_runs/results`, `contact_requests`
+
+### Permessi/Ruoli — RLS
+- 3 ruoli: `super_admin`, `commerciale`, `rivenditore`
+- `has_role()` security definer per evitare ricorsione
+- RLS attivo su tutte le tabelle principali con policy RESTRICTIVE
 
 ---
 
-### B) PROBLEMI IDENTIFICATI
+## B) PROBLEMI IDENTIFICATI — LISTA INTERVENTI
 
-#### P0 - CRITICI
+### P0 — CRITICI (bloccano produzione)
 
-| # | Problema | Dettaglio | Intervento |
-|---|----------|-----------|------------|
-| 1 | **`toast` da "sonner" in OrderDetail.tsx** | Usa `import { toast } from "sonner"` (toast.success/toast.error) mentre il resto del progetto usa `@/hooks/use-toast`. Incoerenza + due sistemi toast in parallelo | Sostituire con `toast` da `@/hooks/use-toast` |
-| 2 | **`toast` da "sonner" in DealerPreventivi.tsx** | Stesso problema: `toast.success()` e `toast.error()` da sonner | Sostituire con pattern `toast({ title, description })` |
-| 3 | **`toast` da "sonner" in BulkDeleteDealersDialog.tsx e BulkDeleteCommercialiDialog.tsx** | Stessi file usano sonner | Standardizzare |
-| 4 | **`process.env.NODE_ENV` in useOrdersInfinite.ts** | Vite non espone `process.env`. Dovrebbe usare `import.meta.env.DEV` | Correggere il check del dev logging |
-| 5 | **`formatCurrency` duplicata in PaymentsSection.tsx** | Definisce la propria `formatCurrency` locale (riga 64-69) identica a quella in `@/lib/utils` | Importare da utils |
-| 6 | **`formatCurrency` duplicata in OrderLinesEditor.tsx** | Definisce la propria `formatCurrency` locale (riga 50-55) identica a quella in utils | Importare da utils |
-| 7 | **`formatDate` duplicata in PaymentsSection.tsx** | Definisce la propria `formatDate` locale (riga 71-77) identica a quella in utils | Importare da utils |
-| 8 | **Inline `Intl.NumberFormat` in NewOrderDialog.tsx** | Usa `new Intl.NumberFormat("it-IT", ...)` inline (riga 411) invece di `formatCurrency` | Importare da utils |
-| 9 | **Inline `Intl.NumberFormat` in NewPreventivoDialog.tsx** | Usa `new Intl.NumberFormat("it-IT", ...)` inline (righe 315, 344) | Importare da utils |
+| # | Area | Problema | Impatto |
+|---|------|----------|---------|
+| 1 | **Edge Function mancante** | `useCommerciali.ts` chiama `create-commerciale` (riga 131) ma la funzione NON ESISTE. Esiste solo `create-user`. | **Creazione commerciali da sezione Commerciali è rotta**. InviteUserDialog usa correttamente `create-user`. |
+| 2 | **Sonner duplicato** | `App.tsx` monta sia `<Toaster />` (shadcn) sia `<Sonner />`. Nessun componente importa direttamente sonner. | Doppio provider toast, potenziali toast invisibili. |
+| 3 | **Sicurezza: RLS "USING (true)"** | Linter segnala una policy INSERT con `WITH CHECK (true)` su `contact_requests`. | Accettabile per form contatto pubblico — da documentare come eccezione intenzionale. |
+| 4 | **Sicurezza: Leaked password protection disabilitata** | Auth config non ha protezione password compromesse. | Rischio utenti con password note in data breach. |
+| 5 | **`useRLSTests.ts` chiama `create-commerciale`** | Riga 50: invoca funzione inesistente, test RLS non funzionano. | Test suite RLS completamente rotta. |
 
-#### P1 - IMPORTANTI (Performance + Architettura)
+### P1 — IMPORTANTI (qualità + stabilità)
 
-| # | Problema | Dettaglio | Intervento |
-|---|----------|-----------|------------|
-| 10 | **Filtri client-side su dati gia paginati** | `Orders.tsx` carica con infinite scroll (50 per pagina) ma filtra client-side. Se l'utente filtra per stato "consegnato" e ci sono 200 ordini, potrebbe non vedere risultati finche non carica abbastanza pagine | Documentare come limitazione nota. Il filtering server-side richiederebbe un refactor significativo dell'infinite scroll. I filtri funzionano correttamente sulle pagine gia caricate |
-| 11 | **`useOrdersInfinite` query view con JOIN** | Fa SELECT su `orders_with_payment_stats` (view) con JOIN `dealers` e `clients`. Le views con JOIN sono piu lente delle tabelle dirette | Accettabile: la view e ottimizzata e l'indice su `data_inserimento` copre l'ORDER BY. Non cambiare |
-| 12 | **`NewOrderDialog` e `NewPreventivoDialog`: form duplicati ~80%** | I due dialog condividono ~80% del codice (schema Zod, selezione dealer, sezione cliente, sezione righe ordine). Solo la sezione "data scadenza" e l'ID sono diversi | Valutare estrazione di un componente condiviso `OrderFormFields` in futuro (P2) |
-| 13 | **`useRLSTests.ts` usa sonner** | Import da sonner invece di use-toast | Standardizzare |
+| # | Area | Problema |
+|---|------|----------|
+| 6 | **Placeholder.tsx** | Route `/audit` usa `Placeholder` — pagina vuota "in sviluppo" esposta a utenti. |
+| 7 | **TestDataSeeder + RLSTest** | Pagine di sviluppo/debug accessibili in produzione (anche se protette da `super_admin`). |
+| 8 | **`useRLSTests.ts` sign-in flow** | Il test hook fa sign-in come test users, il che distrugge la sessione admin corrente. Dopo i test, tenta di ri-autenticarsi con la password del test user, non dell'admin originale (riga 367). |
+| 9 | **`useScheduledRLSTests.ts`** | Usa `useState/useEffect` + fetch manuale invece di `useQuery`. Pattern inconsistente con il resto della codebase. |
+| 10 | **`next-themes` dependency** | Usato solo da `sonner.tsx`. Se Sonner viene rimosso, `next-themes` diventa dependency morta. |
+| 11 | **`useUpdateUserRole` non-atomico** | `useSettings.ts` riga 96-103: DELETE + INSERT separati senza transazione. Se l'INSERT fallisce, l'utente resta senza ruolo. |
+| 12 | **`generateSecurePassword` duplicata** | Presente sia in `InviteUserDialog.tsx` (client, Math.random — insicura) sia in `reset-user-password/index.ts` (server, crypto.getRandomValues — sicura). Il client genera la password e la passa al server. |
 
-#### P2 - MIGLIORAMENTI (UX + Pulizia)
+### P2 — MIGLIORAMENTI (pulizia + performance)
 
-| # | Problema | Dettaglio | Intervento |
-|---|----------|-----------|------------|
-| 14 | **Categories non allineate tra componenti** | `NewOrderDialog` usa ["Infissi", "Porte", "Accessori", "Altro"]. `OrderLinesEditor` usa ["Finestra", "Portafinestra", "Scorrevole", "Porta", "Accessorio"]. Incoerenza nelle categorie disponibili | Estrarre costante condivisa `ORDER_CATEGORIES` in un file di costanti |
-| 15 | **`OrderDetail.tsx`: `convertMutation` inline** | Definisce una mutation inline (`useMutation`) per convertire preventivo, duplicando logica che potrebbe stare in `useOrders.ts` | Spostare in useOrders.ts come `useConvertPreventivo` |
-| 16 | **`Separator` importato ma non usato in NewOrderDialog** | Import `Separator` (riga 36) non utilizzato nel JSX del form visibile | Verificare se usato piu in basso nel file |
-
----
-
-### C) PIANO DI IMPLEMENTAZIONE
-
-#### Fase 1: Standardizzazione Toast (P0)
-
-Sostituire `import { toast } from "sonner"` con `import { toast } from "@/hooks/use-toast"` nei seguenti file, adattando le chiamate da `toast.success("msg")` a `toast({ title: "msg" })`:
-
-1. `src/pages/OrderDetail.tsx`
-2. `src/pages/DealerPreventivi.tsx`
-3. `src/components/dealers/BulkDeleteDealersDialog.tsx`
-4. `src/components/commerciali/BulkDeleteCommercialiDialog.tsx`
-5. `src/hooks/useRLSTests.ts`
-
-#### Fase 2: Rimozione Duplicazioni formatCurrency/formatDate (P0)
-
-1. `src/components/orders/PaymentsSection.tsx`: rimuovere `formatCurrency` (riga 64-69) e `formatDate` (riga 71-77) locali, importare da `@/lib/utils`
-2. `src/components/orders/OrderLinesEditor.tsx`: rimuovere `formatCurrency` locale (riga 50-55), importare da `@/lib/utils`
-3. `src/components/orders/NewOrderDialog.tsx`: sostituire `new Intl.NumberFormat(...)` inline con `formatCurrency` da utils
-4. `src/components/orders/NewPreventivoDialog.tsx`: sostituire `new Intl.NumberFormat(...)` inline (2 occorrenze) con `formatCurrency` da utils
-
-#### Fase 3: Fix process.env (P0)
-
-In `src/hooks/useOrdersInfinite.ts` (riga 55): sostituire `process.env.NODE_ENV === "development"` con `import.meta.env.DEV`
-
-#### Fase 4: Costanti Condivise (P2)
-
-Creare `src/lib/orderConstants.ts` con:
-- `ORDER_CATEGORIES` (lista unificata categorie prodotti)
-- Valutare consolidamento delle categorie diverse tra NewOrderDialog e OrderLinesEditor
-
-#### Fase 5: Refactor convertMutation (P2, opzionale)
-
-Spostare la mutation di conversione preventivo da `OrderDetail.tsx` inline a `useOrders.ts` come `useConvertPreventivo`, per riusabilita (anche `DealerPreventivi.tsx` ha la stessa mutation).
+| # | Area | Problema |
+|---|------|----------|
+| 13 | **`console.error` proliferazione** | 162 occorrenze in 17 file. Pattern corretto (log + toast), ma potrebbe beneficiare di un logger centralizzato. |
+| 14 | **`date-fns` + `format` locale import** | `GlobalSearch.tsx` importa `format` + `it` da date-fns direttamente invece di usare `formatDate` da utils. |
+| 15 | **`DashboardRouter.tsx`** | Wrapper lazy di una riga, ridondante — `SmartDashboard` è già lazy-loaded in `HomeRouter`. |
+| 16 | **`src/types/orders.ts`** | `OrderForSelection` type non sembra usato da nessun componente (da verificare). |
+| 17 | **Realtime: invalidation aggressiva** | `useRealtimeSync` invalida ~12 query keys per ogni singola modifica. Con traffico alto, causa cascade di refetch. |
 
 ---
 
-### D) RIEPILOGO INTERVENTI
+## C) PIANO INTERVENTI DETTAGLIATO
 
-| Categoria | Interventi | File toccati |
-|-----------|-----------|--------------|
-| Toast standardizzazione | 5 file migrati da sonner a use-toast | OrderDetail, DealerPreventivi, BulkDeleteDealersDialog, BulkDeleteCommercialiDialog, useRLSTests |
-| Duplicazioni rimosse | 4 formatCurrency + 1 formatDate locali rimosse, 3 Intl.NumberFormat inline sostituiti | PaymentsSection, OrderLinesEditor, NewOrderDialog, NewPreventivoDialog |
-| Fix build | process.env -> import.meta.env.DEV | useOrdersInfinite |
-| Costanti | Categorie prodotto unificate | Nuovo file orderConstants.ts |
+### FASE 1: Fix Critici (P0)
 
-**Stima impatto:**
-- Zero rischio di regressione funzionale (solo standardizzazione import e rimozione duplicazioni)
-- Console piu pulita (nessun warning process.env)
-- Codebase piu coerente (un solo sistema toast, un solo formatCurrency)
-- ~50 righe di codice duplicato rimosse
+1. **Fix `useCommerciali.ts`**: Sostituire `create-commerciale` con `create-user` passando `role: "commerciale"`. Allineare lo schema body a quello atteso da `create-user/index.ts`.
+
+2. **Fix `useRLSTests.ts`**: Stesso fix — usare `create-user` con ruolo appropriato.
+
+3. **Rimuovere `<Sonner />`** da `App.tsx`: L'intero codebase usa `use-toast` (shadcn). Sonner è ridondante. Opzionalmente rimuovere `src/components/ui/sonner.tsx` e la dependency `sonner` + `next-themes`.
+
+4. **Abilitare leaked password protection**: Raccomandazione documentata (richiede configurazione backend).
+
+### FASE 2: Stabilità (P1)
+
+5. **Route `/audit`**: Rimuovere la route Placeholder o reindirizzare alla sezione Audit Log già funzionante in Impostazioni.
+
+6. **`useUpdateUserRole` atomico**: Usare un'edge function o una RPC per DELETE+INSERT in una transazione.
+
+7. **Password generation**: Rimuovere `generateSecurePassword` dal client (`InviteUserDialog`). Fare generare la password server-side dalla funzione `create-user` come già fa `reset-user-password`.
+
+8. **Proteggere/nascondere route dev**: Aggiungere flag `import.meta.env.DEV` alle route `rls-test` e `seed-test-data` per escluderle dalla produzione.
+
+### FASE 3: Pulizia (P2)
+
+9. **`GlobalSearch.tsx`**: Sostituire `format` + `it` con `formatDate` da `@/lib/utils`.
+
+10. **Rimuovere `DashboardRouter.tsx`** se confermato ridondante, aggiornare import in `HomeRouter`.
+
+11. **Verificare e rimuovere `OrderForSelection`** se non utilizzato.
+
+12. **Ottimizzare realtime invalidation**: Raggruppare invalidazioni con `queryClient.invalidateQueries` usando prefissi più ampi o debouncing.
+
+---
+
+## D) SICUREZZA — STATO ATTUALE
+
+| Check | Stato |
+|-------|-------|
+| RLS su tutte le tabelle | ✅ Attivo, policy RESTRICTIVE |
+| `has_role()` security definer | ✅ Implementato |
+| Input validation server-side (Zod) | ✅ Edge functions con `validateBody` |
+| Auth token verification | ✅ `verifySuperAdmin`/`verifyRole` in ogni EF |
+| Segreti nel client | ✅ Solo anon key (corretto) |
+| `dangerouslySetInnerHTML` | ✅ Solo in `chart.tsx` (shadcn UI, no user input) |
+| `window.confirm` | ✅ Zero occorrenze (usa AlertDialog) |
+| Password policy Zod | ✅ Min 8, uppercase, number, special char |
+| Leaked password protection | ❌ Disabilitata (P0 #4) |
+| `contact_requests` INSERT open | ⚠️ Intenzionale per form pubblico |
+| `verify_jwt = false` su EF | ✅ Corretto — auth validata internamente |
+
+---
+
+## E) PERFORMANCE — STATO ATTUALE
+
+| Area | Stato |
+|------|-------|
+| Lazy loading pagine | ✅ 30+ componenti lazy |
+| TanStack Query con staleTime | ✅ 2-10 min per query |
+| DB views pre-aggregate | ✅ 3 views (orders, dealers, commerciali) |
+| RPC per KPI aggregate | ✅ 6 funzioni RPC |
+| Promise.all per chiamate parallele | ✅ Dashboard, Commerciale dashboard |
+| Infinite scroll (pagination) | ✅ Ordini, Pagamenti, Dealers, Commerciali |
+| Realtime sync centralizzato | ✅ `useRealtimeSync` |
+| `refetchOnWindowFocus: false` | ✅ Config globale QueryClient |
+
+---
+
+## F) MULTI-TENANCY / DATA ISOLATION
+
+Il sistema è role-based (non multi-tenant), ma l'isolamento dati è corretto:
+- **Super Admin**: vede tutto
+- **Commerciale**: vede solo `commerciale_id = auth.uid()` per ordini, `commerciale_owner_id = auth.uid()` per dealers
+- **Rivenditore**: vede solo `creato_da_user_id = auth.uid()` per ordini
+- Views con `security_invoker = true`: RLS rispettato anche attraverso le viste
+
+---
+
+## G) BACKUP & RESTORE
+
+- Backup automatici giornalieri via Lovable Cloud (infrastruttura gestita)
+- PITR (Point-in-Time Recovery) disponibile
+- Audit log con trigger `log_order_changes()` per tracciabilità
+- Git versioning per codice
+
+---
+
+## H) OSSERVABILITÀ
+
+| Componente | Stato |
+|------------|-------|
+| ErrorBoundary globale | ✅ Con UI di recovery |
+| Console error logging | ✅ In tutti i mutation onError |
+| Audit log DB | ✅ Trigger + hook manuale |
+| Error tracking esterno (Sentry) | ❌ TODO nel codice, non implementato |
+| Structured logging EF | ✅ console.log con contesto |
+| Metriche latenza/uptime | ❌ Non implementato |
+
+---
+
+## OUTPUT: RIEPILOGO INTERVENTI PRIORITIZZATI
+
+### Da implementare (14 interventi):
+
+**P0 (5):** Fix `create-commerciale` → `create-user` (2 file), rimuovere Sonner duplicato, documentare eccezione RLS contact_requests, abilitare leaked password protection
+
+**P1 (7):** Rimuovere route Placeholder audit, proteggere route dev, atomicizzare updateUserRole, spostare password generation server-side, fix useRLSTests session restore, convertire useScheduledRLSTests a useQuery, rimuovere next-themes
+
+**P2 (4):** Standardizzare date formatting in GlobalSearch, rimuovere DashboardRouter ridondante, verificare OrderForSelection, ottimizzare realtime invalidation
+
+### Dichiarazione
+
+Il progetto è a un **buon livello di maturità enterprise** con architettura pulita, RLS robusto, validazione server-side e performance ottimizzate. I fix P0 (#1 e #2 in particolare) sono bloccanti per la produzione. Una volta risolti, il sistema può essere dichiarato **PRONTO PER PRODUZIONE** con le raccomandazioni P1 come follow-up immediato.
 
