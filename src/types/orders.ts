@@ -21,20 +21,3 @@ export interface OrderWithPaymentStats extends Tables<"orders"> {
   data_ultimo_pagamento: string | null;
 }
 
-/**
- * Tipo ordine per selezione nei dialog (es. NewPaymentDialog)
- */
-export interface OrderForSelection {
-  id: string;
-  stato: string;
-  importo_totale: number;
-  importo_pagato?: number;
-  importo_da_pagare?: number;
-  percentuale_pagata?: number;
-  data_inserimento?: string;
-  dealers: {
-    id?: string;
-    ragione_sociale: string;
-    commerciale_owner_id?: string;
-  };
-}

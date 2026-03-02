@@ -1,10 +1,10 @@
 import { lazy } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Layout } from "./Layout";
-import { DashboardRouter } from "./DashboardRouter";
 import { Loader2 } from "lucide-react";
 
 const Home = lazy(() => import("@/pages/Home"));
+const SmartDashboard = lazy(() => import("@/pages/SmartDashboard"));
 
 export const HomeRouter = () => {
   const { user, loading } = useAuth();
@@ -23,7 +23,7 @@ export const HomeRouter = () => {
 
   return (
     <Layout>
-      <DashboardRouter />
+      <SmartDashboard />
     </Layout>
   );
 };

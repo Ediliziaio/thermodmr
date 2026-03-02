@@ -47,23 +47,20 @@ export const useRLSTests = () => {
 
       // Create user via edge function (requires super_admin)
       const password = "TestPassword123!";
-      const { data, error } = await supabase.functions.invoke("create-commerciale", {
+      const { data, error } = await supabase.functions.invoke("create-user", {
         body: {
           email,
           password,
           display_name: `Test ${role}`,
+          role,
         },
       });
 
       if (error) throw error;
 
-      const userId = data.user_id;
+      const userId = data?.user?.id;
 
-      // Update role if not commerciale
-      if (role !== "commerciale") {
-        await supabase.from("user_roles").delete().eq("user_id", userId);
-        await supabase.from("user_roles").insert({ user_id: userId, role });
-      }
+      // Role is already assigned by create-user edge function
 
       return { userId, email, password };
     } catch (error) {

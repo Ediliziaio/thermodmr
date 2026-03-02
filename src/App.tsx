@@ -1,6 +1,5 @@
 import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -29,7 +28,7 @@ const Provvigioni = lazy(() => import("./pages/Provvigioni"));
 const RLSTest = lazy(() => import("./pages/RLSTest"));
 const TestDataSeeder = lazy(() => import("./pages/TestDataSeeder"));
 const Impostazioni = lazy(() => import("./pages/Impostazioni"));
-const Placeholder = lazy(() => import("./pages/Placeholder"));
+
 const DealerArea = lazy(() => import("./pages/DealerArea"));
 const DealerPreventivi = lazy(() => import("./pages/DealerPreventivi"));
 const ChiSiamoPage = lazy(() => import("./pages/ChiSiamo"));
@@ -57,7 +56,6 @@ const App = () => (
   <ErrorBoundary>
     <TooltipProvider>
       <Toaster />
-      <Sonner />
       <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ScrollToTop />
         <AuthProvider>
@@ -184,16 +182,6 @@ const App = () => (
               }
             />
             <Route
-              path="/audit"
-              element={
-                <ProtectedRoute requiredRole="super_admin">
-                  <Layout>
-                    <Placeholder title="Audit Log" description="Storico modifiche e attività" />
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
               path="/impostazioni"
               element={
                 <ProtectedRoute requiredRole="super_admin">
@@ -203,24 +191,28 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
-            <Route
-              path="/rls-test"
-              element={
-                <ProtectedRoute requiredRole="super_admin">
-                  <RLSTest />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/seed-test-data"
-              element={
-                <ProtectedRoute requiredRole="super_admin">
-                  <Layout>
-                    <TestDataSeeder />
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
+            {import.meta.env.DEV && (
+              <>
+                <Route
+                  path="/rls-test"
+                  element={
+                    <ProtectedRoute requiredRole="super_admin">
+                      <RLSTest />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/seed-test-data"
+                  element={
+                    <ProtectedRoute requiredRole="super_admin">
+                      <Layout>
+                        <TestDataSeeder />
+                      </Layout>
+                    </ProtectedRoute>
+                  }
+                />
+              </>
+            )}
             <Route path="/chi-siamo" element={<ChiSiamoPage />} />
             <Route path="/prodotti-pubblico" element={<ProdottiPubblico />} />
             <Route path="/prodotti/dmr-confort" element={<DmrConfort />} />
