@@ -30,15 +30,6 @@ const InviteUserDialog = ({ open, onOpenChange }: InviteUserDialogProps) => {
   const [loading, setLoading] = useState(false);
   const [createdPassword, setCreatedPassword] = useState<string | null>(null);
 
-  const generateSecurePassword = (): string => {
-    const length = 12;
-    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-    let pwd = "";
-    for (let i = 0; i < length; i++) {
-      pwd += charset.charAt(Math.floor(Math.random() * charset.length));
-    }
-    return pwd;
-  };
 
   const resetForm = () => {
     setEmail("");
@@ -67,14 +58,10 @@ const InviteUserDialog = ({ open, onOpenChange }: InviteUserDialogProps) => {
 
     setLoading(true);
     try {
-      // Genera sempre password temporanea sicura
-      const tempPassword = generateSecurePassword();
-
-      // Call create-user edge function
+      // Call create-user edge function — password generated server-side
       const response = await supabase.functions.invoke('create-user', {
         body: {
           email,
-          password: tempPassword,
           display_name: displayName,
           role,
         },
@@ -84,8 +71,9 @@ const InviteUserDialog = ({ open, onOpenChange }: InviteUserDialogProps) => {
         throw new Error(response.error.message || 'Errore durante la creazione');
       }
 
-      // Show success with password
-      setCreatedPassword(tempPassword);
+      // Show success with server-generated password
+      const generatedPassword = response.data?.generated_password;
+      setCreatedPassword(generatedPassword || '(password non disponibile)');
       
       toast({
         title: "✅ Utente creato con successo",

@@ -3,13 +3,23 @@ import { createAdminClient, verifySuperAdmin, createSupabaseClient } from '../_s
 import { createErrorResponse, createSuccessResponse, ApiError, HttpStatus } from '../_shared/errors.ts';
 import { validateBody, z, CommonSchemas } from '../_shared/validation.ts';
 
-// Input validation schema
+// Input validation schema — password is optional (server generates if missing)
 const createUserSchema = z.object({
   email: CommonSchemas.email,
-  password: CommonSchemas.password,
+  password: CommonSchemas.password.optional(),
   display_name: CommonSchemas.displayName,
   role: CommonSchemas.appRole,
 });
+
+/**
+ * Generate a cryptographically secure random password
+ */
+function generateSecurePassword(length = 16): string {
+  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
+  const randomValues = new Uint8Array(length);
+  crypto.getRandomValues(randomValues);
+  return Array.from(randomValues, (v) => charset[v % charset.length]).join('');
+}
 
 Deno.serve(async (req) => {
   // Handle CORS preflight
@@ -26,7 +36,10 @@ Deno.serve(async (req) => {
     console.log(`User ${caller.id} (${caller.email}) creating new user`);
 
     // Validate input
-    const { email, password, display_name, role } = await validateBody(req, createUserSchema);
+    const { email, password: providedPassword, display_name, role } = await validateBody(req, createUserSchema);
+    
+    // Use provided password or generate secure one
+    const password = providedPassword || generateSecurePassword();
     console.log('Creating user with email:', email);
 
     // Create user with Supabase Admin API
@@ -84,6 +97,8 @@ Deno.serve(async (req) => {
         display_name,
         role,
       },
+      // Return generated password so admin can share it
+      generated_password: !providedPassword ? password : undefined,
     });
   } catch (error) {
     return createErrorResponse(error);

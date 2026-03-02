@@ -9,9 +9,7 @@ import { usePaymentsInfinite } from "@/hooks/usePaymentsInfinite";
 import type { PaymentWithDetails } from "@/lib/paymentConstants";
 import { getTipoBadgeVariant } from "@/lib/paymentConstants";
 import { useNavigate } from "react-router-dom";
-import { formatCurrency, getStatusColor, getStatusLabel } from "@/lib/utils";
-import { format } from "date-fns";
-import { it } from "date-fns/locale";
+import { formatCurrency, formatDate, getStatusColor, getStatusLabel } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -89,7 +87,7 @@ const OrderResult = ({ order, query, onClick }: { order: OrderWithDetails; query
             </div>
           </div>
           <div className="text-right text-xs text-muted-foreground">
-            {order.data_inserimento && format(new Date(order.data_inserimento), "dd MMM yyyy", { locale: it })}
+            {order.data_inserimento && formatDate(order.data_inserimento)}
           </div>
         </div>
       </CardContent>
@@ -138,7 +136,7 @@ const PaymentResult = ({ payment, query, onClick }: { payment: PaymentWithDetail
             </div>
           </div>
           <div className="text-right text-xs text-muted-foreground">
-            {format(new Date(payment.data_pagamento), "dd MMM yyyy", { locale: it })}
+            {formatDate(payment.data_pagamento)}
           </div>
         </div>
       </CardContent>

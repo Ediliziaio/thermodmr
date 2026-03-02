@@ -20,22 +20,14 @@ export const useRealtimeSync = () => {
           table: "orders",
         },
         () => {
-          
-          // Invalida queries ordini
+          // Batch invalidation: ordini + dipendenze
           queryClient.invalidateQueries({ queryKey: ["orders"] });
           queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
-          queryClient.invalidateQueries({ queryKey: ["order"] }); // Dettaglio ordine
-          
-          // Invalida queries pagamenti (perché dipendono da orders.stato, orders.dealers)
+          queryClient.invalidateQueries({ queryKey: ["order"] });
           queryClient.invalidateQueries({ queryKey: ["allPayments"] });
           queryClient.invalidateQueries({ queryKey: ["payments-infinite"] });
-          queryClient.invalidateQueries({ queryKey: ["order-payments"] }); // Fix: era orderPayments
-          
-          // Invalida dashboard
+          queryClient.invalidateQueries({ queryKey: ["order-payments"] });
           queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
-          queryClient.invalidateQueries({ queryKey: ["commerciale-dashboard"] });
-          queryClient.invalidateQueries({ queryKey: ["dealer-order-stats"] });
-          queryClient.invalidateQueries({ queryKey: ["dealer-recent-activity"] });
           queryClient.invalidateQueries({ queryKey: ["upcoming-deadlines"] });
         }
       )
@@ -47,25 +39,14 @@ export const useRealtimeSync = () => {
           table: "payments",
         },
         () => {
-          
-          // Invalida queries pagamenti
           queryClient.invalidateQueries({ queryKey: ["allPayments"] });
           queryClient.invalidateQueries({ queryKey: ["payments-infinite"] });
-          queryClient.invalidateQueries({ queryKey: ["order-payments"] }); // Fix: era orderPayments
-          
-          // Invalida queries ordini (perché cambiano importi pagati/da pagare)
+          queryClient.invalidateQueries({ queryKey: ["order-payments"] });
           queryClient.invalidateQueries({ queryKey: ["orders"] });
           queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
-          queryClient.invalidateQueries({ queryKey: ["order"] }); // Dettaglio ordine
-          
-          // Invalida dashboard
+          queryClient.invalidateQueries({ queryKey: ["order"] });
           queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
           queryClient.invalidateQueries({ queryKey: ["revenue-data"] });
-          queryClient.invalidateQueries({ queryKey: ["commerciale-dashboard"] });
-          queryClient.invalidateQueries({ queryKey: ["dealer-order-stats"] });
-          queryClient.invalidateQueries({ queryKey: ["dealer-recent-activity"] });
-          queryClient.invalidateQueries({ queryKey: ["dealer-payment-reminders"] });
-          queryClient.invalidateQueries({ queryKey: ["upcoming-deadlines"] });
         }
       )
       .on(
@@ -76,13 +57,8 @@ export const useRealtimeSync = () => {
           table: "dealers",
         },
         () => {
-          
-          // Invalida queries dealers
           queryClient.invalidateQueries({ queryKey: ["dealers-infinite"] });
-          
-          // Invalida dashboard (per top dealers)
           queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
-          queryClient.invalidateQueries({ queryKey: ["commerciale-dashboard"] });
         }
       )
       .subscribe();

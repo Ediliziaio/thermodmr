@@ -128,8 +128,8 @@ export const useCreateCommerciale = () => {
       display_name: string;
     }) => {
       const { data: result, error } = await supabase.functions.invoke(
-        "create-commerciale",
-        { body: data }
+        "create-user",
+        { body: { ...data, role: "commerciale" } }
       );
 
       if (error) throw error;

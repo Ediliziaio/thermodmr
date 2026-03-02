@@ -93,13 +93,10 @@ export const useUpdateUserRole = () => {
   
   return useMutation({
     mutationFn: async ({ userId, role }: { userId: string; role: "super_admin" | "commerciale" | "rivenditore" }) => {
-      // Delete existing role
-      await supabase.from("user_roles").delete().eq("user_id", userId);
-      
-      // Insert new role
-      const { error } = await supabase
-        .from("user_roles")
-        .insert([{ user_id: userId, role }]);
+      const { error } = await supabase.rpc("update_user_role", {
+        p_user_id: userId,
+        p_new_role: role,
+      });
       
       if (error) throw error;
     },
