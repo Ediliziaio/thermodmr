@@ -14,7 +14,6 @@ import {
   FileText,
   LogOut,
   Shield,
-  Bell,
   Menu,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -36,8 +35,7 @@ const navigation = [
   { name: "Pagamenti", href: "/pagamenti", icon: CreditCard, roles: ["super_admin", "commerciale"] },
   { name: "Provvigioni", href: "/provvigioni", icon: TrendingUp, roles: ["super_admin", "commerciale"] },
   { name: "KPI", href: "/kpi", icon: BarChart3, roles: ["super_admin"] },
-  { name: "Audit", href: "/audit", icon: FileText, roles: ["super_admin"] },
-  { name: "RLS Test", href: "/rls-test", icon: Shield, roles: ["super_admin"] },
+  ...(import.meta.env.DEV ? [{ name: "RLS Test", href: "/rls-test", icon: Shield, roles: ["super_admin"] }] : []),
   { name: "Impostazioni", href: "/impostazioni", icon: Settings, roles: ["super_admin"] },
 ];
 
@@ -158,11 +156,7 @@ export function Layout({ children }: LayoutProps) {
             <div className="flex-1 max-w-2xl">
               <GlobalSearch />
             </div>
-            <div className="flex items-center gap-3">
-              <Button variant="ghost" size="icon">
-                <Bell className="h-5 w-5" />
-              </Button>
-            </div>
+            <div className="flex items-center gap-3" />
           </div>
         </div>
         

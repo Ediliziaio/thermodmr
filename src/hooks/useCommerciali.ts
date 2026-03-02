@@ -124,7 +124,6 @@ export const useCreateCommerciale = () => {
   return useMutation({
     mutationFn: async (data: {
       email: string;
-      password: string;
       display_name: string;
     }) => {
       const { data: result, error } = await supabase.functions.invoke(
