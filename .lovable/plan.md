@@ -1,39 +1,49 @@
 
+Obiettivo: risolvere definitivamente il crash su `/ordini/PRV-2026-0007` (`RangeError: Invalid time value`) nella sezione allegati.
 
-# Verifica Allegati Preventivo — Problemi Trovati
+1) Diagnosi confermata (causa reale)
+- Il crash non è dovuto al valore DB di `created_at` (nel DB è valido), ma a un mismatch frontend:
+  - `AttachmentsSection` legge campi camelCase (`createdAt`, `nomeFile`, `tipoMime`)
+  - La query restituisce campi snake_case (`created_at`, `nome_file`, `tipo_mime`)
+- Quindi `attachment.createdAt` risulta `undefined` e `formatDateTime(undefined)` genera l’errore.
+- Inoltre oggi gli URL allegati sono misti:
+  - vecchi record con URL completo pubblico
+  - nuovi record con path storage relativo
+  Serve compatibilità su download/eliminazione.
 
-## Stato Attuale
+2) Intervento tecnico (fix robusta)
+A. Allineare il contratto dati degli allegati
+- File: `src/components/orders/AttachmentsSection.tsx`
+- Sostituire l’interfaccia `Attachment` custom camelCase con il tipo reale DB (`Tables<"attachments">`) oppure adattare il componente a leggere snake_case.
+- Aggiornare rendering:
+  - `attachment.nome_file`
+  - `attachment.tipo_mime`
+  - `attachment.created_at`
+- Aggiornare `formatDateTime` chiamando il valore DB corretto.
 
-L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
+B. Hardening data/UX (no crash anche con dati sporchi)
+- In `AttachmentsSection`, aggiungere una funzione safe per data:
+  - se `created_at` mancante o invalida → mostrare fallback tipo `Data non disponibile` (senza lanciare eccezioni).
+- Mantenere anche guard su MIME type (`tipo_mime?.startsWith(...)`).
 
----
+C. Normalizzare gestione path storage (compatibilità vecchi + nuovi record)
+- In `AttachmentsSection`, introdurre helper `getStoragePath(url)`:
+  - se `url` è già path (`PRV-.../file.pdf`) lo usa direttamente
+  - se è URL completo (`.../order-attachments/...`) estrae il path
+- Usare questo helper in:
+  - download (`createSignedUrl(path, 60)`)
+  - delete (`remove([path])`)
 
-## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
+D. (Opzionale ma consigliato) Pulizia dati storici
+- Migrazione SQL per convertire `attachments.url` da URL completo a path relativo per record legacy.
+- Non necessaria per sbloccare il bug, ma utile per consistenza futura.
 
-**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
+3) File da modificare
+- `src/components/orders/AttachmentsSection.tsx` (fix principale)
+- Opzionale: migrazione in `supabase/migrations/` per normalizzazione URL legacy.
 
-Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
-
-**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
-
-Interventi:
-- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
-- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
-- Entrambi i file usano lo stesso pattern, la fix e' identica
-
-## Bug 2: `useCreatePreventivo` contiene codice morto
-
-**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
-
-- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
-- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
-
-**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
-
-## Riepilogo
-
-| # | Tipo | File | Problema |
-|---|------|------|----------|
-| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
-| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
-
+4) Verifica post-fix (end-to-end)
+- Aprire `/ordini/PRV-2026-0007` e confermare assenza di ErrorBoundary.
+- Verificare che lista allegati mostri nome, dimensione, data senza crash.
+- Testare download allegato legacy (URL completo) e allegato nuovo (path).
+- Testare eliminazione allegato in entrambi i formati URL/path.
