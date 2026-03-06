@@ -55,6 +55,8 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [dealerFilter, setDealerFilter] = useState<string>("tutti");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("tutti");
+  const [dateFrom, setDateFrom] = useState<Date | undefined>();
+  const [dateTo, setDateTo] = useState<Date | undefined>();
 
   const { data: preventivi, isLoading } = useQuery({
     queryKey: ["dealer-preventivi", dealerId],
