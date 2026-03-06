@@ -99,9 +99,19 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
       if (dealerFilter !== "tutti" && p.dealer_id !== dealerFilter) return false;
       if (statusFilter === "validi" && isExpired(p.data_scadenza_preventivo)) return false;
       if (statusFilter === "scaduti" && !isExpired(p.data_scadenza_preventivo)) return false;
+      if (dateFrom) {
+        const d = new Date(p.data_inserimento);
+        if (d < dateFrom) return false;
+      }
+      if (dateTo) {
+        const d = new Date(p.data_inserimento);
+        const end = new Date(dateTo);
+        end.setHours(23, 59, 59, 999);
+        if (d > end) return false;
+      }
       return true;
     });
-  }, [preventivi, searchTerm, dealerFilter, statusFilter]);
+  }, [preventivi, searchTerm, dealerFilter, statusFilter, dateFrom, dateTo]);
 
   // KPI stats (from ALL preventivi, not filtered)
   const stats = useMemo(() => {
