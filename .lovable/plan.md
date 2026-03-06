@@ -1,49 +1,39 @@
 
 
-# Preventivi: Statistiche, Filtri e UX migliorata
+# Verifica Allegati Preventivo — Problemi Trovati
 
-## Stato attuale
-La pagina `/preventivi` (`DealerPreventivi.tsx`) mostra solo una lista piatta senza statistiche, senza filtri e senza la colonna rivenditore (che pure viene caricata dal DB via join `dealers(ragione_sociale)`).
+## Stato Attuale
 
-## Interventi
+L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
 
-### 1. Statistiche KPI in alto (4 card)
-Calcolare dai dati già in memoria (`preventivi`):
-- **Totale Preventivi** — conteggio
-- **Valore Totale** — somma `importo_totale`, formattato con `formatCurrency`
-- **Validi** — conteggio dove `data_scadenza_preventivo` non scaduto o null
-- **Scaduti** — conteggio scaduti
-- **Tasso Conversione** — (opzionale, richiede conteggio ordini convertiti; se troppo complesso, mostrare ticket medio al suo posto)
+---
 
-Layout: griglia 2 colonne mobile, 4 colonne desktop. Stile coerente con `MetricCard` ma senza "change" (non serve il confronto periodo).
+## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
 
-### 2. Barra Filtri
-Aggiungere sotto le statistiche, prima della tabella:
-- **Ricerca testo** — filtra per ID preventivo (client-side, dato che i dati sono già in memoria)
-- **Filtro Rivenditore** — Select con lista dealer estratta dai preventivi stessi (`dealers.ragione_sociale`). Filtra per `dealer_id`
-- **Filtro Stato** — "Tutti", "Validi", "Scaduti" — quick filter buttons come nella pagina Ordini
-- **Filtro Importo** — range min/max (opzionale, nei filtri avanzati collassabili)
+**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
 
-Tutto client-side: filtrare l'array `preventivi` già caricato.
+Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
 
-### 3. Colonna Rivenditore nella tabella
-La query già carica `dealers(ragione_sociale)`. Aggiungere:
-- **Desktop**: colonna "Rivenditore" nella tabella
-- **Mobile**: riga con nome rivenditore nella card
+**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
 
-### 4. Conteggio risultati
-Mostrare `{filteredPreventivi.length} preventivi` sotto i filtri, per feedback immediato.
+Interventi:
+- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
+- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
+- Entrambi i file usano lo stesso pattern, la fix e' identica
 
-## File da modificare
+## Bug 2: `useCreatePreventivo` contiene codice morto
 
-**`src/pages/DealerPreventivi.tsx`** — unico file:
-- Aggiungere stati per filtri (`searchTerm`, `dealerFilter`, `statusFilter`)
-- Calcolare `filteredPreventivi` da `preventivi` con `useMemo`
-- Calcolare statistiche KPI da `preventivi` con `useMemo`
-- Renderizzare 4 card KPI sopra la tabella
-- Renderizzare barra filtri (search input + select dealer + quick filter buttons)
-- Aggiungere colonna Rivenditore al desktop table e alla mobile card
-- Mostrare conteggio risultati filtrati
+**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
 
-Nessuna modifica DB, nessun nuovo componente. Tutto in-page, filtri client-side.
+- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
+- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
+
+**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
+
+## Riepilogo
+
+| # | Tipo | File | Problema |
+|---|------|------|----------|
+| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
+| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
 
