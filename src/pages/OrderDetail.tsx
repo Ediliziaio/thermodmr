@@ -72,6 +72,9 @@ export default function OrderDetail() {
   const [isEditingOrderId, setIsEditingOrderId] = useState(false);
   const [editedOrderId, setEditedOrderId] = useState("");
   const [showConvertDialog, setShowConvertDialog] = useState(false);
+  const [editedLines, setEditedLines] = useState<any[] | null>(null);
+  const hasLineChanges = editedLines !== null;
+  const [showConvertDialog, setShowConvertDialog] = useState(false);
 
   useEffect(() => {
     if (order) {
