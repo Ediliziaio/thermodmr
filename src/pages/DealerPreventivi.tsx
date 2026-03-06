@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -18,8 +20,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import {
   FileText, ArrowRightCircle, Eye, AlertTriangle, CheckCircle2, Plus, Copy,
-  Search, BarChart3, Euro, Clock, XCircle,
+  Search, BarChart3, Euro, Clock, XCircle, CalendarIcon,
 } from "lucide-react";
+import { format } from "date-fns";
+import { it } from "date-fns/locale";
 import { formatCurrency, formatDate, cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
@@ -51,6 +55,8 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [dealerFilter, setDealerFilter] = useState<string>("tutti");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("tutti");
+  const [dateFrom, setDateFrom] = useState<Date | undefined>();
+  const [dateTo, setDateTo] = useState<Date | undefined>();
 
   const { data: preventivi, isLoading } = useQuery({
     queryKey: ["dealer-preventivi", dealerId],
@@ -93,9 +99,19 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
       if (dealerFilter !== "tutti" && p.dealer_id !== dealerFilter) return false;
       if (statusFilter === "validi" && isExpired(p.data_scadenza_preventivo)) return false;
       if (statusFilter === "scaduti" && !isExpired(p.data_scadenza_preventivo)) return false;
+      if (dateFrom) {
+        const d = new Date(p.data_inserimento);
+        if (d < dateFrom) return false;
+      }
+      if (dateTo) {
+        const d = new Date(p.data_inserimento);
+        const end = new Date(dateTo);
+        end.setHours(23, 59, 59, 999);
+        if (d > end) return false;
+      }
       return true;
     });
-  }, [preventivi, searchTerm, dealerFilter, statusFilter]);
+  }, [preventivi, searchTerm, dealerFilter, statusFilter, dateFrom, dateTo]);
 
   // KPI stats (from ALL preventivi, not filtered)
   const stats = useMemo(() => {
@@ -190,7 +206,15 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
 
   const basePath = dealerId ? `/rivenditori/${dealerId}/area` : "";
 
-  const hasActiveFilters = searchTerm || dealerFilter !== "tutti" || statusFilter !== "tutti";
+  const hasActiveFilters = searchTerm || dealerFilter !== "tutti" || statusFilter !== "tutti" || dateFrom || dateTo;
+
+  const resetFilters = () => {
+    setSearchTerm("");
+    setDealerFilter("tutti");
+    setStatusFilter("tutti");
+    setDateFrom(undefined);
+    setDateTo(undefined);
+  };
 
   return (
     <div className="space-y-6 p-4 md:p-6">
@@ -213,7 +237,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
       {/* KPI Cards */}
       {!isLoading && preventivi && preventivi.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          <Card>
+          <Card className="border-l-4 border-l-primary">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 text-muted-foreground mb-1">
                 <BarChart3 className="h-4 w-4" />
@@ -222,7 +246,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
               <p className="text-2xl font-bold">{stats.total}</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-l-4 border-l-accent-foreground/30">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 text-muted-foreground mb-1">
                 <Euro className="h-4 w-4" />
@@ -231,7 +255,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
               <p className="text-2xl font-bold">{formatCurrency(stats.value)}</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-l-4 border-l-chart-2">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 text-muted-foreground mb-1">
                 <CheckCircle2 className="h-4 w-4 text-chart-2" />
@@ -240,7 +264,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
               <p className="text-2xl font-bold text-chart-2">{stats.valid}</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-l-4 border-l-destructive">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 text-muted-foreground mb-1">
                 <XCircle className="h-4 w-4 text-destructive" />
@@ -279,6 +303,44 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
               </Select>
             )}
           </div>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="sm" className={cn("justify-start text-left font-normal", !dateFrom && "text-muted-foreground")}>
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {dateFrom ? format(dateFrom, "dd MMM yyyy", { locale: it }) : "Da"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={dateFrom}
+                  onSelect={setDateFrom}
+                  initialFocus
+                  locale={it}
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              </PopoverContent>
+            </Popover>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="sm" className={cn("justify-start text-left font-normal", !dateTo && "text-muted-foreground")}>
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {dateTo ? format(dateTo, "dd MMM yyyy", { locale: it }) : "A"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={dateTo}
+                  onSelect={setDateTo}
+                  initialFocus
+                  locale={it}
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
           <div className="flex items-center gap-2 flex-wrap">
             {(["tutti", "validi", "scaduti"] as StatusFilter[]).map((s) => (
               <Button
@@ -300,7 +362,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => { setSearchTerm(""); setDealerFilter("tutti"); setStatusFilter("tutti"); }}
+                onClick={resetFilters}
                 className="text-muted-foreground"
               >
                 Cancella filtri
@@ -331,8 +393,10 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                 <Card
                   key={p.id}
                   className={cn(
-                    "cursor-pointer hover:shadow-md transition-shadow",
-                    expired && "border-destructive/50 bg-destructive/5"
+                    "cursor-pointer hover:shadow-md transition-shadow border-l-4",
+                    expired
+                      ? "border-l-destructive bg-destructive/5"
+                      : "border-l-chart-2"
                   )}
                   onClick={() => navigate(`${basePath}/ordini/${p.id}`)}
                 >
@@ -340,11 +404,11 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-sm font-medium">{p.id}</span>
                       {expired ? (
-                        <Badge variant="destructive" className="text-xs">
+                        <Badge variant="destructive" className="text-xs animate-pulse">
                           <AlertTriangle className="h-3 w-3 mr-1" />Scaduto
                         </Badge>
                       ) : (
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge className="text-xs bg-chart-2/10 text-chart-2 border-chart-2/20 hover:bg-chart-2/20">
                           <CheckCircle2 className="h-3 w-3 mr-1" />Valido
                         </Badge>
                       )}
@@ -417,7 +481,9 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                         key={p.id}
                         className={cn(
                           "cursor-pointer",
-                          expired && "bg-destructive/5 hover:bg-destructive/10"
+                          expired
+                            ? "bg-destructive/5 hover:bg-destructive/10"
+                            : "hover:bg-chart-2/5"
                         )}
                         onClick={() => navigate(`${basePath}/ordini/${p.id}`)}
                       >
@@ -430,11 +496,11 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                         </TableCell>
                         <TableCell>
                           {expired ? (
-                            <Badge variant="destructive">
+                            <Badge variant="destructive" className="animate-pulse">
                               <AlertTriangle className="h-3 w-3 mr-1" />Scaduto
                             </Badge>
                           ) : (
-                            <Badge variant="secondary">
+                            <Badge className="bg-chart-2/10 text-chart-2 border-chart-2/20 hover:bg-chart-2/20">
                               <CheckCircle2 className="h-3 w-3 mr-1" />Valido
                             </Badge>
                           )}
@@ -468,7 +534,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
             <Search className="h-12 w-12 mx-auto mb-3 text-muted-foreground opacity-50" />
             <p className="text-muted-foreground font-medium">Nessun risultato</p>
             <p className="text-sm text-muted-foreground mt-1">Prova a modificare i filtri di ricerca</p>
-            <Button variant="outline" size="sm" className="mt-4" onClick={() => { setSearchTerm(""); setDealerFilter("tutti"); setStatusFilter("tutti"); }}>
+            <Button variant="outline" size="sm" className="mt-4" onClick={resetFilters}>
               Cancella filtri
             </Button>
           </CardContent>
