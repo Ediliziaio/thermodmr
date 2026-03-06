@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -12,7 +16,10 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { FileText, ArrowRightCircle, Eye, AlertTriangle, CheckCircle2, Plus, Copy } from "lucide-react";
+import {
+  FileText, ArrowRightCircle, Eye, AlertTriangle, CheckCircle2, Plus, Copy,
+  Search, BarChart3, Euro, Clock, XCircle,
+} from "lucide-react";
 import { formatCurrency, formatDate, cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
@@ -23,6 +30,13 @@ interface DealerPreventiviProps {
   dealerId?: string;
 }
 
+type StatusFilter = "tutti" | "validi" | "scaduti";
+
+const isExpired = (date: string | null) => {
+  if (!date) return false;
+  return new Date(date) < new Date();
+};
+
 export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -32,6 +46,11 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
   const [preventivoDialogOpen, setPreventivoDialogOpen] = useState(false);
   const [duplicateData, setDuplicateData] = useState<PreventivoDefaultValues | undefined>(undefined);
   const [isDuplicating, setIsDuplicating] = useState(false);
+
+  // Filter states
+  const [searchTerm, setSearchTerm] = useState("");
+  const [dealerFilter, setDealerFilter] = useState<string>("tutti");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("tutti");
 
   const { data: preventivi, isLoading } = useQuery({
     queryKey: ["dealer-preventivi", dealerId],
@@ -50,6 +69,44 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
       return data;
     },
   });
+
+  // Unique dealers for filter dropdown
+  const dealerOptions = useMemo(() => {
+    if (!preventivi) return [];
+    const map = new Map<string, string>();
+    preventivi.forEach((p) => {
+      const name = (p.dealers as any)?.ragione_sociale;
+      if (name && p.dealer_id) map.set(p.dealer_id, name);
+    });
+    return Array.from(map.entries()).sort((a, b) => a[1].localeCompare(b[1]));
+  }, [preventivi]);
+
+  // Filtered data
+  const filteredPreventivi = useMemo(() => {
+    if (!preventivi) return [];
+    return preventivi.filter((p) => {
+      if (searchTerm) {
+        const term = searchTerm.toLowerCase();
+        const dealerName = ((p.dealers as any)?.ragione_sociale || "").toLowerCase();
+        if (!p.id.toLowerCase().includes(term) && !dealerName.includes(term)) return false;
+      }
+      if (dealerFilter !== "tutti" && p.dealer_id !== dealerFilter) return false;
+      if (statusFilter === "validi" && isExpired(p.data_scadenza_preventivo)) return false;
+      if (statusFilter === "scaduti" && !isExpired(p.data_scadenza_preventivo)) return false;
+      return true;
+    });
+  }, [preventivi, searchTerm, dealerFilter, statusFilter]);
+
+  // KPI stats (from ALL preventivi, not filtered)
+  const stats = useMemo(() => {
+    if (!preventivi) return { total: 0, value: 0, valid: 0, expired: 0, avgTicket: 0 };
+    const total = preventivi.length;
+    const value = preventivi.reduce((sum, p) => sum + Number(p.importo_totale), 0);
+    const expired = preventivi.filter((p) => isExpired(p.data_scadenza_preventivo)).length;
+    const valid = total - expired;
+    const avgTicket = total > 0 ? value / total : 0;
+    return { total, value, valid, expired, avgTicket };
+  }, [preventivi]);
 
   const convertMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -73,7 +130,6 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
   const handleDuplicate = async (id: string) => {
     setIsDuplicating(true);
     try {
-      // Fetch order data
       const { data: order, error: orderError } = await supabase
         .from("orders")
         .select("dealer_id, note_rivenditore, note_interna, data_consegna_prevista, cliente_finale_id")
@@ -81,14 +137,12 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
         .single();
       if (orderError) throw orderError;
 
-      // Fetch order lines
       const { data: lines, error: linesError } = await supabase
         .from("order_lines")
         .select("categoria, descrizione, quantita, prezzo_unitario, sconto, iva")
         .eq("ordine_id", id);
       if (linesError) throw linesError;
 
-      // Fetch client if present
       let clientData: PreventivoDefaultValues = {};
       if (order.cliente_finale_id) {
         const { data: client } = await supabase
@@ -111,7 +165,6 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
         dealer_id: order.dealer_id,
         note_rivenditore: order.note_rivenditore || "",
         note_interna: order.note_interna || "",
-        
         ...clientData,
         order_lines: lines?.map(l => ({
           categoria: l.categoria,
@@ -132,20 +185,16 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
 
   const handleDialogClose = (open: boolean) => {
     setPreventivoDialogOpen(open);
-    if (!open) {
-      setDuplicateData(undefined);
-    }
-  };
-
-  const isExpired = (date: string | null) => {
-    if (!date) return false;
-    return new Date(date) < new Date();
+    if (!open) setDuplicateData(undefined);
   };
 
   const basePath = dealerId ? `/rivenditori/${dealerId}/area` : "";
 
+  const hasActiveFilters = searchTerm || dealerFilter !== "tutti" || statusFilter !== "tutti";
+
   return (
     <div className="space-y-6 p-4 md:p-6">
+      {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Preventivi</h1>
@@ -161,18 +210,123 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
         )}
       </div>
 
+      {/* KPI Cards */}
+      {!isLoading && preventivi && preventivi.length > 0 && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                <BarChart3 className="h-4 w-4" />
+                <span className="text-xs font-medium uppercase tracking-wide">Totale</span>
+              </div>
+              <p className="text-2xl font-bold">{stats.total}</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                <Euro className="h-4 w-4" />
+                <span className="text-xs font-medium uppercase tracking-wide">Valore</span>
+              </div>
+              <p className="text-2xl font-bold">{formatCurrency(stats.value)}</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                <CheckCircle2 className="h-4 w-4 text-green-500" />
+                <span className="text-xs font-medium uppercase tracking-wide">Validi</span>
+              </div>
+              <p className="text-2xl font-bold text-green-600">{stats.valid}</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                <XCircle className="h-4 w-4 text-destructive" />
+                <span className="text-xs font-medium uppercase tracking-wide">Scaduti</span>
+              </div>
+              <p className="text-2xl font-bold text-destructive">{stats.expired}</p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Filters */}
+      {!isLoading && preventivi && preventivi.length > 0 && (
+        <div className="space-y-3">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Cerca per ID o rivenditore..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+            {!dealerId && dealerOptions.length > 1 && (
+              <Select value={dealerFilter} onValueChange={setDealerFilter}>
+                <SelectTrigger className="w-full sm:w-[220px]">
+                  <SelectValue placeholder="Tutti i rivenditori" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="tutti">Tutti i rivenditori</SelectItem>
+                  {dealerOptions.map(([id, name]) => (
+                    <SelectItem key={id} value={id}>{name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          </div>
+          <div className="flex items-center gap-2 flex-wrap">
+            {(["tutti", "validi", "scaduti"] as StatusFilter[]).map((s) => (
+              <Button
+                key={s}
+                variant={statusFilter === s ? "default" : "outline"}
+                size="sm"
+                onClick={() => setStatusFilter(s)}
+              >
+                {s === "tutti" && "Tutti"}
+                {s === "validi" && (
+                  <><CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />Validi</>
+                )}
+                {s === "scaduti" && (
+                  <><AlertTriangle className="h-3.5 w-3.5 mr-1.5" />Scaduti</>
+                )}
+              </Button>
+            ))}
+            {hasActiveFilters && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => { setSearchTerm(""); setDealerFilter("tutti"); setStatusFilter("tutti"); }}
+                className="text-muted-foreground"
+              >
+                Cancella filtri
+              </Button>
+            )}
+            <span className="ml-auto text-sm text-muted-foreground">
+              {filteredPreventivi.length} preventiv{filteredPreventivi.length === 1 ? "o" : "i"}
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* Content */}
       {isLoading ? (
         <div className="space-y-3">
           {[...Array(3)].map((_, i) => (
             <Skeleton key={i} className="h-16" />
           ))}
         </div>
-      ) : preventivi && preventivi.length > 0 ? (
+      ) : filteredPreventivi.length > 0 ? (
         <>
           {/* Mobile Cards */}
           <div className="md:hidden space-y-3">
-            {preventivi.map((p) => {
+            {filteredPreventivi.map((p) => {
               const expired = isExpired(p.data_scadenza_preventivo);
+              const dealerName = (p.dealers as any)?.ragione_sociale;
               return (
                 <Card
                   key={p.id}
@@ -187,16 +341,17 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                       <span className="font-mono text-sm font-medium">{p.id}</span>
                       {expired ? (
                         <Badge variant="destructive" className="text-xs">
-                          <AlertTriangle className="h-3 w-3 mr-1" />
-                          Scaduto
+                          <AlertTriangle className="h-3 w-3 mr-1" />Scaduto
                         </Badge>
                       ) : (
                         <Badge variant="secondary" className="text-xs">
-                          <CheckCircle2 className="h-3 w-3 mr-1" />
-                          Valido
+                          <CheckCircle2 className="h-3 w-3 mr-1" />Valido
                         </Badge>
                       )}
                     </div>
+                    {dealerName && !dealerId && (
+                      <p className="text-sm text-muted-foreground">{dealerName}</p>
+                    )}
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <div>
                         <p className="text-muted-foreground text-xs">Importo</p>
@@ -218,28 +373,17 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                     {canManage && (
                       <div className="flex gap-2">
                         <Button
-                          size="sm"
-                          variant="outline"
-                          className="flex-1"
+                          size="sm" variant="outline" className="flex-1"
                           disabled={isDuplicating}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDuplicate(p.id);
-                          }}
+                          onClick={(e) => { e.stopPropagation(); handleDuplicate(p.id); }}
                         >
-                          <Copy className="h-4 w-4 mr-2" />
-                          Duplica
+                          <Copy className="h-4 w-4 mr-2" />Duplica
                         </Button>
                         <Button
-                          size="sm"
-                          className="flex-1"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setConvertId(p.id);
-                          }}
+                          size="sm" className="flex-1"
+                          onClick={(e) => { e.stopPropagation(); setConvertId(p.id); }}
                         >
-                          <ArrowRightCircle className="h-4 w-4 mr-2" />
-                          Converti
+                          <ArrowRightCircle className="h-4 w-4 mr-2" />Converti
                         </Button>
                       </div>
                     )}
@@ -256,6 +400,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                 <TableHeader>
                   <TableRow>
                     <TableHead>ID Preventivo</TableHead>
+                    {!dealerId && <TableHead>Rivenditore</TableHead>}
                     <TableHead>Data Creazione</TableHead>
                     <TableHead>Importo Totale</TableHead>
                     <TableHead>Scadenza</TableHead>
@@ -264,8 +409,9 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {preventivi.map((p) => {
+                  {filteredPreventivi.map((p) => {
                     const expired = isExpired(p.data_scadenza_preventivo);
+                    const dealerName = (p.dealers as any)?.ragione_sociale;
                     return (
                       <TableRow
                         key={p.id}
@@ -276,59 +422,34 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                         onClick={() => navigate(`${basePath}/ordini/${p.id}`)}
                       >
                         <TableCell className="font-mono font-medium">{p.id}</TableCell>
+                        {!dealerId && <TableCell>{dealerName || "—"}</TableCell>}
                         <TableCell>{formatDate(p.data_inserimento)}</TableCell>
                         <TableCell className="font-medium">{formatCurrency(Number(p.importo_totale))}</TableCell>
                         <TableCell className={expired ? "text-destructive font-medium" : ""}>
-                          {p.data_scadenza_preventivo
-                            ? formatDate(p.data_scadenza_preventivo)
-                            : "—"}
+                          {p.data_scadenza_preventivo ? formatDate(p.data_scadenza_preventivo) : "—"}
                         </TableCell>
                         <TableCell>
                           {expired ? (
                             <Badge variant="destructive">
-                              <AlertTriangle className="h-3 w-3 mr-1" />
-                              Scaduto
+                              <AlertTriangle className="h-3 w-3 mr-1" />Scaduto
                             </Badge>
                           ) : (
                             <Badge variant="secondary">
-                              <CheckCircle2 className="h-3 w-3 mr-1" />
-                              Valido
+                              <CheckCircle2 className="h-3 w-3 mr-1" />Valido
                             </Badge>
                           )}
                         </TableCell>
                         {canManage && (
                           <TableCell className="text-right">
                             <div className="flex items-center justify-end gap-2">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  navigate(`${basePath}/ordini/${p.id}`);
-                                }}
-                              >
+                              <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); navigate(`${basePath}/ordini/${p.id}`); }}>
                                 <Eye className="h-4 w-4" />
                               </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                disabled={isDuplicating}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDuplicate(p.id);
-                                }}
-                              >
+                              <Button variant="ghost" size="sm" disabled={isDuplicating} onClick={(e) => { e.stopPropagation(); handleDuplicate(p.id); }}>
                                 <Copy className="h-4 w-4" />
                               </Button>
-                              <Button
-                                size="sm"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setConvertId(p.id);
-                                }}
-                              >
-                                <ArrowRightCircle className="h-4 w-4 mr-1" />
-                                Converti
+                              <Button size="sm" onClick={(e) => { e.stopPropagation(); setConvertId(p.id); }}>
+                                <ArrowRightCircle className="h-4 w-4 mr-1" />Converti
                               </Button>
                             </div>
                           </TableCell>
@@ -341,6 +462,17 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
             </CardContent>
           </Card>
         </>
+      ) : preventivi && preventivi.length > 0 ? (
+        <Card>
+          <CardContent className="py-12 text-center">
+            <Search className="h-12 w-12 mx-auto mb-3 text-muted-foreground opacity-50" />
+            <p className="text-muted-foreground font-medium">Nessun risultato</p>
+            <p className="text-sm text-muted-foreground mt-1">Prova a modificare i filtri di ricerca</p>
+            <Button variant="outline" size="sm" className="mt-4" onClick={() => { setSearchTerm(""); setDealerFilter("tutti"); setStatusFilter("tutti"); }}>
+              Cancella filtri
+            </Button>
+          </CardContent>
+        </Card>
       ) : (
         <Card>
           <CardContent className="py-12 text-center">
@@ -355,7 +487,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
         </Card>
       )}
 
-      {/* Preventivo Dialog (create or duplicate) */}
+      {/* Preventivo Dialog */}
       {canManage && (
         <NewPreventivoDialog
           open={preventivoDialogOpen}
