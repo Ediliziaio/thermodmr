@@ -34,6 +34,7 @@ interface OrderLinesEditorProps {
   orderStatus?: string;
   readOnly?: boolean;
   title?: string;
+  simplified?: boolean;
 }
 
 const categories = [
@@ -60,7 +61,7 @@ function normalizeLine(raw: any): OrderLine {
   };
 }
 
-export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly = false, title = "Righe Ordine" }: OrderLinesEditorProps) {
+export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly = false, title = "Righe Ordine", simplified = false }: OrderLinesEditorProps) {
   const [editingLines, setEditingLines] = useState<OrderLine[]>(() => lines.map(normalizeLine));
 
   // Sync when external lines change (e.g. after refetch)
@@ -156,88 +157,115 @@ export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly =
               )}
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label>Categoria</Label>
-                <Select
-                  value={line.categoria}
-                  onValueChange={(value) => updateLine(line.id, "categoria", value)}
-                  disabled={!canEdit}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((cat) => (
-                      <SelectItem key={cat} value={cat}>
-                        {cat}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+            {simplified ? (
+              <div className="grid gap-4 md:grid-cols-[1fr_auto]">
+                <div className="space-y-2">
+                  <Label>Descrizione</Label>
+                  <Input
+                    value={line.descrizione}
+                    onChange={(e) => updateLine(line.id, "descrizione", e.target.value)}
+                    placeholder="Descrizione prodotto"
+                    disabled={!canEdit}
+                  />
+                </div>
+                <div className="space-y-2 w-40">
+                  <Label>Prezzo (€)</Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={line.prezzoUnitario}
+                    onChange={(e) =>
+                      updateLine(line.id, "prezzoUnitario", parseFloat(e.target.value) || 0)
+                    }
+                    disabled={!canEdit}
+                  />
+                </div>
               </div>
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label>Categoria</Label>
+                  <Select
+                    value={line.categoria}
+                    onValueChange={(value) => updateLine(line.id, "categoria", value)}
+                    disabled={!canEdit}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((cat) => (
+                        <SelectItem key={cat} value={cat}>
+                          {cat}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              <div className="space-y-2">
-                <Label>Descrizione</Label>
-                <Input
-                  value={line.descrizione}
-                  onChange={(e) => updateLine(line.id, "descrizione", e.target.value)}
-                  placeholder="Descrizione prodotto"
-                  disabled={!canEdit}
-                />
-              </div>
+                <div className="space-y-2">
+                  <Label>Descrizione</Label>
+                  <Input
+                    value={line.descrizione}
+                    onChange={(e) => updateLine(line.id, "descrizione", e.target.value)}
+                    placeholder="Descrizione prodotto"
+                    disabled={!canEdit}
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label>Quantità</Label>
-                <Input
-                  type="number"
-                  min="1"
-                  value={line.quantita}
-                  onChange={(e) =>
-                    updateLine(line.id, "quantita", parseInt(e.target.value) || 1)
-                  }
-                  disabled={!canEdit}
-                />
-              </div>
+                <div className="space-y-2">
+                  <Label>Quantità</Label>
+                  <Input
+                    type="number"
+                    min="1"
+                    value={line.quantita}
+                    onChange={(e) =>
+                      updateLine(line.id, "quantita", parseInt(e.target.value) || 1)
+                    }
+                    disabled={!canEdit}
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label>Prezzo Unitario (€)</Label>
-                <Input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={line.prezzoUnitario}
-                  onChange={(e) =>
-                    updateLine(line.id, "prezzoUnitario", parseFloat(e.target.value) || 0)
-                  }
-                  disabled={!canEdit}
-                />
-              </div>
+                <div className="space-y-2">
+                  <Label>Prezzo Unitario (€)</Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={line.prezzoUnitario}
+                    onChange={(e) =>
+                      updateLine(line.id, "prezzoUnitario", parseFloat(e.target.value) || 0)
+                    }
+                    disabled={!canEdit}
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label>Sconto (%)</Label>
-                <Input
-                  type="number"
-                  min="0"
-                  max="100"
-                  step="0.01"
-                  value={line.sconto}
-                  onChange={(e) =>
-                    updateLine(line.id, "sconto", parseFloat(e.target.value) || 0)
-                  }
-                  disabled={!canEdit}
-                />
-              </div>
+                <div className="space-y-2">
+                  <Label>Sconto (%)</Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="0.01"
+                    value={line.sconto}
+                    onChange={(e) =>
+                      updateLine(line.id, "sconto", parseFloat(e.target.value) || 0)
+                    }
+                    disabled={!canEdit}
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label>IVA</Label>
-                <IvaSelector
-                  value={line.iva}
-                  onChange={(value) => updateLine(line.id, "iva", value)}
-                  disabled={!canEdit}
-                />
+                <div className="space-y-2">
+                  <Label>IVA</Label>
+                  <IvaSelector
+                    value={line.iva}
+                    onChange={(value) => updateLine(line.id, "iva", value)}
+                    disabled={!canEdit}
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
             <div className="flex justify-end pt-2 border-t">
               <div className="text-right">
@@ -258,18 +286,22 @@ export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly =
 
         {editingLines.length > 0 && (
           <div className="border-t pt-4 space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Imponibile</span>
-              <span className="font-medium">
-                {formatCurrency(totalImporto - totalIva)}
-              </span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">IVA Totale</span>
-              <span className="font-medium">{formatCurrency(totalIva)}</span>
-            </div>
-            <div className="flex justify-between text-lg font-bold pt-2 border-t">
-              <span>{title.replace("Righe", "Totale")}</span>
+            {!simplified && (
+              <>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Imponibile</span>
+                  <span className="font-medium">
+                    {formatCurrency(totalImporto - totalIva)}
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">IVA Totale</span>
+                  <span className="font-medium">{formatCurrency(totalIva)}</span>
+                </div>
+              </>
+            )}
+            <div className={`flex justify-between text-lg font-bold ${!simplified ? 'pt-2 border-t' : ''}`}>
+              <span>{title.replace("Righe", "Totale").replace("Prodotti Quotati", "Totale")}</span>
               <span>{formatCurrency(totalImporto)}</span>
             </div>
           </div>
