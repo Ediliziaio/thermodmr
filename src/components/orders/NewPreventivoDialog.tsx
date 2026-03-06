@@ -34,15 +34,13 @@ import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency } from "@/lib/utils";
-import { IvaSelector } from "./IvaSelector";
-
 const orderLineSchema = z.object({
   categoria: z.string().min(1, "Categoria richiesta"),
   descrizione: z.string().min(1, "Descrizione richiesta"),
   quantita: z.coerce.number().min(1, "Quantità minima 1"),
   prezzo_unitario: z.coerce.number().min(0, "Prezzo deve essere >= 0"),
   sconto: z.coerce.number().min(0).max(100).default(0),
-  iva: z.coerce.number().min(0).max(100).default(22),
+  iva: z.coerce.number().default(0),
 });
 
 const preventivoFormSchema = z.object({
@@ -83,8 +81,7 @@ export interface PreventivoDefaultValues {
 
 const calculateLineTotal = (line: z.infer<typeof orderLineSchema>) => {
   const subtotal = line.quantita * line.prezzo_unitario;
-  const afterDiscount = subtotal * (1 - line.sconto / 100);
-  return afterDiscount * (1 + line.iva / 100);
+  return subtotal * (1 - line.sconto / 100);
 };
 
 interface NewPreventivoDialogProps {
@@ -106,7 +103,7 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
       dealer_id: defaultDealerId || "",
       data_scadenza_preventivo: "",
       order_lines: [
-        { categoria: "Infissi", descrizione: "", quantita: 1, prezzo_unitario: 0, sconto: 0, iva: 22 },
+        { categoria: "Infissi", descrizione: "", quantita: 1, prezzo_unitario: 0, sconto: 0, iva: 0 },
       ],
     },
   });
@@ -126,8 +123,8 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
         note_rivenditore: defaultValues.note_rivenditore || "",
         note_interna: defaultValues.note_interna || "",
         order_lines: defaultValues.order_lines && defaultValues.order_lines.length > 0
-          ? defaultValues.order_lines
-          : [{ categoria: "Infissi", descrizione: "", quantita: 1, prezzo_unitario: 0, sconto: 0, iva: 22 }],
+          ? defaultValues.order_lines.map(l => ({ ...l, iva: 0 }))
+          : [{ categoria: "Infissi", descrizione: "", quantita: 1, prezzo_unitario: 0, sconto: 0, iva: 0 }],
       });
     }
   }, [defaultValues, open]);
@@ -242,7 +239,7 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-sm font-semibold">Righe Preventivo *</h3>
-                  <Button type="button" variant="outline" size="sm" onClick={() => append({ categoria: "Infissi", descrizione: "", quantita: 1, prezzo_unitario: 0, sconto: 0, iva: 22 })}>
+                  <Button type="button" variant="outline" size="sm" onClick={() => append({ categoria: "Infissi", descrizione: "", quantita: 1, prezzo_unitario: 0, sconto: 0, iva: 0 })}>
                     <Plus className="h-4 w-4 mr-2" />Aggiungi Riga
                   </Button>
                 </div>
@@ -302,16 +299,7 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
                             )}
                           </div>
                         </div>
-                        <div className="mt-2 flex justify-between items-center text-sm gap-3">
-                          <FormField control={form.control} name={`order_lines.${index}.iva`} render={({ field }) => (
-                            <FormItem className="flex-1">
-                              <IvaSelector
-                                value={field.value}
-                                onChange={field.onChange}
-                                triggerClassName="h-8 text-xs"
-                              />
-                            </FormItem>
-                          )} />
+                        <div className="mt-2 flex justify-end text-sm">
                           <span className="font-semibold whitespace-nowrap">
                             Totale: {formatCurrency(calculateLineTotal(watchedLines[index]))}
                           </span>
