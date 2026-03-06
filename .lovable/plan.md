@@ -1,31 +1,39 @@
 
 
-# Modifiche al Dialog Creazione Preventivo
+# Verifica Allegati Preventivo — Problemi Trovati
 
-## Interventi
+## Stato Attuale
 
-### 1. Rimuovere campo "Data Consegna Prevista"
-**File:** `src/components/orders/NewPreventivoDialog.tsx`
-- Rimuovere il campo `data_consegna_prevista` dal form (righe 315-317)
-- Rimuovere dal schema Zod e dai defaultValues
-- Rimuovere dalla `PreventivoDefaultValues` interface
-- Non passare il valore nella mutazione (il campo DB resta nullable, sara' semplicemente `null`)
+L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
 
-### 2. Aggiungere sezione Allegati nel dialog di creazione
-**File:** `src/components/orders/NewPreventivoDialog.tsx`
-- Aggiungere uno stato locale `pendingFiles: File[]` per i file selezionati prima del salvataggio (il preventivo non esiste ancora, non possiamo caricare su storage)
-- Aggiungere una sezione UI con bottone "Aggiungi Allegato" e lista file selezionati con possibilita' di rimuoverli
-- Dopo la creazione del preventivo (nel `onSubmit`), caricare i file su storage `order-attachments` e inserire i record nella tabella `attachments`, riutilizzando la stessa logica di `AttachmentsSection`
+---
 
-### 3. Aggiornare `useCreatePreventivo` o `onSubmit`
-**File:** `src/components/orders/NewPreventivoDialog.tsx`
-- Nel `onSubmit`, dopo `createPreventivoMutation.mutateAsync()`, iterare sui `pendingFiles` e per ognuno:
-  1. Upload su storage `order-attachments/{preventivoId}/...`
-  2. Insert record in tabella `attachments`
-- Mostrare toast di successo anche per gli allegati
+## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
 
-### Nessuna modifica a
-- `useOrders.ts` — la mutazione resta invariata
-- `AttachmentsSection.tsx` — usato nella pagina dettaglio ordine, non nel dialog di creazione
-- Database — nessuna migrazione necessaria, le tabelle e RLS sono gia' corrette
+**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
+
+Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
+
+**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
+
+Interventi:
+- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
+- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
+- Entrambi i file usano lo stesso pattern, la fix e' identica
+
+## Bug 2: `useCreatePreventivo` contiene codice morto
+
+**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
+
+- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
+- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
+
+**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
+
+## Riepilogo
+
+| # | Tipo | File | Problema |
+|---|------|------|----------|
+| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
+| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
 
