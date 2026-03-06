@@ -498,8 +498,7 @@ export const useCreatePreventivo = () => {
         (sum: number, line: any) => {
           const subtotal = line.quantita * line.prezzo_unitario;
           const afterDiscount = subtotal * (1 - line.sconto / 100);
-          const total = afterDiscount * (1 + line.iva / 100);
-          return sum + total;
+          return sum + afterDiscount;
         },
         0
       );
@@ -510,7 +509,6 @@ export const useCreatePreventivo = () => {
         commerciale_id: dealer.commerciale_owner_id,
         creato_da_user_id: user.id,
         cliente_finale_id: clienteFinaleId,
-        data_consegna_prevista: values.data_consegna_prevista || null,
         data_scadenza_preventivo: values.data_scadenza_preventivo || null,
         importo_acconto: 0,
         importo_totale: importoTotale,
@@ -530,7 +528,6 @@ export const useCreatePreventivo = () => {
       const orderLinesData = values.order_lines.map((line: any) => {
         const subtotal = line.quantita * line.prezzo_unitario;
         const afterDiscount = subtotal * (1 - line.sconto / 100);
-        const total = afterDiscount * (1 + line.iva / 100);
 
         return {
           ordine_id: newOrder.id,
@@ -540,7 +537,7 @@ export const useCreatePreventivo = () => {
           prezzo_unitario: line.prezzo_unitario,
           sconto: line.sconto,
           iva: line.iva,
-          totale_riga: total,
+          totale_riga: afterDiscount,
         };
       });
 

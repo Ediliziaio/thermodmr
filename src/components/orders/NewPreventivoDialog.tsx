@@ -182,16 +182,12 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
         continue;
       }
 
-      const { data: { publicUrl } } = supabase.storage
-        .from("order-attachments")
-        .getPublicUrl(fileName);
-
       const { error: insertError } = await supabase
         .from("attachments")
         .insert({
           ordine_id: preventivoId,
           nome_file: file.name,
-          url: publicUrl,
+          url: fileName,
           tipo_mime: file.type,
           dimensione: file.size,
           uploaded_by_user_id: user.id,

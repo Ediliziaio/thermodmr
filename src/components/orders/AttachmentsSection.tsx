@@ -79,18 +79,13 @@ export function AttachmentsSection({ orderId, attachments }: AttachmentsSectionP
 
           if (uploadError) throw uploadError;
 
-          // Get public URL
-          const { data: { publicUrl } } = supabase.storage
-            .from("order-attachments")
-            .getPublicUrl(fileName);
-
-          // Insert attachment record
+          // Insert attachment record - store storage path, not public URL
           const { error: insertError } = await supabase
             .from("attachments")
             .insert({
               ordine_id: orderId,
               nome_file: file.name,
-              url: publicUrl,
+              url: fileName,
               tipo_mime: file.type,
               dimensione: file.size,
               uploaded_by_user_id: user.id,
@@ -121,8 +116,21 @@ export function AttachmentsSection({ orderId, attachments }: AttachmentsSectionP
     input.click();
   };
 
-  const handleDownload = (attachment: Attachment) => {
-    window.open(attachment.url, "_blank");
+  const handleDownload = async (attachment: Attachment) => {
+    const { data, error } = await supabase.storage
+      .from("order-attachments")
+      .createSignedUrl(attachment.url, 60);
+
+    if (error || !data?.signedUrl) {
+      toast({
+        title: "Errore download",
+        description: "Impossibile generare il link per il download.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    window.open(data.signedUrl, "_blank");
   };
 
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
