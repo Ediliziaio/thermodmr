@@ -298,9 +298,10 @@ export default function OrderDetail() {
                 readOnly={!isSuperAdmin}
                 title="Prodotti Quotati"
               />
-              {hasLineChanges && isSuperAdmin && (
+              {isSuperAdmin && (
                 <div className="flex justify-end">
                   <Button
+                    variant={hasLineChanges ? "default" : "outline"}
                     onClick={() => {
                       if (id && editedLines) {
                         updateOrderLinesMutation.mutate(
@@ -309,7 +310,7 @@ export default function OrderDetail() {
                         );
                       }
                     }}
-                    disabled={updateOrderLinesMutation.isPending}
+                    disabled={!hasLineChanges || updateOrderLinesMutation.isPending}
                   >
                     {updateOrderLinesMutation.isPending ? (
                       <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
