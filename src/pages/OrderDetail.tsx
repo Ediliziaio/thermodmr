@@ -43,6 +43,7 @@ import {
   useUpdateOrderStatus,
   useUpdateOrderNotes,
   useUpdateOrderId,
+  useUpdateOrderLines,
 } from "@/hooks/useOrders";
 import { formatCurrency, formatDate, getStatusLabel, getStatusColor } from "@/lib/utils";
 import { differenceInDays, isPast, parseISO } from "date-fns";

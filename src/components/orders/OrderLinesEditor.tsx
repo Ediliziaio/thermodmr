@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,9 @@ import {
 } from "@/components/ui/select";
 import { Plus, Trash2 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
+import { IvaSelector } from "./IvaSelector";
 
+/** Internal normalized line format (camelCase) */
 interface OrderLine {
   id: string;
   ordineId: string;
@@ -25,10 +27,9 @@ interface OrderLine {
   totaleRiga: number;
   misure?: Record<string, any>;
 }
-import { IvaSelector } from "./IvaSelector";
 
 interface OrderLinesEditorProps {
-  lines: OrderLine[];
+  lines: any[];
   onLinesChange: (lines: OrderLine[]) => void;
   orderStatus?: string;
   readOnly?: boolean;
@@ -43,11 +44,31 @@ const categories = [
   "Accessorio",
 ];
 
-export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly = false, title = "Righe Ordine" }: OrderLinesEditorProps) {
-  const [editingLines, setEditingLines] = useState<OrderLine[]>(lines);
-  
-  const canEdit = !readOnly && (orderStatus === "da_confermare" || !orderStatus);
+/** Normalize a line from DB snake_case or internal camelCase */
+function normalizeLine(raw: any): OrderLine {
+  return {
+    id: raw.id || `line-${Date.now()}-${Math.random()}`,
+    ordineId: raw.ordine_id ?? raw.ordineId ?? "",
+    categoria: raw.categoria || "Finestra",
+    descrizione: raw.descrizione || "",
+    quantita: Number(raw.quantita) || 1,
+    prezzoUnitario: Number(raw.prezzo_unitario ?? raw.prezzoUnitario) || 0,
+    sconto: Number(raw.sconto) || 0,
+    iva: Number(raw.iva) ?? 22,
+    totaleRiga: Number(raw.totale_riga ?? raw.totaleRiga) || 0,
+    misure: raw.misure,
+  };
+}
 
+export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly = false, title = "Righe Ordine" }: OrderLinesEditorProps) {
+  const [editingLines, setEditingLines] = useState<OrderLine[]>(() => lines.map(normalizeLine));
+
+  // Sync when external lines change (e.g. after refetch)
+  useEffect(() => {
+    setEditingLines(lines.map(normalizeLine));
+  }, [lines]);
+
+  const canEdit = !readOnly && (orderStatus === "da_confermare" || orderStatus === "preventivo" || !orderStatus);
 
   const calculateLineTotal = (line: OrderLine) => {
     const subtotal = line.quantita * line.prezzoUnitario;
@@ -68,7 +89,9 @@ export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly =
       iva: 22,
       totaleRiga: 0,
     };
-    setEditingLines([...editingLines, newLine]);
+    const updated = [...editingLines, newLine];
+    setEditingLines(updated);
+    onLinesChange(updated);
   };
 
   const removeLine = (id: string) => {
@@ -108,10 +131,10 @@ export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly =
           </Button>
         )}
       </CardHeader>
-      {!canEdit && orderStatus !== "da_confermare" && (
+      {!canEdit && readOnly && orderStatus && orderStatus !== "da_confermare" && orderStatus !== "preventivo" && (
         <div className="px-6 pb-2">
           <p className="text-sm text-muted-foreground">
-            Le righe possono essere modificate solo quando l'ordine è in stato "Da Confermare"
+            Le righe possono essere modificate solo quando l'ordine è in stato "Da Confermare" o "Preventivo"
           </p>
         </div>
       )}
@@ -229,7 +252,7 @@ export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly =
 
         {editingLines.length === 0 && (
           <div className="text-center py-8 text-muted-foreground">
-            <p>Nessuna riga presente. Clicca su "Aggiungi Riga" per iniziare.</p>
+            <p>Nessuna riga presente. {canEdit ? 'Clicca su "Aggiungi Riga" per iniziare.' : ''}</p>
           </div>
         )}
 
