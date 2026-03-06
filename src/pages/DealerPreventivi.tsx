@@ -206,7 +206,15 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
 
   const basePath = dealerId ? `/rivenditori/${dealerId}/area` : "";
 
-  const hasActiveFilters = searchTerm || dealerFilter !== "tutti" || statusFilter !== "tutti";
+  const hasActiveFilters = searchTerm || dealerFilter !== "tutti" || statusFilter !== "tutti" || dateFrom || dateTo;
+
+  const resetFilters = () => {
+    setSearchTerm("");
+    setDealerFilter("tutti");
+    setStatusFilter("tutti");
+    setDateFrom(undefined);
+    setDateTo(undefined);
+  };
 
   return (
     <div className="space-y-6 p-4 md:p-6">
