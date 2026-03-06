@@ -303,6 +303,44 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
               </Select>
             )}
           </div>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="sm" className={cn("justify-start text-left font-normal", !dateFrom && "text-muted-foreground")}>
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {dateFrom ? format(dateFrom, "dd MMM yyyy", { locale: it }) : "Da"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={dateFrom}
+                  onSelect={setDateFrom}
+                  initialFocus
+                  locale={it}
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              </PopoverContent>
+            </Popover>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="sm" className={cn("justify-start text-left font-normal", !dateTo && "text-muted-foreground")}>
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {dateTo ? format(dateTo, "dd MMM yyyy", { locale: it }) : "A"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={dateTo}
+                  onSelect={setDateTo}
+                  initialFocus
+                  locale={it}
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
           <div className="flex items-center gap-2 flex-wrap">
             {(["tutti", "validi", "scaduti"] as StatusFilter[]).map((s) => (
               <Button
@@ -324,7 +362,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => { setSearchTerm(""); setDealerFilter("tutti"); setStatusFilter("tutti"); }}
+                onClick={resetFilters}
                 className="text-muted-foreground"
               >
                 Cancella filtri
