@@ -34,6 +34,7 @@ interface OrderLinesEditorProps {
   orderStatus?: string;
   readOnly?: boolean;
   title?: string;
+  simplified?: boolean;
 }
 
 const categories = [
