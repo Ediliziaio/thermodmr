@@ -1,39 +1,75 @@
 
 
-# Verifica Allegati Preventivo — Problemi Trovati
+# Rimozione completa sezioni Provvigioni e Commerciali
 
-## Stato Attuale
+## Panoramica
+Eliminare tutte le pagine, componenti, hook e route relative a Provvigioni e Commerciali. Rimuovere anche il tab Commissioni dalle Impostazioni. I riferimenti a `commerciale_id` nei filtri (Dealers, Analytics, ecc.) e nel DB restano invariati — si rimuove solo l'UI dedicata.
 
-L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
+## File da eliminare
 
----
+### Pagine
+- `src/pages/Provvigioni.tsx`
+- `src/pages/Commerciali.tsx`
+- `src/pages/CommercialeDetail.tsx`
+- `src/pages/CommercialeDashboard.tsx`
 
-## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
+### Componenti
+- `src/components/commerciali/AssignDealersDialog.tsx`
+- `src/components/commerciali/BulkDeleteCommercialiDialog.tsx`
+- `src/components/commerciali/CommercialFilters.tsx`
+- `src/components/commerciali/CommercialeCard.tsx`
+- `src/components/commerciali/DeleteCommercialeDialog.tsx`
+- `src/components/commerciali/EditCommercialeDialog.tsx`
+- `src/components/commerciali/MobileCommercialCard.tsx`
+- `src/components/commerciali/MobileCommercialFilters.tsx`
+- `src/components/commerciali/NewCommercialeDialog.tsx`
+- `src/components/commissions/CommissionStatusBadge.tsx`
+- `src/components/commissions/LiquidateCommissionDialog.tsx`
+- `src/components/settings/CommissionSettingsSection.tsx`
 
-**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
+### Hook
+- `src/hooks/useCommerciali.ts`
+- `src/hooks/useCommercialiInfinite.ts`
+- `src/hooks/useCommissions.ts`
+- `src/hooks/useCommercialeDashboard.ts`
 
-Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
+### Edge Functions
+- `src/supabase/functions/delete-commerciale/index.ts`
+- `src/supabase/functions/update-commerciale/index.ts`
+- `src/supabase/functions/notify-dealer-reassignment/index.ts`
 
-**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
+## File da modificare
 
-Interventi:
-- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
-- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
-- Entrambi i file usano lo stesso pattern, la fix e' identica
+### `src/App.tsx`
+- Rimuovere lazy imports: `CommercialeDetail`, `Commerciali`, `Provvigioni`
+- Rimuovere le 3 Route: `/commerciali`, `/commerciali/:id`, `/provvigioni`
 
-## Bug 2: `useCreatePreventivo` contiene codice morto
+### `src/components/Layout.tsx`
+- Rimuovere dal navigation array: voce "Commerciali" e "Provvigioni"
+- Rimuovere import `Briefcase`, `TrendingUp` (se non usati altrove)
 
-**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
+### `src/pages/SmartDashboard.tsx`
+- Rimuovere import `CommercialeDashboard`
+- Rimuovere il blocco `if (userRole === "commerciale")` — reindirizzare i commerciali come i rivenditori (a `/ordini`) o mostrare la Dashboard standard
 
-- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
-- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
+### `src/pages/Impostazioni.tsx`
+- Rimuovere import `CommissionSettingsSection`
+- Rimuovere tab "Commissioni" (TabsTrigger + TabsContent)
+- Rimuovere import `Percent`
 
-**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
+### `src/components/dealers/DealerFilters.tsx`
+- Rimuovere il filtro "Commerciale" (select + import `useCommercialiInfinite`)
 
-## Riepilogo
+### `src/components/dealers/MobileDealerFilters.tsx`
+- Rimuovere il filtro "Commerciale" (select + import `useCommercialiInfinite`)
 
-| # | Tipo | File | Problema |
-|---|------|------|----------|
-| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
-| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
+### `src/pages/Analytics.tsx`
+- Rimuovere import `useCommercialiInfinite` e il filtro per commerciale se presente
+
+### `src/components/settings/UserManagementSection.tsx`
+- Rimuovere il tab "Commerciali" e il filtro per ruolo commerciale (TabsTrigger + TabsContent per commerciali)
+- Rimuovere l'opzione "Commerciale" dal Select ruolo nel renderUserCard
+- Aggiornare `grid-cols-3` a `grid-cols-2` nella TabsList
+
+Nessuna modifica al database — le colonne `commerciale_id` e `commerciale_owner_id` restano per compatibilità.
 
