@@ -342,7 +342,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
             </Popover>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
-            {(["tutti", "validi", "scaduti"] as StatusFilter[]).map((s) => (
+            {(["tutti", "validi", "non_validi"] as StatusFilter[]).map((s) => (
               <Button
                 key={s}
                 variant={statusFilter === s ? "default" : "outline"}
@@ -353,8 +353,8 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                 {s === "validi" && (
                   <><CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />Validi</>
                 )}
-                {s === "scaduti" && (
-                  <><AlertTriangle className="h-3.5 w-3.5 mr-1.5" />Scaduti</>
+                {s === "non_validi" && (
+                  <><AlertTriangle className="h-3.5 w-3.5 mr-1.5" />Non Validi</>
                 )}
               </Button>
             ))}
