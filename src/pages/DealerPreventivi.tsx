@@ -111,7 +111,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
         dealer_id: order.dealer_id,
         note_rivenditore: order.note_rivenditore || "",
         note_interna: order.note_interna || "",
-        data_consegna_prevista: order.data_consegna_prevista || "",
+        
         ...clientData,
         order_lines: lines?.map(l => ({
           categoria: l.categoria,

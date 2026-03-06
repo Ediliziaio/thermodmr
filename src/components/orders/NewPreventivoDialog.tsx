@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -27,13 +27,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Trash2, Loader2 } from "lucide-react";
+import { Plus, Trash2, Loader2, Paperclip, X } from "lucide-react";
 import { useDealersInfinite } from "@/hooks/useDealersInfinite";
 import { useCreatePreventivo } from "@/hooks/useOrders";
 import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
+
 const orderLineSchema = z.object({
   categoria: z.string().min(1, "Categoria richiesta"),
   descrizione: z.string().min(1, "Descrizione richiesta"),
@@ -50,7 +53,6 @@ const preventivoFormSchema = z.object({
   cliente_email: z.string().email().optional().or(z.literal("")),
   cliente_telefono: z.string().optional(),
   cliente_indirizzo: z.string().optional(),
-  data_consegna_prevista: z.string().optional(),
   data_scadenza_preventivo: z.string().min(1, "Data scadenza richiesta"),
   note_rivenditore: z.string().optional(),
   note_interna: z.string().optional(),
@@ -66,7 +68,6 @@ export interface PreventivoDefaultValues {
   cliente_email?: string;
   cliente_telefono?: string;
   cliente_indirizzo?: string;
-  data_consegna_prevista?: string;
   note_rivenditore?: string;
   note_interna?: string;
   order_lines?: Array<{
@@ -96,6 +97,9 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
   const { data: dealersData } = useDealersInfinite();
   const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
   const createPreventivoMutation = useCreatePreventivo();
+  const [pendingFiles, setPendingFiles] = useState<File[]>([]);
+  const [uploadingFiles, setUploadingFiles] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<PreventivoFormValues>({
     resolver: zodResolver(preventivoFormSchema),
@@ -118,7 +122,6 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
         cliente_email: defaultValues.cliente_email || "",
         cliente_telefono: defaultValues.cliente_telefono || "",
         cliente_indirizzo: defaultValues.cliente_indirizzo || "",
-        data_consegna_prevista: defaultValues.data_consegna_prevista || "",
         data_scadenza_preventivo: "", // always empty for duplicates
         note_rivenditore: defaultValues.note_rivenditore || "",
         note_interna: defaultValues.note_interna || "",
@@ -129,6 +132,13 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
     }
   }, [defaultValues, open]);
 
+  // Reset pending files when dialog closes
+  useEffect(() => {
+    if (!open) {
+      setPendingFiles([]);
+    }
+  }, [open]);
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "order_lines",
@@ -137,23 +147,103 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
   const watchedLines = form.watch("order_lines");
   const importoTotale = watchedLines.reduce((sum, line) => sum + calculateLineTotal(line), 0);
 
+  const handleAddFiles = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    setPendingFiles(prev => [...prev, ...Array.from(files)]);
+    // Reset input so the same file can be selected again
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleRemoveFile = (index: number) => {
+    setPendingFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const uploadAttachments = async (preventivoId: string) => {
+    if (pendingFiles.length === 0) return;
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    for (const file of pendingFiles) {
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${preventivoId}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("order-attachments")
+        .upload(fileName, file);
+
+      if (uploadError) {
+        console.error("Error uploading file:", uploadError);
+        continue;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from("order-attachments")
+        .getPublicUrl(fileName);
+
+      const { error: insertError } = await supabase
+        .from("attachments")
+        .insert({
+          ordine_id: preventivoId,
+          nome_file: file.name,
+          url: publicUrl,
+          tipo_mime: file.type,
+          dimensione: file.size,
+          uploaded_by_user_id: user.id,
+        });
+
+      if (insertError) {
+        console.error("Error inserting attachment record:", insertError);
+      }
+    }
+  };
+
   const onSubmit = async (values: PreventivoFormValues) => {
-    await createPreventivoMutation.mutateAsync({
+    const newPreventivo = await createPreventivoMutation.mutateAsync({
       dealer_id: values.dealer_id,
       cliente_nome: values.cliente_nome,
       cliente_cognome: values.cliente_cognome,
       cliente_email: values.cliente_email,
       cliente_telefono: values.cliente_telefono,
       cliente_indirizzo: values.cliente_indirizzo,
-      data_consegna_prevista: values.data_consegna_prevista,
       data_scadenza_preventivo: values.data_scadenza_preventivo,
       note_rivenditore: values.note_rivenditore,
       note_interna: values.note_interna,
       order_lines: values.order_lines,
     });
+
+    // Upload pending files after preventivo creation
+    if (pendingFiles.length > 0) {
+      setUploadingFiles(true);
+      try {
+        await uploadAttachments(newPreventivo.id);
+        toast({
+          title: "Allegati caricati",
+          description: `${pendingFiles.length} allegati caricati con successo.`,
+        });
+      } catch (error) {
+        console.error("Error uploading attachments:", error);
+        toast({
+          title: "Errore allegati",
+          description: "Alcuni allegati non sono stati caricati correttamente.",
+          variant: "destructive",
+        });
+      } finally {
+        setUploadingFiles(false);
+      }
+    }
+
     onOpenChange(false);
     form.reset();
+    setPendingFiles([]);
   };
+
+  const isSubmitting = createPreventivoMutation.isPending || uploadingFiles;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -311,11 +401,7 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
               </CardContent>
             </Card>
 
-            {/* Additional Info */}
-            <FormField control={form.control} name="data_consegna_prevista" render={({ field }) => (
-              <FormItem><FormLabel>Data Consegna Prevista</FormLabel><FormControl><Input type="date" {...field} /></FormControl><FormMessage /></FormItem>
-            )} />
-
+            {/* Notes */}
             <FormField control={form.control} name="note_rivenditore" render={({ field }) => (
               <FormItem><FormLabel>Note Rivenditore</FormLabel><FormControl><Textarea rows={2} {...field} /></FormControl><FormMessage /></FormItem>
             )} />
@@ -323,6 +409,45 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
             <FormField control={form.control} name="note_interna" render={({ field }) => (
               <FormItem><FormLabel>Note Interna</FormLabel><FormControl><Textarea rows={2} {...field} /></FormControl><FormMessage /></FormItem>
             )} />
+
+            {/* Attachments */}
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm font-semibold">Allegati</h3>
+                  <Button type="button" variant="outline" size="sm" onClick={handleAddFiles}>
+                    <Paperclip className="h-4 w-4 mr-2" />Aggiungi Allegato
+                  </Button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
+                </div>
+                {pendingFiles.length > 0 ? (
+                  <div className="space-y-2">
+                    {pendingFiles.map((file, index) => (
+                      <div key={index} className="flex items-center justify-between bg-muted/30 rounded-md px-3 py-2 text-sm">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <Paperclip className="h-4 w-4 text-muted-foreground shrink-0" />
+                          <span className="truncate">{file.name}</span>
+                          <span className="text-muted-foreground text-xs shrink-0">
+                            ({(file.size / 1024).toFixed(0)} KB)
+                          </span>
+                        </div>
+                        <Button type="button" variant="ghost" size="sm" className="h-7 w-7 p-0 shrink-0" onClick={() => handleRemoveFile(index)}>
+                          <X className="h-3.5 w-3.5 text-destructive" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">Nessun allegato selezionato</p>
+                )}
+              </CardContent>
+            </Card>
 
             <Separator />
 
@@ -337,8 +462,8 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
             {/* Actions */}
             <div className="flex justify-end gap-3">
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Annulla</Button>
-              <Button type="submit" disabled={createPreventivoMutation.isPending}>
-                {createPreventivoMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isDuplicate ? "Duplica Preventivo" : "Crea Preventivo"}
               </Button>
             </div>
