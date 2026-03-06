@@ -497,7 +497,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                         <TableCell>
                           {expired ? (
                             <Badge variant="destructive" className="animate-pulse">
-                              <AlertTriangle className="h-3 w-3 mr-1" />Scaduto
+                              <AlertTriangle className="h-3 w-3 mr-1" />Non Valido
                             </Badge>
                           ) : (
                             <Badge className="bg-chart-2/10 text-chart-2 border-chart-2/20 hover:bg-chart-2/20">
