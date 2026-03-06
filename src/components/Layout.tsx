@@ -30,7 +30,7 @@ const navigation = [
   { name: "Rivenditori", href: "/rivenditori", icon: Users, roles: ["super_admin", "commerciale"] },
   { name: "Pagamenti", href: "/pagamenti", icon: CreditCard, roles: ["super_admin", "commerciale"] },
   { name: "KPI", href: "/kpi", icon: BarChart3, roles: ["super_admin"] },
-  ...(import.meta.env.DEV ? [{ name: "RLS Test", href: "/rls-test", icon: Shield, roles: ["super_admin"] }] : []),
+  
   { name: "Impostazioni", href: "/impostazioni", icon: Settings, roles: ["super_admin"] },
 ];
 

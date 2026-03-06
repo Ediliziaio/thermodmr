@@ -22,7 +22,7 @@ const PaymentDetail = lazy(() => import("./pages/PaymentDetail"));
 const Orders = lazy(() => import("./pages/Orders"));
 const Dealers = lazy(() => import("./pages/Dealers"));
 const Pagamenti = lazy(() => import("./pages/Pagamenti"));
-const RLSTest = lazy(() => import("./pages/RLSTest"));
+
 const TestDataSeeder = lazy(() => import("./pages/TestDataSeeder"));
 const Impostazioni = lazy(() => import("./pages/Impostazioni"));
 
