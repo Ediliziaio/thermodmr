@@ -234,10 +234,10 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-2 text-muted-foreground mb-1">
-                <CheckCircle2 className="h-4 w-4 text-green-500" />
+                <CheckCircle2 className="h-4 w-4 text-chart-2" />
                 <span className="text-xs font-medium uppercase tracking-wide">Validi</span>
               </div>
-              <p className="text-2xl font-bold text-green-600">{stats.valid}</p>
+              <p className="text-2xl font-bold text-chart-2">{stats.valid}</p>
             </CardContent>
           </Card>
           <Card>
