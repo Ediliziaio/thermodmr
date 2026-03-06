@@ -1,9 +1,8 @@
 import { useAuth } from "@/contexts/AuthContext";
 import Dashboard from "./Dashboard";
-import CommercialeDashboard from "./CommercialeDashboard";
 import { Navigate } from "react-router-dom";
 import { Loader2, AlertCircle } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function SmartDashboard() {
   const { userRole, loading } = useAuth();
@@ -20,11 +19,7 @@ export default function SmartDashboard() {
     return <Dashboard />;
   }
 
-  if (userRole === "commerciale") {
-    return <CommercialeDashboard />;
-  }
-
-  if (userRole === "rivenditore") {
+  if (userRole === "commerciale" || userRole === "rivenditore") {
     return <Navigate to="/ordini" replace />;
   }
 

@@ -1,11 +1,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UserManagementSection from "@/components/settings/UserManagementSection";
-import CommissionSettingsSection from "@/components/settings/CommissionSettingsSection";
 import OrderNumberingSection from "@/components/settings/OrderNumberingSection";
 import PDFTemplateSection from "@/components/settings/PDFTemplateSection";
 import IntegrationSection from "@/components/settings/IntegrationSection";
 import AuditLogSection from "@/components/settings/AuditLogSection";
-import { Settings, Users, Percent, Hash, FileText, Plug, ClipboardList } from "lucide-react";
+import { Settings, Users, Hash, FileText, Plug, ClipboardList } from "lucide-react";
 
 const Impostazioni = () => {
   return (
@@ -26,11 +25,6 @@ const Impostazioni = () => {
             <Users className="h-4 w-4" />
             <span className="hidden sm:inline">Utenti e Ruoli</span>
             <span className="sm:hidden">Utenti</span>
-          </TabsTrigger>
-          <TabsTrigger value="commissions" className="flex items-center gap-1.5 min-w-fit">
-            <Percent className="h-4 w-4" />
-            <span className="hidden sm:inline">Commissioni</span>
-            <span className="sm:hidden">Comm.</span>
           </TabsTrigger>
           <TabsTrigger value="numbering" className="flex items-center gap-1.5 min-w-fit">
             <Hash className="h-4 w-4" />
@@ -56,10 +50,6 @@ const Impostazioni = () => {
 
         <TabsContent value="users" className="space-y-4">
           <UserManagementSection />
-        </TabsContent>
-
-        <TabsContent value="commissions" className="space-y-4">
-          <CommissionSettingsSection />
         </TabsContent>
 
         <TabsContent value="numbering" className="space-y-4">

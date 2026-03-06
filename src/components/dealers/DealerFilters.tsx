@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,6 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Search, X, ArrowUpDown } from "lucide-react";
-import { useCommercialiInfinite } from "@/hooks/useCommercialiInfinite";
 import type { DealerFilters as FilterType } from "@/hooks/useDealersInfinite";
 import { PROVINCE_ITALIANE } from "@/lib/dealerConstants";
 
@@ -24,35 +23,26 @@ interface DealerFiltersProps {
 export function DealerFilters({ onFiltersChange, resultsCount }: DealerFiltersProps) {
   const [search, setSearch] = useState("");
   const [provincia, setProvincia] = useState("");
-  const [commercialeId, setCommercialeId] = useState("");
   const [minRevenue, setMinRevenue] = useState("");
   const [maxRevenue, setMaxRevenue] = useState("");
   const [sortBy, setSortBy] = useState<FilterType["sortBy"]>("ragione_sociale");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
-  const { data: commercialiData } = useCommercialiInfinite();
-  const commerciali = useMemo(
-    () => commercialiData?.pages.flatMap((p) => p.data) || [],
-    [commercialiData]
-  );
-
   useEffect(() => {
     const filters: FilterType = {
       search: search || undefined,
       provincia: provincia || undefined,
-      commerciale_id: commercialeId || undefined,
       minRevenue: minRevenue ? parseFloat(minRevenue) : undefined,
       maxRevenue: maxRevenue ? parseFloat(maxRevenue) : undefined,
       sortBy,
       sortOrder,
     };
     onFiltersChange(filters);
-  }, [search, provincia, commercialeId, minRevenue, maxRevenue, sortBy, sortOrder, onFiltersChange]);
+  }, [search, provincia, minRevenue, maxRevenue, sortBy, sortOrder, onFiltersChange]);
 
   const clearFilters = () => {
     setSearch("");
     setProvincia("");
-    setCommercialeId("");
     setMinRevenue("");
     setMaxRevenue("");
     setSortBy("ragione_sociale");
@@ -62,7 +52,6 @@ export function DealerFilters({ onFiltersChange, resultsCount }: DealerFiltersPr
   const activeFiltersCount = [
     search,
     provincia,
-    commercialeId,
     minRevenue,
     maxRevenue,
   ].filter(Boolean).length;
@@ -100,7 +89,7 @@ export function DealerFilters({ onFiltersChange, resultsCount }: DealerFiltersPr
         </div>
 
         {/* Filtri Avanzati */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Provincia */}
           <div className="space-y-2">
             <Label htmlFor="provincia">Provincia</Label>
@@ -115,26 +104,6 @@ export function DealerFilters({ onFiltersChange, resultsCount }: DealerFiltersPr
                     {prov}
                   </SelectItem>
                 ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Commerciale */}
-          <div className="space-y-2">
-            <Label htmlFor="commerciale">Commerciale</Label>
-            <Select value={commercialeId} onValueChange={setCommercialeId}>
-              <SelectTrigger id="commerciale">
-                <SelectValue placeholder="Tutti" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value=" ">Tutti i commerciali</SelectItem>
-                {commerciali
-                  .filter((c) => c.is_active)
-                  .map((c) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.display_name}
-                    </SelectItem>
-                  ))}
               </SelectContent>
             </Select>
           </div>

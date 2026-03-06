@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, TrendingUp, Euro, Package, Target, Download, Users } from "lucide-react";
@@ -11,35 +11,24 @@ import { PaymentTrendsDetailedChart } from "@/components/analytics/PaymentTrends
 import { DealerPerformanceChart } from "@/components/analytics/DealerPerformanceChart";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDealersInfinite } from "@/hooks/useDealersInfinite";
-import { useCommercialiInfinite } from "@/hooks/useCommercialiInfinite";
 import { toast } from "@/hooks/use-toast";
 
 export default function Analytics() {
   const { userRole } = useAuth();
   const [months, setMonths] = useState(6);
-  const [selectedCommerciale, setSelectedCommerciale] = useState<string | undefined>();
   const [selectedDealer, setSelectedDealer] = useState<string | undefined>();
 
   const { data: analytics, isLoading, error } = useUnifiedAnalytics({
-    commercialeId: selectedCommerciale,
     dealerId: selectedDealer,
     months,
   });
 
-  // Fetch commerciali and dealers for filters (only for super_admin)
-  const { data: commercialiData } = useCommercialiInfinite();
   const { data: dealersData } = useDealersInfinite();
-
-  const commerciali = useMemo(
-    () => commercialiData?.pages.flatMap(p => p.data) || [],
-    [commercialiData]
-  );
 
   const dealers = useMemo(
     () => dealersData?.pages.flatMap(p => p.data) || [],
     [dealersData]
   );
-
 
   const handleExportData = () => {
     if (!analytics) return;
@@ -116,43 +105,25 @@ export default function Analytics() {
             </Select>
 
             {userRole === "super_admin" && (
-              <>
-                <Select value={selectedCommerciale || "all"} onValueChange={(v) => setSelectedCommerciale(v === "all" ? undefined : v)}>
-                  <SelectTrigger className="w-[200px]">
-                    <Users className="h-4 w-4 mr-2" />
-                    <SelectValue placeholder="Tutti i commerciali" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Tutti i commerciali</SelectItem>
-                    {commerciali.map(c => (
-                      <SelectItem key={c.id} value={c.id!}>{c.display_name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                <Select value={selectedDealer || "all"} onValueChange={(v) => setSelectedDealer(v === "all" ? undefined : v)}>
-                  <SelectTrigger className="w-[200px]">
-                    <Users className="h-4 w-4 mr-2" />
-                    <SelectValue placeholder="Tutti i dealers" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Tutti i dealers</SelectItem>
-                    {dealers.map(d => (
-                      <SelectItem key={d.id} value={d.id!}>{d.ragione_sociale}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </>
+              <Select value={selectedDealer || "all"} onValueChange={(v) => setSelectedDealer(v === "all" ? undefined : v)}>
+                <SelectTrigger className="w-[200px]">
+                  <Users className="h-4 w-4 mr-2" />
+                  <SelectValue placeholder="Tutti i dealers" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Tutti i dealers</SelectItem>
+                  {dealers.map(d => (
+                    <SelectItem key={d.id} value={d.id!}>{d.ragione_sociale}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             )}
 
-            {(selectedCommerciale || selectedDealer) && (
+            {selectedDealer && (
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => {
-                  setSelectedCommerciale(undefined);
-                  setSelectedDealer(undefined);
-                }}
+                onClick={() => setSelectedDealer(undefined)}
               >
                 Reset Filtri
               </Button>

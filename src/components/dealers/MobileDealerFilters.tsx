@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Filter, X, ArrowUpDown } from "lucide-react";
-import { useCommercialiInfinite } from "@/hooks/useCommercialiInfinite";
 import type { DealerFilters as FilterType } from "@/hooks/useDealersInfinite";
 import { PROVINCE_ITALIANE } from "@/lib/dealerConstants";
 
@@ -34,35 +33,26 @@ export function MobileDealerFilters({
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [provincia, setProvincia] = useState("");
-  const [commercialeId, setCommercialeId] = useState("");
   const [minRevenue, setMinRevenue] = useState("");
   const [maxRevenue, setMaxRevenue] = useState("");
   const [sortBy, setSortBy] = useState<FilterType["sortBy"]>("ragione_sociale");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
-  const { data: commercialiData } = useCommercialiInfinite();
-  const commerciali = useMemo(
-    () => commercialiData?.pages.flatMap((p) => p.data) || [],
-    [commercialiData]
-  );
-
   useEffect(() => {
     const filters: FilterType = {
       search: search || undefined,
       provincia: provincia || undefined,
-      commerciale_id: commercialeId || undefined,
       minRevenue: minRevenue ? parseFloat(minRevenue) : undefined,
       maxRevenue: maxRevenue ? parseFloat(maxRevenue) : undefined,
       sortBy,
       sortOrder,
     };
     onFiltersChange(filters);
-  }, [search, provincia, commercialeId, minRevenue, maxRevenue, sortBy, sortOrder, onFiltersChange]);
+  }, [search, provincia, minRevenue, maxRevenue, sortBy, sortOrder, onFiltersChange]);
 
   const clearFilters = () => {
     setSearch("");
     setProvincia("");
-    setCommercialeId("");
     setMinRevenue("");
     setMaxRevenue("");
     setSortBy("ragione_sociale");
@@ -72,7 +62,6 @@ export function MobileDealerFilters({
   const activeFiltersCount = [
     search,
     provincia,
-    commercialeId,
     minRevenue,
     maxRevenue,
   ].filter(Boolean).length;
@@ -129,26 +118,6 @@ export function MobileDealerFilters({
                         {prov}
                       </SelectItem>
                     ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Commerciale */}
-              <div className="space-y-2">
-                <Label htmlFor="mobile-commerciale">Commerciale</Label>
-                <Select value={commercialeId} onValueChange={setCommercialeId}>
-                  <SelectTrigger id="mobile-commerciale" className="h-12">
-                    <SelectValue placeholder="Tutti i commerciali" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value=" ">Tutti i commerciali</SelectItem>
-                    {commerciali
-                      .filter((c) => c.is_active)
-                      .map((c) => (
-                        <SelectItem key={c.id} value={c.id}>
-                          {c.display_name}
-                        </SelectItem>
-                      ))}
                   </SelectContent>
                 </Select>
               </div>

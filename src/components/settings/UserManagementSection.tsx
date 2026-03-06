@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UserPlus, Mail, Shield, Users, Briefcase, Store } from "lucide-react";
+import { UserPlus, Mail, Shield, Store } from "lucide-react";
 import { useUsers, useUpdateUserRole, useUpdateUserStatus } from "@/hooks/useSettings";
 import { Skeleton } from "@/components/ui/skeleton";
 import InviteUserDialog from "./InviteUserDialog";
@@ -17,22 +17,14 @@ const UserManagementSection = () => {
   const updateRole = useUpdateUserRole();
   const updateStatus = useUpdateUserStatus();
 
-  // Filter users by role with useMemo for optimization
   const adminUsers = useMemo(() => 
     users?.filter(u => u.roles.includes('super_admin')) || [], 
-    [users]
-  );
-  const commercialeUsers = useMemo(() => 
-    users?.filter(u => u.roles.includes('commerciale')) || [], 
     [users]
   );
   const rivenditoreUsers = useMemo(() => 
     users?.filter(u => u.roles.includes('rivenditore')) || [], 
     [users]
   );
-
-
-
 
   const renderUserCard = (user: any) => (
     <div
@@ -55,7 +47,7 @@ const UserManagementSection = () => {
           onValueChange={(value) =>
             updateRole.mutate({ 
               userId: user.id, 
-              role: value as "super_admin" | "commerciale" | "rivenditore"
+              role: value as "super_admin" | "rivenditore"
             })
           }
         >
@@ -64,7 +56,6 @@ const UserManagementSection = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="super_admin">Super Admin</SelectItem>
-            <SelectItem value="commerciale">Commerciale</SelectItem>
             <SelectItem value="rivenditore">Rivenditore</SelectItem>
           </SelectContent>
         </Select>
@@ -137,19 +128,12 @@ const UserManagementSection = () => {
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="admin" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="admin" className="gap-2">
                 <Shield className="h-4 w-4" />
                 Super Admin
                 <Badge variant="secondary" className="ml-1">
                   {adminUsers.length}
-                </Badge>
-              </TabsTrigger>
-              <TabsTrigger value="commerciale" className="gap-2">
-                <Briefcase className="h-4 w-4" />
-                Commerciali
-                <Badge variant="secondary" className="ml-1">
-                  {commercialeUsers.length}
                 </Badge>
               </TabsTrigger>
               <TabsTrigger value="rivenditore" className="gap-2">
@@ -167,16 +151,6 @@ const UserManagementSection = () => {
                   adminUsers.map(renderUserCard)
                 ) : (
                   renderEmptyState("Super Admin", Shield)
-                )}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="commerciale" className="mt-6">
-              <div className="space-y-4">
-                {commercialeUsers.length > 0 ? (
-                  commercialeUsers.map(renderUserCard)
-                ) : (
-                  renderEmptyState("Commerciale", Briefcase)
                 )}
               </div>
             </TabsContent>
