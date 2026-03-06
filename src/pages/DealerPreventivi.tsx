@@ -481,7 +481,9 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                         key={p.id}
                         className={cn(
                           "cursor-pointer",
-                          expired && "bg-destructive/5 hover:bg-destructive/10"
+                          expired
+                            ? "bg-destructive/5 hover:bg-destructive/10"
+                            : "hover:bg-chart-2/5"
                         )}
                         onClick={() => navigate(`${basePath}/ordini/${p.id}`)}
                       >
@@ -494,11 +496,11 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                         </TableCell>
                         <TableCell>
                           {expired ? (
-                            <Badge variant="destructive">
+                            <Badge variant="destructive" className="animate-pulse">
                               <AlertTriangle className="h-3 w-3 mr-1" />Scaduto
                             </Badge>
                           ) : (
-                            <Badge variant="secondary">
+                            <Badge className="bg-chart-2/10 text-chart-2 border-chart-2/20 hover:bg-chart-2/20">
                               <CheckCircle2 className="h-3 w-3 mr-1" />Valido
                             </Badge>
                           )}
