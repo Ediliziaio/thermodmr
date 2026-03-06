@@ -268,7 +268,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
             <CardContent className="p-4">
               <div className="flex items-center gap-2 text-muted-foreground mb-1">
                 <XCircle className="h-4 w-4 text-destructive" />
-                <span className="text-xs font-medium uppercase tracking-wide">Scaduti</span>
+                <span className="text-xs font-medium uppercase tracking-wide">Non Validi</span>
               </div>
               <p className="text-2xl font-bold text-destructive">{stats.expired}</p>
             </CardContent>
