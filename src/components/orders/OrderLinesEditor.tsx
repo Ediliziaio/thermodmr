@@ -61,7 +61,7 @@ function normalizeLine(raw: any): OrderLine {
   };
 }
 
-export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly = false, title = "Righe Ordine" }: OrderLinesEditorProps) {
+export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly = false, title = "Righe Ordine", simplified = false }: OrderLinesEditorProps) {
   const [editingLines, setEditingLines] = useState<OrderLine[]>(() => lines.map(normalizeLine));
 
   // Sync when external lines change (e.g. after refetch)
