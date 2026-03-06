@@ -22,7 +22,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, FileDown, Send, Loader2, Edit2, Check, X, Clock, AlertTriangle, ArrowRightCircle } from "lucide-react";
+import { ArrowLeft, FileDown, Send, Loader2, Edit2, Check, X, Clock, AlertTriangle, ArrowRightCircle, Copy } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatusStepper } from "@/components/orders/StatusStepper";
 import type { Database } from "@/integrations/supabase/types";
 import { OrderLinesEditor } from "@/components/orders/OrderLinesEditor";
@@ -220,11 +221,19 @@ export default function OrderDetail() {
           </p>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           {isPreventivo ? (
             <>
+              <Button variant="outline" size="sm">
+                <FileDown className="mr-2 h-4 w-4" />
+                Esporta PDF
+              </Button>
+              <Button variant="outline" size="sm">
+                <Copy className="mr-2 h-4 w-4" />
+                Duplica
+              </Button>
               {isSuperAdmin && (
-                <Button onClick={() => setShowConvertDialog(true)} className="gap-2">
+                <Button onClick={() => setShowConvertDialog(true)} className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
                   <ArrowRightCircle className="h-4 w-4" />
                   Converti in Ordine
                 </Button>
@@ -245,133 +254,136 @@ export default function OrderDetail() {
         </div>
       </div>
 
-      {/* Banner scadenza preventivo */}
-      {isPreventivo && scadenzaDate && (
-        <div className={`flex items-center gap-3 rounded-lg border px-4 py-3 text-sm ${
-          isScaduto
-            ? "border-destructive/50 bg-destructive/10 text-destructive"
-            : giorniRimanenti <= 7
-              ? "border-yellow-500/50 bg-yellow-500/10 text-yellow-700 dark:text-yellow-400"
-              : "border-blue-500/50 bg-blue-500/10 text-blue-700 dark:text-blue-400"
-        }`}>
-          {isScaduto ? (
-            <>
-              <AlertTriangle className="h-5 w-5 shrink-0" />
-              <span className="font-medium">Preventivo scaduto il {formatDate(scadenzaDate)}</span>
-            </>
-          ) : (
-            <>
-              <Clock className="h-5 w-5 shrink-0" />
-              <span className="font-medium">
-                Valido fino al {formatDate(scadenzaDate)} ({giorniRimanenti} {giorniRimanenti === 1 ? "giorno" : "giorni"} rimanenti)
-              </span>
-            </>
-          )}
-        </div>
-      )}
-
       {isPreventivo ? (
         <>
-          {/* Layout semplificato preventivo */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Dettagli Preventivo</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 text-sm">
-                <div>
-                  <span className="text-muted-foreground">Rivenditore:</span>
-                  <p className="font-medium text-foreground">
-                    {order.dealers?.ragione_sociale || "N/D"}
-                  </p>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Cliente Finale:</span>
-                  <p className="font-medium text-foreground">
-                    {order.clients
-                      ? `${order.clients.nome} ${order.clients.cognome}`
-                      : "Non specificato"}
-                  </p>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Data Inserimento:</span>
-                  <p className="font-medium text-foreground">
-                    {formatDate(new Date(order.data_inserimento))}
-                  </p>
-                </div>
-                {scadenzaDate && (
-                  <div>
-                    <span className="text-muted-foreground">Data Scadenza:</span>
-                    <p className="font-medium text-foreground">
-                      {formatDate(scadenzaDate)}
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Importo Preventivo</CardTitle>
-              </CardHeader>
-              <CardContent className="flex items-center justify-center">
-                <span className="text-4xl font-bold text-foreground">
-                  {formatCurrency(Number(order.importo_totale))}
+          {/* Header hero con importo */}
+          <div className="flex items-center justify-between rounded-lg border bg-card p-4">
+            <div className="flex items-center gap-3">
+              <Badge className={getStatusColor(order.stato)}>
+                {getStatusLabel(order.stato)}
+              </Badge>
+              {scadenzaDate && (
+                <span className={`inline-flex items-center gap-1.5 text-sm font-medium ${
+                  isScaduto
+                    ? "text-destructive"
+                    : giorniRimanenti <= 7
+                      ? "text-yellow-600 dark:text-yellow-400"
+                      : "text-muted-foreground"
+                }`}>
+                  {isScaduto ? (
+                    <><AlertTriangle className="h-4 w-4" />Scaduto il {formatDate(scadenzaDate)}</>
+                  ) : (
+                    <><Clock className="h-4 w-4" />Valido ancora {giorniRimanenti} {giorniRimanenti === 1 ? "giorno" : "giorni"}</>
+                  )}
                 </span>
-              </CardContent>
-            </Card>
+              )}
+            </div>
+            <span className="text-3xl font-bold text-foreground">
+              {formatCurrency(Number(order.importo_totale))}
+            </span>
           </div>
 
-          {/* Descrizione preventivo */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Descrizione</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Textarea
-                placeholder="Descrizione del preventivo..."
-                className="min-h-[120px]"
-                value={noteRivenditore}
-                onChange={(e) => setNoteRivenditore(e.target.value)}
+          {/* Layout 2 colonne */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Colonna principale */}
+            <div className="lg:col-span-2 space-y-6">
+              <OrderLinesEditor
+                lines={orderLines as any}
+                onLinesChange={() => {}}
+                orderStatus={order.stato}
+                readOnly={true}
+                title="Prodotti Quotati"
               />
-              <Button
-                size="sm"
-                onClick={() => handleNoteSave("rivenditore")}
-                disabled={updateNotesMutation.isPending}
-              >
-                {updateNotesMutation.isPending ? (
-                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
-                ) : "Salva Descrizione"}
-              </Button>
-            </CardContent>
-          </Card>
 
-          {/* Documenti preventivo */}
-          <AttachmentsSection orderId={order.id} attachments={orderAttachments as any} />
+              {/* Note unificate con Tabs */}
+              <Card>
+                <CardContent className="pt-6">
+                  <Tabs defaultValue="descrizione">
+                    <TabsList className="mb-4">
+                      <TabsTrigger value="descrizione">Descrizione</TabsTrigger>
+                      <TabsTrigger value="note_interne">Note Interne</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="descrizione" className="space-y-2">
+                      <Textarea
+                        placeholder="Descrizione del preventivo..."
+                        className="min-h-[120px]"
+                        value={noteRivenditore}
+                        onChange={(e) => setNoteRivenditore(e.target.value)}
+                      />
+                      <Button
+                        size="sm"
+                        onClick={() => handleNoteSave("rivenditore")}
+                        disabled={updateNotesMutation.isPending}
+                      >
+                        {updateNotesMutation.isPending ? (
+                          <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
+                        ) : "Salva Descrizione"}
+                      </Button>
+                    </TabsContent>
+                    <TabsContent value="note_interne" className="space-y-2">
+                      <Textarea
+                        placeholder="Note interne (non visibili al rivenditore)..."
+                        className="min-h-[120px]"
+                        value={noteInterna}
+                        onChange={(e) => setNoteInterna(e.target.value)}
+                      />
+                      <Button
+                        size="sm"
+                        onClick={() => handleNoteSave("interna")}
+                        disabled={updateNotesMutation.isPending}
+                      >
+                        {updateNotesMutation.isPending ? (
+                          <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
+                        ) : "Salva Note"}
+                      </Button>
+                    </TabsContent>
+                  </Tabs>
+                </CardContent>
+              </Card>
 
-          {/* Note interne */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Note Interne</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Textarea
-                placeholder="Note interne (non visibili al rivenditore)..."
-                className="min-h-[100px]"
-                value={noteInterna}
-                onChange={(e) => setNoteInterna(e.target.value)}
-              />
-              <Button
-                size="sm"
-                onClick={() => handleNoteSave("interna")}
-                disabled={updateNotesMutation.isPending}
-              >
-                {updateNotesMutation.isPending ? (
-                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
-                ) : "Salva Note"}
-              </Button>
-            </CardContent>
-          </Card>
+              <AttachmentsSection orderId={order.id} attachments={orderAttachments as any} />
+            </div>
+
+            {/* Sidebar riepilogo */}
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Riepilogo Preventivo</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 text-sm">
+                  <div>
+                    <span className="text-muted-foreground">Rivenditore</span>
+                    <p className="font-medium text-foreground">
+                      {order.dealers?.ragione_sociale || "N/D"}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">Cliente Finale</span>
+                    <p className="font-medium text-foreground">
+                      {order.clients
+                        ? `${order.clients.nome} ${order.clients.cognome}`
+                        : "Non specificato"}
+                    </p>
+                  </div>
+                  <div className="h-px bg-border" />
+                  <div>
+                    <span className="text-muted-foreground">Data Inserimento</span>
+                    <p className="font-medium text-foreground">
+                      {formatDate(new Date(order.data_inserimento))}
+                    </p>
+                  </div>
+                  {scadenzaDate && (
+                    <div>
+                      <span className="text-muted-foreground">Data Scadenza</span>
+                      <p className={`font-medium ${isScaduto ? "text-destructive" : "text-foreground"}`}>
+                        {formatDate(scadenzaDate)}
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </>
       ) : (
         <>

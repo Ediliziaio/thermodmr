@@ -1,47 +1,39 @@
 
 
-# Ottimizzazione UX Preventivo
+# Verifica Allegati Preventivo — Problemi Trovati
 
-## Problemi attuali (dallo screenshot)
-- Layout piatto con card tutte impilate verticalmente, molto spazio vuoto
-- La card "Importo Preventivo" ha troppo spazio bianco e poca informazione
-- Descrizione e Note Interne sono card separate identiche, ridondanti visivamente
-- Nessun indicatore visivo di "completezza" del preventivo
-- Il pulsante "Converti in Ordine" e' isolato in alto, poco enfatizzato
-- Manca un riepilogo rapido delle righe preventivo (prodotti quotati)
+## Stato Attuale
 
-## Interventi
+L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
 
-### 1. Header compatto e informativo
-- Unificare header con badge stato + importo in un unico blocco hero
-- Importo grande visibile subito accanto al titolo, non in una card separata
-- Il pulsante "Converti in Ordine" rimane prominente ma integrato nel header
+---
 
-### 2. Layout a 2 colonne (desktop) con sidebar informativa
-- **Colonna principale (2/3)**: Righe preventivo (OrderLinesEditor in readOnly), Descrizione, Allegati
-- **Sidebar (1/3)**: Card riepilogo (importo, rivenditore, cliente, date, scadenza), Note Interne
-- Su mobile: tutto impilato ma con ordine logico migliore
+## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
 
-### 3. Card "Riepilogo Preventivo" compatta nella sidebar
-- Combina i dati di "Dettagli Preventivo" e "Importo" in una sola card
-- Importo in evidenza in alto, poi lista dati sotto in formato label/value
-- Banner scadenza integrato nella card (non separato)
+**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
 
-### 4. Mostrare le righe del preventivo
-- Aggiungere OrderLinesEditor in readOnly per mostrare i prodotti quotati
-- Attualmente il preventivo non mostra le righe, perdendo informazione chiave
+Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
 
-### 5. Note unificate con Tab
-- Descrizione e Note Interne in una sola card con Tabs (2 tab)
-- Riduce l'ingombro verticale e organizza meglio
+**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
 
-### 6. Azioni preventivo migliorate
-- Aggiungere pulsanti "Esporta PDF" e "Duplica" anche per i preventivi
-- CTA "Converti in Ordine" con colore accent, piu' visibile
+Interventi:
+- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
+- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
+- Entrambi i file usano lo stesso pattern, la fix e' identica
 
-## File da modificare
-- `src/pages/OrderDetail.tsx` — sezione `isPreventivo` (righe 273-374): riscrivere il layout
+## Bug 2: `useCreatePreventivo` contiene codice morto
 
-## Risultato atteso
-Da 4 card impilate verticalmente a un layout strutturato 2 colonne con sidebar, righe prodotto visibili, e note organizzate in tab.
+**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
+
+- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
+- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
+
+**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
+
+## Riepilogo
+
+| # | Tipo | File | Problema |
+|---|------|------|----------|
+| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
+| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
 
