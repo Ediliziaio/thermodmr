@@ -97,8 +97,8 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
         if (!p.id.toLowerCase().includes(term) && !dealerName.includes(term)) return false;
       }
       if (dealerFilter !== "tutti" && p.dealer_id !== dealerFilter) return false;
-      if (statusFilter === "validi" && isExpired(p.data_scadenza_preventivo)) return false;
-      if (statusFilter === "scaduti" && !isExpired(p.data_scadenza_preventivo)) return false;
+      if (statusFilter === "validi" && isNonValido(p.data_scadenza_preventivo)) return false;
+      if (statusFilter === "non_validi" && !isNonValido(p.data_scadenza_preventivo)) return false;
       if (dateFrom) {
         const d = new Date(p.data_inserimento);
         if (d < dateFrom) return false;
