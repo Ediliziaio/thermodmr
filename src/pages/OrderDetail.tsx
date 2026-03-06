@@ -292,6 +292,7 @@ export default function OrderDetail() {
             {/* Colonna principale */}
             <div className="lg:col-span-2 space-y-6">
               <OrderLinesEditor
+                simplified
                 lines={orderLines as any}
                 onLinesChange={(lines) => setEditedLines(lines)}
                 orderStatus={order.stato}

@@ -286,18 +286,22 @@ export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly =
 
         {editingLines.length > 0 && (
           <div className="border-t pt-4 space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Imponibile</span>
-              <span className="font-medium">
-                {formatCurrency(totalImporto - totalIva)}
-              </span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">IVA Totale</span>
-              <span className="font-medium">{formatCurrency(totalIva)}</span>
-            </div>
-            <div className="flex justify-between text-lg font-bold pt-2 border-t">
-              <span>{title.replace("Righe", "Totale")}</span>
+            {!simplified && (
+              <>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Imponibile</span>
+                  <span className="font-medium">
+                    {formatCurrency(totalImporto - totalIva)}
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">IVA Totale</span>
+                  <span className="font-medium">{formatCurrency(totalIva)}</span>
+                </div>
+              </>
+            )}
+            <div className={`flex justify-between text-lg font-bold ${!simplified ? 'pt-2 border-t' : ''}`}>
+              <span>{title.replace("Righe", "Totale").replace("Prodotti Quotati", "Totale")}</span>
               <span>{formatCurrency(totalImporto)}</span>
             </div>
           </div>
