@@ -74,7 +74,6 @@ export default function OrderDetail() {
   const [showConvertDialog, setShowConvertDialog] = useState(false);
   const [editedLines, setEditedLines] = useState<any[] | null>(null);
   const hasLineChanges = editedLines !== null;
-  const [showConvertDialog, setShowConvertDialog] = useState(false);
 
   useEffect(() => {
     if (order) {
