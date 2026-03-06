@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -18,8 +20,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import {
   FileText, ArrowRightCircle, Eye, AlertTriangle, CheckCircle2, Plus, Copy,
-  Search, BarChart3, Euro, Clock, XCircle,
+  Search, BarChart3, Euro, Clock, XCircle, CalendarIcon,
 } from "lucide-react";
+import { format } from "date-fns";
+import { it } from "date-fns/locale";
 import { formatCurrency, formatDate, cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
