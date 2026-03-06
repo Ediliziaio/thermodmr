@@ -387,7 +387,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
           {/* Mobile Cards */}
           <div className="md:hidden space-y-3">
             {filteredPreventivi.map((p) => {
-              const expired = isExpired(p.data_scadenza_preventivo);
+              const expired = isNonValido(p.data_scadenza_preventivo);
               const dealerName = (p.dealers as any)?.ragione_sociale;
               return (
                 <Card
