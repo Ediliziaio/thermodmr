@@ -22,7 +22,7 @@ const PaymentDetail = lazy(() => import("./pages/PaymentDetail"));
 const Orders = lazy(() => import("./pages/Orders"));
 const Dealers = lazy(() => import("./pages/Dealers"));
 const Pagamenti = lazy(() => import("./pages/Pagamenti"));
-const RLSTest = lazy(() => import("./pages/RLSTest"));
+
 const TestDataSeeder = lazy(() => import("./pages/TestDataSeeder"));
 const Impostazioni = lazy(() => import("./pages/Impostazioni"));
 
@@ -159,26 +159,16 @@ const App = () => (
               }
             />
             {import.meta.env.DEV && (
-              <>
-                <Route
-                  path="/rls-test"
-                  element={
-                    <ProtectedRoute requiredRole="super_admin">
-                      <RLSTest />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/seed-test-data"
-                  element={
-                    <ProtectedRoute requiredRole="super_admin">
-                      <Layout>
-                        <TestDataSeeder />
-                      </Layout>
-                    </ProtectedRoute>
-                  }
-                />
-              </>
+              <Route
+                path="/seed-test-data"
+                element={
+                  <ProtectedRoute requiredRole="super_admin">
+                    <Layout>
+                      <TestDataSeeder />
+                    </Layout>
+                  </ProtectedRoute>
+                }
+              />
             )}
             <Route path="/chi-siamo" element={<ChiSiamoPage />} />
             <Route path="/prodotti-pubblico" element={<ProdottiPubblico />} />
