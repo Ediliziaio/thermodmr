@@ -1,39 +1,39 @@
 
 
-# Verifica Allegati Preventivo — Problemi Trovati
+# Stato preventivo modificabile + Azioni massive
 
-## Stato Attuale
+## Cosa aggiungere
 
-L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
+### 1. Cambio stato singolo preventivo
+Attualmente lo stato (Valido/Non Valido) è derivato dalla `data_scadenza_preventivo`. L'utente vuole poterlo cambiare manualmente. Due approcci possibili:
+- **Approccio scelto**: aggiungere un dropdown inline per ogni riga che permetta di cambiare lo stato tra "Valido" e "Non Valido" aggiornando la `data_scadenza_preventivo` (impostandola a ieri per "Non Valido", o rimuovendola/spostandola avanti per "Valido"). Questo non richiede modifiche al DB.
+- In alternativa, si potrebbe convertire il preventivo in ordine direttamente dal dropdown (già esiste il pulsante Converti).
 
----
+Il dropdown nella colonna Stato (desktop) e nella card (mobile) permetterà di scegliere: **Valido**, **Non Valido**, **Converti in Ordine**. Solo per utenti `canManage`.
 
-## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
+### 2. Selezione multipla + Barra azioni massive
+Seguendo il pattern già esistente nel progetto (ordini, pagamenti, dealers):
 
-**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
+- **Checkbox** su ogni riga (desktop: prima colonna, mobile: nella card)
+- **Checkbox "seleziona tutti"** nell'header della tabella
+- **Barra azioni flottante** che appare quando ci sono elementi selezionati, con:
+  - Conteggio selezionati
+  - **Imposta come Valido** — bulk update `data_scadenza_preventivo` a null o +30 giorni
+  - **Imposta come Non Valido** — bulk update `data_scadenza_preventivo` a ieri
+  - **Converti in Ordini** — bulk convert a `da_confermare`
+  - **Elimina** — bulk delete con dialog di conferma
+  - **Deseleziona tutto**
 
-Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
+### 3. File da modificare
 
-**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
+**`src/pages/DealerPreventivi.tsx`**:
+- Aggiungere stato `selectedIds: Set<string>`
+- Aggiungere checkbox nella tabella e nelle card
+- Aggiungere la barra azioni flottante in basso (fixed bottom)
+- Aggiungere dropdown stato inline nelle righe (solo canManage)
+- Aggiungere mutations per bulk update stato e bulk delete
+- Riutilizzare `useBulkUpdateOrderStatus` e `useBulkDeleteOrders` da `useOrders.ts` (già esistenti)
+- Aggiungere invalidazione query `dealer-preventivi` nelle mutations
 
-Interventi:
-- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
-- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
-- Entrambi i file usano lo stesso pattern, la fix e' identica
-
-## Bug 2: `useCreatePreventivo` contiene codice morto
-
-**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
-
-- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
-- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
-
-**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
-
-## Riepilogo
-
-| # | Tipo | File | Problema |
-|---|------|------|----------|
-| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
-| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
+Nessuna modifica DB necessaria. Nessun nuovo componente — tutto inline nella pagina come già fatto per ordini.
 
