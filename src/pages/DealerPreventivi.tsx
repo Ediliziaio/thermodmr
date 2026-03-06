@@ -393,8 +393,10 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                 <Card
                   key={p.id}
                   className={cn(
-                    "cursor-pointer hover:shadow-md transition-shadow",
-                    expired && "border-destructive/50 bg-destructive/5"
+                    "cursor-pointer hover:shadow-md transition-shadow border-l-4",
+                    expired
+                      ? "border-l-destructive bg-destructive/5"
+                      : "border-l-chart-2"
                   )}
                   onClick={() => navigate(`${basePath}/ordini/${p.id}`)}
                 >
@@ -402,11 +404,11 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-sm font-medium">{p.id}</span>
                       {expired ? (
-                        <Badge variant="destructive" className="text-xs">
+                        <Badge variant="destructive" className="text-xs animate-pulse">
                           <AlertTriangle className="h-3 w-3 mr-1" />Scaduto
                         </Badge>
                       ) : (
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge className="text-xs bg-chart-2/10 text-chart-2 border-chart-2/20 hover:bg-chart-2/20">
                           <CheckCircle2 className="h-3 w-3 mr-1" />Valido
                         </Badge>
                       )}
