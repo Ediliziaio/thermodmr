@@ -1,44 +1,39 @@
 
 
-# Abilitare la modifica dei Preventivi
+# Verifica Allegati Preventivo — Problemi Trovati
 
-## Problemi identificati
-1. **readOnly forzato a true** — nella sezione preventivo di `OrderDetail.tsx` (riga 294), `OrderLinesEditor` ha `readOnly={true}`, impedendo qualsiasi modifica
-2. **NaN nei totali** — visibile nello screenshot. Il componente `OrderLinesEditor` usa campi camelCase (`prezzoUnitario`, `quantita`, `sconto`) ma il DB restituisce snake_case (`prezzo_unitario`). Il cast `as any` nasconde il mismatch
-3. **Nessun hook di salvataggio** — manca una mutation per aggiornare/aggiungere/rimuovere le righe del preventivo e ricalcolare `importo_totale`
+## Stato Attuale
 
-## Interventi
+L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
 
-### 1. Fix mapping dati OrderLinesEditor
-**File:** `src/components/orders/OrderLinesEditor.tsx`
-- Aggiornare l'interfaccia `OrderLine` per usare i nomi DB snake_case (`prezzo_unitario`, `totale_riga`, `ordine_id`) oppure fare il mapping nel componente
-- Approccio scelto: mappare i dati in ingresso/uscita nel componente, accettando entrambi i formati con un normalizzatore interno. Questo risolve anche il NaN
+---
 
-### 2. Abilitare editing per preventivi
-**File:** `src/components/orders/OrderLinesEditor.tsx`
-- Modificare la logica `canEdit`: consentire editing anche quando `orderStatus === "preventivo"` (non solo `da_confermare`)
+## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
 
-**File:** `src/pages/OrderDetail.tsx`
-- Cambiare `readOnly={true}` a `readOnly={!isSuperAdmin}` nella sezione preventivo
-- Collegare `onLinesChange` a una funzione di salvataggio reale
+**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
 
-### 3. Hook per salvare le righe del preventivo
-**File:** `src/hooks/useOrders.ts`
-- Aggiungere `useUpdateOrderLines` mutation che:
-  1. Elimina le righe esistenti per l'ordine (`delete where ordine_id = id`)
-  2. Inserisce le nuove righe
-  3. Ricalcola e aggiorna `importo_totale` sulla tabella orders
-  4. Invalida le query `order-lines` e `order`
+Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
 
-### 4. Pulsante "Salva Modifiche" nel preventivo
-**File:** `src/pages/OrderDetail.tsx`
-- Aggiungere stato locale `editedLines` inizializzato dalle `orderLines` DB
-- Passare `editedLines` e setter a `OrderLinesEditor`
-- Aggiungere pulsante "Salva Prodotti" sotto l'editor che chiama `useUpdateOrderLines`
-- Mostrare il pulsante solo se ci sono modifiche non salvate
+**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
 
-## File da modificare
-1. `src/components/orders/OrderLinesEditor.tsx` — fix mapping snake_case + canEdit per preventivi
-2. `src/hooks/useOrders.ts` — nuovo hook `useUpdateOrderLines`
-3. `src/pages/OrderDetail.tsx` — collegare editing + salvataggio
+Interventi:
+- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
+- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
+- Entrambi i file usano lo stesso pattern, la fix e' identica
+
+## Bug 2: `useCreatePreventivo` contiene codice morto
+
+**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
+
+- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
+- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
+
+**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
+
+## Riepilogo
+
+| # | Tipo | File | Problema |
+|---|------|------|----------|
+| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
+| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
 

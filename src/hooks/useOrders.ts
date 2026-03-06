@@ -458,6 +458,77 @@ export const useCreateOrder = () => {
   });
 };
 
+export const useUpdateOrderLines = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ orderId, lines }: { orderId: string; lines: any[] }) => {
+      // 1. Delete existing lines
+      const { error: deleteError } = await supabase
+        .from("order_lines")
+        .delete()
+        .eq("ordine_id", orderId);
+
+      if (deleteError) throw deleteError;
+
+      // 2. Insert new lines and calculate total
+      let importoTotale = 0;
+      const orderLinesData = lines.map((line: any) => {
+        const subtotal = (line.quantita || 1) * (line.prezzoUnitario || 0);
+        const afterDiscount = subtotal * (1 - (line.sconto || 0) / 100);
+        const withIva = afterDiscount * (1 + (line.iva || 0) / 100);
+        importoTotale += withIva;
+
+        return {
+          ordine_id: orderId,
+          categoria: line.categoria || "Finestra",
+          descrizione: line.descrizione || "",
+          quantita: line.quantita || 1,
+          prezzo_unitario: line.prezzoUnitario || 0,
+          sconto: line.sconto || 0,
+          iva: line.iva || 0,
+          totale_riga: withIva,
+        };
+      });
+
+      if (orderLinesData.length > 0) {
+        const { error: insertError } = await supabase
+          .from("order_lines")
+          .insert(orderLinesData);
+
+        if (insertError) throw insertError;
+      }
+
+      // 3. Update order total
+      const { error: updateError } = await supabase
+        .from("orders")
+        .update({ importo_totale: importoTotale })
+        .eq("id", orderId);
+
+      if (updateError) throw updateError;
+
+      return { orderId, importoTotale };
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["order", data.orderId] });
+      queryClient.invalidateQueries({ queryKey: ["order-lines", data.orderId] });
+      queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
+      toast({
+        title: "Righe aggiornate",
+        description: "Le righe del preventivo sono state salvate con successo.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Errore",
+        description: "Impossibile salvare le righe.",
+        variant: "destructive",
+      });
+      console.error("Error updating order lines:", error);
+    },
+  });
+};
+
 export const useCreatePreventivo = () => {
   const queryClient = useQueryClient();
   const { user } = useAuth();

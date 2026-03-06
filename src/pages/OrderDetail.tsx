@@ -43,6 +43,7 @@ import {
   useUpdateOrderStatus,
   useUpdateOrderNotes,
   useUpdateOrderId,
+  useUpdateOrderLines,
 } from "@/hooks/useOrders";
 import { formatCurrency, formatDate, getStatusLabel, getStatusColor } from "@/lib/utils";
 import { differenceInDays, isPast, parseISO } from "date-fns";
@@ -64,12 +65,15 @@ export default function OrderDetail() {
   const updateStatusMutation = useUpdateOrderStatus();
   const updateNotesMutation = useUpdateOrderNotes();
   const updateOrderIdMutation = useUpdateOrderId();
+  const updateOrderLinesMutation = useUpdateOrderLines();
 
   const [noteInterna, setNoteInterna] = useState("");
   const [noteRivenditore, setNoteRivenditore] = useState("");
   const [isEditingOrderId, setIsEditingOrderId] = useState(false);
   const [editedOrderId, setEditedOrderId] = useState("");
   const [showConvertDialog, setShowConvertDialog] = useState(false);
+  const [editedLines, setEditedLines] = useState<any[] | null>(null);
+  const hasLineChanges = editedLines !== null;
 
   useEffect(() => {
     if (order) {
@@ -289,11 +293,30 @@ export default function OrderDetail() {
             <div className="lg:col-span-2 space-y-6">
               <OrderLinesEditor
                 lines={orderLines as any}
-                onLinesChange={() => {}}
+                onLinesChange={(lines) => setEditedLines(lines)}
                 orderStatus={order.stato}
-                readOnly={true}
+                readOnly={!isSuperAdmin}
                 title="Prodotti Quotati"
               />
+              {hasLineChanges && isSuperAdmin && (
+                <div className="flex justify-end">
+                  <Button
+                    onClick={() => {
+                      if (id && editedLines) {
+                        updateOrderLinesMutation.mutate(
+                          { orderId: id, lines: editedLines },
+                          { onSuccess: () => setEditedLines(null) }
+                        );
+                      }
+                    }}
+                    disabled={updateOrderLinesMutation.isPending}
+                  >
+                    {updateOrderLinesMutation.isPending ? (
+                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
+                    ) : "Salva Prodotti"}
+                  </Button>
+                </div>
+              )}
 
               {/* Note unificate con Tabs */}
               <Card>
