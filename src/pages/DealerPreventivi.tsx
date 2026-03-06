@@ -237,7 +237,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
       {/* KPI Cards */}
       {!isLoading && preventivi && preventivi.length > 0 && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          <Card>
+          <Card className="border-l-4 border-l-primary">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 text-muted-foreground mb-1">
                 <BarChart3 className="h-4 w-4" />
@@ -246,7 +246,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
               <p className="text-2xl font-bold">{stats.total}</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-l-4 border-l-accent-foreground/30">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 text-muted-foreground mb-1">
                 <Euro className="h-4 w-4" />
@@ -255,7 +255,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
               <p className="text-2xl font-bold">{formatCurrency(stats.value)}</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-l-4 border-l-chart-2">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 text-muted-foreground mb-1">
                 <CheckCircle2 className="h-4 w-4 text-chart-2" />
@@ -264,7 +264,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
               <p className="text-2xl font-bold text-chart-2">{stats.valid}</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="border-l-4 border-l-destructive">
             <CardContent className="p-4">
               <div className="flex items-center gap-2 text-muted-foreground mb-1">
                 <XCircle className="h-4 w-4 text-destructive" />
