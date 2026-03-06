@@ -118,7 +118,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
     if (!preventivi) return { total: 0, value: 0, valid: 0, expired: 0, avgTicket: 0 };
     const total = preventivi.length;
     const value = preventivi.reduce((sum, p) => sum + Number(p.importo_totale), 0);
-    const expired = preventivi.filter((p) => isExpired(p.data_scadenza_preventivo)).length;
+    const expired = preventivi.filter((p) => isNonValido(p.data_scadenza_preventivo)).length;
     const valid = total - expired;
     const avgTicket = total > 0 ? value / total : 0;
     return { total, value, valid, expired, avgTicket };
