@@ -46,7 +46,7 @@ export function AttachmentsSection({ orderId, attachments }: AttachmentsSectionP
   };
 
   const getFileIcon = (mimeType: string) => {
-    if (mimeType.startsWith("image/")) {
+    if (mimeType?.startsWith("image/")) {
       return <Image className="h-5 w-5" />;
     }
     return <FileText className="h-5 w-5" />;
