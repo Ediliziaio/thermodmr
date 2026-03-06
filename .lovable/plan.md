@@ -1,29 +1,31 @@
 
 
-# Rimuovere IVA dai Preventivi
-
-## Contesto
-I preventivi riguardano acquisti di prodotti esterni, quindi l'IVA non si applica. L'importo inserito è quello finale.
+# Modifiche al Dialog Creazione Preventivo
 
 ## Interventi
 
-### 1. `NewPreventivoDialog.tsx`
-- Rimuovere il campo `iva` dallo schema Zod (hardcodare a `0`)
-- Rimuovere l'`IvaSelector` dalla UI delle righe preventivo
-- Semplificare `calculateLineTotal`: il totale sarà `quantità × prezzo - sconto`, senza maggiorazione IVA
-- Rimuovere l'import di `IvaSelector`
-- Aggiornare i default delle righe: `iva: 0` invece di `iva: 22`
+### 1. Rimuovere campo "Data Consegna Prevista"
+**File:** `src/components/orders/NewPreventivoDialog.tsx`
+- Rimuovere il campo `data_consegna_prevista` dal form (righe 315-317)
+- Rimuovere dal schema Zod e dai defaultValues
+- Rimuovere dalla `PreventivoDefaultValues` interface
+- Non passare il valore nella mutazione (il campo DB resta nullable, sara' semplicemente `null`)
 
-### 2. `PreventivoDefaultValues` (interfaccia duplicazione)
-- Mantenere `iva` nell'interfaccia per retrocompatibilità con dati esistenti, ma forzarlo a `0` nei default
+### 2. Aggiungere sezione Allegati nel dialog di creazione
+**File:** `src/components/orders/NewPreventivoDialog.tsx`
+- Aggiungere uno stato locale `pendingFiles: File[]` per i file selezionati prima del salvataggio (il preventivo non esiste ancora, non possiamo caricare su storage)
+- Aggiungere una sezione UI con bottone "Aggiungi Allegato" e lista file selezionati con possibilita' di rimuoverli
+- Dopo la creazione del preventivo (nel `onSubmit`), caricare i file su storage `order-attachments` e inserire i record nella tabella `attachments`, riutilizzando la stessa logica di `AttachmentsSection`
 
-### 3. Nessuna modifica a
-- `OrderLinesEditor.tsx` — usato per ordini confermati dove l'IVA serve
-- `IvaSelector.tsx` — usato altrove
-- Database `order_lines` — il campo `iva` resta, semplicemente sarà `0` per i preventivi
+### 3. Aggiornare `useCreatePreventivo` o `onSubmit`
+**File:** `src/components/orders/NewPreventivoDialog.tsx`
+- Nel `onSubmit`, dopo `createPreventivoMutation.mutateAsync()`, iterare sui `pendingFiles` e per ognuno:
+  1. Upload su storage `order-attachments/{preventivoId}/...`
+  2. Insert record in tabella `attachments`
+- Mostrare toast di successo anche per gli allegati
 
-## Impatto
-- I preventivi esistenti con IVA > 0 continueranno a funzionare (dati DB invariati)
-- I nuovi preventivi avranno sempre IVA = 0
-- La duplicazione forzerà IVA a 0
+### Nessuna modifica a
+- `useOrders.ts` — la mutazione resta invariata
+- `AttachmentsSection.tsx` — usato nella pagina dettaglio ordine, non nel dialog di creazione
+- Database — nessuna migrazione necessaria, le tabelle e RLS sono gia' corrette
 
