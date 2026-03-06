@@ -34,9 +34,9 @@ interface DealerPreventiviProps {
   dealerId?: string;
 }
 
-type StatusFilter = "tutti" | "validi" | "scaduti";
+type StatusFilter = "tutti" | "validi" | "non_validi";
 
-const isExpired = (date: string | null) => {
+const isNonValido = (date: string | null) => {
   if (!date) return false;
   return new Date(date) < new Date();
 };
@@ -97,8 +97,8 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
         if (!p.id.toLowerCase().includes(term) && !dealerName.includes(term)) return false;
       }
       if (dealerFilter !== "tutti" && p.dealer_id !== dealerFilter) return false;
-      if (statusFilter === "validi" && isExpired(p.data_scadenza_preventivo)) return false;
-      if (statusFilter === "scaduti" && !isExpired(p.data_scadenza_preventivo)) return false;
+      if (statusFilter === "validi" && isNonValido(p.data_scadenza_preventivo)) return false;
+      if (statusFilter === "non_validi" && !isNonValido(p.data_scadenza_preventivo)) return false;
       if (dateFrom) {
         const d = new Date(p.data_inserimento);
         if (d < dateFrom) return false;
@@ -118,7 +118,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
     if (!preventivi) return { total: 0, value: 0, valid: 0, expired: 0, avgTicket: 0 };
     const total = preventivi.length;
     const value = preventivi.reduce((sum, p) => sum + Number(p.importo_totale), 0);
-    const expired = preventivi.filter((p) => isExpired(p.data_scadenza_preventivo)).length;
+    const expired = preventivi.filter((p) => isNonValido(p.data_scadenza_preventivo)).length;
     const valid = total - expired;
     const avgTicket = total > 0 ? value / total : 0;
     return { total, value, valid, expired, avgTicket };
@@ -268,7 +268,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
             <CardContent className="p-4">
               <div className="flex items-center gap-2 text-muted-foreground mb-1">
                 <XCircle className="h-4 w-4 text-destructive" />
-                <span className="text-xs font-medium uppercase tracking-wide">Scaduti</span>
+                <span className="text-xs font-medium uppercase tracking-wide">Non Validi</span>
               </div>
               <p className="text-2xl font-bold text-destructive">{stats.expired}</p>
             </CardContent>
@@ -342,7 +342,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
             </Popover>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
-            {(["tutti", "validi", "scaduti"] as StatusFilter[]).map((s) => (
+            {(["tutti", "validi", "non_validi"] as StatusFilter[]).map((s) => (
               <Button
                 key={s}
                 variant={statusFilter === s ? "default" : "outline"}
@@ -353,8 +353,8 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                 {s === "validi" && (
                   <><CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />Validi</>
                 )}
-                {s === "scaduti" && (
-                  <><AlertTriangle className="h-3.5 w-3.5 mr-1.5" />Scaduti</>
+                {s === "non_validi" && (
+                  <><AlertTriangle className="h-3.5 w-3.5 mr-1.5" />Non Validi</>
                 )}
               </Button>
             ))}
@@ -387,7 +387,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
           {/* Mobile Cards */}
           <div className="md:hidden space-y-3">
             {filteredPreventivi.map((p) => {
-              const expired = isExpired(p.data_scadenza_preventivo);
+              const expired = isNonValido(p.data_scadenza_preventivo);
               const dealerName = (p.dealers as any)?.ragione_sociale;
               return (
                 <Card
@@ -405,7 +405,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                       <span className="font-mono text-sm font-medium">{p.id}</span>
                       {expired ? (
                         <Badge variant="destructive" className="text-xs animate-pulse">
-                          <AlertTriangle className="h-3 w-3 mr-1" />Scaduto
+                          <AlertTriangle className="h-3 w-3 mr-1" />Non Valido
                         </Badge>
                       ) : (
                         <Badge className="text-xs bg-chart-2/10 text-chart-2 border-chart-2/20 hover:bg-chart-2/20">
@@ -474,7 +474,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                 </TableHeader>
                 <TableBody>
                   {filteredPreventivi.map((p) => {
-                    const expired = isExpired(p.data_scadenza_preventivo);
+                    const expired = isNonValido(p.data_scadenza_preventivo);
                     const dealerName = (p.dealers as any)?.ragione_sociale;
                     return (
                       <TableRow
@@ -497,7 +497,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                         <TableCell>
                           {expired ? (
                             <Badge variant="destructive" className="animate-pulse">
-                              <AlertTriangle className="h-3 w-3 mr-1" />Scaduto
+                              <AlertTriangle className="h-3 w-3 mr-1" />Non Valido
                             </Badge>
                           ) : (
                             <Badge className="bg-chart-2/10 text-chart-2 border-chart-2/20 hover:bg-chart-2/20">
