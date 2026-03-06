@@ -34,9 +34,9 @@ interface DealerPreventiviProps {
   dealerId?: string;
 }
 
-type StatusFilter = "tutti" | "validi" | "scaduti";
+type StatusFilter = "tutti" | "validi" | "non_validi";
 
-const isExpired = (date: string | null) => {
+const isNonValido = (date: string | null) => {
   if (!date) return false;
   return new Date(date) < new Date();
 };
