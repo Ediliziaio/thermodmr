@@ -534,7 +534,7 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
             <Search className="h-12 w-12 mx-auto mb-3 text-muted-foreground opacity-50" />
             <p className="text-muted-foreground font-medium">Nessun risultato</p>
             <p className="text-sm text-muted-foreground mt-1">Prova a modificare i filtri di ricerca</p>
-            <Button variant="outline" size="sm" className="mt-4" onClick={() => { setSearchTerm(""); setDealerFilter("tutti"); setStatusFilter("tutti"); }}>
+            <Button variant="outline" size="sm" className="mt-4" onClick={resetFilters}>
               Cancella filtri
             </Button>
           </CardContent>
