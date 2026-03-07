@@ -22,22 +22,9 @@ import {
 import { Plus } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
-enum PaymentType {
-  ACCONTO = "ACCONTO",
-  SALDO = "SALDO",
-  PARZIALE = "PARZIALE",
-}
+import type { Tables } from "@/integrations/supabase/types";
 
-interface Payment {
-  id: string;
-  ordineId: string;
-  tipo: PaymentType;
-  importo: number;
-  dataPagamento: Date;
-  metodo: string;
-  riferimento?: string;
-  ricevutaURL?: string;
-}
+type Payment = Tables<"payments">;
 import { useCreatePayment } from "@/hooks/usePayments";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
