@@ -451,6 +451,7 @@ export default function OrderDetail() {
                     <SelectItem value="da_confermare">Da Confermare</SelectItem>
                     <SelectItem value="da_pagare_acconto">Da Pagare Acconto</SelectItem>
                     <SelectItem value="in_lavorazione">In Lavorazione</SelectItem>
+                    <SelectItem value="da_saldare">Da Saldare</SelectItem>
                     <SelectItem value="da_consegnare">Da Consegnare</SelectItem>
                     <SelectItem value="consegnato">Consegnato</SelectItem>
                   </SelectContent>

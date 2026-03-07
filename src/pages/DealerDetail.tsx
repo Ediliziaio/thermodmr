@@ -56,6 +56,7 @@ export default function DealerDetail() {
     da_confermare: dealerOrders.filter((o) => o.stato === "da_confermare").length,
     da_pagare_acconto: dealerOrders.filter((o) => o.stato === "da_pagare_acconto").length,
     in_lavorazione: dealerOrders.filter((o) => o.stato === "in_lavorazione").length,
+    da_saldare: dealerOrders.filter((o) => o.stato === "da_saldare").length,
     da_consegnare: dealerOrders.filter((o) => o.stato === "da_consegnare").length,
     consegnato: dealerOrders.filter((o) => o.stato === "consegnato").length,
   };

@@ -102,6 +102,8 @@ export const getStatusVariant = (status: string): "default" | "secondary" | "des
       return "destructive";
     case "in_lavorazione":
       return "default";
+    case "da_saldare":
+      return "destructive";
     case "da_consegnare":
       return "secondary";
     case "consegnato":

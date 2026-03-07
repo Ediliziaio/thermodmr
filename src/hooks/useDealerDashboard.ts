@@ -57,6 +57,7 @@ export const useDealerOrderStats = (dealerId?: string) => {
           da_confermare: 0,
           da_pagare_acconto: 0,
           in_lavorazione: 0,
+          da_saldare: 0,
           da_consegnare: 0,
           consegnato: 0,
         },

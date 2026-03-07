@@ -1005,6 +1005,7 @@ export type Database = {
         | "da_confermare"
         | "da_pagare_acconto"
         | "in_lavorazione"
+        | "da_saldare"
         | "da_consegnare"
         | "consegnato"
       payment_type: "acconto" | "saldo" | "parziale"
@@ -1143,6 +1144,7 @@ export const Constants = {
         "da_confermare",
         "da_pagare_acconto",
         "in_lavorazione",
+        "da_saldare",
         "da_consegnare",
         "consegnato",
       ],
