@@ -245,20 +245,62 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     <TooltipProvider>
       <div className="space-y-4">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
+        <div className="flex items-center justify-between gap-4">
+          <div className="min-w-0">
             <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-bold tracking-tight">Ordini</h1>
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Ordini</h1>
               {selectedOrderIds.size > 0 && (
                 <Badge variant="secondary" className="text-sm">
                   {selectedOrderIds.size} selezionati
                 </Badge>
               )}
             </div>
-            <p className="text-muted-foreground mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               Gestisci tutti gli ordini dei rivenditori
             </p>
           </div>
+          <div className="flex items-center gap-1.5">
+            <div className="flex bg-muted rounded-lg p-0.5">
+              {(["3months", "6months", "year", "lastyear", "all"] as const).map((type) => (
+                <button
+                  key={type}
+                  onClick={() => setQuickFilter(type)}
+                  className={cn(
+                    "px-2.5 py-1.5 text-xs font-medium rounded-md transition-all whitespace-nowrap",
+                    activeFilter === type
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {isMobile
+                    ? { "3months": "3M", "6months": "6M", year: new Date().getFullYear().toString(), lastyear: (new Date().getFullYear() - 1).toString(), all: "∞" }[type]
+                    : { "3months": "3 Mesi", "6months": "6 Mesi", year: new Date().getFullYear().toString(), lastyear: (new Date().getFullYear() - 1).toString(), all: "Tutto" }[type]}
+                </button>
+              ))}
+            </div>
+
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="icon" className="h-8 w-8">
+                  <CalendarIcon className="h-3.5 w-3.5" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="end">
+                <Calendar
+                  mode="range"
+                  selected={dateRange}
+                  onSelect={(range) => {
+                    setDateRange(range);
+                    setActiveFilter(null);
+                  }}
+                  numberOfMonths={isMobile ? 1 : 2}
+                  locale={it}
+                  className="pointer-events-auto"
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
           {!isMobile && !isDealerArea && (
             <div className="flex gap-2">
               {userRole === "super_admin" && (
