@@ -588,7 +588,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                                         )}>
                                           {formatCurrency(order.importo_da_pagare)}
                                         </p>
-                                        {order.importo_da_pagare > 0 && (userRole === "super_admin" || userRole === "commerciale") && (
+                                        {order.importo_da_pagare > 0 && !isDealerArea && (userRole === "super_admin" || userRole === "commerciale") && (
                                           <Button
                                             variant="ghost"
                                             size="icon"
