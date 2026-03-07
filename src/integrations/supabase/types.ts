@@ -881,6 +881,7 @@ export type Database = {
           importo_da_pagare: number | null
           importo_pagato: number | null
           importo_totale: number | null
+          modalita_pagamento: string | null
           note_interna: string | null
           note_rivenditore: string | null
           numero_pagamenti: number | null
