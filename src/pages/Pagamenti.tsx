@@ -349,7 +349,7 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
         </>
       )}
 
-      {selectedPaymentIds.size > 0 && (
+      {selectedPaymentIds.size > 0 && !isDealerArea && (
         <div className={cn("fixed z-50 animate-in slide-in-from-bottom-5", isMobile ? "bottom-20 left-4 right-4" : "bottom-6 left-1/2 -translate-x-1/2")}>
           <Card className="shadow-lg border-2">
             <CardContent className={cn("flex items-center gap-4", isMobile ? "p-3 flex-col" : "p-4")}>
