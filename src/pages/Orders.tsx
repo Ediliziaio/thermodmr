@@ -106,6 +106,38 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     clearSelection();
   }, [filters]);
 
+  // Sync dateRange to filters
+  useEffect(() => {
+    setFilters(prev => ({
+      ...prev,
+      dataInserimentoFrom: dateRange?.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
+      dataInserimentoTo: dateRange?.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
+    }));
+  }, [dateRange]);
+
+  const setQuickFilter = (type: '3months' | '6months' | 'year' | 'lastyear' | 'all') => {
+    const n = new Date();
+    setActiveFilter(type);
+    if (type === 'all') {
+      setDateRange(undefined);
+      return;
+    }
+    switch (type) {
+      case '3months':
+        setDateRange({ from: startOfMonth(subMonths(n, 3)), to: n });
+        break;
+      case '6months':
+        setDateRange({ from: startOfMonth(subMonths(n, 6)), to: n });
+        break;
+      case 'year':
+        setDateRange({ from: startOfYear(n), to: endOfYear(n) });
+        break;
+      case 'lastyear':
+        setDateRange({ from: startOfYear(subYears(n, 1)), to: endOfYear(subYears(n, 1)) });
+        break;
+    }
+  };
+
   // Carica automaticamente la prossima pagina quando l'utente scorre fino in fondo
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
