@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, Calendar, Euro, AlertCircle } from "lucide-react";
+import { Eye, Calendar, Euro, AlertCircle, CalendarDays } from "lucide-react";
 import { motion, PanInfo, useMotionValue, useTransform } from "framer-motion";
 import { formatCurrency, getStatusColor, getStatusLabel } from "@/lib/utils";
 import { OrderWithDetails } from "@/hooks/useOrdersInfinite";
@@ -121,10 +121,10 @@ export function OrderMobileCard({
           )}
 
           {/* Info Grid */}
-          <div className="grid grid-cols-2 gap-3 mb-3 text-sm">
+          <div className="grid grid-cols-3 gap-3 mb-3 text-sm">
             {/* Data Inserimento */}
             <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <Calendar className="h-4 w-4 text-muted-foreground shrink-0" />
               <div>
                 <p className="text-xs text-muted-foreground">Inserito</p>
                 <p className="font-medium">
@@ -133,9 +133,20 @@ export function OrderMobileCard({
               </div>
             </div>
 
+            {/* Settimana Consegna */}
+            <div className="flex items-center gap-2">
+              <CalendarDays className="h-4 w-4 text-muted-foreground shrink-0" />
+              <div>
+                <p className="text-xs text-muted-foreground">Sett.</p>
+                <p className="font-medium">
+                  {order.settimana_consegna ? `W${order.settimana_consegna}` : "-"}
+                </p>
+              </div>
+            </div>
+
             {/* Importo Totale */}
             <div className="flex items-center gap-2">
-              <Euro className="h-4 w-4 text-muted-foreground" />
+              <Euro className="h-4 w-4 text-muted-foreground shrink-0" />
               <div>
                 <p className="text-xs text-muted-foreground">Totale</p>
                 <p className="font-semibold">
