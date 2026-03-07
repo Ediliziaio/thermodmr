@@ -293,7 +293,7 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-12"><Checkbox checked={selectedPaymentIds.size === payments.length && payments.length > 0} onCheckedChange={toggleSelectAll} /></TableHead>
+                    {!isDealerArea && <TableHead className="w-12"><Checkbox checked={selectedPaymentIds.size === payments.length && payments.length > 0} onCheckedChange={toggleSelectAll} /></TableHead>}
                     <TableHead>Data</TableHead>
                     <TableHead>Ordine</TableHead>
                     <TableHead>Dealer</TableHead>
@@ -301,16 +301,16 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
                     <TableHead>Metodo</TableHead>
                     <TableHead className="text-right">Importo</TableHead>
                     <TableHead>Riferimento</TableHead>
-                    {userRole === 'super_admin' && <TableHead className="w-12"></TableHead>}
+                    {userRole === 'super_admin' && !isDealerArea && <TableHead className="w-12"></TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {payments.length === 0 ? (
-                    <TableRow><TableCell colSpan={userRole === 'super_admin' ? 9 : 8} className="text-center py-8 text-muted-foreground">Nessun pagamento trovato</TableCell></TableRow>
+                    <TableRow><TableCell colSpan={isDealerArea ? 7 : (userRole === 'super_admin' ? 9 : 8)} className="text-center py-8 text-muted-foreground">Nessun pagamento trovato</TableCell></TableRow>
                   ) : (
                     payments.map((payment) => (
                       <TableRow key={payment.id} className={selectedPaymentIds.has(payment.id) ? 'bg-muted/50' : ''}>
-                        <TableCell><Checkbox checked={selectedPaymentIds.has(payment.id)} onCheckedChange={() => togglePaymentSelection(payment.id)} /></TableCell>
+                        {!isDealerArea && <TableCell><Checkbox checked={selectedPaymentIds.has(payment.id)} onCheckedChange={() => togglePaymentSelection(payment.id)} /></TableCell>}
                         <TableCell>{formatDate(payment.data_pagamento)}</TableCell>
                         <TableCell><button onClick={() => isDealerArea ? navigate(`../ordini/${payment.ordine_id}`, { relative: 'path' }) : navigate(`/ordini/${payment.ordine_id}`)} className="font-medium hover:underline text-primary">{payment.ordine_id}</button></TableCell>
                         <TableCell>{payment.orders.dealers.ragione_sociale}</TableCell>
@@ -318,7 +318,7 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
                         <TableCell className="capitalize">{payment.metodo}</TableCell>
                         <TableCell className="text-right font-medium">{formatCurrency(payment.importo)}</TableCell>
                         <TableCell className="text-muted-foreground">{payment.riferimento || "-"}</TableCell>
-                        {userRole === 'super_admin' && (
+                        {userRole === 'super_admin' && !isDealerArea && (
                           <TableCell><Button variant="ghost" size="sm" onClick={() => handleDeletePayment(payment.id)} className="text-destructive hover:bg-destructive/10"><Trash2 className="h-4 w-4" /></Button></TableCell>
                         )}
                       </TableRow>
@@ -349,7 +349,7 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
         </>
       )}
 
-      {selectedPaymentIds.size > 0 && (
+      {selectedPaymentIds.size > 0 && !isDealerArea && (
         <div className={cn("fixed z-50 animate-in slide-in-from-bottom-5", isMobile ? "bottom-20 left-4 right-4" : "bottom-6 left-1/2 -translate-x-1/2")}>
           <Card className="shadow-lg border-2">
             <CardContent className={cn("flex items-center gap-4", isMobile ? "p-3 flex-col" : "p-4")}>

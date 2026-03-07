@@ -465,13 +465,15 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                     <table className="w-full">
                       <thead className="sticky top-0 bg-background z-10">
                         <tr className="border-b text-left text-sm font-medium text-muted-foreground">
-                          <th className="pb-3 pr-4 w-12">
-                            <Checkbox
-                              checked={selectedOrderIds.size === filteredOrders.length && filteredOrders.length > 0}
-                              onCheckedChange={toggleSelectAll}
-                              aria-label="Seleziona tutti gli ordini"
-                            />
-                          </th>
+                          {!isDealerArea && (
+                            <th className="pb-3 pr-4 w-12">
+                              <Checkbox
+                                checked={selectedOrderIds.size === filteredOrders.length && filteredOrders.length > 0}
+                                onCheckedChange={toggleSelectAll}
+                                aria-label="Seleziona tutti gli ordini"
+                              />
+                            </th>
+                          )}
                           <th className="pb-3 pr-4">ID Ordine</th>
                           <th className="pb-3 pr-4">Rivenditore</th>
                           <th className="pb-3 pr-4">Cliente</th>
@@ -482,7 +484,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                           <th className="pb-3 pr-4">Importo da Pagare</th>
                           <th className="pb-3 pr-4">Consegna Prevista</th>
                           <th className="pb-3 pr-4">Sett.</th>
-                          <th className="pb-3">Azioni</th>
+                          {!isDealerArea && <th className="pb-3">Azioni</th>}
                         </tr>
                       </thead>
                       <tbody>
@@ -496,16 +498,20 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                               key={order.id} 
                               className={cn(
                                 "border-b last:border-0 hover:bg-muted/50 transition-colors",
-                                isSelected && "bg-muted/50"
+                                isSelected && "bg-muted/50",
+                                isDealerArea && "cursor-pointer"
                               )}
+                              onClick={isDealerArea ? () => navigate(`../ordini/${order.id}`, { relative: 'path' }) : undefined}
                             >
-                              <td className="py-4 pr-4">
-                                <Checkbox
-                                  checked={isSelected}
-                                  onCheckedChange={() => toggleOrderSelection(order.id!)}
-                                  aria-label={`Seleziona ordine ${order.id}`}
-                                />
-                              </td>
+                              {!isDealerArea && (
+                                <td className="py-4 pr-4">
+                                  <Checkbox
+                                    checked={isSelected}
+                                    onCheckedChange={() => toggleOrderSelection(order.id!)}
+                                    aria-label={`Seleziona ordine ${order.id}`}
+                                  />
+                                </td>
+                              )}
                               <td className="py-4 pr-4">
                                 <p className="font-medium">{order.id}</p>
                               </td>
@@ -522,7 +528,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                               </td>
                               <td className="py-4 pr-4">
                                 <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                                  {userRole === "super_admin" ? (
+                                  {userRole === "super_admin" && !isDealerArea ? (
                                     <Select
                                       value={order.stato}
                                       onValueChange={(value) => {
@@ -584,7 +590,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                                         )}>
                                           {formatCurrency(order.importo_da_pagare)}
                                         </p>
-                                        {order.importo_da_pagare > 0 && (userRole === "super_admin" || userRole === "commerciale") && (
+                                        {order.importo_da_pagare > 0 && !isDealerArea && (userRole === "super_admin" || userRole === "commerciale") && (
                                           <Button
                                             variant="ghost"
                                             size="icon"
@@ -654,16 +660,18 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                                   <span className="text-muted-foreground">-</span>
                                 )}
                               </td>
-                              <td className="py-4">
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => isDealerArea ? navigate(`../ordini/${order.id}`, { relative: 'path' }) : navigate(`/ordini/${order.id}`)}
-                                >
-                                  <Eye className="h-4 w-4 mr-2" />
-                                  Dettagli
-                                </Button>
-                              </td>
+                              {!isDealerArea && (
+                                <td className="py-4">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => navigate(`/ordini/${order.id}`)}
+                                  >
+                                    <Eye className="h-4 w-4 mr-2" />
+                                    Dettagli
+                                  </Button>
+                                </td>
+                              )}
                             </tr>
                           );
                         })}
@@ -706,7 +714,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
         )}
 
         {/* Floating Action Bar */}
-        {selectedOrderIds.size > 0 && (
+        {selectedOrderIds.size > 0 && !isDealerArea && (
           <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-5">
             <Card className="shadow-lg border-2">
               <CardContent className="flex items-center gap-4 p-4">

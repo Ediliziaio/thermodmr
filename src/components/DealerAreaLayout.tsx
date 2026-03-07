@@ -8,7 +8,6 @@ import {
   LogOut,
   Menu,
   Eye,
-  FileText,
   Headphones,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,7 +28,6 @@ export function DealerAreaLayout({ children, dealerId, dealerName }: DealerAreaL
 
   const navigation = [
     { name: "Dashboard", href: basePath, icon: LayoutDashboard },
-    { name: "Preventivi", href: `${basePath}/preventivi`, icon: FileText },
     { name: "Ordini", href: `${basePath}/ordini`, icon: ShoppingCart },
     { name: "Pagamenti", href: `${basePath}/pagamenti`, icon: CreditCard },
     { name: "Assistenza", href: `${basePath}/assistenza`, icon: Headphones },

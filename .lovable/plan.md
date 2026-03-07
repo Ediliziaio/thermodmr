@@ -1,48 +1,39 @@
 
 
-# Area Rivenditore: Permessi Read-Only e Dashboard Dedicata
+# Verifica Allegati Preventivo — Problemi Trovati
 
-## Problema
-Attualmente nell'Area Rivenditore vengono mostrate le stesse pagine del Super Admin (Orders, Pagamenti, Preventivi) con tutte le azioni di modifica. Il rivenditore deve avere una vista **read-only** e una dashboard personalizzata sulle sue esigenze.
+## Stato Attuale
 
-## Modifiche
+L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
 
-### 1. `src/pages/DealerDashboard.tsx` — Ridisegnare la Dashboard
-- Rimuovere "Azioni Rapide" (Crea Ordine, Gestisci Preventivi etc.)
-- Rimuovere il bottone "Nuovo Ordine" dall'header
-- KPI Cards focalizzate: **Ordini Totali**, **Valore Totale**, **Pagato**, **Da Pagare** (4 colonne)
-- Barra progresso globale pagamento (pagato / totale)
-- Distribuzione ordini per stato (già presente, mantenerla)
-- Attività Recente (già presente, mantenerla)
-- Promemoria Pagamenti: rimuovere il bottone "Paga" (read-only)
-- Link rapidi: solo **Visualizza Ordini**, **Storico Pagamenti**, **Assistenza**
+---
 
-### 2. `src/pages/Orders.tsx` — Read-Only per Dealer Area
-- Quando `isDealerArea` è true:
-  - Nascondere checkbox di selezione e barra azioni bulk
-  - Nascondere la colonna "Azioni" (tranne "Dettagli" / Eye)
-  - Nascondere bottoni "Nuovo Ordine", "Nuovo Preventivo"
-  - Nascondere il dropdown cambio stato inline (mostrare Badge statico)
-  - Nascondere il bottone Quick Payment (+) sulla colonna importo da pagare
-  - Nascondere filtro dealer (è già filtrato per dealer)
-  - Nascondere view toggle Pipeline/Lista (solo lista)
-  - Nascondere export CSV
+## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
 
-### 3. `src/pages/Pagamenti.tsx` — Read-Only per Dealer Area
-- Quando `isDealerArea` è true:
-  - Nascondere bottone "Nuovo Pagamento"
-  - Nascondere checkbox selezione e azioni bulk delete
-  - Nascondere azioni di eliminazione singola
-  - Mantenere solo visualizzazione e filtri base
+**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
 
-### 4. `src/pages/DealerPreventivi.tsx` — Read-Only per Dealer Area
-- Quando `isDealerArea` (il `canManage` già controlla il ruolo, ma bisogna verificare che nel contesto dealer area le azioni CRUD siano disabilitate):
-  - Nascondere "Nuovo Preventivo"
-  - Nascondere checkbox selezione e azioni bulk
-  - Nascondere azioni singole: Converti, Duplica, Elimina, Cambia Stato
-  - Mantenere solo visualizzazione tabella con filtri
+Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
 
-### 5. `src/components/DealerAreaLayout.tsx` — Pulizia Navigazione
-- Rimuovere "Preventivi" dalla sidebar (il rivenditore non gestisce preventivi attivamente, li vede dentro Ordini come stato)
-- Navigazione finale: **Dashboard**, **Ordini**, **Pagamenti**, **Assistenza**
+**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
+
+Interventi:
+- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
+- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
+- Entrambi i file usano lo stesso pattern, la fix e' identica
+
+## Bug 2: `useCreatePreventivo` contiene codice morto
+
+**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
+
+- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
+- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
+
+**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
+
+## Riepilogo
+
+| # | Tipo | File | Problema |
+|---|------|------|----------|
+| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
+| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
 
