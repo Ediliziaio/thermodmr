@@ -9,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent } from "@/components/ui/card";
 import { X, Filter, AlertCircle, Clock, Flame } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
@@ -47,106 +46,101 @@ export function OrderFilters({ filters, onFiltersChange, dealers, searchQuery, o
   const hasActiveFilters = Object.values(filters).some((value) => value !== undefined);
 
   return (
-    <div className="space-y-4">
-      {/* Global Search */}
-      {onSearchQueryChange && (
-        <div className="relative">
-          <Input
-            placeholder="🔍 Ricerca full-text: ID, dealer, cliente, note..."
-            value={searchQuery || ""}
-            onChange={(e) => onSearchQueryChange(e.target.value)}
-            className="pr-20"
-          />
-          {searchQuery && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="absolute right-1 top-1/2 -translate-y-1/2"
-              onClick={() => onSearchQueryChange("")}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          )}
-        </div>
-      )}
-      
-      {/* Quick Filters */}
-      <div className="flex flex-wrap gap-2">
+    <div className="space-y-2">
+      {/* Search + Quick Filters + Advanced Toggle — all in one row */}
+      <div className="flex items-center gap-2 flex-wrap">
+        {/* Global Search */}
+        {onSearchQueryChange && (
+          <div className="relative flex-1 min-w-[200px] max-w-sm">
+            <Input
+              placeholder="🔍 Ricerca: ID, dealer, cliente, note..."
+              value={searchQuery || ""}
+              onChange={(e) => onSearchQueryChange(e.target.value)}
+              className="pr-8 h-9 text-sm"
+            />
+            {searchQuery && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="absolute right-0.5 top-1/2 -translate-y-1/2 h-7 w-7 p-0"
+                onClick={() => onSearchQueryChange("")}
+              >
+                <X className="h-3.5 w-3.5" />
+              </Button>
+            )}
+          </div>
+        )}
+
+        {/* Quick Filters */}
         <Button 
           variant={filters.quickFilter === 'saldo' ? 'default' : 'outline'}
           size="sm"
+          className="h-9 text-xs"
           onClick={() => handleFilterChange('quickFilter', filters.quickFilter === 'saldo' ? undefined : 'saldo')}
         >
-          <AlertCircle className="h-4 w-4 mr-2" />
-          Con Saldo Scoperto
+          <AlertCircle className="h-3.5 w-3.5 mr-1.5" />
+          Saldo Scoperto
         </Button>
         
         <Button 
           variant={filters.quickFilter === 'ritardo' ? 'default' : 'outline'}
           size="sm"
+          className="h-9 text-xs"
           onClick={() => handleFilterChange('quickFilter', filters.quickFilter === 'ritardo' ? undefined : 'ritardo')}
         >
-          <Clock className="h-4 w-4 mr-2" />
-          Consegna in Ritardo
+          <Clock className="h-3.5 w-3.5 mr-1.5" />
+          In Ritardo
         </Button>
         
         <Button 
           variant={filters.quickFilter === 'urgenti' ? 'default' : 'outline'}
           size="sm"
+          className="h-9 text-xs"
           onClick={() => handleFilterChange('quickFilter', filters.quickFilter === 'urgenti' ? undefined : 'urgenti')}
         >
-          <Flame className="h-4 w-4 mr-2" />
+          <Flame className="h-3.5 w-3.5 mr-1.5" />
           Urgenti
         </Button>
-      </div>
 
-      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-        <div className="flex items-center gap-2">
+        {/* Advanced Filters Toggle */}
+        <Collapsible open={isOpen} onOpenChange={setIsOpen} className="contents">
           <CollapsibleTrigger asChild>
-            <Button variant="outline" size="sm">
-              <Filter className="h-4 w-4 mr-2" />
-              Filtri Avanzati
+            <Button variant="outline" size="sm" className="h-9 text-xs">
+              <Filter className="h-3.5 w-3.5 mr-1.5" />
+              Filtri
               {hasActiveFilters && (
-                <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-primary text-primary-foreground">
+                <span className="ml-1.5 px-1.5 py-0.5 text-[10px] rounded-full bg-primary text-primary-foreground leading-none">
                   {Object.values(filters).filter((v) => v !== undefined).length}
                 </span>
               )}
             </Button>
           </CollapsibleTrigger>
+
           {hasActiveFilters && (
-            <Button variant="ghost" size="sm" onClick={clearFilters}>
-              <X className="h-4 w-4 mr-2" />
-              Cancella filtri
+            <Button variant="ghost" size="sm" className="h-9 text-xs" onClick={clearFilters}>
+              <X className="h-3.5 w-3.5 mr-1" />
+              Azzera
             </Button>
           )}
-        </div>
+        </Collapsible>
+      </div>
 
-      <CollapsibleContent>
-        <Card className="mb-4">
-          <CardContent className="pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {/* Ricerca generale */}
-              <div className="space-y-2">
-                <Label htmlFor="search">Ricerca</Label>
-                <Input
-                  id="search"
-                  placeholder="ID Ordine, Cliente..."
-                  value={filters.searchTerm || ""}
-                  onChange={(e) => handleFilterChange("searchTerm", e.target.value)}
-                />
-              </div>
-
+      {/* Advanced Filters Panel */}
+      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+        <CollapsibleContent>
+          <div className="border-t pt-3 pb-1">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
               {/* Stato */}
-              <div className="space-y-2">
-                <Label htmlFor="stato">Stato</Label>
+              <div className="space-y-1">
+                <Label className="text-xs">Stato</Label>
                 <Select
                   value={filters.stato || "all"}
                   onValueChange={(value) =>
                     handleFilterChange("stato", value === "all" ? undefined : value)
                   }
                 >
-                  <SelectTrigger id="stato">
-                    <SelectValue placeholder="Tutti gli stati" />
+                  <SelectTrigger className="h-9 text-sm">
+                    <SelectValue placeholder="Tutti" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Tutti gli stati</SelectItem>
@@ -161,109 +155,75 @@ export function OrderFilters({ filters, onFiltersChange, dealers, searchQuery, o
               </div>
 
               {/* Stato Pagamento */}
-              <div className="space-y-2">
-                <Label htmlFor="statoPagamento">Stato Pagamento</Label>
+              <div className="space-y-1">
+                <Label className="text-xs">Pagamento</Label>
                 <Select
                   value={filters.statoPagamento || "all"}
                   onValueChange={(value) =>
                     handleFilterChange("statoPagamento", value === "all" ? undefined : value)
                   }
                 >
-                  <SelectTrigger id="statoPagamento">
+                  <SelectTrigger className="h-9 text-sm">
                     <SelectValue placeholder="Tutti" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Tutti</SelectItem>
-                    <SelectItem value="pagato">Pagato Completamente</SelectItem>
-                    <SelectItem value="parziale">Pagamento Parziale</SelectItem>
+                    <SelectItem value="pagato">Pagato</SelectItem>
+                    <SelectItem value="parziale">Parziale</SelectItem>
                     <SelectItem value="non_pagato">Non Pagato</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              {/* Rivenditore */}
-              <div className="space-y-2">
-                <Label htmlFor="dealer">Rivenditore</Label>
-                <Select
-                  value={filters.dealerId || "all"}
-                  onValueChange={(value) =>
-                    handleFilterChange("dealerId", value === "all" ? undefined : value)
-                  }
-                >
-                  <SelectTrigger id="dealer">
-                    <SelectValue placeholder="Tutti i rivenditori" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Tutti i rivenditori</SelectItem>
-                    {dealers.map((dealer) => (
-                      <SelectItem key={dealer.id} value={dealer.id}>
-                        {dealer.ragione_sociale}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              {/* Date range — Da / A inline */}
+              <div className="space-y-1">
+                <Label className="text-xs">Periodo</Label>
+                <div className="flex gap-1.5 items-center">
+                  <Input
+                    type="date"
+                    value={filters.dataInserimentoFrom || ""}
+                    onChange={(e) => handleFilterChange("dataInserimentoFrom", e.target.value)}
+                    className="h-9 text-sm flex-1"
+                  />
+                  <span className="text-xs text-muted-foreground">—</span>
+                  <Input
+                    type="date"
+                    value={filters.dataInserimentoTo || ""}
+                    onChange={(e) => handleFilterChange("dataInserimentoTo", e.target.value)}
+                    className="h-9 text-sm flex-1"
+                  />
+                </div>
               </div>
 
-              {/* Data Inserimento Da */}
-              <div className="space-y-2">
-                <Label htmlFor="dateFrom">Data Inserimento Da</Label>
-                <Input
-                  id="dateFrom"
-                  type="date"
-                  value={filters.dataInserimentoFrom || ""}
-                  onChange={(e) => handleFilterChange("dataInserimentoFrom", e.target.value)}
-                />
-              </div>
-
-              {/* Data Inserimento A */}
-              <div className="space-y-2">
-                <Label htmlFor="dateTo">Data Inserimento A</Label>
-                <Input
-                  id="dateTo"
-                  type="date"
-                  value={filters.dataInserimentoTo || ""}
-                  onChange={(e) => handleFilterChange("dataInserimentoTo", e.target.value)}
-                />
-              </div>
-
-              {/* Importo Minimo */}
-              <div className="space-y-2">
-                <Label htmlFor="importoMin">Importo Minimo (€)</Label>
-                <Input
-                  id="importoMin"
-                  type="number"
-                  placeholder="0"
-                  value={filters.importoMin || ""}
-                  onChange={(e) =>
-                    handleFilterChange(
-                      "importoMin",
-                      e.target.value ? parseFloat(e.target.value) : undefined
-                    )
-                  }
-                />
-              </div>
-
-              {/* Importo Massimo */}
-              <div className="space-y-2">
-                <Label htmlFor="importoMax">Importo Massimo (€)</Label>
-                <Input
-                  id="importoMax"
-                  type="number"
-                  placeholder="999999"
-                  value={filters.importoMax || ""}
-                  onChange={(e) =>
-                    handleFilterChange(
-                      "importoMax",
-                      e.target.value ? parseFloat(e.target.value) : undefined
-                    )
-                  }
-                />
+              {/* Importo range — Min / Max inline */}
+              <div className="space-y-1">
+                <Label className="text-xs">Importo (€)</Label>
+                <div className="flex gap-1.5 items-center">
+                  <Input
+                    type="number"
+                    placeholder="Min"
+                    value={filters.importoMin || ""}
+                    onChange={(e) =>
+                      handleFilterChange("importoMin", e.target.value ? parseFloat(e.target.value) : undefined)
+                    }
+                    className="h-9 text-sm flex-1"
+                  />
+                  <span className="text-xs text-muted-foreground">—</span>
+                  <Input
+                    type="number"
+                    placeholder="Max"
+                    value={filters.importoMax || ""}
+                    onChange={(e) =>
+                      handleFilterChange("importoMax", e.target.value ? parseFloat(e.target.value) : undefined)
+                    }
+                    className="h-9 text-sm flex-1"
+                  />
+                </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </CollapsibleContent>
-    </Collapsible>
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
     </div>
   );
 }
