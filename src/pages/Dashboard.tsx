@@ -279,7 +279,7 @@ export default function Dashboard() {
             <div className="text-2xl font-bold">{formatCurrency(kpis.totalAcconti)}</div>
             <div className="flex items-center justify-between mt-1">
               <p className="text-xs text-muted-foreground">Da ordini</p>
-              <DeltaIndicator value={kpis.deltas.acconti} />
+              <DeltaIndicator value={kpis.deltas?.acconti ?? 0} />
             </div>
           </CardContent>
         </Card>
