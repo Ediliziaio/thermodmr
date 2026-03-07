@@ -273,10 +273,6 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                   <Kanban className="h-3.5 w-3.5" />
                   Pipeline
                 </TabsTrigger>
-                <TabsTrigger value="pipeline-dnd" className="gap-1.5 text-xs px-3">
-                  <GripVertical className="h-3.5 w-3.5" />
-                  Drag & Drop
-                </TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
