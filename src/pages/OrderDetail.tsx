@@ -75,6 +75,7 @@ export default function OrderDetail() {
   const updateNotesMutation = useUpdateOrderNotes();
   const updateOrderIdMutation = useUpdateOrderId();
   const updateOrderLinesMutation = useUpdateOrderLines();
+  const updateDatesMutation = useUpdateOrderDates();
 
   const [noteInterna, setNoteInterna] = useState("");
   const [noteRivenditore, setNoteRivenditore] = useState("");
