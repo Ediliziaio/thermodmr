@@ -121,10 +121,10 @@ export function OrderMobileCard({
           )}
 
           {/* Info Grid */}
-          <div className="grid grid-cols-2 gap-3 mb-3 text-sm">
+          <div className="grid grid-cols-3 gap-3 mb-3 text-sm">
             {/* Data Inserimento */}
             <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <Calendar className="h-4 w-4 text-muted-foreground shrink-0" />
               <div>
                 <p className="text-xs text-muted-foreground">Inserito</p>
                 <p className="font-medium">
@@ -133,9 +133,20 @@ export function OrderMobileCard({
               </div>
             </div>
 
+            {/* Settimana Consegna */}
+            <div className="flex items-center gap-2">
+              <CalendarDays className="h-4 w-4 text-muted-foreground shrink-0" />
+              <div>
+                <p className="text-xs text-muted-foreground">Sett.</p>
+                <p className="font-medium">
+                  {order.settimana_consegna ? `W${order.settimana_consegna}` : "-"}
+                </p>
+              </div>
+            </div>
+
             {/* Importo Totale */}
             <div className="flex items-center gap-2">
-              <Euro className="h-4 w-4 text-muted-foreground" />
+              <Euro className="h-4 w-4 text-muted-foreground shrink-0" />
               <div>
                 <p className="text-xs text-muted-foreground">Totale</p>
                 <p className="font-semibold">
