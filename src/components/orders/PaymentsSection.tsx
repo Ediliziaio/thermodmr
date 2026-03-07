@@ -106,7 +106,7 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
     // Crea il pagamento
     createPayment.mutate({
       ordineId: orderId,
-      tipo: newPayment.tipo === PaymentType.ACCONTO ? "acconto" : newPayment.tipo === PaymentType.SALDO ? "saldo" : "parziale",
+      tipo: newPayment.tipo,
       importo,
       dataPagamento: newPayment.dataPagamento,
       metodo: newPayment.metodo,
@@ -116,7 +116,7 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
     setIsDialogOpen(false);
     // Reset form
     setNewPayment({
-      tipo: PaymentType.ACCONTO,
+      tipo: "acconto",
       importo: 0,
       dataPagamento: new Date().toISOString().split("T")[0],
       metodo: "Bonifico",
