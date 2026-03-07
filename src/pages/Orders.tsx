@@ -49,10 +49,19 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
   const isMobile = useIsMobile();
   const isDealerArea = !!dealerId;
   const [searchQuery, setSearchQuery] = useState("");
+  
+  const now = new Date();
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: startOfYear(now),
+    to: endOfYear(now),
+  });
+  const [activeFilter, setActiveFilter] = useState<string | null>("year");
+  
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useOrdersInfinite({ searchQuery, dealerId });
   const { data: dealersData } = useDealersInfinite();
   const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
   const [filters, setFilters] = useState<OrderFiltersState>({});
+  const { ref, inView } = useInView();
   const { ref, inView } = useInView();
   const [selectedOrderIds, setSelectedOrderIds] = useState<Set<string>>(new Set());
   const [bulkStatusDialogOpen, setBulkStatusDialogOpen] = useState(false);
