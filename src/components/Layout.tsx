@@ -12,7 +12,9 @@ import {
   FileText,
   LogOut,
   Menu,
+  Headphones,
 } from "lucide-react";
+import { useOpenTicketsCount } from "@/hooks/useTickets";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
