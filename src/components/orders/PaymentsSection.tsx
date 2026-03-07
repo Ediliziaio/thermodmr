@@ -256,6 +256,28 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
           </div>
         </div>
 
+        {/* Progress Bar */}
+        {(() => {
+          const percentuale = totalAmount > 0 ? Math.min((totalPaid / totalAmount) * 100, 100) : 0;
+          const progressColor = percentuale >= 100
+            ? "[&>div]:bg-green-500"
+            : percentuale >= 50
+              ? "[&>div]:bg-orange-500"
+              : "[&>div]:bg-red-500";
+          return (
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium">Progresso Pagamento</span>
+                <span className="text-sm font-bold">{formatPercentage(percentuale)}</span>
+              </div>
+              <Progress value={percentuale} className={`h-3 ${progressColor}`} />
+              <p className="text-xs text-muted-foreground">
+                Pagato {formatCurrency(totalPaid)} di {formatCurrency(totalAmount)}
+              </p>
+            </div>
+          );
+        })()}
+
         {/* Payment History */}
         <div className="space-y-4">
           <h4 className="font-medium">Storico Pagamenti</h4>
