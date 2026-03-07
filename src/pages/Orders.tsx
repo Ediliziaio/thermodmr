@@ -526,7 +526,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                               </td>
                               <td className="py-4 pr-4">
                                 <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                                  {userRole === "super_admin" ? (
+                                  {userRole === "super_admin" && !isDealerArea ? (
                                     <Select
                                       value={order.stato}
                                       onValueChange={(value) => {
