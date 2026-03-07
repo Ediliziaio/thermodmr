@@ -35,6 +35,7 @@ import type { Database } from "@/integrations/supabase/types";
 import { OrderLinesEditor } from "@/components/orders/OrderLinesEditor";
 import { PaymentsSection } from "@/components/orders/PaymentsSection";
 import { AttachmentsSection } from "@/components/orders/AttachmentsSection";
+import { TicketsSection } from "@/components/orders/TicketsSection";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { PaymentTimelineChart } from "@/components/analytics/charts/PaymentTimelineChart";
@@ -386,6 +387,7 @@ export default function OrderDetail() {
               </Card>
 
               <AttachmentsSection orderId={order.id} attachments={orderAttachments as any} />
+              <TicketsSection orderId={order.id} />
             </div>
 
             {/* Sidebar riepilogo */}
@@ -556,6 +558,7 @@ export default function OrderDetail() {
               </Card>
 
               <AttachmentsSection orderId={order.id} attachments={orderAttachments as any} />
+              <TicketsSection orderId={order.id} />
             </div>
 
             {/* Sidebar */}

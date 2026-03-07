@@ -25,6 +25,7 @@ const Pagamenti = lazy(() => import("./pages/Pagamenti"));
 
 const TestDataSeeder = lazy(() => import("./pages/TestDataSeeder"));
 const Impostazioni = lazy(() => import("./pages/Impostazioni"));
+const Assistenza = lazy(() => import("./pages/Assistenza"));
 
 const DealerArea = lazy(() => import("./pages/DealerArea"));
 const DealerPreventivi = lazy(() => import("./pages/DealerPreventivi"));
@@ -144,6 +145,16 @@ const App = () => (
                 <ProtectedRoute>
                   <Layout>
                     <Analytics />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assistenza"
+              element={
+                <ProtectedRoute requiredRole="super_admin">
+                  <Layout>
+                    <Assistenza />
                   </Layout>
                 </ProtectedRoute>
               }

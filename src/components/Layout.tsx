@@ -12,7 +12,9 @@ import {
   FileText,
   LogOut,
   Menu,
+  Headphones,
 } from "lucide-react";
+import { useOpenTicketsCount } from "@/hooks/useTickets";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -29,6 +31,7 @@ const navigation = [
   { name: "Preventivi", href: "/preventivi", icon: FileText, roles: ["super_admin"] },
   { name: "Rivenditori", href: "/rivenditori", icon: Users, roles: ["super_admin", "commerciale"] },
   { name: "Pagamenti", href: "/pagamenti", icon: CreditCard, roles: ["super_admin", "commerciale"] },
+  { name: "Assistenza", href: "/assistenza", icon: Headphones, roles: ["super_admin"] },
   { name: "KPI", href: "/kpi", icon: BarChart3, roles: ["super_admin"] },
   
   { name: "Impostazioni", href: "/impostazioni", icon: Settings, roles: ["super_admin"] },
@@ -38,6 +41,7 @@ export function Layout({ children }: LayoutProps) {
   const location = useLocation();
   const { user, userRole, signOut } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { data: openTicketsCount = 0 } = useOpenTicketsCount();
 
   const getRoleLabel = (role: string | null) => {
     switch (role) {
@@ -83,6 +87,11 @@ export function Layout({ children }: LayoutProps) {
               >
                 <item.icon className="h-5 w-5" />
                 {item.name}
+                {item.name === "Assistenza" && openTicketsCount > 0 && (
+                  <span className="ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-xs font-bold px-1.5">
+                    {openTicketsCount}
+                  </span>
+                )}
               </Link>
             );
           })}

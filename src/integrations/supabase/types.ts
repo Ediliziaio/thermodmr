@@ -775,6 +775,95 @@ export type Database = {
         }
         Relationships: []
       }
+      support_tickets: {
+        Row: {
+          created_at: string
+          creato_da_user_id: string
+          id: string
+          oggetto: string
+          ordine_id: string
+          priorita: string
+          stato: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          creato_da_user_id: string
+          id?: string
+          oggetto: string
+          ordine_id: string
+          priorita?: string
+          stato?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          creato_da_user_id?: string
+          id?: string
+          oggetto?: string
+          ordine_id?: string
+          priorita?: string
+          stato?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_tickets_ordine_id_fkey"
+            columns: ["ordine_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "support_tickets_ordine_id_fkey"
+            columns: ["ordine_id"]
+            isOneToOne: false
+            referencedRelation: "orders_with_payment_stats"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ticket_messages: {
+        Row: {
+          allegato_nome: string | null
+          allegato_tipo: string | null
+          allegato_url: string | null
+          created_at: string
+          id: string
+          messaggio: string
+          ticket_id: string
+          user_id: string
+        }
+        Insert: {
+          allegato_nome?: string | null
+          allegato_tipo?: string | null
+          allegato_url?: string | null
+          created_at?: string
+          id?: string
+          messaggio: string
+          ticket_id: string
+          user_id: string
+        }
+        Update: {
+          allegato_nome?: string | null
+          allegato_tipo?: string | null
+          allegato_url?: string | null
+          created_at?: string
+          id?: string
+          messaggio?: string
+          ticket_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_messages_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "support_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
