@@ -741,6 +741,8 @@ export default function OrderDetail() {
             </div>
           </div>
         </>
+      )}
+
       <AlertDialog open={showConvertDialog} onOpenChange={setShowConvertDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
