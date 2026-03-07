@@ -31,11 +31,11 @@ const STATUS_CHART_COLORS: Record<string, string> = {
 };
 
 const FILTER_LABELS: Record<string, string> = {
-  month: "Mese Scorso",
   "3months": "Ultimi 3 Mesi",
   "6months": "Ultimi 6 Mesi",
-  year: `Anno Corrente ${new Date().getFullYear()}`,
+  year: `Anno ${new Date().getFullYear()}`,
   lastyear: `Anno ${new Date().getFullYear() - 1}`,
+  all: "Tutto",
 };
 
 function DeltaIndicator({ value }: { value: number }) {
