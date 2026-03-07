@@ -12,7 +12,6 @@ import { BulkDeleteOrdersDialog } from "@/components/orders/BulkDeleteOrdersDial
 import { OrderFilters, OrderFiltersState } from "@/components/orders/OrderFilters";
 import { MobileOrdersList } from "@/components/orders/MobileOrdersList";
 import { MobileOrderFilters } from "@/components/orders/MobileOrderFilters";
-import { OrderPipelineView } from "@/components/orders/OrderPipelineView";
 import { OrderPipelineDnD } from "@/components/orders/OrderPipelineDnD";
 import { QuickPaymentDialog } from "@/components/orders/QuickPaymentDialog";
 import { exportOrdersCustom, ORDER_COLUMNS } from "@/lib/exportUtils";
