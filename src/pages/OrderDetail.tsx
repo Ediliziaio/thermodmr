@@ -616,11 +616,6 @@ export default function OrderDetail() {
                 title="Righe Ordine"
               />
 
-              <PaymentsSection 
-                orderId={order.id} 
-                payments={orderPayments as any}
-                totalAmount={Number(order.importo_totale)}
-              />
 
               {/* Note in Tabs */}
               <Card>
