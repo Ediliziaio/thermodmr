@@ -31,6 +31,7 @@ const navigation = [
   { name: "Preventivi", href: "/preventivi", icon: FileText, roles: ["super_admin"] },
   { name: "Rivenditori", href: "/rivenditori", icon: Users, roles: ["super_admin", "commerciale"] },
   { name: "Pagamenti", href: "/pagamenti", icon: CreditCard, roles: ["super_admin", "commerciale"] },
+  { name: "Assistenza", href: "/assistenza", icon: Headphones, roles: ["super_admin"] },
   { name: "KPI", href: "/kpi", icon: BarChart3, roles: ["super_admin"] },
   
   { name: "Impostazioni", href: "/impostazioni", icon: Settings, roles: ["super_admin"] },
