@@ -378,6 +378,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                     <th className="pb-3 pr-4">Acconto</th>
                     <th className="pb-3 pr-4">Importo da Pagare</th>
                     <th className="pb-3 pr-4">Consegna Prevista</th>
+                    <th className="pb-3 pr-4">Sett.</th>
                     <th className="pb-3">Azioni</th>
                   </tr>
                 </thead>
