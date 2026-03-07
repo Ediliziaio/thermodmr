@@ -293,7 +293,7 @@ export default function Dashboard() {
             <div className="text-2xl font-bold">{formatCurrency(kpis.totalIncassato)}</div>
             <div className="flex items-center justify-between mt-1">
               <p className="text-xs text-muted-foreground">Pagamenti ricevuti</p>
-              <DeltaIndicator value={kpis.deltas.incassato} />
+              <DeltaIndicator value={kpis.deltas?.incassato ?? 0} />
             </div>
           </CardContent>
         </Card>
