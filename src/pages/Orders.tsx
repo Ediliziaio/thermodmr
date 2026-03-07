@@ -69,6 +69,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
   const [activeFilter, setActiveFilter] = useState<string | null>("year");
   
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useOrdersInfinite({ searchQuery, dealerId });
+  const updateOrderStatus = useUpdateOrderStatus();
   const { data: dealersData } = useDealersInfinite();
   const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
   const [filters, setFilters] = useState<OrderFiltersState>({
