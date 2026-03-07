@@ -496,6 +496,7 @@ export type Database = {
           id: string
           importo_acconto: number
           importo_totale: number
+          modalita_pagamento: string | null
           note_interna: string | null
           note_rivenditore: string | null
           settimana_consegna: number | null
@@ -515,6 +516,7 @@ export type Database = {
           id: string
           importo_acconto?: number
           importo_totale?: number
+          modalita_pagamento?: string | null
           note_interna?: string | null
           note_rivenditore?: string | null
           settimana_consegna?: number | null
@@ -534,6 +536,7 @@ export type Database = {
           id?: string
           importo_acconto?: number
           importo_totale?: number
+          modalita_pagamento?: string | null
           note_interna?: string | null
           note_rivenditore?: string | null
           settimana_consegna?: number | null
