@@ -310,7 +310,7 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
                   ) : (
                     payments.map((payment) => (
                       <TableRow key={payment.id} className={selectedPaymentIds.has(payment.id) ? 'bg-muted/50' : ''}>
-                        <TableCell><Checkbox checked={selectedPaymentIds.has(payment.id)} onCheckedChange={() => togglePaymentSelection(payment.id)} /></TableCell>
+                        {!isDealerArea && <TableCell><Checkbox checked={selectedPaymentIds.has(payment.id)} onCheckedChange={() => togglePaymentSelection(payment.id)} /></TableCell>}
                         <TableCell>{formatDate(payment.data_pagamento)}</TableCell>
                         <TableCell><button onClick={() => isDealerArea ? navigate(`../ordini/${payment.ordine_id}`, { relative: 'path' }) : navigate(`/ordini/${payment.ordine_id}`)} className="font-medium hover:underline text-primary">{payment.ordine_id}</button></TableCell>
                         <TableCell>{payment.orders.dealers.ragione_sociale}</TableCell>
