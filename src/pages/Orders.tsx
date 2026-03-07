@@ -465,13 +465,15 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                     <table className="w-full">
                       <thead className="sticky top-0 bg-background z-10">
                         <tr className="border-b text-left text-sm font-medium text-muted-foreground">
-                          <th className="pb-3 pr-4 w-12">
-                            <Checkbox
-                              checked={selectedOrderIds.size === filteredOrders.length && filteredOrders.length > 0}
-                              onCheckedChange={toggleSelectAll}
-                              aria-label="Seleziona tutti gli ordini"
-                            />
-                          </th>
+                          {!isDealerArea && (
+                            <th className="pb-3 pr-4 w-12">
+                              <Checkbox
+                                checked={selectedOrderIds.size === filteredOrders.length && filteredOrders.length > 0}
+                                onCheckedChange={toggleSelectAll}
+                                aria-label="Seleziona tutti gli ordini"
+                              />
+                            </th>
+                          )}
                           <th className="pb-3 pr-4">ID Ordine</th>
                           <th className="pb-3 pr-4">Rivenditore</th>
                           <th className="pb-3 pr-4">Cliente</th>
