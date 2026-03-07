@@ -5,6 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Eye, Loader2, AlertCircle, RefreshCw, X, Trash2, Download, Plus, FileText, List, Kanban } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useOrdersInfinite } from "@/hooks/useOrdersInfinite";
+import { useUpdateOrderStatus } from "@/hooks/useOrders";
 import { NewOrderDialog } from "@/components/orders/NewOrderDialog";
 import { NewPreventivoDialog } from "@/components/orders/NewPreventivoDialog";
 import { BulkUpdateStatusDialog } from "@/components/orders/BulkUpdateStatusDialog";
@@ -36,6 +37,16 @@ import { useRealtimeSync } from "@/hooks/useRealtimeSync";
 
 type ViewMode = "lista" | "pipeline";
 
+const ORDER_STATUSES = [
+  { key: "preventivo", label: "Preventivo", color: "bg-slate-500" },
+  { key: "da_confermare", label: "Da Confermare", color: "bg-amber-500" },
+  { key: "da_pagare_acconto", label: "Da Pagare Acconto", color: "bg-orange-500" },
+  { key: "in_lavorazione", label: "In Lavorazione", color: "bg-blue-500" },
+  { key: "da_saldare", label: "Da Saldare", color: "bg-red-500" },
+  { key: "da_consegnare", label: "Da Consegnare", color: "bg-purple-500" },
+  { key: "consegnato", label: "Consegnato", color: "bg-green-500" },
+] as const;
+
 interface OrdersProps {
   dealerId?: string;
 }
@@ -58,6 +69,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
   const [activeFilter, setActiveFilter] = useState<string | null>("year");
   
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useOrdersInfinite({ searchQuery, dealerId });
+  const updateOrderStatus = useUpdateOrderStatus();
   const { data: dealersData } = useDealersInfinite();
   const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
   const [filters, setFilters] = useState<OrderFiltersState>({
@@ -509,10 +521,37 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                                   : "-"}
                               </td>
                               <td className="py-4 pr-4">
-                                <div className="flex items-center gap-2">
-                                  <Badge variant="outline" className={getStatusColor(order.stato)}>
-                                    {getStatusLabel(order.stato)}
-                                  </Badge>
+                                <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                                  {userRole === "super_admin" ? (
+                                    <Select
+                                      value={order.stato}
+                                      onValueChange={(value) => {
+                                        if (value !== order.stato) {
+                                          updateOrderStatus.mutate({ orderId: order.id!, stato: value });
+                                        }
+                                      }}
+                                    >
+                                      <SelectTrigger className="h-auto border-none bg-transparent p-0 shadow-none focus:ring-0 [&>svg]:ml-1 [&>svg]:h-3 [&>svg]:w-3">
+                                        <Badge variant="outline" className={getStatusColor(order.stato)}>
+                                          {getStatusLabel(order.stato)}
+                                        </Badge>
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        {ORDER_STATUSES.map((s) => (
+                                          <SelectItem key={s.key} value={s.key}>
+                                            <div className="flex items-center gap-2">
+                                              <div className={`w-2 h-2 rounded-full ${s.color}`} />
+                                              {s.label}
+                                            </div>
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                  ) : (
+                                    <Badge variant="outline" className={getStatusColor(order.stato)}>
+                                      {getStatusLabel(order.stato)}
+                                    </Badge>
+                                  )}
                                   {hasUrgentBalance && (
                                     <Badge variant="destructive" className="text-xs">
                                       <AlertCircle className="h-3 w-3 mr-1" />
