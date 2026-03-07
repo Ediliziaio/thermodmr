@@ -124,6 +124,7 @@ export function NewOrderDialog({ open: controlledOpen, onOpenChange: controlledO
       cliente_indirizzo: values.cliente_indirizzo,
       data_consegna_prevista: values.data_consegna_prevista,
       importo_acconto: values.importo_acconto,
+      modalita_pagamento: values.modalita_pagamento,
       note_rivenditore: values.note_rivenditore,
       note_interna: values.note_interna,
       order_lines: values.order_lines as Array<{
