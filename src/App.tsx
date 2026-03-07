@@ -150,6 +150,16 @@ const App = () => (
               }
             />
             <Route
+              path="/assistenza"
+              element={
+                <ProtectedRoute requiredRole="super_admin">
+                  <Layout>
+                    <Assistenza />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/impostazioni"
               element={
                 <ProtectedRoute requiredRole="super_admin">

@@ -87,6 +87,11 @@ export function Layout({ children }: LayoutProps) {
               >
                 <item.icon className="h-5 w-5" />
                 {item.name}
+                {item.name === "Assistenza" && openTicketsCount > 0 && (
+                  <span className="ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-xs font-bold px-1.5">
+                    {openTicketsCount}
+                  </span>
+                )}
               </Link>
             );
           })}
