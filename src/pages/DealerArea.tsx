@@ -13,6 +13,7 @@ const Orders = lazy(() => import("./Orders"));
 const OrderDetail = lazy(() => import("./OrderDetail"));
 const Pagamenti = lazy(() => import("./Pagamenti"));
 const DealerPreventivi = lazy(() => import("./DealerPreventivi"));
+const DealerAssistenza = lazy(() => import("./DealerAssistenza"));
 
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-[50vh]">
