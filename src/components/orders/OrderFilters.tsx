@@ -175,26 +175,6 @@ export function OrderFilters({ filters, onFiltersChange, dealers, searchQuery, o
                 </Select>
               </div>
 
-              {/* Date range — Da / A inline */}
-              <div className="space-y-1">
-                <Label className="text-xs">Periodo</Label>
-                <div className="flex gap-1.5 items-center">
-                  <Input
-                    type="date"
-                    value={filters.dataInserimentoFrom || ""}
-                    onChange={(e) => handleFilterChange("dataInserimentoFrom", e.target.value)}
-                    className="h-9 text-sm flex-1"
-                  />
-                  <span className="text-xs text-muted-foreground">—</span>
-                  <Input
-                    type="date"
-                    value={filters.dataInserimentoTo || ""}
-                    onChange={(e) => handleFilterChange("dataInserimentoTo", e.target.value)}
-                    className="h-9 text-sm flex-1"
-                  />
-                </div>
-              </div>
-
               {/* Importo range — Min / Max inline */}
               <div className="space-y-1">
                 <Label className="text-xs">Importo (€)</Label>
