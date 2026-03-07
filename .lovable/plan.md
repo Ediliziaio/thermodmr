@@ -1,37 +1,39 @@
 
 
-# Miglioramenti Dashboard
+# Verifica Allegati Preventivo — Problemi Trovati
 
-## Cosa manca
+## Stato Attuale
 
-### 1. KPI Ordini Attivi per Stato (click-to-filter)
-Aggiungere una riga di badge/chip cliccabili sotto le KPI cards che mostra il conteggio ordini per ogni fase del workflow (Da Confermare: 3, In Lavorazione: 5, ecc.). Click naviga a `/ordini?status=X`. I dati sono gia disponibili in `kpis.ordersByStatus`.
+L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
 
-### 2. Variazione % vs Periodo Precedente sulle KPI Cards
-Calcolare la variazione percentuale rispetto al periodo precedente per ogni KPI (Ricavi, Acconti, Incassato, Da Saldare). Richiede una nuova RPC `get_dashboard_kpis_comparison` che accetta due range di date e restituisce i valori di entrambi i periodi, oppure il calcolo lato client con una seconda chiamata.
+---
 
-### 3. Barra Progresso Incassi Globale
-Inserire una `Progress` bar tra le KPI cards e i grafici che mostra visivamente "Incassato X di Y" con colore dinamico (verde/arancio/rosso). Usa dati gia disponibili: `kpis.totalIncassato` / `kpis.totalRevenue`.
+## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
 
-### 4. Ultimi Ordini / Attivita Recente
-Widget card con gli ultimi 5 ordini creati/aggiornati, mostrando numero, dealer, stato e importo. Click naviga al dettaglio. Query semplice sulla tabella `orders` ordinata per `updated_at DESC`.
+**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
 
-## Modifiche tecniche
+Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
 
-### Database
-- Nuova RPC `get_dashboard_kpis_comparison(p_start_date, p_end_date)` che restituisce anche i KPI del periodo precedente di uguale durata (per calcolare delta %)
+**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
 
-### `src/pages/Dashboard.tsx`
-- Aggiungere riga di badge ordini per stato (cliccabili) sotto le KPI cards
-- Aggiungere barra `Progress` incassi globale
-- Aggiungere frecce trend sulle KPI cards usando i dati di comparazione
-- Aggiungere widget "Ultimi Ordini" nel grid grafici
+Interventi:
+- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
+- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
+- Entrambi i file usano lo stesso pattern, la fix e' identica
 
-### `src/hooks/useDashboard.ts`
-- Aggiungere hook `useRecentOrders(limit)` per gli ultimi ordini
-- Estendere `useDashboardKPIs` per includere delta % dal periodo precedente
+## Bug 2: `useCreatePreventivo` contiene codice morto
 
-### Nuovo componente `src/components/dashboard/RecentOrdersWidget.tsx`
-- Lista compatta degli ultimi 5 ordini con stato, dealer, importo
-- Click per navigare al dettaglio
+**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
+
+- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
+- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
+
+**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
+
+## Riepilogo
+
+| # | Tipo | File | Problema |
+|---|------|------|----------|
+| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
+| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
 
