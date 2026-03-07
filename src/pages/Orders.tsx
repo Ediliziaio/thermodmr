@@ -498,8 +498,10 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                               key={order.id} 
                               className={cn(
                                 "border-b last:border-0 hover:bg-muted/50 transition-colors",
-                                isSelected && "bg-muted/50"
+                                isSelected && "bg-muted/50",
+                                isDealerArea && "cursor-pointer"
                               )}
+                              onClick={isDealerArea ? () => navigate(`../ordini/${order.id}`, { relative: 'path' }) : undefined}
                             >
                               {!isDealerArea && (
                                 <td className="py-4 pr-4">
