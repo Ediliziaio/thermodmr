@@ -539,16 +539,19 @@ export const useUpdateOrderDates = () => {
       dataFineProduzione,
       settimanaConsegna,
       dataConsegnaPrevista,
+      modalitaPagamento,
     }: {
       orderId: string;
       dataFineProduzione?: string | null;
       settimanaConsegna?: number | null;
       dataConsegnaPrevista?: string | null;
+      modalitaPagamento?: string | null;
     }) => {
       const updateData: Record<string, any> = {};
       if (dataFineProduzione !== undefined) updateData.data_fine_produzione = dataFineProduzione;
       if (settimanaConsegna !== undefined) updateData.settimana_consegna = settimanaConsegna;
       if (dataConsegnaPrevista !== undefined) updateData.data_consegna_prevista = dataConsegnaPrevista;
+      if (modalitaPagamento !== undefined) updateData.modalita_pagamento = modalitaPagamento;
 
       const { data, error } = await supabase
         .from("orders")

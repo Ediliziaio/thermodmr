@@ -451,6 +451,31 @@ export function NewOrderDialog({ open: controlledOpen, onOpenChange: controlledO
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="modalita_pagamento"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Modalità di Pagamento</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value || ""}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleziona modalità" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {MODALITA_PAGAMENTO_OPTIONS.map((opt) => (
+                          <SelectItem key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
             <FormField
