@@ -656,14 +656,28 @@ export default function OrderDetail() {
                     <Label className="text-muted-foreground text-xs">Settimana Consegna</Label>
                     {isSuperAdmin ? (
                       <div className="space-y-1">
-                        <Input
-                          type="number"
-                          min="1"
-                          max="53"
-                          placeholder="es. 24"
-                          value={settimanaConsegna}
-                          onChange={(e) => setSettimanaConsegna(e.target.value)}
-                        />
+                        <Select
+                          value={settimanaConsegna || ""}
+                          onValueChange={(val) => setSettimanaConsegna(val)}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Seleziona settimana" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Array.from({ length: 53 }, (_, i) => {
+                              const weekNum = i + 1;
+                              const year = getYear(new Date());
+                              const ws = startOfWeek(addWeeks(new Date(year, 0, 4), weekNum - 1), { weekStartsOn: 1 });
+                              const monthNames = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
+                              const monthLabel = monthNames[ws.getMonth()];
+                              return (
+                                <SelectItem key={weekNum} value={String(weekNum)}>
+                                  {weekNum} - {monthLabel}
+                                </SelectItem>
+                              );
+                            })}
+                          </SelectContent>
+                        </Select>
                         {settimanaConsegna && Number(settimanaConsegna) >= 1 && Number(settimanaConsegna) <= 53 && (
                           <p className="text-xs text-muted-foreground">
                             {(() => {
