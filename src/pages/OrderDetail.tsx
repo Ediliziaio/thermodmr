@@ -592,7 +592,7 @@ export default function OrderDetail() {
 
           <PaymentsSection 
             orderId={order.id} 
-            payments={orderPayments as any}
+            payments={orderPayments || []}
             totalAmount={Number(order.importo_totale)}
           />
 

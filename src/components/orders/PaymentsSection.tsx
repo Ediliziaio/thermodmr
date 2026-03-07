@@ -278,7 +278,7 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
                     </span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    {formatDate(payment.dataPagamento)}
+                    {formatDate(payment.data_pagamento)}
                   </p>
                   {payment.riferimento && (
                     <p className="text-xs text-muted-foreground">
