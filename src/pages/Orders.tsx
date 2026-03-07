@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, Loader2, AlertCircle, RefreshCw, X, Trash2, Download, Plus, FileText, List, Kanban, GripVertical } from "lucide-react";
+import { Eye, Loader2, AlertCircle, RefreshCw, X, Trash2, Download, Plus, FileText, List, Kanban } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useOrdersInfinite } from "@/hooks/useOrdersInfinite";
 import { NewOrderDialog } from "@/components/orders/NewOrderDialog";
