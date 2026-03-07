@@ -93,6 +93,9 @@ export default function OrderDetail() {
       setNoteInterna(order.note_interna || "");
       setNoteRivenditore(order.note_rivenditore || "");
       setEditedOrderId(order.id);
+      setDataFineProduzione(order.data_fine_produzione ? parseISO(order.data_fine_produzione) : undefined);
+      setSettimanaConsegna(order.settimana_consegna?.toString() || "");
+      setDataConsegnaPrevista(order.data_consegna_prevista ? parseISO(order.data_consegna_prevista) : undefined);
     }
   }, [order]);
 
