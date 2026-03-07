@@ -59,6 +59,14 @@ export const OrderPipelineCard = React.memo(function OrderPipelineCard({
           />
         </div>
 
+        {/* Modalità Pagamento */}
+        {(order as any).modalita_pagamento && (
+          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <CreditCard className="h-3 w-3" />
+            <span className="truncate">{getModalitaPagamentoLabel((order as any).modalita_pagamento)}</span>
+          </div>
+        )}
+
         {/* Footer: settimana + da pagare */}
         <div className="flex items-center justify-between text-xs">
           {order.settimana_consegna ? (
