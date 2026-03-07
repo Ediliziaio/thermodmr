@@ -39,7 +39,7 @@ export const useDashboardKPIs = (startDate?: Date, endDate?: Date) => {
   return useQuery({
     queryKey: ["dashboard-kpis", startDate, endDate],
     queryFn: async (): Promise<DashboardKPIs> => {
-      const [kpisResult, dealersResult, comparisonResult] = await Promise.all([
+      const [kpisResult, dealersResult] = await Promise.all([
         supabase.rpc("get_dashboard_kpis", {
           p_start_date: startDate?.toISOString(),
           p_end_date: endDate?.toISOString(),
@@ -51,12 +51,19 @@ export const useDashboardKPIs = (startDate?: Date, endDate?: Date) => {
           p_start_date: startDate?.toISOString(),
           p_end_date: endDate?.toISOString(),
         }),
-        supabase.rpc("get_dashboard_kpis_comparison" as any, {
+      ]);
+
+      // Fetch comparison separately to avoid blocking main KPIs
+      let comparisonResult: any = { error: null, data: null };
+      try {
+        comparisonResult = await supabase.rpc("get_dashboard_kpis_comparison", {
           p_start_date: startDate?.toISOString() ?? null,
           p_end_date: endDate?.toISOString() ?? null,
           p_commerciale_id: null,
-        }),
-      ]);
+        });
+      } catch (_) {
+        // Silently ignore comparison errors
+      }
 
       if (kpisResult.error) throw kpisResult.error;
       if (dealersResult.error) throw dealersResult.error;
