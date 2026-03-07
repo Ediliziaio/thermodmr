@@ -596,13 +596,6 @@ export default function OrderDetail() {
             totalAmount={Number(order.importo_totale)}
           />
 
-          {orderPayments && orderPayments.length > 0 && (
-            <PaymentTimelineChart
-              payments={orderPayments}
-              totalAmount={order.importo_totale}
-              title="Timeline Pagamenti"
-            />
-          )}
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Colonna principale */}
