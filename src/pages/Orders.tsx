@@ -658,16 +658,18 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                                   <span className="text-muted-foreground">-</span>
                                 )}
                               </td>
-                              <td className="py-4">
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => isDealerArea ? navigate(`../ordini/${order.id}`, { relative: 'path' }) : navigate(`/ordini/${order.id}`)}
-                                >
-                                  <Eye className="h-4 w-4 mr-2" />
-                                  Dettagli
-                                </Button>
-                              </td>
+                              {!isDealerArea && (
+                                <td className="py-4">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => navigate(`/ordini/${order.id}`)}
+                                  >
+                                    <Eye className="h-4 w-4 mr-2" />
+                                    Dettagli
+                                  </Button>
+                                </td>
+                              )}
                             </tr>
                           );
                         })}
