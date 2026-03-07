@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
+import { getModalitaPagamentoLabel } from "@/lib/orderConstants";
 
 /**
  * Convert array of objects to CSV string
@@ -109,6 +110,7 @@ export function exportOrders(orders: any[]) {
     "Importo Pagato": formatCurrencyForExport(o.importo_pagato),
     "Importo Da Pagare": formatCurrencyForExport(o.importo_da_pagare),
     "Percentuale Pagata": o.percentuale_pagata ? `${o.percentuale_pagata.toFixed(2)}%` : "0%",
+    "Modalità Pagamento": getModalitaPagamentoLabel(o.modalita_pagamento),
     "Cliente Finale": o.clients ? `${o.clients.nome} ${o.clients.cognome}` : "",
     "Note Interna": o.note_interna || "",
     "Note Rivenditore": o.note_rivenditore || "",
@@ -213,6 +215,9 @@ function formatValueForExport(value: any, key: string): string {
     };
     return baseLabels[value] || value;
   }
+  if (key === "modalita_pagamento") {
+    return getModalitaPagamentoLabel(value);
+  }
   
   return String(value);
 }
@@ -232,6 +237,7 @@ export const ORDER_COLUMNS = [
   { key: "importo_pagato", label: "Importo Pagato", defaultSelected: true },
   { key: "importo_da_pagare", label: "Da Pagare", defaultSelected: true },
   { key: "percentuale_pagata", label: "% Pagata", defaultSelected: false },
+  { key: "modalita_pagamento", label: "Modalità Pagamento", defaultSelected: false },
   { key: "cliente_finale", label: "Cliente Finale", defaultSelected: false },
   { key: "note_interna", label: "Note Interna", defaultSelected: false },
   { key: "note_rivenditore", label: "Note Rivenditore", defaultSelected: false },

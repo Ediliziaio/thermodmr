@@ -19,5 +19,20 @@ export const ORDER_FORM_CATEGORIES = [
   "Altro",
 ] as const;
 
+export const MODALITA_PAGAMENTO_OPTIONS = [
+  { value: "tutto", label: "Tutto" },
+  { value: "50_50", label: "50% Acconto + 50% Saldo" },
+  { value: "completamento_lavori", label: "A completamento lavori" },
+  { value: "alla_consegna", label: "Alla consegna" },
+  { value: "contanti", label: "Contanti" },
+] as const;
+
+export type ModalitaPagamento = (typeof MODALITA_PAGAMENTO_OPTIONS)[number]["value"];
+
+export const getModalitaPagamentoLabel = (value: string | null | undefined): string => {
+  if (!value) return "";
+  return MODALITA_PAGAMENTO_OPTIONS.find(o => o.value === value)?.label || value;
+};
+
 export type OrderLineCategory = (typeof ORDER_LINE_CATEGORIES)[number];
 export type OrderFormCategory = (typeof ORDER_FORM_CATEGORIES)[number];

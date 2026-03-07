@@ -1,0 +1,1 @@
+ALTER TABLE orders ADD COLUMN modalita_pagamento text;

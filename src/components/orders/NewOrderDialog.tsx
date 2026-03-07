@@ -36,6 +36,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency } from "@/lib/utils";
 import { IvaSelector } from "./IvaSelector";
+import { MODALITA_PAGAMENTO_OPTIONS } from "@/lib/orderConstants";
 
 const orderLineSchema = z.object({
   categoria: z.string().min(1, "Categoria richiesta"),
@@ -55,6 +56,7 @@ const orderFormSchema = z.object({
   cliente_indirizzo: z.string().optional(),
   data_consegna_prevista: z.string().optional(),
   importo_acconto: z.coerce.number().min(0).default(0),
+  modalita_pagamento: z.string().optional(),
   note_rivenditore: z.string().optional(),
   note_interna: z.string().optional(),
   order_lines: z.array(orderLineSchema).min(1, "Aggiungi almeno una riga"),
@@ -122,6 +124,7 @@ export function NewOrderDialog({ open: controlledOpen, onOpenChange: controlledO
       cliente_indirizzo: values.cliente_indirizzo,
       data_consegna_prevista: values.data_consegna_prevista,
       importo_acconto: values.importo_acconto,
+      modalita_pagamento: values.modalita_pagamento,
       note_rivenditore: values.note_rivenditore,
       note_interna: values.note_interna,
       order_lines: values.order_lines as Array<{
@@ -444,6 +447,31 @@ export function NewOrderDialog({ open: controlledOpen, onOpenChange: controlledO
                     <FormControl>
                       <Input type="number" step="0.01" {...field} />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="modalita_pagamento"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Modalità di Pagamento</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value || ""}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleziona modalità" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {MODALITA_PAGAMENTO_OPTIONS.map((opt) => (
+                          <SelectItem key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}

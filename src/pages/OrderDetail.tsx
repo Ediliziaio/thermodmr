@@ -54,6 +54,7 @@ import {
   useUpdateOrderDates,
 } from "@/hooks/useOrders";
 import { formatCurrency, formatDate, getStatusLabel, getStatusColor } from "@/lib/utils";
+import { MODALITA_PAGAMENTO_OPTIONS, getModalitaPagamentoLabel } from "@/lib/orderConstants";
 import { differenceInDays, isPast, parseISO, format, startOfWeek, addWeeks, endOfWeek, getWeek, getYear } from "date-fns";
 import { it } from "date-fns/locale";
 
@@ -86,6 +87,7 @@ export default function OrderDetail() {
   const [dataFineProduzione, setDataFineProduzione] = useState<Date | undefined>();
   const [settimanaConsegna, setSettimanaConsegna] = useState<string>("");
   const [dataConsegnaPrevista, setDataConsegnaPrevista] = useState<Date | undefined>();
+  const [modalitaPagamento, setModalitaPagamento] = useState<string>("");
   const hasLineChanges = editedLines !== null;
 
   useEffect(() => {
@@ -96,6 +98,7 @@ export default function OrderDetail() {
       setDataFineProduzione(order.data_fine_produzione ? parseISO(order.data_fine_produzione) : undefined);
       setSettimanaConsegna(order.settimana_consegna?.toString() || "");
       setDataConsegnaPrevista(order.data_consegna_prevista ? parseISO(order.data_consegna_prevista) : undefined);
+      setModalitaPagamento((order as any).modalita_pagamento || "");
     }
   }, [order]);
 
@@ -587,6 +590,50 @@ export default function OrderDetail() {
                       {formatCurrency(saldo)}
                     </span>
                   </div>
+                  <div className="h-px bg-border" />
+                  {/* Modalità Pagamento */}
+                  <div className="space-y-1.5">
+                    <Label className="text-muted-foreground text-xs">Modalità di Pagamento</Label>
+                    {isSuperAdmin ? (
+                      <Select
+                        value={modalitaPagamento || ""}
+                        onValueChange={(v) => setModalitaPagamento(v)}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Seleziona modalità" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {MODALITA_PAGAMENTO_OPTIONS.map((opt) => (
+                            <SelectItem key={opt.value} value={opt.value}>
+                              {opt.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <p className="font-medium text-foreground">
+                        {getModalitaPagamentoLabel(modalitaPagamento) || "Non specificata"}
+                      </p>
+                    )}
+                  </div>
+                  {isSuperAdmin && (
+                    <Button
+                      size="sm"
+                      className="w-full"
+                      onClick={() => {
+                        if (!id) return;
+                        updateDatesMutation.mutate({
+                          orderId: id,
+                          modalitaPagamento: modalitaPagamento || null,
+                        });
+                      }}
+                      disabled={updateDatesMutation.isPending}
+                    >
+                      {updateDatesMutation.isPending ? (
+                        <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
+                      ) : "Salva Modalità"}
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
 

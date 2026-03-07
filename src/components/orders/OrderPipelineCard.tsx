@@ -2,8 +2,9 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { AlertCircle, CalendarDays } from "lucide-react";
+import { AlertCircle, CalendarDays, CreditCard } from "lucide-react";
 import { formatCurrency, getStatusColor, getStatusLabel } from "@/lib/utils";
+import { getModalitaPagamentoLabel } from "@/lib/orderConstants";
 import type { OrderWithPaymentStats } from "@/types/orders";
 
 interface OrderPipelineCardProps {
@@ -57,6 +58,14 @@ export const OrderPipelineCard = React.memo(function OrderPipelineCard({
             className="h-1.5"
           />
         </div>
+
+        {/* Modalità Pagamento */}
+        {(order as any).modalita_pagamento && (
+          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <CreditCard className="h-3 w-3" />
+            <span className="truncate">{getModalitaPagamentoLabel((order as any).modalita_pagamento)}</span>
+          </div>
+        )}
 
         {/* Footer: settimana + da pagare */}
         <div className="flex items-center justify-between text-xs">

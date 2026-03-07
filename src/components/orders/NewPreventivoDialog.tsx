@@ -34,6 +34,7 @@ import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency } from "@/lib/utils";
+import { MODALITA_PAGAMENTO_OPTIONS } from "@/lib/orderConstants";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -54,6 +55,7 @@ const preventivoFormSchema = z.object({
   cliente_telefono: z.string().optional(),
   cliente_indirizzo: z.string().optional(),
   data_scadenza_preventivo: z.string().min(1, "Data scadenza richiesta"),
+  modalita_pagamento: z.string().optional(),
   note_rivenditore: z.string().optional(),
   note_interna: z.string().optional(),
   order_lines: z.array(orderLineSchema).min(1, "Aggiungi almeno una riga"),
@@ -208,6 +210,7 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
       cliente_telefono: values.cliente_telefono,
       cliente_indirizzo: values.cliente_indirizzo,
       data_scadenza_preventivo: values.data_scadenza_preventivo,
+      modalita_pagamento: values.modalita_pagamento,
       note_rivenditore: values.note_rivenditore,
       note_interna: values.note_interna,
       order_lines: values.order_lines,
@@ -396,6 +399,32 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
                 </div>
               </CardContent>
             </Card>
+
+            {/* Modalità Pagamento */}
+            <FormField
+              control={form.control}
+              name="modalita_pagamento"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Modalità di Pagamento</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value || ""}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Seleziona modalità" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {MODALITA_PAGAMENTO_OPTIONS.map((opt) => (
+                        <SelectItem key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             {/* Notes */}
             <FormField control={form.control} name="note_rivenditore" render={({ field }) => (
