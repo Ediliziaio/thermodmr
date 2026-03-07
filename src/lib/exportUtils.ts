@@ -215,6 +215,9 @@ function formatValueForExport(value: any, key: string): string {
     };
     return baseLabels[value] || value;
   }
+  if (key === "modalita_pagamento") {
+    return getModalitaPagamentoLabel(value);
+  }
   
   return String(value);
 }
