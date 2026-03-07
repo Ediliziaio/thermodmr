@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Euro, TrendingUp, TrendingDown, Minus, CheckCircle, AlertCircle, Radio, CalendarIcon, X, RefreshCw, ArrowUp, ArrowDown } from "lucide-react";
+import { Euro, TrendingUp, Minus, CheckCircle, AlertCircle, Radio, CalendarIcon, RefreshCw, ArrowUp, ArrowDown } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { format, subMonths, startOfMonth, endOfMonth, startOfYear, endOfYear, subYears } from "date-fns";
 import { it } from "date-fns/locale";
