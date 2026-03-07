@@ -156,9 +156,9 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={PaymentType.ACCONTO}>Acconto</SelectItem>
-                    <SelectItem value={PaymentType.PARZIALE}>Parziale</SelectItem>
-                    <SelectItem value={PaymentType.SALDO}>Saldo</SelectItem>
+                    <SelectItem value="acconto">Acconto</SelectItem>
+                    <SelectItem value="parziale">Parziale</SelectItem>
+                    <SelectItem value="saldo">Saldo</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
