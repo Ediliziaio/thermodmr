@@ -106,7 +106,7 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
     // Crea il pagamento
     createPayment.mutate({
       ordineId: orderId,
-      tipo: newPayment.tipo,
+      tipo: newPayment.tipo as "acconto" | "saldo" | "parziale",
       importo,
       dataPagamento: newPayment.dataPagamento,
       metodo: newPayment.metodo,
