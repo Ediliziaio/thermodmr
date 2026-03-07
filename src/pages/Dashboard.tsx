@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Euro, TrendingUp, CheckCircle, AlertCircle, Radio, CalendarIcon, X, RefreshCw } from "lucide-react";
+import { Euro, TrendingUp, TrendingDown, Minus, CheckCircle, AlertCircle, Radio, CalendarIcon, X, RefreshCw, ArrowUp, ArrowDown } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { format, subMonths, startOfMonth, endOfMonth, startOfYear, endOfYear, subYears } from "date-fns";
 import { it } from "date-fns/locale";
@@ -13,6 +13,9 @@ import { useRealtimeSync } from "@/hooks/useRealtimeSync";
 import { RevenueChart } from "@/components/dashboard/RevenueChart";
 import { OrderStatusPieChart } from "@/components/dashboard/OrderStatusPieChart";
 import { DeadlinesWidget } from "@/components/dashboard/DeadlinesWidget";
+import { RecentOrdersWidget } from "@/components/dashboard/RecentOrdersWidget";
+import { CollectionProgressBar } from "@/components/dashboard/CollectionProgressBar";
+import { StatusBadgesRow } from "@/components/dashboard/StatusBadgesRow";
 import { formatCurrency, getStatusLabel, cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useNavigate } from "react-router-dom";
@@ -35,6 +38,19 @@ const FILTER_LABELS: Record<string, string> = {
   lastyear: `Anno ${new Date().getFullYear() - 1}`,
 };
 
+function DeltaIndicator({ value }: { value: number }) {
+  if (value === 0) return <Minus className="h-3 w-3 text-muted-foreground" />;
+  const isPositive = value > 0;
+  return (
+    <span className={cn("flex items-center gap-0.5 text-xs font-medium",
+      isPositive ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
+    )}>
+      {isPositive ? <ArrowUp className="h-3 w-3" /> : <ArrowDown className="h-3 w-3" />}
+      {Math.abs(value).toFixed(1)}%
+    </span>
+  );
+}
+
 export default function Dashboard() {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
@@ -42,7 +58,6 @@ export default function Dashboard() {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   
-  // Real-time centralizzato
   useRealtimeSync();
   
   const { data: kpis, isLoading: kpisLoading, error: kpisError, refetch } = useDashboardKPIs(
@@ -248,9 +263,10 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatCurrency(kpis.totalRevenue)}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              {kpis.totalOrders} ordini totali
-            </p>
+            <div className="flex items-center justify-between mt-1">
+              <p className="text-xs text-muted-foreground">{kpis.totalOrders} ordini totali</p>
+              <DeltaIndicator value={kpis.deltas.revenue} />
+            </div>
           </CardContent>
         </Card>
 
@@ -261,7 +277,10 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatCurrency(kpis.totalAcconti)}</div>
-            <p className="text-xs text-muted-foreground mt-1">Da ordini</p>
+            <div className="flex items-center justify-between mt-1">
+              <p className="text-xs text-muted-foreground">Da ordini</p>
+              <DeltaIndicator value={kpis.deltas.acconti} />
+            </div>
           </CardContent>
         </Card>
 
@@ -272,7 +291,10 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatCurrency(kpis.totalIncassato)}</div>
-            <p className="text-xs text-muted-foreground mt-1">Pagamenti ricevuti</p>
+            <div className="flex items-center justify-between mt-1">
+              <p className="text-xs text-muted-foreground">Pagamenti ricevuti</p>
+              <DeltaIndicator value={kpis.deltas.incassato} />
+            </div>
           </CardContent>
         </Card>
 
@@ -291,6 +313,15 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Status Badges Row */}
+      <StatusBadgesRow ordersByStatus={kpis.ordersByStatus} />
+
+      {/* Collection Progress Bar */}
+      <CollectionProgressBar
+        totalIncassato={kpis.totalIncassato}
+        totalRevenue={kpis.totalRevenue}
+      />
 
       {/* Charts Section */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -313,40 +344,45 @@ export default function Dashboard() {
         }))}
       />
 
-      {/* Top Dealers */}
-      <Card>
-        <CardHeader className="p-4 sm:p-6">
-          <CardTitle className="text-lg md:text-xl">Top 5 Rivenditori</CardTitle>
-          <CardDescription className="text-xs md:text-sm">I 5 rivenditori con più fatturato</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {kpis.topDealers.length > 0 ? (
-            <div className="space-y-4">
-              {kpis.topDealers.map((dealer) => (
-                <div
-                  key={dealer.id}
-                  onClick={() => navigate(`/rivenditori/${dealer.id}`)}
-                  className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0 cursor-pointer rounded-lg p-2 -mx-2 transition-colors hover:bg-accent/50"
-                >
-                  <div className="space-y-1">
-                    <p className="font-medium">{dealer.ragione_sociale}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {dealer.ordersCount} ordini
-                    </p>
+      {/* Recent Orders & Top Dealers */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <RecentOrdersWidget />
+
+        {/* Top Dealers */}
+        <Card>
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="text-lg md:text-xl">Top 5 Rivenditori</CardTitle>
+            <CardDescription className="text-xs md:text-sm">I 5 rivenditori con più fatturato</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {kpis.topDealers.length > 0 ? (
+              <div className="space-y-4">
+                {kpis.topDealers.map((dealer) => (
+                  <div
+                    key={dealer.id}
+                    onClick={() => navigate(`/rivenditori/${dealer.id}`)}
+                    className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0 cursor-pointer rounded-lg p-2 -mx-2 transition-colors hover:bg-accent/50"
+                  >
+                    <div className="space-y-1">
+                      <p className="font-medium">{dealer.ragione_sociale}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {dealer.ordersCount} ordini
+                      </p>
+                    </div>
+                    <div className="text-right space-y-1">
+                      <p className="font-semibold">{formatCurrency(dealer.totalRevenue)}</p>
+                    </div>
                   </div>
-                  <div className="text-right space-y-1">
-                    <p className="font-semibold">{formatCurrency(dealer.totalRevenue)}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">Nessun dato disponibile</p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">Nessun dato disponibile</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
