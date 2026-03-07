@@ -345,17 +345,6 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
               searchQuery={searchQuery}
               onSearchQueryChange={setSearchQuery}
             />
-            <OrderPipelineView orders={filteredOrders} isDealerArea={isDealerArea} />
-          </>
-        ) : viewMode === "pipeline-dnd" ? (
-          <>
-            <OrderFilters
-              filters={filters}
-              onFiltersChange={setFilters}
-              dealers={dealers || []}
-              searchQuery={searchQuery}
-              onSearchQueryChange={setSearchQuery}
-            />
             <OrderPipelineDnD orders={filteredOrders} isDealerArea={isDealerArea} />
           </>
         ) : (
