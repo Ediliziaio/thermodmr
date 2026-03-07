@@ -53,22 +53,22 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
   const totalPaid = payments.reduce((sum, p) => sum + p.importo, 0);
   const remaining = totalAmount - totalPaid;
 
-  const getPaymentTypeLabel = (type: PaymentType) => {
-    const labels = {
-      [PaymentType.ACCONTO]: "Acconto",
-      [PaymentType.SALDO]: "Saldo",
-      [PaymentType.PARZIALE]: "Parziale",
+  const getPaymentTypeLabel = (type: string) => {
+    const labels: Record<string, string> = {
+      acconto: "Acconto",
+      saldo: "Saldo",
+      parziale: "Parziale",
     };
-    return labels[type];
+    return labels[type] || type;
   };
 
-  const getPaymentTypeColor = (type: PaymentType) => {
-    const colors = {
-      [PaymentType.ACCONTO]: "bg-blue-500/10 text-blue-700 dark:text-blue-400",
-      [PaymentType.SALDO]: "bg-green-500/10 text-green-700 dark:text-green-400",
-      [PaymentType.PARZIALE]: "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400",
+  const getPaymentTypeColor = (type: string) => {
+    const colors: Record<string, string> = {
+      acconto: "bg-blue-500/10 text-blue-700 dark:text-blue-400",
+      saldo: "bg-green-500/10 text-green-700 dark:text-green-400",
+      parziale: "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400",
     };
-    return colors[type];
+    return colors[type] || "";
   };
 
   const handleAddPayment = () => {
