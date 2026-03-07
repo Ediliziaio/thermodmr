@@ -41,7 +41,7 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
   
   const canCreatePayment = userRole === "super_admin" || userRole === "commerciale";
   const [newPayment, setNewPayment] = useState({
-    tipo: PaymentType.ACCONTO,
+    tipo: "acconto" as string,
     importo: 0,
     dataPagamento: new Date().toISOString().split("T")[0],
     metodo: "Bonifico",
