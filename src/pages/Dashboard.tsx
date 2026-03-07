@@ -265,7 +265,7 @@ export default function Dashboard() {
             <div className="text-2xl font-bold">{formatCurrency(kpis.totalRevenue)}</div>
             <div className="flex items-center justify-between mt-1">
               <p className="text-xs text-muted-foreground">{kpis.totalOrders} ordini totali</p>
-              <DeltaIndicator value={kpis.deltas.revenue} />
+              <DeltaIndicator value={kpis.deltas?.revenue ?? 0} />
             </div>
           </CardContent>
         </Card>
