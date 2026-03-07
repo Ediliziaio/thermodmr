@@ -41,6 +41,7 @@ export function Layout({ children }: LayoutProps) {
   const location = useLocation();
   const { user, userRole, signOut } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { data: openTicketsCount = 0 } = useOpenTicketsCount();
 
   const getRoleLabel = (role: string | null) => {
     switch (role) {
