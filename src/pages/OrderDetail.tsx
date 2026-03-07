@@ -590,6 +590,50 @@ export default function OrderDetail() {
                       {formatCurrency(saldo)}
                     </span>
                   </div>
+                  <div className="h-px bg-border" />
+                  {/* Modalità Pagamento */}
+                  <div className="space-y-1.5">
+                    <Label className="text-muted-foreground text-xs">Modalità di Pagamento</Label>
+                    {isSuperAdmin ? (
+                      <Select
+                        value={modalitaPagamento || ""}
+                        onValueChange={(v) => setModalitaPagamento(v)}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Seleziona modalità" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {MODALITA_PAGAMENTO_OPTIONS.map((opt) => (
+                            <SelectItem key={opt.value} value={opt.value}>
+                              {opt.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <p className="font-medium text-foreground">
+                        {getModalitaPagamentoLabel(modalitaPagamento) || "Non specificata"}
+                      </p>
+                    )}
+                  </div>
+                  {isSuperAdmin && (
+                    <Button
+                      size="sm"
+                      className="w-full"
+                      onClick={() => {
+                        if (!id) return;
+                        updateDatesMutation.mutate({
+                          orderId: id,
+                          modalitaPagamento: modalitaPagamento || null,
+                        });
+                      }}
+                      disabled={updateDatesMutation.isPending}
+                    >
+                      {updateDatesMutation.isPending ? (
+                        <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
+                      ) : "Salva Modalità"}
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
 

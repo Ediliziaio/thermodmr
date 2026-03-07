@@ -234,6 +234,7 @@ export const ORDER_COLUMNS = [
   { key: "importo_pagato", label: "Importo Pagato", defaultSelected: true },
   { key: "importo_da_pagare", label: "Da Pagare", defaultSelected: true },
   { key: "percentuale_pagata", label: "% Pagata", defaultSelected: false },
+  { key: "modalita_pagamento", label: "Modalità Pagamento", defaultSelected: false },
   { key: "cliente_finale", label: "Cliente Finale", defaultSelected: false },
   { key: "note_interna", label: "Note Interna", defaultSelected: false },
   { key: "note_rivenditore", label: "Note Rivenditore", defaultSelected: false },
