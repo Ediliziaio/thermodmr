@@ -149,7 +149,7 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
                 <Select
                   value={newPayment.tipo}
                   onValueChange={(value) =>
-                    setNewPayment({ ...newPayment, tipo: value as PaymentType })
+                    setNewPayment({ ...newPayment, tipo: value })
                   }
                 >
                   <SelectTrigger>
