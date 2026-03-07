@@ -489,6 +489,7 @@ export type Database = {
           created_at: string
           creato_da_user_id: string
           data_consegna_prevista: string | null
+          data_fine_produzione: string | null
           data_inserimento: string
           data_scadenza_preventivo: string | null
           dealer_id: string
@@ -497,6 +498,7 @@ export type Database = {
           importo_totale: number
           note_interna: string | null
           note_rivenditore: string | null
+          settimana_consegna: number | null
           stato: Database["public"]["Enums"]["order_status"]
           updated_at: string
         }
@@ -506,6 +508,7 @@ export type Database = {
           created_at?: string
           creato_da_user_id: string
           data_consegna_prevista?: string | null
+          data_fine_produzione?: string | null
           data_inserimento?: string
           data_scadenza_preventivo?: string | null
           dealer_id: string
@@ -514,6 +517,7 @@ export type Database = {
           importo_totale?: number
           note_interna?: string | null
           note_rivenditore?: string | null
+          settimana_consegna?: number | null
           stato?: Database["public"]["Enums"]["order_status"]
           updated_at?: string
         }
@@ -523,6 +527,7 @@ export type Database = {
           created_at?: string
           creato_da_user_id?: string
           data_consegna_prevista?: string | null
+          data_fine_produzione?: string | null
           data_inserimento?: string
           data_scadenza_preventivo?: string | null
           dealer_id?: string
@@ -531,6 +536,7 @@ export type Database = {
           importo_totale?: number
           note_interna?: string | null
           note_rivenditore?: string | null
+          settimana_consegna?: number | null
           stato?: Database["public"]["Enums"]["order_status"]
           updated_at?: string
         }
