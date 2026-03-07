@@ -87,6 +87,7 @@ export default function OrderDetail() {
   const [dataFineProduzione, setDataFineProduzione] = useState<Date | undefined>();
   const [settimanaConsegna, setSettimanaConsegna] = useState<string>("");
   const [dataConsegnaPrevista, setDataConsegnaPrevista] = useState<Date | undefined>();
+  const [modalitaPagamento, setModalitaPagamento] = useState<string>("");
   const hasLineChanges = editedLines !== null;
 
   useEffect(() => {
