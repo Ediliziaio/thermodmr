@@ -54,6 +54,7 @@ import {
   useUpdateOrderDates,
 } from "@/hooks/useOrders";
 import { formatCurrency, formatDate, getStatusLabel, getStatusColor } from "@/lib/utils";
+import { MODALITA_PAGAMENTO_OPTIONS, getModalitaPagamentoLabel } from "@/lib/orderConstants";
 import { differenceInDays, isPast, parseISO, format, startOfWeek, addWeeks, endOfWeek, getWeek, getYear } from "date-fns";
 import { it } from "date-fns/locale";
 
