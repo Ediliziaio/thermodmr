@@ -60,7 +60,10 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useOrdersInfinite({ searchQuery, dealerId });
   const { data: dealersData } = useDealersInfinite();
   const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
-  const [filters, setFilters] = useState<OrderFiltersState>({});
+  const [filters, setFilters] = useState<OrderFiltersState>({
+    dataInserimentoFrom: format(startOfYear(now), 'yyyy-MM-dd'),
+    dataInserimentoTo: format(endOfYear(now), 'yyyy-MM-dd'),
+  });
   const { ref, inView } = useInView();
   const [selectedOrderIds, setSelectedOrderIds] = useState<Set<string>>(new Set());
   const [bulkStatusDialogOpen, setBulkStatusDialogOpen] = useState(false);
