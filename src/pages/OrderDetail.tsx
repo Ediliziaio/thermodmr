@@ -672,7 +672,7 @@ export default function OrderDetail() {
                               const monthLabel = monthNames[ws.getMonth()];
                               return (
                                 <SelectItem key={weekNum} value={String(weekNum)}>
-                                  {weekNum} - {monthLabel}
+                                  {weekNum} - {monthLabel} {year}
                                 </SelectItem>
                               );
                             })}
