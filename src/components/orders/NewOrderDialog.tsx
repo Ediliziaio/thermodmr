@@ -36,6 +36,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency } from "@/lib/utils";
 import { IvaSelector } from "./IvaSelector";
+import { MODALITA_PAGAMENTO_OPTIONS } from "@/lib/orderConstants";
 
 const orderLineSchema = z.object({
   categoria: z.string().min(1, "Categoria richiesta"),
