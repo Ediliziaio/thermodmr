@@ -7,15 +7,14 @@ import {
   Package, 
   CheckCircle, 
   Clock, 
-  TrendingUp, 
   AlertCircle,
   Euro,
   Bell,
-  Plus,
   ExternalLink,
   CreditCard,
-  FileText,
-  RefreshCw
+  RefreshCw,
+  ShoppingCart,
+  Headphones,
 } from "lucide-react";
 import { formatCurrency, getStatusColor, getStatusLabel, cn } from "@/lib/utils";
 import { useDealerOrderStats, useRecentActivity, usePaymentReminders } from "@/hooks/useDealerDashboard";
@@ -71,88 +70,72 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
   }
 
   const newActivitiesCount = activities?.filter(a => a.isNew).length || 0;
+  const globalPaymentPercentage = stats.totalRevenue > 0 
+    ? (stats.totalPaid / stats.totalRevenue) * 100 
+    : 0;
+
+  const basePath = dealerId ? `/rivenditori/${dealerId}/area` : "";
 
   return (
     <div className="space-y-4 md:space-y-6 lg:space-y-8 p-4 md:p-6">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-            {dealerName ? `Dashboard ${dealerName}` : "Benvenuto"}
-          </h1>
-          <p className="text-sm md:text-base text-muted-foreground mt-1">
-            Panoramica {dealerName ? "degli" : "dei tuoi"} ordini e notifiche
-          </p>
-        </div>
-        {!dealerId && (
-          <Button onClick={() => navigate("/ordini")} size="lg" className="min-h-[44px]">
-            <Plus className="h-4 w-4 mr-2" />
-            Nuovo Ordine
-          </Button>
-        )}
+      <div>
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
+          {dealerName ? `Dashboard ${dealerName}` : "Benvenuto"}
+        </h1>
+        <p className="text-sm md:text-base text-muted-foreground mt-1">
+          Panoramica {dealerName ? "degli" : "dei tuoi"} ordini e pagamenti
+        </p>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Preventivi Attivi</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.ordersByStatus.preventivo || 0}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              In attesa di conferma
-            </p>
-          </CardContent>
-        </Card>
-
+      {/* KPI Cards - 4 colonne */}
+      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Ordini Totali</CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalOrders - (stats.ordersByStatus.preventivo || 0)}</div>
+            <div className="text-2xl font-bold">{stats.totalOrders}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Ordini confermati
+              Tutti gli ordini
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Fatturato Totale</CardTitle>
+            <CardTitle className="text-sm font-medium">Valore Totale</CardTitle>
             <Euro className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatCurrency(stats.totalRevenue)}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Valore totale ordini
+              Importo complessivo ordini
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Importo Incassato</CardTitle>
-            <CheckCircle className="h-4 w-4 text-success" />
+            <CardTitle className="text-sm font-medium">Pagato</CardTitle>
+            <CheckCircle className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-success">{formatCurrency(stats.totalPaid)}</div>
+            <div className="text-2xl font-bold text-green-600">{formatCurrency(stats.totalPaid)}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Pagamenti ricevuti
+              Pagamenti effettuati
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Da Saldare</CardTitle>
-            <AlertCircle className="h-4 w-4 text-warning" />
+            <CardTitle className="text-sm font-medium">Da Pagare</CardTitle>
+            <AlertCircle className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-warning">{formatCurrency(stats.totalRemaining)}</div>
+            <div className="text-2xl font-bold text-orange-500">{formatCurrency(stats.totalRemaining)}</div>
             <p className="text-xs text-muted-foreground mt-1">
               Importo rimanente
             </p>
@@ -160,28 +143,39 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
         </Card>
       </div>
 
-      {/* Recent Activity & Payment Reminders Grid */}
-      <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2">
-      {/* Order Distribution by Status */}
+      {/* Global Payment Progress */}
       <Card>
-        <CardHeader className="p-4 sm:p-6">
-          <CardTitle className="text-lg md:text-xl">Distribuzione Ordini per Stato</CardTitle>
-          <CardDescription className="text-xs md:text-sm">
-            I tuoi ordini suddivisi per stato di avanzamento
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3 md:space-y-4 p-4 sm:p-6 pt-0">
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-sm font-medium">Progresso Pagamento Globale</p>
+            <p className="text-sm font-bold">{globalPaymentPercentage.toFixed(1)}%</p>
+          </div>
+          <Progress value={globalPaymentPercentage} className="h-3" />
+          <div className="flex items-center justify-between mt-2 text-xs text-muted-foreground">
+            <span>Pagato: {formatCurrency(stats.totalPaid)}</span>
+            <span>Totale: {formatCurrency(stats.totalRevenue)}</span>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Grid: Status Distribution + Recent Activity */}
+      <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2">
+        {/* Order Distribution by Status */}
+        <Card>
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="text-lg md:text-xl">Distribuzione Ordini per Stato</CardTitle>
+            <CardDescription className="text-xs md:text-sm">
+              I tuoi ordini suddivisi per stato di avanzamento
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3 md:space-y-4 p-4 sm:p-6 pt-0">
             {Object.entries(stats.ordersByStatus).map(([status, count]) => (
               <div key={status} className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className={getStatusColor(status)}>
-                      {getStatusLabel(status)}
-                    </Badge>
-                  </div>
-                  <span className="text-sm font-medium">
-                    {count} ordini
-                  </span>
+                  <Badge variant="outline" className={getStatusColor(status)}>
+                    {getStatusLabel(status)}
+                  </Badge>
+                  <span className="text-sm font-medium">{count} ordini</span>
                 </div>
                 <Progress 
                   value={(count / stats.totalOrders) * 100} 
@@ -194,14 +188,6 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
               <div className="text-center py-8 text-muted-foreground">
                 <Package className="h-12 w-12 mx-auto mb-3 opacity-50" />
                 <p>Nessun ordine ancora</p>
-                <Button 
-                  onClick={() => navigate("/ordini")} 
-                  variant="outline" 
-                  size="sm" 
-                  className="mt-3"
-                >
-                  Crea il tuo primo ordine
-                </Button>
               </div>
             )}
           </CardContent>
@@ -237,14 +223,14 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
                     className={`flex items-start gap-3 p-3 rounded-lg border ${
                       activity.isNew ? "bg-primary/5 border-primary/20" : "bg-muted/30"
                     } hover:bg-accent/50 transition-colors cursor-pointer`}
-                    onClick={() => navigate(`/ordini/${activity.orderId}`)}
+                    onClick={() => navigate(`${basePath}/ordini/${activity.orderId}`)}
                   >
                     <div className="mt-1">
                       {activity.type === "status_change" && (
                         <Clock className="h-4 w-4 text-primary" />
                       )}
                       {activity.type === "payment" && (
-                        <CreditCard className="h-4 w-4 text-success" />
+                        <CreditCard className="h-4 w-4 text-green-600" />
                       )}
                       {activity.type === "new_order" && (
                         <Package className="h-4 w-4 text-blue-500" />
@@ -272,7 +258,7 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
           </CardContent>
         </Card>
 
-        {/* Payment Reminders */}
+        {/* Payment Reminders - Read Only */}
         <Card className={cn(
           "md:col-span-2 border-l-4 transition-all",
           reminders && reminders.length > 0 ? "border-l-destructive shadow-lg" : "border-l-transparent"
@@ -282,7 +268,7 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
               <div className="flex items-center gap-2">
                 <AlertCircle className={cn(
                   "h-5 w-5",
-                  reminders && reminders.length > 0 ? "text-destructive" : "text-warning"
+                  reminders && reminders.length > 0 ? "text-destructive" : "text-orange-500"
                 )} />
                 <CardTitle className="text-lg md:text-xl">Promemoria Pagamenti</CardTitle>
               </div>
@@ -309,7 +295,7 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
                   <div
                     key={reminder.orderId}
                     className="border rounded-lg p-4 hover:bg-destructive/5 transition-colors cursor-pointer bg-destructive/5 border-destructive/20"
-                    onClick={() => navigate(`/ordini/${reminder.orderId}`)}
+                    onClick={() => navigate(`${basePath}/ordini/${reminder.orderId}`)}
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
@@ -327,7 +313,7 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
                           </div>
                           <div>
                             <p className="text-muted-foreground">Pagato</p>
-                            <p className="font-medium text-success">{formatCurrency(reminder.paidAmount)}</p>
+                            <p className="font-medium text-green-600">{formatCurrency(reminder.paidAmount)}</p>
                           </div>
                           <div>
                             <p className="text-muted-foreground">Rimanente</p>
@@ -342,20 +328,13 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
                           <Progress value={reminder.percentage} className="h-2" />
                         </div>
                       </div>
-                      <Button variant="destructive" size="sm" onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/ordini/${reminder.orderId}`);
-                      }}>
-                        <CreditCard className="h-3 w-3 mr-1" />
-                        Paga
-                      </Button>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
               <div className="text-center py-8 text-muted-foreground">
-                <CheckCircle className="h-12 w-12 mx-auto mb-3 opacity-50 text-success" />
+                <CheckCircle className="h-12 w-12 mx-auto mb-3 opacity-50 text-green-600" />
                 <p className="text-sm font-medium">Tutto in regola!</p>
                 <p className="text-xs mt-1">Non ci sono pagamenti in sospeso.</p>
               </div>
@@ -364,43 +343,19 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
         </Card>
       </div>
 
-      {/* Quick Actions */}
+      {/* Quick Links - Read Only */}
       <Card>
         <CardHeader>
-          <CardTitle>Azioni Rapide</CardTitle>
+          <CardTitle>Link Rapidi</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-3 md:grid-cols-4">
+          <div className="grid gap-3 md:grid-cols-3">
             <Button 
-              onClick={() => navigate(dealerId ? `/rivenditori/${dealerId}/area/preventivi` : "/ordini")} 
+              onClick={() => navigate(`${basePath}/ordini`)} 
               variant="outline" 
               className="justify-start h-auto py-4"
             >
-              <FileText className="h-5 w-5 mr-3" />
-              <div className="text-left">
-                <p className="font-medium">Preventivi</p>
-                <p className="text-xs text-muted-foreground">Gestisci preventivi</p>
-              </div>
-            </Button>
-
-            <Button 
-              onClick={() => navigate(dealerId ? `/rivenditori/${dealerId}/area/ordini` : "/ordini")} 
-              variant="outline" 
-              className="justify-start h-auto py-4"
-            >
-              <Plus className="h-5 w-5 mr-3" />
-              <div className="text-left">
-                <p className="font-medium">Crea Ordine</p>
-                <p className="text-xs text-muted-foreground">Nuovo ordine cliente</p>
-              </div>
-            </Button>
-            
-            <Button 
-              onClick={() => navigate(dealerId ? `/rivenditori/${dealerId}/area/ordini` : "/ordini")} 
-              variant="outline" 
-              className="justify-start h-auto py-4"
-            >
-              <Package className="h-5 w-5 mr-3" />
+              <ShoppingCart className="h-5 w-5 mr-3" />
               <div className="text-left">
                 <p className="font-medium">Visualizza Ordini</p>
                 <p className="text-xs text-muted-foreground">Tutti i tuoi ordini</p>
@@ -408,14 +363,26 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
             </Button>
             
             <Button 
-              onClick={() => navigate(dealerId ? `/rivenditori/${dealerId}/area/pagamenti` : "/pagamenti")} 
+              onClick={() => navigate(`${basePath}/pagamenti`)} 
               variant="outline" 
               className="justify-start h-auto py-4"
             >
               <CreditCard className="h-5 w-5 mr-3" />
               <div className="text-left">
-                <p className="font-medium">Pagamenti</p>
-                <p className="text-xs text-muted-foreground">Storico pagamenti</p>
+                <p className="font-medium">Storico Pagamenti</p>
+                <p className="text-xs text-muted-foreground">Consulta i pagamenti</p>
+              </div>
+            </Button>
+
+            <Button 
+              onClick={() => navigate(`${basePath}/assistenza`)} 
+              variant="outline" 
+              className="justify-start h-auto py-4"
+            >
+              <Headphones className="h-5 w-5 mr-3" />
+              <div className="text-left">
+                <p className="font-medium">Assistenza</p>
+                <p className="text-xs text-muted-foreground">Apri un ticket</p>
               </div>
             </Button>
           </div>

@@ -712,7 +712,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
         )}
 
         {/* Floating Action Bar */}
-        {selectedOrderIds.size > 0 && (
+        {selectedOrderIds.size > 0 && !isDealerArea && (
           <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-5">
             <Card className="shadow-lg border-2">
               <CardContent className="flex items-center gap-4 p-4">
