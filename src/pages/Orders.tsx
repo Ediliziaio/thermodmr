@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, Loader2, AlertCircle, RefreshCw, X, Trash2, Download, Plus, FileText, List, Kanban, GripVertical } from "lucide-react";
+import { Eye, Loader2, AlertCircle, RefreshCw, X, Trash2, Download, Plus, FileText, List, Kanban } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useOrdersInfinite } from "@/hooks/useOrdersInfinite";
 import { NewOrderDialog } from "@/components/orders/NewOrderDialog";
@@ -12,7 +12,6 @@ import { BulkDeleteOrdersDialog } from "@/components/orders/BulkDeleteOrdersDial
 import { OrderFilters, OrderFiltersState } from "@/components/orders/OrderFilters";
 import { MobileOrdersList } from "@/components/orders/MobileOrdersList";
 import { MobileOrderFilters } from "@/components/orders/MobileOrderFilters";
-import { OrderPipelineView } from "@/components/orders/OrderPipelineView";
 import { OrderPipelineDnD } from "@/components/orders/OrderPipelineDnD";
 import { QuickPaymentDialog } from "@/components/orders/QuickPaymentDialog";
 import { exportOrdersCustom, ORDER_COLUMNS } from "@/lib/exportUtils";
@@ -29,7 +28,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useRealtimeSync } from "@/hooks/useRealtimeSync";
 
-type ViewMode = "lista" | "pipeline" | "pipeline-dnd";
+type ViewMode = "lista" | "pipeline";
 
 interface OrdersProps {
   dealerId?: string;
@@ -274,10 +273,6 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                   <Kanban className="h-3.5 w-3.5" />
                   Pipeline
                 </TabsTrigger>
-                <TabsTrigger value="pipeline-dnd" className="gap-1.5 text-xs px-3">
-                  <GripVertical className="h-3.5 w-3.5" />
-                  Drag & Drop
-                </TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
@@ -342,17 +337,6 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
             />
           </>
         ) : viewMode === "pipeline" ? (
-          <>
-            <OrderFilters
-              filters={filters}
-              onFiltersChange={setFilters}
-              dealers={dealers || []}
-              searchQuery={searchQuery}
-              onSearchQueryChange={setSearchQuery}
-            />
-            <OrderPipelineView orders={filteredOrders} isDealerArea={isDealerArea} />
-          </>
-        ) : viewMode === "pipeline-dnd" ? (
           <>
             <OrderFilters
               filters={filters}
