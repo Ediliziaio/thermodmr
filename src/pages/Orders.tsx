@@ -284,36 +284,28 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
             ? "flex gap-4 overflow-x-auto -mx-6 px-6 pb-4" 
             : "grid grid-cols-2 lg:grid-cols-4 gap-4"
         )} style={isMobile ? { minWidth: 'max-content' } : undefined}>
-          <Card className={cn(isMobile && "min-w-[200px]")}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Totale Ordini</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">{stats.totalOrders}</p>
+          <Card className={cn(isMobile && "min-w-[160px]")}>
+            <CardContent className="py-3 px-4">
+              <p className="text-xs font-medium text-muted-foreground">Totale Ordini</p>
+              <p className="text-xl font-bold mt-0.5">{stats.totalOrders}</p>
             </CardContent>
           </Card>
-          <Card className={cn(isMobile && "min-w-[200px]")}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Valore Totale</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">{formatCurrency(stats.totalValue)}</p>
+          <Card className={cn(isMobile && "min-w-[160px]")}>
+            <CardContent className="py-3 px-4">
+              <p className="text-xs font-medium text-muted-foreground">Valore Totale</p>
+              <p className="text-xl font-bold mt-0.5">{formatCurrency(stats.totalValue)}</p>
             </CardContent>
           </Card>
-          <Card className={cn(isMobile && "min-w-[200px]")}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Da Incassare</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-orange-600">{formatCurrency(stats.totalToCollect)}</p>
+          <Card className={cn(isMobile && "min-w-[160px]")}>
+            <CardContent className="py-3 px-4">
+              <p className="text-xs font-medium text-muted-foreground">Da Incassare</p>
+              <p className="text-xl font-bold mt-0.5 text-orange-600">{formatCurrency(stats.totalToCollect)}</p>
             </CardContent>
           </Card>
-          <Card className={cn(isMobile && "min-w-[200px]")}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Ordini con Saldo</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-red-600">{stats.ordersWithBalance}</p>
+          <Card className={cn(isMobile && "min-w-[160px]")}>
+            <CardContent className="py-3 px-4">
+              <p className="text-xs font-medium text-muted-foreground">Ordini con Saldo</p>
+              <p className="text-xl font-bold mt-0.5 text-red-600">{stats.ordersWithBalance}</p>
             </CardContent>
           </Card>
         </div>
