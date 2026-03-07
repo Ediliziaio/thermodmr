@@ -73,24 +73,25 @@ export default function Dashboard() {
     dateRange?.to
   );
 
-  const setQuickFilter = (type: 'month' | '3months' | '6months' | 'year' | 'lastyear') => {
-    const now = new Date();
+  const setQuickFilter = (type: '3months' | '6months' | 'year' | 'lastyear' | 'all') => {
+    const n = new Date();
     setActiveFilter(type);
+    if (type === 'all') {
+      setDateRange(undefined);
+      return;
+    }
     switch (type) {
-      case 'month':
-        setDateRange({ from: startOfMonth(subMonths(now, 1)), to: endOfMonth(subMonths(now, 1)) });
-        break;
       case '3months':
-        setDateRange({ from: startOfMonth(subMonths(now, 3)), to: now });
+        setDateRange({ from: startOfMonth(subMonths(n, 3)), to: n });
         break;
       case '6months':
-        setDateRange({ from: startOfMonth(subMonths(now, 6)), to: now });
+        setDateRange({ from: startOfMonth(subMonths(n, 6)), to: n });
         break;
       case 'year':
-        setDateRange({ from: startOfYear(now), to: endOfYear(now) });
+        setDateRange({ from: startOfYear(n), to: endOfYear(n) });
         break;
       case 'lastyear':
-        setDateRange({ from: startOfYear(subYears(now, 1)), to: endOfYear(subYears(now, 1)) });
+        setDateRange({ from: startOfYear(subYears(n, 1)), to: endOfYear(subYears(n, 1)) });
         break;
     }
   };
