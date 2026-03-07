@@ -2,8 +2,9 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { AlertCircle, CalendarDays } from "lucide-react";
+import { AlertCircle, CalendarDays, CreditCard } from "lucide-react";
 import { formatCurrency, getStatusColor, getStatusLabel } from "@/lib/utils";
+import { getModalitaPagamentoLabel } from "@/lib/orderConstants";
 import type { OrderWithPaymentStats } from "@/types/orders";
 
 interface OrderPipelineCardProps {
