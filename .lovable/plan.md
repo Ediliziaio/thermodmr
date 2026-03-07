@@ -1,40 +1,39 @@
 
 
-# Bottone Salva Globale + Popup "Modifiche non salvate"
+# Verifica Allegati Preventivo — Problemi Trovati
 
-## Problema
-Attualmente ci sono 4-5 bottoni "Salva" sparsi nella pagina (Salva Prodotti, Salva Note, Salva Descrizione, Salva Date, Salva Modalità). L'utente vuole un unico bottone di salvataggio in fondo a destra e un popup di conferma se tenta di uscire con modifiche non salvate.
+## Stato Attuale
 
-## Modifiche
+L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
 
-### `src/pages/OrderDetail.tsx`
+---
 
-1. **Tracciamento dirty state unificato**: Creare una funzione `hasUnsavedChanges` che controlla se qualsiasi campo è stato modificato rispetto ai dati originali dell'ordine:
-   - `editedLines !== null` (righe prodotto modificate)
-   - `noteInterna !== (order.note_interna || "")` (nota interna modificata)
-   - `noteRivenditore !== (order.note_rivenditore || "")` (nota rivenditore modificata)
-   - `dataFineProduzione` diversa dall'originale
-   - `settimanaConsegna` diversa dall'originale
-   - `dataConsegnaPrevista` diversa dall'originale
-   - `modalitaPagamento` diversa dall'originale
+## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
 
-2. **Rimuovere i singoli bottoni "Salva"**: Eliminare i bottoni "Salva Prodotti", "Salva Note", "Salva Descrizione", "Salva Date", "Salva Modalità" sparsi nella pagina.
+**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
 
-3. **Aggiungere barra di salvataggio fissa in basso a destra**: Un `div` fisso (`fixed bottom-4 right-4`) che appare solo quando `hasUnsavedChanges` è true, con:
-   - Bottone "Salva Modifiche" che esegue tutti i salvataggi necessari in parallelo (note, linee, date, modalità)
-   - Bottone "Annulla Modifiche" per resettare tutto allo stato originale
+Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
 
-4. **Popup "Modifiche non salvate" alla navigazione**: Aggiungere un `AlertDialog` che si attiva quando l'utente clicca "Torna agli Ordini" o naviga via con modifiche non salvate:
-   - Stato `showUnsavedDialog` + `pendingNavigation` per memorizzare dove l'utente vuole andare
-   - Intercettare il click su "Torna agli Ordini" per controllare `hasUnsavedChanges` prima di navigare
-   - Tre opzioni nel dialog: "Salva e Esci" (salva tutto poi naviga), "Esci senza salvare" (naviga direttamente), "Annulla" (resta nella pagina)
-   - Usare `useBeforeUnload` per intercettare anche la chiusura del browser/tab
+**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
 
-5. **Funzione `handleSaveAll`**: Un'unica funzione che chiama in parallelo tutte le mutation necessarie basandosi su cosa è stato effettivamente modificato:
-   - Se note cambiate → `updateNotesMutation`
-   - Se linee cambiate → `updateOrderLinesMutation`
-   - Se date/modalità cambiate → `updateDatesMutation`
-   - Al completamento di tutto, resetta gli stati dirty
+Interventi:
+- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
+- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
+- Entrambi i file usano lo stesso pattern, la fix e' identica
 
-Stessa logica sia per la vista Preventivo che per la vista Ordine.
+## Bug 2: `useCreatePreventivo` contiene codice morto
+
+**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
+
+- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
+- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
+
+**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
+
+## Riepilogo
+
+| # | Tipo | File | Problema |
+|---|------|------|----------|
+| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
+| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
 

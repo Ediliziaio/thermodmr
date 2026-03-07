@@ -28,7 +28,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, FileDown, Send, Loader2, Edit2, Check, X, Clock, AlertTriangle, ArrowRightCircle, Copy, CalendarIcon } from "lucide-react";
+import { ArrowLeft, FileDown, Send, Loader2, Edit2, Check, X, Clock, AlertTriangle, ArrowRightCircle, Copy, CalendarIcon, Save } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatusStepper } from "@/components/orders/StatusStepper";
 import type { Database } from "@/integrations/supabase/types";
@@ -36,7 +36,7 @@ import { OrderLinesEditor } from "@/components/orders/OrderLinesEditor";
 import { PaymentsSection } from "@/components/orders/PaymentsSection";
 import { AttachmentsSection } from "@/components/orders/AttachmentsSection";
 import { TicketsSection } from "@/components/orders/TicketsSection";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { PaymentTimelineChart } from "@/components/analytics/charts/PaymentTimelineChart";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -89,7 +89,10 @@ export default function OrderDetail() {
   const [settimanaConsegna, setSettimanaConsegna] = useState<string>("");
   const [dataConsegnaPrevista, setDataConsegnaPrevista] = useState<Date | undefined>();
   const [modalitaPagamento, setModalitaPagamento] = useState<string>("");
-  const hasLineChanges = editedLines !== null;
+
+  // Unsaved changes dialog state
+  const [showUnsavedDialog, setShowUnsavedDialog] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
 
   useEffect(() => {
     if (order) {
@@ -105,6 +108,149 @@ export default function OrderDetail() {
 
   const isPreventivo = order?.stato === "preventivo";
   const isSuperAdmin = userRole === "super_admin";
+
+  // --- Unified dirty state ---
+  const hasUnsavedChanges = useMemo(() => {
+    if (!order) return false;
+    const notesChanged =
+      noteInterna !== (order.note_interna || "") ||
+      noteRivenditore !== (order.note_rivenditore || "");
+    const linesChanged = editedLines !== null;
+
+    const origFineProd = order.data_fine_produzione ? format(parseISO(order.data_fine_produzione), "yyyy-MM-dd") : "";
+    const currFineProd = dataFineProduzione ? format(dataFineProduzione, "yyyy-MM-dd") : "";
+    const origConsegna = order.data_consegna_prevista ? format(parseISO(order.data_consegna_prevista), "yyyy-MM-dd") : "";
+    const currConsegna = dataConsegnaPrevista ? format(dataConsegnaPrevista, "yyyy-MM-dd") : "";
+
+    const datesChanged =
+      currFineProd !== origFineProd ||
+      (settimanaConsegna || "") !== (order.settimana_consegna?.toString() || "") ||
+      currConsegna !== origConsegna ||
+      (modalitaPagamento || "") !== ((order as any).modalita_pagamento || "");
+
+    return notesChanged || linesChanged || datesChanged;
+  }, [order, noteInterna, noteRivenditore, editedLines, dataFineProduzione, settimanaConsegna, dataConsegnaPrevista, modalitaPagamento]);
+
+  // Browser tab close guard
+  useEffect(() => {
+    if (!hasUnsavedChanges) return;
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [hasUnsavedChanges]);
+
+  // --- Save all ---
+  const isSaving = updateNotesMutation.isPending || updateOrderLinesMutation.isPending || updateDatesMutation.isPending;
+
+  const handleSaveAll = useCallback(async () => {
+    if (!id || !order) return;
+    const promises: Promise<any>[] = [];
+
+    const notesChanged =
+      noteInterna !== (order.note_interna || "") ||
+      noteRivenditore !== (order.note_rivenditore || "");
+    if (notesChanged) {
+      promises.push(
+        new Promise((resolve, reject) =>
+          updateNotesMutation.mutate(
+            { orderId: id, noteInterna, noteRivenditore },
+            { onSuccess: resolve, onError: reject }
+          )
+        )
+      );
+    }
+
+    if (editedLines !== null) {
+      promises.push(
+        new Promise((resolve, reject) =>
+          updateOrderLinesMutation.mutate(
+            { orderId: id, lines: editedLines },
+            { onSuccess: () => { setEditedLines(null); resolve(undefined); }, onError: reject }
+          )
+        )
+      );
+    }
+
+    const origFineProd = order.data_fine_produzione ? format(parseISO(order.data_fine_produzione), "yyyy-MM-dd") : "";
+    const currFineProd = dataFineProduzione ? format(dataFineProduzione, "yyyy-MM-dd") : "";
+    const origConsegna = order.data_consegna_prevista ? format(parseISO(order.data_consegna_prevista), "yyyy-MM-dd") : "";
+    const currConsegna = dataConsegnaPrevista ? format(dataConsegnaPrevista, "yyyy-MM-dd") : "";
+
+    const datesChanged =
+      currFineProd !== origFineProd ||
+      (settimanaConsegna || "") !== (order.settimana_consegna?.toString() || "") ||
+      currConsegna !== origConsegna ||
+      (modalitaPagamento || "") !== ((order as any).modalita_pagamento || "");
+
+    if (datesChanged) {
+      promises.push(
+        new Promise((resolve, reject) =>
+          updateDatesMutation.mutate(
+            {
+              orderId: id,
+              dataFineProduzione: dataFineProduzione ? format(dataFineProduzione, "yyyy-MM-dd") : null,
+              settimanaConsegna: settimanaConsegna ? Number(settimanaConsegna) : null,
+              dataConsegnaPrevista: dataConsegnaPrevista ? format(dataConsegnaPrevista, "yyyy-MM-dd") : null,
+              modalitaPagamento: modalitaPagamento || null,
+            },
+            { onSuccess: resolve, onError: reject }
+          )
+        )
+      );
+    }
+
+    if (promises.length > 0) {
+      try {
+        await Promise.all(promises);
+      } catch {
+        // Individual mutations already show error toasts
+      }
+    }
+  }, [id, order, noteInterna, noteRivenditore, editedLines, dataFineProduzione, settimanaConsegna, dataConsegnaPrevista, modalitaPagamento, updateNotesMutation, updateOrderLinesMutation, updateDatesMutation]);
+
+  const handleResetAll = useCallback(() => {
+    if (!order) return;
+    setNoteInterna(order.note_interna || "");
+    setNoteRivenditore(order.note_rivenditore || "");
+    setEditedLines(null);
+    setDataFineProduzione(order.data_fine_produzione ? parseISO(order.data_fine_produzione) : undefined);
+    setSettimanaConsegna(order.settimana_consegna?.toString() || "");
+    setDataConsegnaPrevista(order.data_consegna_prevista ? parseISO(order.data_consegna_prevista) : undefined);
+    setModalitaPagamento((order as any).modalita_pagamento || "");
+  }, [order]);
+
+  // --- Navigation guard ---
+  const handleNavigateBack = useCallback(() => {
+    const target = isDealerArea ? "__back__" : "/ordini";
+    if (hasUnsavedChanges) {
+      setPendingNavigation(target);
+      setShowUnsavedDialog(true);
+    } else {
+      if (target === "__back__") navigate(-1);
+      else navigate(target);
+    }
+  }, [hasUnsavedChanges, isDealerArea, navigate]);
+
+  const handleDiscardAndNavigate = useCallback(() => {
+    setShowUnsavedDialog(false);
+    if (pendingNavigation === "__back__") navigate(-1);
+    else if (pendingNavigation) navigate(pendingNavigation);
+    setPendingNavigation(null);
+  }, [pendingNavigation, navigate]);
+
+  const handleSaveAndNavigate = useCallback(async () => {
+    await handleSaveAll();
+    setShowUnsavedDialog(false);
+    // Small delay to let mutations complete
+    setTimeout(() => {
+      if (pendingNavigation === "__back__") navigate(-1);
+      else if (pendingNavigation) navigate(pendingNavigation);
+      setPendingNavigation(null);
+    }, 300);
+  }, [handleSaveAll, pendingNavigation, navigate]);
 
   const convertMutation = useMutation({
     mutationFn: async (orderId: string) => {
@@ -128,15 +274,6 @@ export default function OrderDetail() {
   const handleStatusChange = (newStatus: Database["public"]["Tables"]["orders"]["Row"]["stato"]) => {
     if (id && isSuperAdmin) {
       updateStatusMutation.mutate({ orderId: id, stato: newStatus });
-    }
-  };
-
-  const handleNoteSave = (type: "interna" | "rivenditore") => {
-    if (!id) return;
-    if (type === "interna") {
-      updateNotesMutation.mutate({ orderId: id, noteInterna });
-    } else {
-      updateNotesMutation.mutate({ orderId: id, noteRivenditore });
     }
   };
 
@@ -194,8 +331,8 @@ export default function OrderDetail() {
   const entityLabel = isPreventivo ? "Preventivo" : "Ordine";
 
   return (
-    <div className="space-y-6">
-      <Button variant="ghost" onClick={() => isDealerArea ? navigate(-1) : navigate("/ordini")}>
+    <div className="space-y-6 pb-24">
+      <Button variant="ghost" onClick={handleNavigateBack}>
         <ArrowLeft className="mr-2 h-4 w-4" />
         Torna agli Ordini
       </Button>
@@ -319,26 +456,6 @@ export default function OrderDetail() {
                 readOnly={!isSuperAdmin}
                 title="Prodotti Quotati"
               />
-              {isSuperAdmin && (
-                <div className="flex justify-end">
-                  <Button
-                    variant={hasLineChanges ? "default" : "outline"}
-                    onClick={() => {
-                      if (id && editedLines) {
-                        updateOrderLinesMutation.mutate(
-                          { orderId: id, lines: editedLines },
-                          { onSuccess: () => setEditedLines(null) }
-                        );
-                      }
-                    }}
-                    disabled={!hasLineChanges || updateOrderLinesMutation.isPending}
-                  >
-                    {updateOrderLinesMutation.isPending ? (
-                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
-                    ) : "Salva Prodotti"}
-                  </Button>
-                </div>
-              )}
 
               {/* Note unificate con Tabs */}
               <Card>
@@ -355,15 +472,6 @@ export default function OrderDetail() {
                         value={noteRivenditore}
                         onChange={(e) => setNoteRivenditore(e.target.value)}
                       />
-                      <Button
-                        size="sm"
-                        onClick={() => handleNoteSave("rivenditore")}
-                        disabled={updateNotesMutation.isPending}
-                      >
-                        {updateNotesMutation.isPending ? (
-                          <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
-                        ) : "Salva Descrizione"}
-                      </Button>
                     </TabsContent>
                     <TabsContent value="note_interne" className="space-y-2">
                       <Textarea
@@ -372,15 +480,6 @@ export default function OrderDetail() {
                         value={noteInterna}
                         onChange={(e) => setNoteInterna(e.target.value)}
                       />
-                      <Button
-                        size="sm"
-                        onClick={() => handleNoteSave("interna")}
-                        disabled={updateNotesMutation.isPending}
-                      >
-                        {updateNotesMutation.isPending ? (
-                          <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
-                        ) : "Salva Note"}
-                      </Button>
                     </TabsContent>
                   </Tabs>
                 </CardContent>
@@ -484,26 +583,6 @@ export default function OrderDetail() {
                 readOnly={!isSuperAdmin}
                 title="Righe Ordine"
               />
-              {isSuperAdmin && (
-                <div className="flex justify-end">
-                  <Button
-                    variant={hasLineChanges ? "default" : "outline"}
-                    onClick={() => {
-                      if (id && editedLines) {
-                        updateOrderLinesMutation.mutate(
-                          { orderId: id, lines: editedLines },
-                          { onSuccess: () => setEditedLines(null) }
-                        );
-                      }
-                    }}
-                    disabled={!hasLineChanges || updateOrderLinesMutation.isPending}
-                  >
-                    {updateOrderLinesMutation.isPending ? (
-                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
-                    ) : "Salva Prodotti"}
-                  </Button>
-                </div>
-              )}
 
               <PaymentsSection 
                 orderId={order.id} 
@@ -526,15 +605,6 @@ export default function OrderDetail() {
                         value={noteRivenditore}
                         onChange={(e) => setNoteRivenditore(e.target.value)}
                       />
-                      <Button
-                        size="sm"
-                        onClick={() => handleNoteSave("rivenditore")}
-                        disabled={updateNotesMutation.isPending}
-                      >
-                        {updateNotesMutation.isPending ? (
-                          <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
-                        ) : "Salva Note"}
-                      </Button>
                     </TabsContent>
                     <TabsContent value="note_interne" className="space-y-2">
                       <Textarea
@@ -543,15 +613,6 @@ export default function OrderDetail() {
                         value={noteInterna}
                         onChange={(e) => setNoteInterna(e.target.value)}
                       />
-                      <Button
-                        size="sm"
-                        onClick={() => handleNoteSave("interna")}
-                        disabled={updateNotesMutation.isPending}
-                      >
-                        {updateNotesMutation.isPending ? (
-                          <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
-                        ) : "Salva Note"}
-                      </Button>
                     </TabsContent>
                   </Tabs>
                 </CardContent>
@@ -619,24 +680,6 @@ export default function OrderDetail() {
                       </p>
                     )}
                   </div>
-                  {isSuperAdmin && (
-                    <Button
-                      size="sm"
-                      className="w-full"
-                      onClick={() => {
-                        if (!id) return;
-                        updateDatesMutation.mutate({
-                          orderId: id,
-                          modalitaPagamento: modalitaPagamento || null,
-                        });
-                      }}
-                      disabled={updateDatesMutation.isPending}
-                    >
-                      {updateDatesMutation.isPending ? (
-                        <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
-                      ) : "Salva Modalità"}
-                    </Button>
-                  )}
                 </CardContent>
               </Card>
 
@@ -780,27 +823,6 @@ export default function OrderDetail() {
                       </p>
                     )}
                   </div>
-
-                  {isSuperAdmin && (
-                    <Button
-                      size="sm"
-                      className="w-full"
-                      onClick={() => {
-                        if (!id) return;
-                        updateDatesMutation.mutate({
-                          orderId: id,
-                          dataFineProduzione: dataFineProduzione ? format(dataFineProduzione, "yyyy-MM-dd") : null,
-                          settimanaConsegna: settimanaConsegna ? Number(settimanaConsegna) : null,
-                          dataConsegnaPrevista: dataConsegnaPrevista ? format(dataConsegnaPrevista, "yyyy-MM-dd") : null,
-                        });
-                      }}
-                      disabled={updateDatesMutation.isPending}
-                    >
-                      {updateDatesMutation.isPending ? (
-                        <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
-                      ) : "Salva Date"}
-                    </Button>
-                  )}
                 </CardContent>
               </Card>
             </div>
@@ -808,6 +830,34 @@ export default function OrderDetail() {
         </>
       )}
 
+      {/* Fixed Save Bar */}
+      {hasUnsavedChanges && (
+        <div className="fixed bottom-4 right-4 z-50 flex items-center gap-3 rounded-lg border bg-card p-4 shadow-lg">
+          <span className="text-sm font-medium text-muted-foreground">Hai modifiche non salvate</span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleResetAll}
+            disabled={isSaving}
+          >
+            Annulla
+          </Button>
+          <Button
+            size="sm"
+            onClick={handleSaveAll}
+            disabled={isSaving}
+            className="gap-2"
+          >
+            {isSaving ? (
+              <><Loader2 className="h-4 w-4 animate-spin" />Salvataggio...</>
+            ) : (
+              <><Save className="h-4 w-4" />Salva Modifiche</>
+            )}
+          </Button>
+        </div>
+      )}
+
+      {/* Convert dialog */}
       <AlertDialog open={showConvertDialog} onOpenChange={setShowConvertDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -825,6 +875,40 @@ export default function OrderDetail() {
             >
               {convertMutation.isPending ? "Conversione..." : "Conferma Conversione"}
             </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Unsaved changes navigation guard */}
+      <AlertDialog open={showUnsavedDialog} onOpenChange={setShowUnsavedDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Modifiche non salvate</AlertDialogTitle>
+            <AlertDialogDescription>
+              Hai delle modifiche non salvate. Vuoi salvare prima di uscire?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+            <AlertDialogCancel onClick={() => { setShowUnsavedDialog(false); setPendingNavigation(null); }}>
+              Annulla
+            </AlertDialogCancel>
+            <Button
+              variant="outline"
+              onClick={handleDiscardAndNavigate}
+            >
+              Esci senza salvare
+            </Button>
+            <Button
+              onClick={handleSaveAndNavigate}
+              disabled={isSaving}
+              className="gap-2"
+            >
+              {isSaving ? (
+                <><Loader2 className="h-4 w-4 animate-spin" />Salvataggio...</>
+              ) : (
+                <><Save className="h-4 w-4" />Salva e Esci</>
+              )}
+            </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
