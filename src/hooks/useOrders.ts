@@ -635,6 +635,7 @@ export const useCreatePreventivo = () => {
         importo_totale: importoTotale,
         note_rivenditore: values.note_rivenditore || null,
         note_interna: values.note_interna || null,
+        modalita_pagamento: values.modalita_pagamento || null,
         stato: "preventivo",
       };
 
