@@ -1,39 +1,46 @@
 
 
-# Verifica Allegati Preventivo — Problemi Trovati
+# Aggiungere Modalità di Pagamento all'Ordine
 
-## Stato Attuale
+## Cosa cambia
 
-L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
+Aggiungere un campo `modalita_pagamento` alla tabella `orders` per tracciare le condizioni di pagamento concordate. Le opzioni disponibili saranno:
+- **Tutto** (pagamento in un'unica soluzione)
+- **50% Acconto + 50% Saldo**
+- **A completamento lavori**
+- **Alla consegna**
+- **Contanti**
 
----
+## Modifiche
 
-## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
+### 1. Migrazione DB
+Aggiungere colonna `modalita_pagamento text` nullable alla tabella `orders` e alla view `orders_with_payment_stats`.
 
-**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
+```sql
+ALTER TABLE orders ADD COLUMN modalita_pagamento text;
+```
 
-Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
+Ricreare la view `orders_with_payment_stats` includendo il nuovo campo.
 
-**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
+### 2. `src/pages/OrderDetail.tsx`
+- Aggiungere stato locale `modalitaPagamento` sincronizzato con `order.modalita_pagamento`
+- Nella sidebar "Riepilogo Economico", aggiungere un `<Select>` (editabile da super_admin) con le 5 opzioni
+- Salvare il valore tramite una nuova mutation o estendendo `useUpdateOrderDates` per includere anche `modalita_pagamento`
 
-Interventi:
-- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
-- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
-- Entrambi i file usano lo stesso pattern, la fix e' identica
+### 3. `src/hooks/useOrders.ts`
+- Estendere `useUpdateOrderDates` (rinominandolo concettualmente) per accettare anche `modalitaPagamento`, oppure creare un nuovo hook `useUpdateOrderPaymentTerms`
+- Aggiungere `modalita_pagamento` nel `useCreateOrder` e `useCreatePreventivo`
 
-## Bug 2: `useCreatePreventivo` contiene codice morto
+### 4. `src/components/orders/NewOrderDialog.tsx`
+- Aggiungere campo `modalita_pagamento` allo schema zod e al form
+- Inserire un `<Select>` con le 5 opzioni nella sezione "Additional Info"
 
-**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
+### 5. `src/components/orders/NewPreventivoDialog.tsx`
+- Stesso campo `modalita_pagamento` anche nel form preventivo
 
-- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
-- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
+### 6. `src/components/orders/OrderPipelineCard.tsx`
+- Mostrare la modalità di pagamento nella card se presente
 
-**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
-
-## Riepilogo
-
-| # | Tipo | File | Problema |
-|---|------|------|----------|
-| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
-| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
+### 7. `src/lib/exportUtils.ts`
+- Aggiungere `modalita_pagamento` all'export CSV/Excel
 
