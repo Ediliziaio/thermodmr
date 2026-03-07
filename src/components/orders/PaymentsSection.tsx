@@ -268,7 +268,7 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-sm font-medium">Progresso Pagamento</span>
-                <span className="text-sm font-bold">{formatPercentage(percentuale)}</span>
+                <span className="text-sm font-bold">{percentuale.toFixed(1)}%</span>
               </div>
               <Progress value={percentuale} className={`h-3 ${progressColor}`} />
               <p className="text-xs text-muted-foreground">
