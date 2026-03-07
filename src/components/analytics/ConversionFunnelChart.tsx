@@ -13,6 +13,7 @@ const stageLabels: Record<string, string> = {
   da_confermare: "Da Confermare",
   da_pagare_acconto: "Da Pagare Acconto",
   in_lavorazione: "In Lavorazione",
+  da_saldare: "Da Saldare",
   da_consegnare: "Da Consegnare",
   consegnato: "Consegnato",
 };

@@ -1,0 +1,1 @@
+ALTER TYPE order_status ADD VALUE 'da_saldare' BEFORE 'da_consegnare';

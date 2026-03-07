@@ -11,6 +11,7 @@ interface DashboardKPIs {
     da_confermare: number;
     da_pagare_acconto: number;
     in_lavorazione: number;
+    da_saldare: number;
     da_consegnare: number;
     consegnato: number;
   };

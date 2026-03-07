@@ -1,77 +1,39 @@
 
 
-# Miglioramento UX Dettaglio Ordine + Nuovo stato "Da Saldare" + Colori fasi
+# Verifica Allegati Preventivo — Problemi Trovati
 
-## Cosa cambia
+## Stato Attuale
 
-### 1. Nuovo stato "Da Saldare" nel workflow
-Aggiungere `da_saldare` all'enum `order_status` nel database, posizionato tra `in_lavorazione` e `da_consegnare`. Il workflow diventa:
+L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
 
-```text
-Preventivo → Da Confermare → Da Pagare Acconto → In Lavorazione → Da Saldare → Da Consegnare → Consegnato
-```
+---
 
-**Migrazione DB**: `ALTER TYPE order_status ADD VALUE 'da_saldare' BEFORE 'da_consegnare';`
+## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
 
-### 2. Colori distintivi per ogni fase (stepper + badge)
-Ogni fase avrà un colore unico e riconoscibile:
+**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
 
-| Stato | Colore Stepper (cerchio) | Badge |
-|---|---|---|
-| Preventivo | Grigio/Slate | `bg-slate-500/10 text-slate-700` |
-| Da Confermare | Giallo/Amber | `bg-yellow-500/10 text-yellow-700` |
-| Da Pagare Acconto | Arancione | `bg-orange-500/10 text-orange-700` |
-| In Lavorazione | Blu | `bg-blue-500/10 text-blue-700` |
-| **Da Saldare** | **Rosso** | `bg-red-500/10 text-red-700` |
-| Da Consegnare | Viola | `bg-purple-500/10 text-purple-700` |
-| Consegnato | Verde | `bg-green-500/10 text-green-700` |
+Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
 
-### 3. StatusStepper con colori per fase
-Attualmente lo stepper usa un unico colore (`primary`) per completato/corrente. Cambiare per usare il colore specifico di ogni fase sia per il cerchio che per la linea di connessione, rendendo il progresso visivamente più ricco.
+**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
 
-### 4. Miglioramento UX pagina dettaglio
-- Stepper più compatto e visivamente pulito
-- Colori coerenti tra stepper, badge e filtri
+Interventi:
+- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
+- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
+- Entrambi i file usano lo stesso pattern, la fix e' identica
 
-## File da modificare
+## Bug 2: `useCreatePreventivo` contiene codice morto
 
-### Migrazione DB
-- Aggiungere `da_saldare` all'enum `order_status`
+**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
 
-### `src/lib/utils.ts`
-- `getStatusColor`: aggiungere `da_saldare` con colore rosso
-- `getStatusLabel`: aggiungere `da_saldare` → "Da Saldare"
-- `getStatusVariant`: aggiungere caso `da_saldare`
+- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
+- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
 
-### `src/components/orders/StatusStepper.tsx`
-- Aggiungere step `da_saldare` (number 4, spostare da_consegnare a 5, consegnato a 6)
-- Usare colori specifici per fase: ogni cerchio completato/corrente ha il suo colore
-- Linea di connessione colorata con il colore della fase completata
+**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
 
-### `src/pages/OrderDetail.tsx`
-- Aggiungere `<SelectItem value="da_saldare">Da Saldare</SelectItem>` nel dropdown stato
+## Riepilogo
 
-### `src/components/orders/OrderFilters.tsx` + `MobileOrderFilters.tsx`
-- Aggiungere opzione `da_saldare` nei filtri stato
-
-### `src/components/orders/BulkUpdateStatusDialog.tsx`
-- Aggiungere `da_saldare` nelle opzioni di aggiornamento massivo
-
-### `src/lib/exportUtils.ts`
-- Aggiungere mapping `da_saldare` → "Da Saldare"
-
-### `src/components/analytics/ConversionFunnelChart.tsx`
-- Aggiungere `da_saldare` nel funnel
-
-### `src/components/analytics/charts/OrdersDistributionChart.tsx`
-- Aggiungere colore per `da_saldare`
-
-### `src/pages/Dashboard.tsx`
-- Aggiungere colore chart per `da_saldare`
-
-### `src/pages/DealerDetail.tsx`
-- Aggiungere conteggio `da_saldare` in ordersByStatus
-
-### `src/hooks/useDashboard.ts` + `useDealerDashboard.ts`
-- Aggiungere `da_saldare` nei tipi e conteggi
+| # | Tipo | File | Problema |
+|---|------|------|----------|
+| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
+| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
 

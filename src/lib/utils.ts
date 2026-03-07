@@ -63,9 +63,10 @@ export const formatDateTime = (date: Date | string) => {
 export const getStatusColor = (status: string) => {
   const colors: Record<string, string> = {
     preventivo: "bg-slate-500/10 text-slate-700 dark:text-slate-400",
-    da_confermare: "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400",
+    da_confermare: "bg-amber-500/10 text-amber-700 dark:text-amber-400",
     da_pagare_acconto: "bg-orange-500/10 text-orange-700 dark:text-orange-400",
     in_lavorazione: "bg-blue-500/10 text-blue-700 dark:text-blue-400",
+    da_saldare: "bg-red-500/10 text-red-700 dark:text-red-400",
     da_consegnare: "bg-purple-500/10 text-purple-700 dark:text-purple-400",
     consegnato: "bg-green-500/10 text-green-700 dark:text-green-400",
   };
@@ -81,6 +82,7 @@ export const getStatusLabel = (status: string) => {
     da_confermare: "Da Confermare",
     da_pagare_acconto: "Da Pagare Acconto",
     in_lavorazione: "In Lavorazione",
+    da_saldare: "Da Saldare",
     da_consegnare: "Da Consegnare",
     consegnato: "Consegnato",
   };
@@ -100,6 +102,8 @@ export const getStatusVariant = (status: string): "default" | "secondary" | "des
       return "destructive";
     case "in_lavorazione":
       return "default";
+    case "da_saldare":
+      return "destructive";
     case "da_consegnare":
       return "secondary";
     case "consegnato":

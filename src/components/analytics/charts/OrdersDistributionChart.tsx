@@ -13,11 +13,13 @@ interface OrdersDistributionChartProps {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  da_confermare: "hsl(var(--chart-1))",
-  da_pagare_acconto: "hsl(var(--chart-2))",
-  in_lavorazione: "hsl(var(--chart-3))",
-  da_consegnare: "hsl(var(--chart-4))",
-  consegnato: "hsl(var(--chart-5))",
+  preventivo: "hsl(215, 14%, 60%)",
+  da_confermare: "hsl(38, 92%, 50%)",
+  da_pagare_acconto: "hsl(25, 95%, 53%)",
+  in_lavorazione: "hsl(217, 91%, 60%)",
+  da_saldare: "hsl(0, 84%, 60%)",
+  da_consegnare: "hsl(271, 91%, 65%)",
+  consegnato: "hsl(142, 71%, 45%)",
 };
 
 export function OrdersDistributionChart({ orders, title = "Distribuzione Ordini per Stato" }: OrdersDistributionChartProps) {
