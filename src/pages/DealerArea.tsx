@@ -53,6 +53,7 @@ export default function DealerArea() {
           <Route path="ordini" element={<Orders dealerId={id} />} />
           <Route path="ordini/:orderId" element={<OrderDetail />} />
           <Route path="pagamenti" element={<Pagamenti dealerId={id} />} />
+          <Route path="assistenza" element={<DealerAssistenza dealerId={id} />} />
         </Routes>
       </Suspense>
       {hasNextPage && <div ref={ref} />}

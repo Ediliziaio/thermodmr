@@ -32,6 +32,7 @@ export function DealerAreaLayout({ children, dealerId, dealerName }: DealerAreaL
     { name: "Preventivi", href: `${basePath}/preventivi`, icon: FileText },
     { name: "Ordini", href: `${basePath}/ordini`, icon: ShoppingCart },
     { name: "Pagamenti", href: `${basePath}/pagamenti`, icon: CreditCard },
+    { name: "Assistenza", href: `${basePath}/assistenza`, icon: Headphones },
   ];
 
   const isActive = (href: string) => {
