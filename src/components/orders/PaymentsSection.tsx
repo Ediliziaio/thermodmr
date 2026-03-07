@@ -22,22 +22,9 @@ import {
 import { Plus } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
-enum PaymentType {
-  ACCONTO = "ACCONTO",
-  SALDO = "SALDO",
-  PARZIALE = "PARZIALE",
-}
+import type { Tables } from "@/integrations/supabase/types";
 
-interface Payment {
-  id: string;
-  ordineId: string;
-  tipo: PaymentType;
-  importo: number;
-  dataPagamento: Date;
-  metodo: string;
-  riferimento?: string;
-  ricevutaURL?: string;
-}
+type Payment = Tables<"payments">;
 import { useCreatePayment } from "@/hooks/usePayments";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
@@ -54,7 +41,7 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
   
   const canCreatePayment = userRole === "super_admin" || userRole === "commerciale";
   const [newPayment, setNewPayment] = useState({
-    tipo: PaymentType.ACCONTO,
+    tipo: "acconto" as string,
     importo: 0,
     dataPagamento: new Date().toISOString().split("T")[0],
     metodo: "Bonifico",
@@ -66,22 +53,22 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
   const totalPaid = payments.reduce((sum, p) => sum + p.importo, 0);
   const remaining = totalAmount - totalPaid;
 
-  const getPaymentTypeLabel = (type: PaymentType) => {
-    const labels = {
-      [PaymentType.ACCONTO]: "Acconto",
-      [PaymentType.SALDO]: "Saldo",
-      [PaymentType.PARZIALE]: "Parziale",
+  const getPaymentTypeLabel = (type: string) => {
+    const labels: Record<string, string> = {
+      acconto: "Acconto",
+      saldo: "Saldo",
+      parziale: "Parziale",
     };
-    return labels[type];
+    return labels[type] || type;
   };
 
-  const getPaymentTypeColor = (type: PaymentType) => {
-    const colors = {
-      [PaymentType.ACCONTO]: "bg-blue-500/10 text-blue-700 dark:text-blue-400",
-      [PaymentType.SALDO]: "bg-green-500/10 text-green-700 dark:text-green-400",
-      [PaymentType.PARZIALE]: "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400",
+  const getPaymentTypeColor = (type: string) => {
+    const colors: Record<string, string> = {
+      acconto: "bg-blue-500/10 text-blue-700 dark:text-blue-400",
+      saldo: "bg-green-500/10 text-green-700 dark:text-green-400",
+      parziale: "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400",
     };
-    return colors[type];
+    return colors[type] || "";
   };
 
   const handleAddPayment = () => {
@@ -119,7 +106,7 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
     // Crea il pagamento
     createPayment.mutate({
       ordineId: orderId,
-      tipo: newPayment.tipo === PaymentType.ACCONTO ? "acconto" : newPayment.tipo === PaymentType.SALDO ? "saldo" : "parziale",
+      tipo: newPayment.tipo as "acconto" | "saldo" | "parziale",
       importo,
       dataPagamento: newPayment.dataPagamento,
       metodo: newPayment.metodo,
@@ -129,7 +116,7 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
     setIsDialogOpen(false);
     // Reset form
     setNewPayment({
-      tipo: PaymentType.ACCONTO,
+      tipo: "acconto",
       importo: 0,
       dataPagamento: new Date().toISOString().split("T")[0],
       metodo: "Bonifico",
@@ -162,16 +149,16 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
                 <Select
                   value={newPayment.tipo}
                   onValueChange={(value) =>
-                    setNewPayment({ ...newPayment, tipo: value as PaymentType })
+                    setNewPayment({ ...newPayment, tipo: value })
                   }
                 >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={PaymentType.ACCONTO}>Acconto</SelectItem>
-                    <SelectItem value={PaymentType.PARZIALE}>Parziale</SelectItem>
-                    <SelectItem value={PaymentType.SALDO}>Saldo</SelectItem>
+                    <SelectItem value="acconto">Acconto</SelectItem>
+                    <SelectItem value="parziale">Parziale</SelectItem>
+                    <SelectItem value="saldo">Saldo</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -291,7 +278,7 @@ export function PaymentsSection({ orderId, payments, totalAmount }: PaymentsSect
                     </span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    {formatDate(payment.dataPagamento)}
+                    {formatDate(payment.data_pagamento)}
                   </p>
                   {payment.riferimento && (
                     <p className="text-xs text-muted-foreground">
