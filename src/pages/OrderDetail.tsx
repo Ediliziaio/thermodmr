@@ -38,7 +38,7 @@ import { AttachmentsSection } from "@/components/orders/AttachmentsSection";
 import { TicketsSection } from "@/components/orders/TicketsSection";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { PaymentTimelineChart } from "@/components/analytics/charts/PaymentTimelineChart";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
@@ -596,13 +596,6 @@ export default function OrderDetail() {
             totalAmount={Number(order.importo_totale)}
           />
 
-          {orderPayments && orderPayments.length > 0 && (
-            <PaymentTimelineChart
-              payments={orderPayments}
-              totalAmount={order.importo_totale}
-              title="Timeline Pagamenti"
-            />
-          )}
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Colonna principale */}
