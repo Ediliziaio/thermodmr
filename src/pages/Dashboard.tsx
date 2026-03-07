@@ -161,101 +161,66 @@ export default function Dashboard() {
   return (
     <div className="space-y-4 md:space-y-6 lg:space-y-8 p-4 md:p-6">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
+      <div className="flex items-center justify-between gap-4">
+        <div className="min-w-0">
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-sm md:text-base text-muted-foreground mt-1">
-            Panoramica generale degli ordini e delle performance
-            {dateRange?.from && (
-              <span className="ml-2 text-primary font-medium">
-                • {formatDateRange()}
-              </span>
-            )}
+          <p className="text-sm text-muted-foreground mt-1 flex items-center gap-2">
+            Panoramica generale
+            <span className="inline-flex items-center gap-1 text-xs text-muted-foreground/60">
+              <Radio className="h-3 w-3 text-green-500 animate-pulse" />
+              Live
+            </span>
           </p>
         </div>
-        {/* Date Range Filters */}
-        <div className="flex items-center gap-2 flex-wrap w-full md:w-auto">
-          <div className="flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-hide w-full md:w-auto">
-            {(["month", "3months", "6months", "year", "lastyear"] as const).map((type) => (
-              <Button
+        <div className="flex items-center gap-1.5">
+          <div className="flex bg-muted rounded-lg p-0.5">
+            {(["3months", "6months", "year", "lastyear", "all"] as const).map((type) => (
+              <button
                 key={type}
-                size="sm"
-                variant={activeFilter === type ? "default" : "outline"}
                 onClick={() => setQuickFilter(type)}
-                className="snap-center min-w-fit transition-all"
+                className={cn(
+                  "px-2.5 py-1.5 text-xs font-medium rounded-md transition-all whitespace-nowrap",
+                  activeFilter === type
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                )}
               >
                 {isMobile
-                  ? { month: "1M", "3months": "3M", "6months": "6M", year: "1A", lastyear: "AA" }[type]
-                  : { month: "Mese Scorso", "3months": "Ultimi 3 Mesi", "6months": "Ultimi 6 Mesi", year: "Anno Corrente", lastyear: "Anno Scorso" }[type]}
-              </Button>
+                  ? { "3months": "3M", "6months": "6M", year: new Date().getFullYear().toString(), lastyear: (new Date().getFullYear() - 1).toString(), all: "∞" }[type]
+                  : { "3months": "3 Mesi", "6months": "6 Mesi", year: new Date().getFullYear().toString(), lastyear: (new Date().getFullYear() - 1).toString(), all: "Tutto" }[type]}
+              </button>
             ))}
           </div>
 
           <Popover>
             <PopoverTrigger asChild>
               <Button
-                variant={dateRange ? "default" : "outline"}
-                className={cn(
-                  "justify-start text-left font-normal",
-                  !dateRange && "text-muted-foreground"
-                )}
+                variant="outline"
+                size="icon"
+                className="h-8 w-8"
               >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {dateRange ? formatDateRange() : "Seleziona periodo"}
+                <CalendarIcon className="h-3.5 w-3.5" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="end">
-              <div className="p-3 space-y-3">
-                <Calendar
-                  mode="range"
-                  selected={dateRange}
-                  onSelect={(range) => {
-                    setDateRange(range);
-                    setActiveFilter(null);
-                  }}
-                  numberOfMonths={2}
-                  locale={it}
-                  className="pointer-events-auto"
-                />
-                <div className="border-t pt-3">
-                  <p className="text-sm font-medium mb-2">Filtri rapidi</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {(["month", "3months", "6months", "year", "lastyear"] as const).map((type) => (
-                      <Button
-                        key={type}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setQuickFilter(type)}
-                        className={type === "lastyear" ? "col-span-2" : ""}
-                      >
-                        {{ month: "Ultimo mese", "3months": "Ultimi 3 mesi", "6months": "Ultimi 6 mesi", year: "Quest'anno", lastyear: "Anno scorso" }[type]}
-                      </Button>
-                    ))}
-                  </div>
+              <Calendar
+                mode="range"
+                selected={dateRange}
+                onSelect={(range) => {
+                  setDateRange(range);
+                  setActiveFilter(null);
+                }}
+                numberOfMonths={isMobile ? 1 : 2}
+                locale={it}
+                className="pointer-events-auto"
+              />
+              {dateRange && activeFilter === null && (
+                <div className="border-t px-3 py-2 text-xs text-muted-foreground">
+                  {formatDateRange()}
                 </div>
-              </div>
+              )}
             </PopoverContent>
           </Popover>
-          
-          {dateRange && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                setDateRange(undefined);
-                setActiveFilter(null);
-              }}
-              title="Reset filtro periodo"
-              className="min-h-[44px] min-w-[44px]"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          )}
-          
-          <div className="flex items-center gap-2 text-sm text-muted-foreground border-l pl-3">
-            <Radio className="h-4 w-4 text-green-500 animate-pulse" />
-            <span className="hidden sm:inline">Real-time</span>
-          </div>
         </div>
       </div>
 
