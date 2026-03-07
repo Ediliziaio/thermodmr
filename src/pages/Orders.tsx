@@ -495,6 +495,15 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                                 : "N/A"}
                             </span>
                           </td>
+                          <td className="py-4 pr-4 text-sm text-center">
+                            {order.settimana_consegna ? (
+                              <Badge variant="outline" className="font-mono">
+                                W{order.settimana_consegna}
+                              </Badge>
+                            ) : (
+                              <span className="text-muted-foreground">-</span>
+                            )}
+                          </td>
                           <td className="py-4">
                             <Button
                               variant="ghost"
