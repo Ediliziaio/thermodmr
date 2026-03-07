@@ -129,7 +129,7 @@ export function OrderFilters({ filters, onFiltersChange, dealers, searchQuery, o
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleContent>
           <div className="border-t pt-3 pb-1">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
               {/* Stato */}
               <div className="space-y-1">
                 <Label className="text-xs">Stato</Label>
@@ -173,26 +173,6 @@ export function OrderFilters({ filters, onFiltersChange, dealers, searchQuery, o
                     <SelectItem value="non_pagato">Non Pagato</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
-
-              {/* Date range — Da / A inline */}
-              <div className="space-y-1">
-                <Label className="text-xs">Periodo</Label>
-                <div className="flex gap-1.5 items-center">
-                  <Input
-                    type="date"
-                    value={filters.dataInserimentoFrom || ""}
-                    onChange={(e) => handleFilterChange("dataInserimentoFrom", e.target.value)}
-                    className="h-9 text-sm flex-1"
-                  />
-                  <span className="text-xs text-muted-foreground">—</span>
-                  <Input
-                    type="date"
-                    value={filters.dataInserimentoTo || ""}
-                    onChange={(e) => handleFilterChange("dataInserimentoTo", e.target.value)}
-                    className="h-9 text-sm flex-1"
-                  />
-                </div>
               </div>
 
               {/* Importo range — Min / Max inline */}

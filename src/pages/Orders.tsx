@@ -21,6 +21,12 @@ import { useDealersInfinite } from "@/hooks/useDealersInfinite";
 import { useMemo, useState, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { formatCurrency, formatDate, getStatusColor, getStatusLabel, cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { DateRange } from "react-day-picker";
+import { format, subMonths, startOfMonth, startOfYear, endOfYear, subYears } from "date-fns";
+import { it } from "date-fns/locale";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -43,10 +49,21 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
   const isMobile = useIsMobile();
   const isDealerArea = !!dealerId;
   const [searchQuery, setSearchQuery] = useState("");
+  
+  const now = new Date();
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: startOfYear(now),
+    to: endOfYear(now),
+  });
+  const [activeFilter, setActiveFilter] = useState<string | null>("year");
+  
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useOrdersInfinite({ searchQuery, dealerId });
   const { data: dealersData } = useDealersInfinite();
   const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
-  const [filters, setFilters] = useState<OrderFiltersState>({});
+  const [filters, setFilters] = useState<OrderFiltersState>({
+    dataInserimentoFrom: format(startOfYear(now), 'yyyy-MM-dd'),
+    dataInserimentoTo: format(endOfYear(now), 'yyyy-MM-dd'),
+  });
   const { ref, inView } = useInView();
   const [selectedOrderIds, setSelectedOrderIds] = useState<Set<string>>(new Set());
   const [bulkStatusDialogOpen, setBulkStatusDialogOpen] = useState(false);
@@ -91,6 +108,38 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
   useEffect(() => {
     clearSelection();
   }, [filters]);
+
+  // Sync dateRange to filters
+  useEffect(() => {
+    setFilters(prev => ({
+      ...prev,
+      dataInserimentoFrom: dateRange?.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
+      dataInserimentoTo: dateRange?.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
+    }));
+  }, [dateRange]);
+
+  const setQuickFilter = (type: '3months' | '6months' | 'year' | 'lastyear' | 'all') => {
+    const n = new Date();
+    setActiveFilter(type);
+    if (type === 'all') {
+      setDateRange(undefined);
+      return;
+    }
+    switch (type) {
+      case '3months':
+        setDateRange({ from: startOfMonth(subMonths(n, 3)), to: n });
+        break;
+      case '6months':
+        setDateRange({ from: startOfMonth(subMonths(n, 6)), to: n });
+        break;
+      case 'year':
+        setDateRange({ from: startOfYear(n), to: endOfYear(n) });
+        break;
+      case 'lastyear':
+        setDateRange({ from: startOfYear(subYears(n, 1)), to: endOfYear(subYears(n, 1)) });
+        break;
+    }
+  };
 
   // Carica automaticamente la prossima pagina quando l'utente scorre fino in fondo
   useEffect(() => {
@@ -199,35 +248,78 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     <TooltipProvider>
       <div className="space-y-4">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
+        <div className="flex items-center justify-between gap-4">
+          <div className="min-w-0">
             <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-bold tracking-tight">Ordini</h1>
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Ordini</h1>
               {selectedOrderIds.size > 0 && (
                 <Badge variant="secondary" className="text-sm">
                   {selectedOrderIds.size} selezionati
                 </Badge>
               )}
             </div>
-            <p className="text-muted-foreground mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               Gestisci tutti gli ordini dei rivenditori
             </p>
           </div>
-          {!isMobile && !isDealerArea && (
-            <div className="flex gap-2">
-              {userRole === "super_admin" && (
-                <>
-                  <Button variant="outline" onClick={() => setPreventivoDialogOpen(true)}>
-                    <FileText className="mr-2 h-4 w-4" />
-                    Nuovo Preventivo
-                  </Button>
-                  <NewPreventivoDialog open={preventivoDialogOpen} onOpenChange={setPreventivoDialogOpen} />
-                </>
-              )}
-              <NewOrderDialog open={newOrderDialogOpen} onOpenChange={setNewOrderDialogOpen} />
+          <div className="flex items-center gap-1.5">
+            <div className="flex bg-muted rounded-lg p-0.5">
+              {(["3months", "6months", "year", "lastyear", "all"] as const).map((type) => (
+                <button
+                  key={type}
+                  onClick={() => setQuickFilter(type)}
+                  className={cn(
+                    "px-2.5 py-1.5 text-xs font-medium rounded-md transition-all whitespace-nowrap",
+                    activeFilter === type
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  {isMobile
+                    ? { "3months": "3M", "6months": "6M", year: new Date().getFullYear().toString(), lastyear: (new Date().getFullYear() - 1).toString(), all: "∞" }[type]
+                    : { "3months": "3 Mesi", "6months": "6 Mesi", year: new Date().getFullYear().toString(), lastyear: (new Date().getFullYear() - 1).toString(), all: "Tutto" }[type]}
+                </button>
+              ))}
             </div>
-          )}
+
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="icon" className="h-8 w-8">
+                  <CalendarIcon className="h-3.5 w-3.5" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="end">
+                <Calendar
+                  mode="range"
+                  selected={dateRange}
+                  onSelect={(range) => {
+                    setDateRange(range);
+                    setActiveFilter(null);
+                  }}
+                  numberOfMonths={isMobile ? 1 : 2}
+                  locale={it}
+                  className="pointer-events-auto"
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
+
+        {/* Action Buttons */}
+        {!isMobile && !isDealerArea && (
+          <div className="flex gap-2">
+            {userRole === "super_admin" && (
+              <>
+                <Button variant="outline" onClick={() => setPreventivoDialogOpen(true)}>
+                  <FileText className="mr-2 h-4 w-4" />
+                  Nuovo Preventivo
+                </Button>
+                <NewPreventivoDialog open={preventivoDialogOpen} onOpenChange={setPreventivoDialogOpen} />
+              </>
+            )}
+            <NewOrderDialog open={newOrderDialogOpen} onOpenChange={setNewOrderDialogOpen} />
+          </div>
+        )}
 
         {/* Dealer Filter + View Toggle Row */}
         {!isMobile && !isDealerArea && (
