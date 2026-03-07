@@ -83,6 +83,9 @@ export default function OrderDetail() {
   const [editedOrderId, setEditedOrderId] = useState("");
   const [showConvertDialog, setShowConvertDialog] = useState(false);
   const [editedLines, setEditedLines] = useState<any[] | null>(null);
+  const [dataFineProduzione, setDataFineProduzione] = useState<Date | undefined>();
+  const [settimanaConsegna, setSettimanaConsegna] = useState<string>("");
+  const [dataConsegnaPrevista, setDataConsegnaPrevista] = useState<Date | undefined>();
   const hasLineChanges = editedLines !== null;
 
   useEffect(() => {
