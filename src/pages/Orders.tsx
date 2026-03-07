@@ -28,7 +28,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useRealtimeSync } from "@/hooks/useRealtimeSync";
 
-type ViewMode = "lista" | "pipeline" | "pipeline-dnd";
+type ViewMode = "lista" | "pipeline";
 
 interface OrdersProps {
   dealerId?: string;
