@@ -55,6 +55,7 @@ const orderFormSchema = z.object({
   cliente_indirizzo: z.string().optional(),
   data_consegna_prevista: z.string().optional(),
   importo_acconto: z.coerce.number().min(0).default(0),
+  modalita_pagamento: z.string().optional(),
   note_rivenditore: z.string().optional(),
   note_interna: z.string().optional(),
   order_lines: z.array(orderLineSchema).min(1, "Aggiungi almeno una riga"),
