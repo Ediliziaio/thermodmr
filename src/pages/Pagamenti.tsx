@@ -293,7 +293,7 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-12"><Checkbox checked={selectedPaymentIds.size === payments.length && payments.length > 0} onCheckedChange={toggleSelectAll} /></TableHead>
+                    {!isDealerArea && <TableHead className="w-12"><Checkbox checked={selectedPaymentIds.size === payments.length && payments.length > 0} onCheckedChange={toggleSelectAll} /></TableHead>}
                     <TableHead>Data</TableHead>
                     <TableHead>Ordine</TableHead>
                     <TableHead>Dealer</TableHead>
