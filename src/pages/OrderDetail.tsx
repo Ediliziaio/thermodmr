@@ -38,7 +38,7 @@ import { AttachmentsSection } from "@/components/orders/AttachmentsSection";
 import { TicketsSection } from "@/components/orders/TicketsSection";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { PaymentTimelineChart } from "@/components/analytics/charts/PaymentTimelineChart";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
