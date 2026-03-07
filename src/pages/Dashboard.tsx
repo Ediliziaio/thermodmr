@@ -55,8 +55,12 @@ export default function Dashboard() {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   
-  const [dateRange, setDateRange] = useState<DateRange | undefined>();
-  const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  const now = new Date();
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: startOfYear(now),
+    to: endOfYear(now),
+  });
+  const [activeFilter, setActiveFilter] = useState<string | null>("year");
   
   useRealtimeSync();
   
