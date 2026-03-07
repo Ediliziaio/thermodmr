@@ -378,6 +378,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                     <th className="pb-3 pr-4">Acconto</th>
                     <th className="pb-3 pr-4">Importo da Pagare</th>
                     <th className="pb-3 pr-4">Consegna Prevista</th>
+                    <th className="pb-3 pr-4">Sett.</th>
                     <th className="pb-3">Azioni</th>
                   </tr>
                 </thead>
@@ -493,6 +494,15 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                                 ? formatDate(new Date(order.data_consegna_prevista))
                                 : "N/A"}
                             </span>
+                          </td>
+                          <td className="py-4 pr-4 text-sm text-center">
+                            {order.settimana_consegna ? (
+                              <Badge variant="outline" className="font-mono">
+                                W{order.settimana_consegna}
+                              </Badge>
+                            ) : (
+                              <span className="text-muted-foreground">-</span>
+                            )}
                           </td>
                           <td className="py-4">
                             <Button
