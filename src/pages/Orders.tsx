@@ -301,21 +301,22 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
             </Popover>
           </div>
         </div>
-          {!isMobile && !isDealerArea && (
-            <div className="flex gap-2">
-              {userRole === "super_admin" && (
-                <>
-                  <Button variant="outline" onClick={() => setPreventivoDialogOpen(true)}>
-                    <FileText className="mr-2 h-4 w-4" />
-                    Nuovo Preventivo
-                  </Button>
-                  <NewPreventivoDialog open={preventivoDialogOpen} onOpenChange={setPreventivoDialogOpen} />
-                </>
-              )}
-              <NewOrderDialog open={newOrderDialogOpen} onOpenChange={setNewOrderDialogOpen} />
-            </div>
-          )}
-        </div>
+
+        {/* Action Buttons */}
+        {!isMobile && !isDealerArea && (
+          <div className="flex gap-2">
+            {userRole === "super_admin" && (
+              <>
+                <Button variant="outline" onClick={() => setPreventivoDialogOpen(true)}>
+                  <FileText className="mr-2 h-4 w-4" />
+                  Nuovo Preventivo
+                </Button>
+                <NewPreventivoDialog open={preventivoDialogOpen} onOpenChange={setPreventivoDialogOpen} />
+              </>
+            )}
+            <NewOrderDialog open={newOrderDialogOpen} onOpenChange={setNewOrderDialogOpen} />
+          </div>
+        )}
 
         {/* Dealer Filter + View Toggle Row */}
         {!isMobile && !isDealerArea && (
