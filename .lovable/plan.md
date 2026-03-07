@@ -1,39 +1,26 @@
 
 
-# Verifica Allegati Preventivo — Problemi Trovati
+# Dropdown Settimana Consegna + Allineamento Allegati Preventivi/Ordini
 
-## Stato Attuale
+## Cosa cambia
 
-L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
+### 1. Settimana Consegna → Dropdown con label mese
+Sostituire l'input numerico con un `Select` dropdown contenente le 53 settimane dell'anno. Ogni opzione mostra il numero della settimana e il mese abbreviato di inizio, es:
+- `1 - Gen`
+- `5 - Feb`
+- `9 - Mar`
+- `22 - Mag`
+- `52 - Dic`
 
----
+Il range di date (es. "02 Giu - 08 Giu 2026") resta visibile sotto il dropdown come testo informativo.
 
-## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
+### 2. Allegati preventivi = stessi degli ordini
+La sezione allegati nei preventivi usa già lo stesso componente `AttachmentsSection`. Attualmente è posizionata nella colonna principale (sotto le note). Nessuna modifica necessaria — il comportamento è già identico (upload, download con signed URL, eliminazione con conferma).
 
-**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
+## File da modificare
 
-Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
-
-**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
-
-Interventi:
-- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
-- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
-- Entrambi i file usano lo stesso pattern, la fix e' identica
-
-## Bug 2: `useCreatePreventivo` contiene codice morto
-
-**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
-
-- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
-- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
-
-**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
-
-## Riepilogo
-
-| # | Tipo | File | Problema |
-|---|------|------|----------|
-| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
-| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
+### `src/pages/OrderDetail.tsx`
+- **Sezione Settimana Consegna** (righe ~654-683): sostituire `<Input type="number">` con `<Select>` dropdown
+- Generare le 53 opzioni con una funzione helper che calcola il mese di inizio di ciascuna settimana
+- Mantenere la label informativa con il range di date sotto il Select
 
