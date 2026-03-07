@@ -110,6 +110,7 @@ export function exportOrders(orders: any[]) {
     "Importo Pagato": formatCurrencyForExport(o.importo_pagato),
     "Importo Da Pagare": formatCurrencyForExport(o.importo_da_pagare),
     "Percentuale Pagata": o.percentuale_pagata ? `${o.percentuale_pagata.toFixed(2)}%` : "0%",
+    "Modalità Pagamento": getModalitaPagamentoLabel(o.modalita_pagamento),
     "Cliente Finale": o.clients ? `${o.clients.nome} ${o.clients.cognome}` : "",
     "Note Interna": o.note_interna || "",
     "Note Rivenditore": o.note_rivenditore || "",
