@@ -318,7 +318,7 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
                         <TableCell className="capitalize">{payment.metodo}</TableCell>
                         <TableCell className="text-right font-medium">{formatCurrency(payment.importo)}</TableCell>
                         <TableCell className="text-muted-foreground">{payment.riferimento || "-"}</TableCell>
-                        {userRole === 'super_admin' && (
+                        {userRole === 'super_admin' && !isDealerArea && (
                           <TableCell><Button variant="ghost" size="sm" onClick={() => handleDeletePayment(payment.id)} className="text-destructive hover:bg-destructive/10"><Trash2 className="h-4 w-4" /></Button></TableCell>
                         )}
                       </TableRow>
