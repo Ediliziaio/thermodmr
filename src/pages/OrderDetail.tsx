@@ -13,6 +13,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -22,7 +28,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, FileDown, Send, Loader2, Edit2, Check, X, Clock, AlertTriangle, ArrowRightCircle, Copy } from "lucide-react";
+import { ArrowLeft, FileDown, Send, Loader2, Edit2, Check, X, Clock, AlertTriangle, ArrowRightCircle, Copy, CalendarIcon } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatusStepper } from "@/components/orders/StatusStepper";
 import type { Database } from "@/integrations/supabase/types";
@@ -35,6 +41,7 @@ import { PaymentTimelineChart } from "@/components/analytics/charts/PaymentTimel
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 import {
   useOrderById,
   useOrderLines,
@@ -44,9 +51,11 @@ import {
   useUpdateOrderNotes,
   useUpdateOrderId,
   useUpdateOrderLines,
+  useUpdateOrderDates,
 } from "@/hooks/useOrders";
 import { formatCurrency, formatDate, getStatusLabel, getStatusColor } from "@/lib/utils";
-import { differenceInDays, isPast, parseISO } from "date-fns";
+import { differenceInDays, isPast, parseISO, format, startOfWeek, addWeeks, endOfWeek, getWeek, getYear } from "date-fns";
+import { it } from "date-fns/locale";
 
 export default function OrderDetail() {
   const { id } = useParams<{ id: string }>();
@@ -66,6 +75,7 @@ export default function OrderDetail() {
   const updateNotesMutation = useUpdateOrderNotes();
   const updateOrderIdMutation = useUpdateOrderId();
   const updateOrderLinesMutation = useUpdateOrderLines();
+  const updateDatesMutation = useUpdateOrderDates();
 
   const [noteInterna, setNoteInterna] = useState("");
   const [noteRivenditore, setNoteRivenditore] = useState("");
@@ -73,6 +83,9 @@ export default function OrderDetail() {
   const [editedOrderId, setEditedOrderId] = useState("");
   const [showConvertDialog, setShowConvertDialog] = useState(false);
   const [editedLines, setEditedLines] = useState<any[] | null>(null);
+  const [dataFineProduzione, setDataFineProduzione] = useState<Date | undefined>();
+  const [settimanaConsegna, setSettimanaConsegna] = useState<string>("");
+  const [dataConsegnaPrevista, setDataConsegnaPrevista] = useState<Date | undefined>();
   const hasLineChanges = editedLines !== null;
 
   useEffect(() => {
@@ -80,6 +93,9 @@ export default function OrderDetail() {
       setNoteInterna(order.note_interna || "");
       setNoteRivenditore(order.note_rivenditore || "");
       setEditedOrderId(order.id);
+      setDataFineProduzione(order.data_fine_produzione ? parseISO(order.data_fine_produzione) : undefined);
+      setSettimanaConsegna(order.settimana_consegna?.toString() || "");
+      setDataConsegnaPrevista(order.data_consegna_prevista ? parseISO(order.data_consegna_prevista) : undefined);
     }
   }, [order]);
 
@@ -412,7 +428,7 @@ export default function OrderDetail() {
         </>
       ) : (
         <>
-          {/* Layout ordine - invariato */}
+          {/* Stato ordine */}
           <Card>
             <CardHeader>
               <CardTitle>Stato Ordine</CardTitle>
@@ -452,22 +468,93 @@ export default function OrderDetail() {
           )}
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Colonna principale */}
             <div className="lg:col-span-2 space-y-6">
-              <OrderLinesEditor 
-                lines={orderLines as any} 
-                onLinesChange={() => {}} 
+              <OrderLinesEditor
+                simplified
+                lines={orderLines as any}
+                onLinesChange={(lines) => setEditedLines(lines)}
                 orderStatus={order.stato}
                 readOnly={!isSuperAdmin}
                 title="Righe Ordine"
               />
+              {isSuperAdmin && (
+                <div className="flex justify-end">
+                  <Button
+                    variant={hasLineChanges ? "default" : "outline"}
+                    onClick={() => {
+                      if (id && editedLines) {
+                        updateOrderLinesMutation.mutate(
+                          { orderId: id, lines: editedLines },
+                          { onSuccess: () => setEditedLines(null) }
+                        );
+                      }
+                    }}
+                    disabled={!hasLineChanges || updateOrderLinesMutation.isPending}
+                  >
+                    {updateOrderLinesMutation.isPending ? (
+                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
+                    ) : "Salva Prodotti"}
+                  </Button>
+                </div>
+              )}
+
               <PaymentsSection 
                 orderId={order.id} 
                 payments={orderPayments as any}
                 totalAmount={Number(order.importo_totale)}
               />
+
+              {/* Note in Tabs */}
+              <Card>
+                <CardContent className="pt-6">
+                  <Tabs defaultValue="note_rivenditore">
+                    <TabsList className="mb-4">
+                      <TabsTrigger value="note_rivenditore">Note Rivenditore</TabsTrigger>
+                      <TabsTrigger value="note_interne">Note Interne</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="note_rivenditore" className="space-y-2">
+                      <Textarea
+                        placeholder="Note visibili al rivenditore..."
+                        className="min-h-[120px]"
+                        value={noteRivenditore}
+                        onChange={(e) => setNoteRivenditore(e.target.value)}
+                      />
+                      <Button
+                        size="sm"
+                        onClick={() => handleNoteSave("rivenditore")}
+                        disabled={updateNotesMutation.isPending}
+                      >
+                        {updateNotesMutation.isPending ? (
+                          <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
+                        ) : "Salva Note"}
+                      </Button>
+                    </TabsContent>
+                    <TabsContent value="note_interne" className="space-y-2">
+                      <Textarea
+                        placeholder="Note interne (non visibili al rivenditore)..."
+                        className="min-h-[120px]"
+                        value={noteInterna}
+                        onChange={(e) => setNoteInterna(e.target.value)}
+                      />
+                      <Button
+                        size="sm"
+                        onClick={() => handleNoteSave("interna")}
+                        disabled={updateNotesMutation.isPending}
+                      >
+                        {updateNotesMutation.isPending ? (
+                          <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
+                        ) : "Salva Note"}
+                      </Button>
+                    </TabsContent>
+                  </Tabs>
+                </CardContent>
+              </Card>
+
               <AttachmentsSection orderId={order.id} attachments={orderAttachments as any} />
             </div>
 
+            {/* Sidebar */}
             <div className="space-y-6">
               <Card>
                 <CardHeader>
@@ -514,14 +601,6 @@ export default function OrderDetail() {
                     </p>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Data Consegna Prevista:</span>
-                    <p className="font-medium text-foreground">
-                      {order.data_consegna_prevista
-                        ? formatDate(new Date(order.data_consegna_prevista))
-                        : "Da definire"}
-                    </p>
-                  </div>
-                  <div>
                     <span className="text-muted-foreground">Cliente Finale:</span>
                     <p className="font-medium text-foreground">
                       {order.clients
@@ -532,49 +611,131 @@ export default function OrderDetail() {
                 </CardContent>
               </Card>
 
+              {/* Date Produzione & Consegna */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Note Rivenditore</CardTitle>
+                  <CardTitle>Produzione & Consegna</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-2">
-                  <Textarea
-                    placeholder="Note visibili al rivenditore..."
-                    className="min-h-[100px]"
-                    value={noteRivenditore}
-                    onChange={(e) => setNoteRivenditore(e.target.value)}
-                  />
-                  <Button
-                    size="sm"
-                    onClick={() => handleNoteSave("rivenditore")}
-                    disabled={updateNotesMutation.isPending}
-                  >
-                    {updateNotesMutation.isPending ? (
-                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
-                    ) : "Salva Note"}
-                  </Button>
-                </CardContent>
-              </Card>
+                <CardContent className="space-y-4">
+                  {/* Data Fine Produzione */}
+                  <div className="space-y-1.5">
+                    <Label className="text-muted-foreground text-xs">Data Fine Produzione</Label>
+                    {isSuperAdmin ? (
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "w-full justify-start text-left font-normal",
+                              !dataFineProduzione && "text-muted-foreground"
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {dataFineProduzione ? format(dataFineProduzione, "dd/MM/yyyy") : "Seleziona data"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={dataFineProduzione}
+                            onSelect={setDataFineProduzione}
+                            initialFocus
+                            className={cn("p-3 pointer-events-auto")}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    ) : (
+                      <p className="font-medium text-foreground">
+                        {dataFineProduzione ? format(dataFineProduzione, "dd/MM/yyyy") : "Da definire"}
+                      </p>
+                    )}
+                  </div>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>Note Interne</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <Textarea
-                    placeholder="Note interne (non visibili al rivenditore)..."
-                    className="min-h-[100px]"
-                    value={noteInterna}
-                    onChange={(e) => setNoteInterna(e.target.value)}
-                  />
-                  <Button
-                    size="sm"
-                    onClick={() => handleNoteSave("interna")}
-                    disabled={updateNotesMutation.isPending}
-                  >
-                    {updateNotesMutation.isPending ? (
-                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
-                    ) : "Salva Note"}
-                  </Button>
+                  {/* Settimana Consegna */}
+                  <div className="space-y-1.5">
+                    <Label className="text-muted-foreground text-xs">Settimana Consegna</Label>
+                    {isSuperAdmin ? (
+                      <div className="space-y-1">
+                        <Input
+                          type="number"
+                          min="1"
+                          max="53"
+                          placeholder="es. 24"
+                          value={settimanaConsegna}
+                          onChange={(e) => setSettimanaConsegna(e.target.value)}
+                        />
+                        {settimanaConsegna && Number(settimanaConsegna) >= 1 && Number(settimanaConsegna) <= 53 && (
+                          <p className="text-xs text-muted-foreground">
+                            {(() => {
+                              const year = getYear(new Date());
+                              const weekStart = startOfWeek(addWeeks(new Date(year, 0, 4), Number(settimanaConsegna) - 1), { weekStartsOn: 1 });
+                              const weekEnd = endOfWeek(weekStart, { weekStartsOn: 1 });
+                              return `${format(weekStart, "dd MMM", { locale: it })} - ${format(weekEnd, "dd MMM yyyy", { locale: it })}`;
+                            })()}
+                          </p>
+                        )}
+                      </div>
+                    ) : (
+                      <p className="font-medium text-foreground">
+                        {settimanaConsegna ? `Settimana ${settimanaConsegna}` : "Da definire"}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Data Consegna Prevista */}
+                  <div className="space-y-1.5">
+                    <Label className="text-muted-foreground text-xs">Data Consegna Prevista</Label>
+                    {isSuperAdmin ? (
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "w-full justify-start text-left font-normal",
+                              !dataConsegnaPrevista && "text-muted-foreground"
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {dataConsegnaPrevista ? format(dataConsegnaPrevista, "dd/MM/yyyy") : "Seleziona data"}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={dataConsegnaPrevista}
+                            onSelect={setDataConsegnaPrevista}
+                            initialFocus
+                            className={cn("p-3 pointer-events-auto")}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    ) : (
+                      <p className="font-medium text-foreground">
+                        {dataConsegnaPrevista ? format(dataConsegnaPrevista, "dd/MM/yyyy") : "Da definire"}
+                      </p>
+                    )}
+                  </div>
+
+                  {isSuperAdmin && (
+                    <Button
+                      size="sm"
+                      className="w-full"
+                      onClick={() => {
+                        if (!id) return;
+                        updateDatesMutation.mutate({
+                          orderId: id,
+                          dataFineProduzione: dataFineProduzione ? format(dataFineProduzione, "yyyy-MM-dd") : null,
+                          settimanaConsegna: settimanaConsegna ? Number(settimanaConsegna) : null,
+                          dataConsegnaPrevista: dataConsegnaPrevista ? format(dataConsegnaPrevista, "yyyy-MM-dd") : null,
+                        });
+                      }}
+                      disabled={updateDatesMutation.isPending}
+                    >
+                      {updateDatesMutation.isPending ? (
+                        <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Salvataggio...</>
+                      ) : "Salva Date"}
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -582,7 +743,6 @@ export default function OrderDetail() {
         </>
       )}
 
-      {/* Dialog conferma conversione */}
       <AlertDialog open={showConvertDialog} onOpenChange={setShowConvertDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>

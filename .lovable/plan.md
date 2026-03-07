@@ -1,45 +1,39 @@
 
 
-# Miglioramento UX Dettaglio Ordine
+# Verifica Allegati Preventivo — Problemi Trovati
 
-## Cosa cambia
+## Stato Attuale
 
-### 1. Nuove colonne DB
-Aggiungere due campi alla tabella `orders`:
-- `data_fine_produzione` (date, nullable) — data di fine produzione
-- `settimana_consegna` (integer, nullable) — settimana dell'anno per la consegna (1-53)
+L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
 
-### 2. Righe ordine editabili (semplificate)
-Attualmente le righe ordine nel dettaglio sono read-only (tranne per stato `da_confermare`). Cambiamenti:
-- Rendere le righe **sempre editabili** per super_admin, indipendentemente dallo stato
-- Semplificare la vista: mostrare solo **Descrizione** e **Prezzo** (usare `simplified` mode come nei preventivi)
-- Aggiungere il pulsante "Salva Prodotti" sotto l'editor (come già fatto per i preventivi)
+---
 
-### 3. Nuovi campi date nella sidebar
-Nella card "Informazioni Ordine" aggiungere:
-- **Data Fine Produzione**: input date editabile da super_admin
-- **Settimana Consegna**: input numerico (1-53) con label che mostra il range di date corrispondente
-- Entrambi salvabili con un'unica mutation `useUpdateOrderDates`
+## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
 
-### 4. Layout ordine migliorato
-Riorganizzare il layout ordine per allinearlo a quello dei preventivi:
-- Note Rivenditore e Note Interne spostate in Tabs nella colonna principale (come i preventivi)
-- Sidebar più pulita: Riepilogo Economico + Informazioni Ordine + Date Produzione/Consegna
+**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
 
-## File da modificare
+Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
 
-### Migrazione DB
-- Aggiungere `data_fine_produzione date` e `settimana_consegna integer` alla tabella `orders`
+**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
 
-### `src/hooks/useOrders.ts`
-- Aggiungere `useUpdateOrderDates` mutation per salvare `data_fine_produzione`, `settimana_consegna`, `data_consegna_prevista`
+Interventi:
+- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
+- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
+- Entrambi i file usano lo stesso pattern, la fix e' identica
 
-### `src/pages/OrderDetail.tsx`
-- Righe ordine: passare `simplified`, aggiungere `onLinesChange` con stato e pulsante salva
-- Sidebar: aggiungere input per data fine produzione e settimana consegna
-- Note: unificare in Tabs come i preventivi
-- Rendere `data_consegna_prevista` editabile inline
+## Bug 2: `useCreatePreventivo` contiene codice morto
 
-### `src/components/orders/OrderLinesEditor.tsx`
-- Rimuovere restrizione su `canEdit` per super_admin (permettere editing in tutti gli stati)
+**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
+
+- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
+- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
+
+**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
+
+## Riepilogo
+
+| # | Tipo | File | Problema |
+|---|------|------|----------|
+| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
+| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
 

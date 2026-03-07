@@ -69,7 +69,7 @@ export function OrderLinesEditor({ lines, onLinesChange, orderStatus, readOnly =
     setEditingLines(lines.map(normalizeLine));
   }, [lines]);
 
-  const canEdit = !readOnly && (orderStatus === "da_confermare" || orderStatus === "preventivo" || !orderStatus);
+  const canEdit = !readOnly;
 
   const calculateLineTotal = (line: OrderLine) => {
     const subtotal = line.quantita * line.prezzoUnitario;
