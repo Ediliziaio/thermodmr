@@ -301,7 +301,7 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
                     <TableHead>Metodo</TableHead>
                     <TableHead className="text-right">Importo</TableHead>
                     <TableHead>Riferimento</TableHead>
-                    {userRole === 'super_admin' && <TableHead className="w-12"></TableHead>}
+                    {userRole === 'super_admin' && !isDealerArea && <TableHead className="w-12"></TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
