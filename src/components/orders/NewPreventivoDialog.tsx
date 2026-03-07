@@ -55,6 +55,7 @@ const preventivoFormSchema = z.object({
   cliente_telefono: z.string().optional(),
   cliente_indirizzo: z.string().optional(),
   data_scadenza_preventivo: z.string().min(1, "Data scadenza richiesta"),
+  modalita_pagamento: z.string().optional(),
   note_rivenditore: z.string().optional(),
   note_interna: z.string().optional(),
   order_lines: z.array(orderLineSchema).min(1, "Aggiungi almeno una riga"),
