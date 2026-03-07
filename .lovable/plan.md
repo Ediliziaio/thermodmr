@@ -1,39 +1,34 @@
 
 
-# Verifica Allegati Preventivo — Problemi Trovati
+# Miglioramento Filtri Dashboard
 
-## Stato Attuale
+## Problema
+I filtri periodo sono ingombranti, duplicati (nel header e dentro il popover calendario), e la vista di default è "tutto" invece di mostrare l'anno corrente. L'esperienza è poco fluida.
 
-L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
+## Soluzione
 
----
+### 1. Default su Anno Corrente
+- Inizializzare `dateRange` e `activeFilter` con il filtro "year" (anno corrente) invece di `undefined`/`null`
+- La dashboard si apre già filtrata sull'anno in corso
 
-## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
+### 2. Semplificare i filtri
+- Rimuovere i filtri rapidi duplicati dentro il popover calendario
+- Rendere i bottoni filtro più compatti e puliti con stile pill/segmented control
+- Mantenere solo: **3M**, **6M**, **Anno**, **Anno Scorso** (rimuovere "Mese Scorso" che è poco utile)
+- Il pulsante calendario rimane per selezione personalizzata
+- Aggiungere un bottone "Tutto" per rimuovere i filtri e vedere tutti i dati
 
-**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
+### 3. Layout header più pulito
+- Filtri allineati a destra in una riga compatta senza wrapping caotico
+- Rimuovere il badge data range dal sottotitolo (ridondante con i bottoni)
+- Indicatore Real-time più discreto
 
-Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
+### Modifiche file
 
-**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
-
-Interventi:
-- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
-- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
-- Entrambi i file usano lo stesso pattern, la fix e' identica
-
-## Bug 2: `useCreatePreventivo` contiene codice morto
-
-**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
-
-- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
-- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
-
-**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
-
-## Riepilogo
-
-| # | Tipo | File | Problema |
-|---|------|------|----------|
-| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
-| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
+**`src/pages/Dashboard.tsx`**:
+- Stato iniziale: `activeFilter = "year"`, `dateRange` calcolato per anno corrente
+- Riorganizzare header con filtri compatti
+- Aggiungere opzione "Tutto" per reset
+- Rimuovere duplicati dal popover calendario
+- Pulire layout generale filtri
 
