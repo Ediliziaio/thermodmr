@@ -21,7 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus } from "lucide-react";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatCurrency, formatDate, formatPercentage } from "@/lib/utils";
 
 import type { Tables } from "@/integrations/supabase/types";
 
