@@ -529,6 +529,55 @@ export const useUpdateOrderLines = () => {
   });
 };
 
+export const useUpdateOrderDates = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      orderId,
+      dataFineProduzione,
+      settimanaConsegna,
+      dataConsegnaPrevista,
+    }: {
+      orderId: string;
+      dataFineProduzione?: string | null;
+      settimanaConsegna?: number | null;
+      dataConsegnaPrevista?: string | null;
+    }) => {
+      const updateData: Record<string, any> = {};
+      if (dataFineProduzione !== undefined) updateData.data_fine_produzione = dataFineProduzione;
+      if (settimanaConsegna !== undefined) updateData.settimana_consegna = settimanaConsegna;
+      if (dataConsegnaPrevista !== undefined) updateData.data_consegna_prevista = dataConsegnaPrevista;
+
+      const { data, error } = await supabase
+        .from("orders")
+        .update(updateData)
+        .eq("id", orderId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["order", variables.orderId] });
+      queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
+      toast({
+        title: "Date aggiornate",
+        description: "Le date dell'ordine sono state aggiornate con successo.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Errore",
+        description: "Impossibile aggiornare le date dell'ordine.",
+        variant: "destructive",
+      });
+      console.error("Error updating order dates:", error);
+    },
+  });
+};
+
 export const useCreatePreventivo = () => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
