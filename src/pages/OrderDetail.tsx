@@ -561,8 +561,40 @@ export default function OrderDetail() {
                   </SelectContent>
                 </Select>
               </div>
+
+              {/* Modalità Pagamento */}
+              <div className="space-y-2">
+                <Label className="text-muted-foreground">Modalità di Pagamento</Label>
+                {isSuperAdmin ? (
+                  <Select
+                    value={modalitaPagamento || ""}
+                    onValueChange={(v) => setModalitaPagamento(v)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Seleziona modalità" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {MODALITA_PAGAMENTO_OPTIONS.map((opt) => (
+                        <SelectItem key={opt.value} value={opt.value}>
+                          {opt.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <p className="font-medium text-foreground">
+                    {getModalitaPagamentoLabel(modalitaPagamento) || "Non specificata"}
+                  </p>
+                )}
+              </div>
             </CardContent>
           </Card>
+
+          <PaymentsSection 
+            orderId={order.id} 
+            payments={orderPayments as any}
+            totalAmount={Number(order.importo_totale)}
+          />
 
           {orderPayments && orderPayments.length > 0 && (
             <PaymentTimelineChart
@@ -584,11 +616,6 @@ export default function OrderDetail() {
                 title="Righe Ordine"
               />
 
-              <PaymentsSection 
-                orderId={order.id} 
-                payments={orderPayments as any}
-                totalAmount={Number(order.importo_totale)}
-              />
 
               {/* Note in Tabs */}
               <Card>
@@ -653,32 +680,6 @@ export default function OrderDetail() {
                     <span className="text-lg font-bold text-foreground">
                       {formatCurrency(saldo)}
                     </span>
-                  </div>
-                  <div className="h-px bg-border" />
-                  {/* Modalità Pagamento */}
-                  <div className="space-y-1.5">
-                    <Label className="text-muted-foreground text-xs">Modalità di Pagamento</Label>
-                    {isSuperAdmin ? (
-                      <Select
-                        value={modalitaPagamento || ""}
-                        onValueChange={(v) => setModalitaPagamento(v)}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Seleziona modalità" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {MODALITA_PAGAMENTO_OPTIONS.map((opt) => (
-                            <SelectItem key={opt.value} value={opt.value}>
-                              {opt.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    ) : (
-                      <p className="font-medium text-foreground">
-                        {getModalitaPagamentoLabel(modalitaPagamento) || "Non specificata"}
-                      </p>
-                    )}
                   </div>
                 </CardContent>
               </Card>
