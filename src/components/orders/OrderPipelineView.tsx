@@ -1,0 +1,95 @@
+import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { OrderPipelineCard } from "./OrderPipelineCard";
+import { formatCurrency, getStatusLabel } from "@/lib/utils";
+import type { OrderWithPaymentStats } from "@/types/orders";
+
+const PIPELINE_STATUSES = [
+  { key: "da_confermare", color: "bg-amber-500" },
+  { key: "da_pagare_acconto", color: "bg-orange-500" },
+  { key: "in_lavorazione", color: "bg-blue-500" },
+  { key: "da_saldare", color: "bg-red-500" },
+  { key: "da_consegnare", color: "bg-purple-500" },
+  { key: "consegnato", color: "bg-green-500" },
+] as const;
+
+interface OrderPipelineViewProps {
+  orders: OrderWithPaymentStats[];
+  isDealerArea?: boolean;
+}
+
+export function OrderPipelineView({ orders, isDealerArea }: OrderPipelineViewProps) {
+  const navigate = useNavigate();
+
+  const grouped = useMemo(() => {
+    const map: Record<string, OrderWithPaymentStats[]> = {};
+    for (const s of PIPELINE_STATUSES) {
+      map[s.key] = [];
+    }
+    for (const order of orders) {
+      if (map[order.stato]) {
+        map[order.stato].push(order);
+      }
+    }
+    return map;
+  }, [orders]);
+
+  return (
+    <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: 400 }}>
+      {PIPELINE_STATUSES.map((status) => {
+        const columnOrders = grouped[status.key] || [];
+        const totalValue = columnOrders.reduce(
+          (s, o) => s + o.importo_totale,
+          0
+        );
+
+        return (
+          <div
+            key={status.key}
+            className="flex-shrink-0 w-[260px] flex flex-col rounded-lg border bg-muted/30"
+          >
+            {/* Column Header */}
+            <div className="p-3 border-b space-y-1">
+              <div className="flex items-center gap-2">
+                <div className={`w-2.5 h-2.5 rounded-full ${status.color}`} />
+                <span className="font-semibold text-sm">
+                  {getStatusLabel(status.key)}
+                </span>
+                <Badge variant="secondary" className="ml-auto text-xs">
+                  {columnOrders.length}
+                </Badge>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {formatCurrency(totalValue)}
+              </p>
+            </div>
+
+            {/* Cards */}
+            <ScrollArea className="flex-1 p-2">
+              <div className="space-y-2">
+                {columnOrders.map((order) => (
+                  <OrderPipelineCard
+                    key={order.id}
+                    order={order}
+                    onClick={() =>
+                      isDealerArea
+                        ? navigate(`../ordini/${order.id}`, { relative: "path" })
+                        : navigate(`/ordini/${order.id}`)
+                    }
+                  />
+                ))}
+                {columnOrders.length === 0 && (
+                  <p className="text-xs text-muted-foreground text-center py-6">
+                    Nessun ordine
+                  </p>
+                )}
+              </div>
+            </ScrollArea>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
