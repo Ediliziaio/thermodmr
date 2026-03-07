@@ -210,6 +210,7 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
       cliente_telefono: values.cliente_telefono,
       cliente_indirizzo: values.cliente_indirizzo,
       data_scadenza_preventivo: values.data_scadenza_preventivo,
+      modalita_pagamento: values.modalita_pagamento,
       note_rivenditore: values.note_rivenditore,
       note_interna: values.note_interna,
       order_lines: values.order_lines,
