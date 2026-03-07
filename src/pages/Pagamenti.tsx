@@ -306,7 +306,7 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
                 </TableHeader>
                 <TableBody>
                   {payments.length === 0 ? (
-                    <TableRow><TableCell colSpan={userRole === 'super_admin' ? 9 : 8} className="text-center py-8 text-muted-foreground">Nessun pagamento trovato</TableCell></TableRow>
+                    <TableRow><TableCell colSpan={isDealerArea ? 7 : (userRole === 'super_admin' ? 9 : 8)} className="text-center py-8 text-muted-foreground">Nessun pagamento trovato</TableCell></TableRow>
                   ) : (
                     payments.map((payment) => (
                       <TableRow key={payment.id} className={selectedPaymentIds.has(payment.id) ? 'bg-muted/50' : ''}>
