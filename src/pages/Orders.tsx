@@ -501,13 +501,15 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                                 isSelected && "bg-muted/50"
                               )}
                             >
-                              <td className="py-4 pr-4">
-                                <Checkbox
-                                  checked={isSelected}
-                                  onCheckedChange={() => toggleOrderSelection(order.id!)}
-                                  aria-label={`Seleziona ordine ${order.id}`}
-                                />
-                              </td>
+                              {!isDealerArea && (
+                                <td className="py-4 pr-4">
+                                  <Checkbox
+                                    checked={isSelected}
+                                    onCheckedChange={() => toggleOrderSelection(order.id!)}
+                                    aria-label={`Seleziona ordine ${order.id}`}
+                                  />
+                                </td>
+                              )}
                               <td className="py-4 pr-4">
                                 <p className="font-medium">{order.id}</p>
                               </td>
