@@ -12,7 +12,7 @@ import { Loader2 } from "lucide-react";
 const Orders = lazy(() => import("./Orders"));
 const OrderDetail = lazy(() => import("./OrderDetail"));
 const Pagamenti = lazy(() => import("./Pagamenti"));
-// DealerPreventivi removed - dealer area is read-only
+const DealerPreventivi = lazy(() => import("./DealerPreventivi"));
 const DealerAssistenza = lazy(() => import("./DealerAssistenza"));
 
 const PageLoader = () => (
