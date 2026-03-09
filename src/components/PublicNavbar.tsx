@@ -268,6 +268,18 @@ const PublicNavbar = () => {
                     </div>
                   );
                 })}
+
+                {/* Mobile CTA */}
+                <div className="pt-3 mt-2 border-t border-[hsl(0,0%,92%)]">
+                  <a href="/#contatti" onClick={() => setMobileOpen(false)}>
+                    <Button
+                      className="w-full bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full min-h-[48px] shadow-[0_4px_20px_hsl(195,85%,45%,0.3)]"
+                    >
+                      Richiedi Preventivo
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </a>
+                </div>
               </div>
             </motion.div>
           </>
