@@ -349,10 +349,10 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {payments.length === 0 ? (
+                  {sortedPayments.length === 0 ? (
                     <TableRow><TableCell colSpan={isDealerArea ? 7 : (userRole === 'super_admin' ? 9 : 8)} className="text-center py-8 text-muted-foreground">Nessun pagamento trovato</TableCell></TableRow>
                   ) : (
-                    payments.map((payment) => (
+                    sortedPayments.map((payment) => (
                       <TableRow key={payment.id} className={selectedPaymentIds.has(payment.id) ? 'bg-muted/50' : ''}>
                         {!isDealerArea && <TableCell><Checkbox checked={selectedPaymentIds.has(payment.id)} onCheckedChange={() => togglePaymentSelection(payment.id)} /></TableCell>}
                         <TableCell>{formatDate(payment.data_pagamento)}</TableCell>
