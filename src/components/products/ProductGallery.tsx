@@ -36,10 +36,10 @@ const ProductGallery = ({ images }: ProductGalleryProps) => {
   }, [api]);
 
   return (
-    <section ref={ref} className="py-24 bg-[hsl(0,0%,97%)]">
-      <div className="max-w-5xl mx-auto px-6">
+    <section ref={ref} className="py-16 sm:py-24 bg-[hsl(0,0%,97%)]">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <motion.div initial="hidden" animate={inView ? "visible" : "hidden"} variants={stagger}>
-          <motion.h2 variants={fadeUp} className="text-3xl font-bold text-[hsl(0,0%,10%)] mb-12 text-center">
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-8 sm:mb-12 text-center">
             Galleria
           </motion.h2>
           <motion.div variants={fadeUp}>
