@@ -48,17 +48,17 @@ const VantaggiPage = () => {
       <PublicNavbar />
 
       {/* Hero */}
-      <section className="pt-32 pb-20 bg-[hsl(0,0%,97%)]">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="pt-24 sm:pt-32 pb-14 sm:pb-20 bg-[hsl(0,0%,97%)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div initial="hidden" animate="visible" variants={stagger} className="max-w-3xl">
-            <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
+            <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-3 sm:mb-4">
               I Tuoi Vantaggi Competitivi
             </motion.p>
-            <motion.h1 variants={fadeUp} className="text-4xl sm:text-5xl font-extrabold text-[hsl(0,0%,10%)] leading-tight mb-6">
+            <motion.h1 variants={fadeUp} className="text-2xl sm:text-5xl font-extrabold text-[hsl(0,0%,10%)] leading-tight mb-4 sm:mb-6">
               Perché Scegliere{" "}
               <span className="text-[hsl(195,85%,45%)]">ThermoDMR</span>
             </motion.h1>
-            <motion.p variants={fadeUp} className="text-lg text-[hsl(0,0%,40%)] leading-relaxed">
+            <motion.p variants={fadeUp} className="text-base sm:text-lg text-[hsl(0,0%,40%)] leading-relaxed">
               Stanco di fornitori che non rispettano i tempi, con prezzi sempre più alti e zero supporto?
               Con ThermoDMR hai un partner che lavora per farti guadagnare.
             </motion.p>
@@ -67,8 +67,8 @@ const VantaggiPage = () => {
       </section>
 
       {/* Main advantages */}
-      <section ref={ref1} className="py-24 bg-[hsl(0,0%,8%)]">
-        <div className="max-w-7xl mx-auto px-6">
+      <section ref={ref1} className="py-16 sm:py-24 bg-[hsl(0,0%,8%)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div initial="hidden" animate={inView1 ? "visible" : "hidden"} variants={stagger} className="grid sm:grid-cols-2 gap-6">
             {mainAdvantages.map((a) => (
               <motion.div
@@ -98,13 +98,13 @@ const VantaggiPage = () => {
       </section>
 
       {/* Extra advantages */}
-      <section ref={ref2} className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
+      <section ref={ref2} className="py-16 sm:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div initial="hidden" animate={inView2 ? "visible" : "hidden"} variants={stagger}>
             <motion.div variants={fadeUp} className="text-center mb-16">
               <h2 className="text-3xl font-bold text-[hsl(0,0%,10%)]">E Non È Tutto...</h2>
             </motion.div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
               {extraAdvantages.map((a) => (
                 <motion.div key={a.title} variants={fadeUp} className="p-6 rounded-2xl bg-[hsl(0,0%,97%)] border border-[hsl(0,0%,90%)] text-center hover:shadow-md transition-shadow">
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[hsl(195,85%,45%)] text-white mb-4">
@@ -120,14 +120,14 @@ const VantaggiPage = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gradient-to-br from-[hsl(195,85%,40%)] to-[hsl(210,80%,40%)]">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-6">Inizia a Guadagnare di Più Oggi!</h2>
-          <p className="text-white/80 text-lg mb-8">
+      <section className="py-16 sm:py-20 bg-gradient-to-br from-[hsl(195,85%,40%)] to-[hsl(210,80%,40%)]">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+          <h2 className="text-2xl sm:text-4xl font-extrabold text-white mb-4 sm:mb-6">Inizia a Guadagnare di Più Oggi!</h2>
+          <p className="text-white/80 text-base sm:text-lg mb-6 sm:mb-8">
             Entra nella rete ThermoDMR e scopri cosa significa avere un partner produttore serio.
           </p>
-          <Link to="/contatti">
-            <Button size="lg" className="bg-white text-[hsl(195,85%,40%)] hover:bg-white/90 font-bold rounded-full px-12 text-base shadow-xl">
+          <Link to="/contatti" className="w-full sm:w-auto inline-block">
+            <Button size="lg" className="w-full sm:w-auto bg-white text-[hsl(195,85%,40%)] hover:bg-white/90 font-bold rounded-full px-12 text-base shadow-xl min-h-[48px]">
               Diventa Rivenditore <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>

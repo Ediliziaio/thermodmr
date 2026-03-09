@@ -63,16 +63,16 @@ const GaranziePage = () => {
       <PublicNavbar />
 
       {/* Hero */}
-      <section className="pt-32 pb-20 bg-[hsl(0,0%,97%)]">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="pt-24 sm:pt-32 pb-14 sm:pb-20 bg-[hsl(0,0%,97%)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div initial="hidden" animate="visible" variants={stagger} className="max-w-3xl">
-            <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
+            <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-3 sm:mb-4">
               Le Nostre Garanzie
             </motion.p>
-            <motion.h1 variants={fadeUp} className="text-4xl sm:text-5xl font-extrabold text-[hsl(0,0%,10%)] leading-tight mb-6">
+            <motion.h1 variants={fadeUp} className="text-2xl sm:text-5xl font-extrabold text-[hsl(0,0%,10%)] leading-tight mb-4 sm:mb-6">
               Garanzie <span className="text-[hsl(195,85%,45%)]">Contrattuali</span> per la Tua Tranquillità
             </motion.h1>
-            <motion.p variants={fadeUp} className="text-lg text-[hsl(0,0%,40%)] leading-relaxed">
+            <motion.p variants={fadeUp} className="text-base sm:text-lg text-[hsl(0,0%,40%)] leading-relaxed">
               Non promettiamo, garantiamo. Ogni impegno è scritto nero su bianco nel contratto di partnership.
             </motion.p>
           </motion.div>
@@ -80,15 +80,15 @@ const GaranziePage = () => {
       </section>
 
       {/* Guarantees */}
-      <section ref={ref} className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6 space-y-12">
+      <section ref={ref} className="py-16 sm:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 space-y-8 sm:space-y-12">
           {guarantees.map((g, i) => (
             <motion.div
               key={g.title}
               initial="hidden"
               animate={inView ? "visible" : "hidden"}
               variants={fadeUp}
-              className="grid lg:grid-cols-2 gap-12 items-start p-8 rounded-2xl bg-[hsl(0,0%,97%)] border-l-4 border-[hsl(195,85%,45%)]"
+              className="grid lg:grid-cols-2 gap-6 sm:gap-12 items-start p-5 sm:p-8 rounded-2xl bg-[hsl(0,0%,97%)] border-l-4 border-[hsl(195,85%,45%)]"
             >
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
@@ -118,14 +118,14 @@ const GaranziePage = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gradient-to-br from-[hsl(195,85%,40%)] to-[hsl(210,80%,40%)]">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-6">Vuoi Leggere il Contratto Completo?</h2>
-          <p className="text-white/80 text-lg mb-8">
+      <section className="py-16 sm:py-20 bg-gradient-to-br from-[hsl(195,85%,40%)] to-[hsl(210,80%,40%)]">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+          <h2 className="text-2xl sm:text-4xl font-extrabold text-white mb-4 sm:mb-6">Vuoi Leggere il Contratto Completo?</h2>
+          <p className="text-white/80 text-base sm:text-lg mb-6 sm:mb-8">
             Contattaci e ti invieremo il contratto di partnership senza impegno.
           </p>
-          <Link to="/contatti">
-            <Button size="lg" className="bg-white text-[hsl(195,85%,40%)] hover:bg-white/90 font-bold rounded-full px-12 text-base shadow-xl">
+          <Link to="/contatti" className="w-full sm:w-auto inline-block">
+            <Button size="lg" className="w-full sm:w-auto bg-white text-[hsl(195,85%,40%)] hover:bg-white/90 font-bold rounded-full px-12 text-base shadow-xl min-h-[48px]">
               Richiedi il Contratto <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>

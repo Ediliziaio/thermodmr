@@ -92,7 +92,7 @@ const DiventaRivenditore = () => {
       <PublicNavbar />
 
       {/* Hero */}
-      <section ref={heroRef} className="relative pt-20 min-h-[480px] sm:min-h-[540px] flex items-center overflow-hidden">
+      <section ref={heroRef} className="relative pt-20 min-h-[400px] sm:min-h-[540px] flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <img
             src="/images/cta-bg.jpg"
@@ -107,13 +107,13 @@ const DiventaRivenditore = () => {
             <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,65%)] uppercase mb-4">
               Partnership
             </motion.p>
-            <motion.h1 variants={fadeUp} className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
+            <motion.h1 variants={fadeUp} className="text-2xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-4 sm:mb-6">
               Diventa Rivenditore{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[hsl(195,85%,50%)] to-[hsl(210,80%,55%)]">
                 ThermoDMR
               </span>
             </motion.h1>
-            <motion.p variants={fadeUp} className="text-lg text-white/75 leading-relaxed max-w-2xl mb-8">
+            <motion.p variants={fadeUp} className="text-base sm:text-lg text-white/75 leading-relaxed max-w-2xl mb-6 sm:mb-8">
               Entra nella nostra rete di rivenditori e offri ai tuoi clienti serramenti di qualità superiore
               con profilo tedesco, margini competitivi e supporto dedicato.
             </motion.p>
@@ -142,9 +142,9 @@ const DiventaRivenditore = () => {
       </section>
 
       {/* Vantaggi */}
-      <section ref={vantaggiRef} id="vantaggi-rivenditore" className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div initial="hidden" animate={vantaggiInView ? "visible" : "hidden"} variants={stagger} className="text-center mb-16">
+      <section ref={vantaggiRef} id="vantaggi-rivenditore" className="py-16 sm:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <motion.div initial="hidden" animate={vantaggiInView ? "visible" : "hidden"} variants={stagger} className="text-center mb-10 sm:mb-16">
             <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
               I Vantaggi della Partnership
             </motion.p>
@@ -175,9 +175,9 @@ const DiventaRivenditore = () => {
       </section>
 
       {/* Come Funziona */}
-      <section ref={stepsRef} className="py-24 bg-[hsl(0,0%,97%)]">
-        <div className="max-w-5xl mx-auto px-6">
-          <motion.div initial="hidden" animate={stepsInView ? "visible" : "hidden"} variants={stagger} className="text-center mb-16">
+      <section ref={stepsRef} className="py-16 sm:py-24 bg-[hsl(0,0%,97%)]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <motion.div initial="hidden" animate={stepsInView ? "visible" : "hidden"} variants={stagger} className="text-center mb-10 sm:mb-16">
             <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
               Il Percorso
             </motion.p>
@@ -207,21 +207,21 @@ const DiventaRivenditore = () => {
       </section>
 
       {/* CTA Finale */}
-      <section ref={ctaRef} className="relative py-28 overflow-hidden">
+      <section ref={ctaRef} className="relative py-20 sm:py-28 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[hsl(195,85%,35%)] to-[hsl(195,85%,25%)]" />
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")" }} />
         </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <motion.div initial="hidden" animate={ctaInView ? "visible" : "hidden"} variants={stagger}>
             <motion.div variants={fadeUp} className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/15 mb-6">
               <Award className="h-8 w-8 text-white" />
             </motion.div>
-            <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
+            <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-extrabold text-white mb-4">
               Pronto a Crescere con Noi?
             </motion.h2>
-            <motion.p variants={fadeUp} className="text-lg text-white/80 mb-6 max-w-2xl mx-auto leading-relaxed">
+            <motion.p variants={fadeUp} className="text-base sm:text-lg text-white/80 mb-6 max-w-2xl mx-auto leading-relaxed">
               Compila il modulo di contatto e il nostro team commerciale ti ricontatterà entro 24 ore per discutere della tua candidatura.
             </motion.p>
 
