@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo_Thermodmr.png";
