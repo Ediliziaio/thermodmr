@@ -111,10 +111,10 @@ const Portoncini = () => {
         </div>
       </section>
 
-      <section ref={benefitsRef} className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
+      <section ref={benefitsRef} className="py-16 sm:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div initial="hidden" animate={benefitsInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.h2 variants={fadeUp} className="text-3xl font-bold text-[hsl(0,0%,10%)] mb-12 text-center">Vantaggi Chiave</motion.h2>
+            <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-8 sm:mb-12 text-center">Vantaggi Chiave</motion.h2>
             <div className="grid md:grid-cols-3 gap-8">
               {benefits.map((b) => (
                 <motion.div key={b.title} variants={fadeUp} className="text-center space-y-4">
