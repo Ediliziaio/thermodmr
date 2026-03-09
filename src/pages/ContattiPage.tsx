@@ -78,7 +78,7 @@ const ContattiPage = () => {
           <div className="grid lg:grid-cols-5 gap-10 sm:gap-16">
             {/* Form */}
             <div className="lg:col-span-3">
-              <form onSubmit={handleSubmit} className="bg-[hsl(0,0%,97%)] rounded-2xl border border-[hsl(0,0%,90%)] p-8 space-y-5">
+              <form onSubmit={handleSubmit} className="bg-[hsl(0,0%,97%)] rounded-2xl border border-[hsl(0,0%,90%)] p-4 sm:p-8 space-y-5">
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-[hsl(0,0%,20%)]">Nome *</label>

@@ -126,8 +126,8 @@ const VantaggiPage = () => {
           <p className="text-white/80 text-base sm:text-lg mb-6 sm:mb-8">
             Entra nella rete ThermoDMR e scopri cosa significa avere un partner produttore serio.
           </p>
-          <Link to="/contatti">
-            <Button size="lg" className="bg-white text-[hsl(195,85%,40%)] hover:bg-white/90 font-bold rounded-full px-12 text-base shadow-xl">
+          <Link to="/contatti" className="w-full sm:w-auto inline-block">
+            <Button size="lg" className="w-full sm:w-auto bg-white text-[hsl(195,85%,40%)] hover:bg-white/90 font-bold rounded-full px-12 text-base shadow-xl min-h-[48px]">
               Diventa Rivenditore <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>

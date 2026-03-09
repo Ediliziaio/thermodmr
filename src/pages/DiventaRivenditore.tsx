@@ -218,10 +218,10 @@ const DiventaRivenditore = () => {
             <motion.div variants={fadeUp} className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/15 mb-6">
               <Award className="h-8 w-8 text-white" />
             </motion.div>
-            <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
+            <motion.h2 variants={fadeUp} className="text-2xl sm:text-4xl font-extrabold text-white mb-4">
               Pronto a Crescere con Noi?
             </motion.h2>
-            <motion.p variants={fadeUp} className="text-lg text-white/80 mb-6 max-w-2xl mx-auto leading-relaxed">
+            <motion.p variants={fadeUp} className="text-base sm:text-lg text-white/80 mb-6 max-w-2xl mx-auto leading-relaxed">
               Compila il modulo di contatto e il nostro team commerciale ti ricontatterà entro 24 ore per discutere della tua candidatura.
             </motion.p>
 
