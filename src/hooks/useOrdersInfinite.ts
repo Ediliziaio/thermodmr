@@ -94,12 +94,33 @@ export const useOrdersInfinite = ({
         query = query.neq("stato", "consegnato");
       }
 
-      // Ricerca solo su campi della tabella orders (evita errori con join)
+      // Ricerca su campi ordine + dealer/cliente tramite pre-query
       if (searchQuery && searchQuery.trim()) {
         const search = searchQuery.trim().toLowerCase();
-        query = query.or(
-          `id.ilike.%${search}%,note_interna.ilike.%${search}%,note_rivenditore.ilike.%${search}%`
-        );
+        
+        // Pre-query: trova dealer e clienti che matchano la ricerca
+        const [dealerRes, clientRes] = await Promise.all([
+          supabase.from("dealers").select("id").ilike("ragione_sociale", `%${search}%`),
+          supabase.from("clients").select("id").or(`nome.ilike.%${search}%,cognome.ilike.%${search}%`),
+        ]);
+        
+        const dealerIds = (dealerRes.data || []).map(d => d.id);
+        const clientIds = (clientRes.data || []).map(c => c.id);
+        
+        // Build OR filter combining order fields + matched dealer/client IDs
+        const orParts = [
+          `id.ilike.%${search}%`,
+          `note_interna.ilike.%${search}%`,
+          `note_rivenditore.ilike.%${search}%`,
+        ];
+        if (dealerIds.length > 0) {
+          orParts.push(`dealer_id.in.(${dealerIds.join(",")})`);
+        }
+        if (clientIds.length > 0) {
+          orParts.push(`cliente_finale_id.in.(${clientIds.join(",")})`);
+        }
+        
+        query = query.or(orParts.join(","));
       }
 
       query = query.range(from, to);
