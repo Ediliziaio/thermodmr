@@ -258,12 +258,12 @@ const DmrDomus = () => {
 
       <RelatedProducts currentSlug="/prodotti/dmr-domus" />
 
-      <section className="py-20 bg-[hsl(195,85%,45%)]">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">Interessato al DMR DOMUS?</h2>
-          <p className="text-white/80 mb-8">Contattaci per un preventivo personalizzato e scopri le condizioni riservate ai rivenditori.</p>
+      <section className="py-16 sm:py-20 bg-[hsl(195,85%,45%)]">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Interessato al DMR DOMUS?</h2>
+          <p className="text-white/80 mb-6 sm:mb-8 text-sm sm:text-base">Contattaci per un preventivo personalizzato e scopri le condizioni riservate ai rivenditori.</p>
           <Link to="/contatti">
-            <Button className="bg-white text-[hsl(195,85%,45%)] hover:bg-white/90 font-semibold rounded-full px-10 py-3 text-lg shadow-xl">
+            <Button className="w-full sm:w-auto bg-white text-[hsl(195,85%,45%)] hover:bg-white/90 font-semibold rounded-full px-10 py-3 text-base sm:text-lg shadow-xl min-h-[48px]">
               Richiedi Preventivo <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
