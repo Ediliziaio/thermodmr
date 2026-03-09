@@ -37,7 +37,7 @@ const ProductHero = ({ category, title, titleAccent, description, heroImage, bad
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.05 });
 
   return (
-    <section ref={ref} className="relative pt-20 min-h-[420px] sm:min-h-[480px] flex items-end overflow-hidden">
+    <section ref={ref} className="relative pt-20 min-h-[360px] sm:min-h-[480px] flex items-end overflow-hidden">
       {/* Background image */}
       <div className="absolute inset-0">
         <img src={heroImage} alt={`${title} ${titleAccent}`} className="w-full h-full object-cover" />
@@ -45,7 +45,7 @@ const ProductHero = ({ category, title, titleAccent, description, heroImage, bad
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 pb-14 pt-24 w-full">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pb-10 sm:pb-14 pt-16 sm:pt-24 w-full">
         {/* Breadcrumb */}
         <Breadcrumb className="mb-6">
           <BreadcrumbList>
