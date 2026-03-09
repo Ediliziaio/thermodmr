@@ -66,6 +66,7 @@ type PreventivoFormValues = z.infer<typeof preventivoFormSchema>;
 
 export interface PreventivoDefaultValues {
   dealer_id?: string;
+  riferimento_preventivo?: string;
   cliente_nome?: string;
   cliente_cognome?: string;
   cliente_email?: string;
