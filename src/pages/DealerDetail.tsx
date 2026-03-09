@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, AlertCircle, Building2, MapPin, Phone, Mail, FileText, ShoppingCart, Euro, TrendingUp, Calendar, Eye } from "lucide-react";
+import { ArrowLeft, AlertCircle, Building2, MapPin, Phone, Mail, FileText, ShoppingCart, Euro, TrendingUp, Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatCurrency, formatDate, getStatusColor, getStatusLabel } from "@/lib/utils";
 import { RevenueTimelineChart } from "@/components/analytics/charts/RevenueTimelineChart";
@@ -16,7 +16,6 @@ export default function DealerDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  // Direct query for the specific dealer
   const { data: dealer, isLoading: isLoadingDealer, error: dealerError, refetch: refetchDealer } = useQuery({
     queryKey: ["dealer-detail", id],
     queryFn: async () => {
@@ -31,7 +30,6 @@ export default function DealerDetail() {
     enabled: !!id,
   });
 
-  // Direct query for this dealer's orders only
   const { data: dealerOrders = [], isLoading: isLoadingOrders } = useQuery({
     queryKey: ["dealer-orders", id],
     queryFn: async () => {
@@ -47,21 +45,12 @@ export default function DealerDetail() {
     enabled: !!id,
   });
 
-  // KPI from pre-calculated stats + orders
   const totalRevenue = dealer?.total_revenue || 0;
   const totalPaid = dealer?.total_paid || 0;
   const totalToPay = dealer?.total_remaining || 0;
   const ordersCount = dealer?.orders_count || 0;
   const avgTicket = ordersCount > 0 ? totalRevenue / ordersCount : 0;
-
-  const ordersByStatus = {
-    da_confermare: dealerOrders.filter((o) => o.stato === "da_confermare").length,
-    da_pagare_acconto: dealerOrders.filter((o) => o.stato === "da_pagare_acconto").length,
-    in_lavorazione: dealerOrders.filter((o) => o.stato === "in_lavorazione").length,
-    da_saldare: dealerOrders.filter((o) => o.stato === "da_saldare").length,
-    da_consegnare: dealerOrders.filter((o) => o.stato === "da_consegnare").length,
-    consegnato: dealerOrders.filter((o) => o.stato === "consegnato").length,
-  };
+  const hasMoreOrders = ordersCount > 50;
 
   if (isLoadingDealer) {
     return (
@@ -136,7 +125,7 @@ export default function DealerDetail() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{dealer.orders_count || 0}</p>
+            <p className="text-2xl font-bold">{ordersCount}</p>
           </CardContent>
         </Card>
 
@@ -177,13 +166,12 @@ export default function DealerDetail() {
         </Card>
       </div>
 
-      {/* Tabs */}
+      {/* Tabs — merged Analytics+Statistiche into single "Panoramica" */}
       <Tabs defaultValue="info" className="space-y-4">
         <TabsList>
           <TabsTrigger value="info">Informazioni</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="orders">Ordini ({dealer.orders_count || 0})</TabsTrigger>
-          <TabsTrigger value="stats">Statistiche</TabsTrigger>
+          <TabsTrigger value="panoramica">Panoramica</TabsTrigger>
+          <TabsTrigger value="orders">Ordini ({ordersCount})</TabsTrigger>
         </TabsList>
 
         {/* Tab: Informazioni */}
@@ -247,13 +235,12 @@ export default function DealerDetail() {
                   <p className="text-base whitespace-pre-wrap">{dealer.note}</p>
                 </div>
               )}
-
             </CardContent>
           </Card>
         </TabsContent>
 
-        {/* Tab: Analytics */}
-        <TabsContent value="analytics" className="space-y-4">
+        {/* Tab: Panoramica (merged Analytics + Statistiche) */}
+        <TabsContent value="panoramica" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <RevenueTimelineChart
               orders={dealerOrders}
@@ -265,101 +252,8 @@ export default function DealerDetail() {
               title="Distribuzione Ordini per Stato"
             />
           </div>
-        </TabsContent>
 
-        {/* Tab: Ordini */}
-        <TabsContent value="orders" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <ShoppingCart className="h-5 w-5" />
-                Storico Ordini
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {isLoadingOrders ? (
-                <div className="space-y-2">
-                  {[1, 2, 3].map((i) => (
-                    <Skeleton key={i} className="h-16 w-full" />
-                  ))}
-                </div>
-              ) : dealerOrders.length > 0 ? (
-                <div className="rounded-md border">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>ID Ordine</TableHead>
-                        <TableHead>Data</TableHead>
-                        <TableHead>Stato</TableHead>
-                        <TableHead className="text-right">Importo</TableHead>
-                        <TableHead className="text-right">Pagato</TableHead>
-                        <TableHead className="text-right">Da Pagare</TableHead>
-                        <TableHead></TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {dealerOrders.map((order) => (
-                        <TableRow key={order.id}>
-                          <TableCell className="font-medium">{order.id}</TableCell>
-                          <TableCell>{formatDate(order.data_inserimento || "")}</TableCell>
-                          <TableCell>
-                            <Badge className={getStatusColor(order.stato || "")}>
-                              {getStatusLabel(order.stato || "")}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right">{formatCurrency(order.importo_totale || 0)}</TableCell>
-                          <TableCell className="text-right">{formatCurrency(order.importo_pagato || 0)}</TableCell>
-                          <TableCell className="text-right text-amber-600 font-medium">
-                            {formatCurrency(order.importo_da_pagare || 0)}
-                          </TableCell>
-                          <TableCell>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => navigate(`/ordini/${order.id}`)}
-                            >
-                              <Eye className="h-4 w-4 mr-2" />
-                              Dettagli
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground">Nessun ordine trovato</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Tab: Statistiche */}
-        <TabsContent value="stats" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Calendar className="h-5 w-5" />
-                  Ordini per Stato
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {Object.entries(ordersByStatus).map(([status, count]) => (
-                    <div key={status} className="flex items-center justify-between">
-                      <Badge variant="outline" className={getStatusColor(status)}>
-                        {getStatusLabel(status)}
-                      </Badge>
-                      <span className="text-2xl font-bold">{count}</span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -401,6 +295,87 @@ export default function DealerDetail() {
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+
+        {/* Tab: Ordini */}
+        <TabsContent value="orders" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ShoppingCart className="h-5 w-5" />
+                Storico Ordini
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {isLoadingOrders ? (
+                <div className="space-y-2">
+                  {[1, 2, 3].map((i) => (
+                    <Skeleton key={i} className="h-16 w-full" />
+                  ))}
+                </div>
+              ) : dealerOrders.length > 0 ? (
+                <>
+                  <div className="rounded-md border">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>ID Ordine</TableHead>
+                          <TableHead>Data</TableHead>
+                          <TableHead>Stato</TableHead>
+                          <TableHead className="text-right">Importo</TableHead>
+                          <TableHead className="text-right">Pagato</TableHead>
+                          <TableHead className="text-right">Da Pagare</TableHead>
+                          <TableHead></TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {dealerOrders.map((order) => (
+                          <TableRow key={order.id}>
+                            <TableCell className="font-medium">{order.id}</TableCell>
+                            <TableCell>{formatDate(order.data_inserimento || "")}</TableCell>
+                            <TableCell>
+                              <Badge className={getStatusColor(order.stato || "")}>
+                                {getStatusLabel(order.stato || "")}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-right">{formatCurrency(order.importo_totale || 0)}</TableCell>
+                            <TableCell className="text-right">{formatCurrency(order.importo_pagato || 0)}</TableCell>
+                            <TableCell className="text-right text-amber-600 font-medium">
+                              {formatCurrency(order.importo_da_pagare || 0)}
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => navigate(`/ordini/${order.id}`)}
+                              >
+                                <Eye className="h-4 w-4 mr-2" />
+                                Dettagli
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                  {hasMoreOrders && (
+                    <div className="text-center pt-4">
+                      <Button
+                        variant="outline"
+                        onClick={() => navigate(`/ordini?dealer=${id}`)}
+                      >
+                        Vedi tutti gli ordini ({ordersCount})
+                      </Button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">Nessun ordine trovato</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>

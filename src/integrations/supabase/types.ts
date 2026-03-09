@@ -1067,6 +1067,16 @@ export type Database = {
         }
         Returns: Json
       }
+      get_dealer_global_stats: {
+        Args: {
+          p_commerciale_id?: string
+          p_max_revenue?: number
+          p_min_revenue?: number
+          p_provincia?: string
+          p_search?: string
+        }
+        Returns: Json
+      }
       get_order_stats: { Args: { p_order_id: string }; Returns: Json }
       get_payment_stats: {
         Args: {

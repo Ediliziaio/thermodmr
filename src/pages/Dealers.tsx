@@ -10,7 +10,7 @@ import { DealerRowView } from "@/components/dealers/DealerRowView";
 import { MobileDealerCard } from "@/components/dealers/MobileDealerCard";
 import { DealersMiniDashboard } from "@/components/dealers/DealersMiniDashboard";
 import { useInView } from "react-intersection-observer";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -20,6 +20,10 @@ export default function Dealers() {
   const isMobile = useIsMobile();
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useDealersInfinite(filters);
   const { ref, inView } = useInView();
+
+  const handleFiltersChange = useCallback((newFilters: DealerFilters) => {
+    setFilters(newFilters);
+  }, []);
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
@@ -96,7 +100,7 @@ export default function Dealers() {
             </p>
           </div>
           <MobileDealerFilters
-            onFiltersChange={setFilters}
+            onFiltersChange={handleFiltersChange}
             resultsCount={totalCount}
           />
         </div>
@@ -112,7 +116,7 @@ export default function Dealers() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ delay: index * 0.05 }}
+                    transition={{ delay: Math.min(index * 0.05, 0.5) }}
                   >
                     <MobileDealerCard dealer={dealer} />
                   </motion.div>
@@ -130,7 +134,7 @@ export default function Dealers() {
           )}
         </div>
 
-        {/* FAB - Floating Action Button */}
+        {/* FAB */}
         <motion.div
           className="fixed bottom-6 right-6 z-30"
           initial={{ scale: 0 }}
@@ -185,10 +189,10 @@ export default function Dealers() {
         </div>
       </div>
 
-      <DealersMiniDashboard dealers={allDealers} totalCount={totalCount} />
+      <DealersMiniDashboard filters={filters} />
 
       <DealerFiltersComponent
-        onFiltersChange={setFilters}
+        onFiltersChange={handleFiltersChange}
         resultsCount={totalCount}
       />
 
