@@ -21,7 +21,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useNavigate } from "react-router-dom";
 
 const STATUS_CHART_COLORS: Record<string, string> = {
-  preventivo: "hsl(215, 14%, 60%)",
   da_confermare: "hsl(38, 92%, 50%)",
   da_pagare_acconto: "hsl(25, 95%, 53%)",
   in_lavorazione: "hsl(217, 91%, 60%)",
