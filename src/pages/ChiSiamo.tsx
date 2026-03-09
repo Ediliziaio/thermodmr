@@ -107,8 +107,8 @@ const ChiSiamo = () => {
       </section>
 
       {/* Numeri */}
-      <section ref={ref3} className="py-20 bg-[hsl(0,0%,8%)]">
-        <div className="max-w-7xl mx-auto px-6">
+      <section ref={ref3} className="py-14 sm:py-20 bg-[hsl(0,0%,8%)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div initial="hidden" animate={inView3 ? "visible" : "hidden"} variants={stagger} className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             {[
               { value: "200+", label: "Rivenditori Attivi" },
