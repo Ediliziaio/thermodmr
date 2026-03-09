@@ -56,7 +56,7 @@ export const useOrdersInfinite = ({
 
       // Filtro per stato
       if (stato) {
-        query = query.eq("stato", stato);
+        query = query.eq("stato", stato as any);
       }
 
       // Filtro per date
