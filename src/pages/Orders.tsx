@@ -236,14 +236,13 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     ? sortedOrders.filter(o => selectedOrderIds.has(o.id!))
     : sortedOrders;
 
-  // Statistiche per l'header (dal totalCount server-side + dati caricati)
-  const stats = useMemo(() => {
-    const totalOrders = data?.pages[0]?.totalCount || 0;
-    const totalValue = allOrders.reduce((sum, o) => sum + o.importo_totale, 0);
-    const totalToCollect = allOrders.reduce((sum, o) => sum + o.importo_da_pagare, 0);
-    const ordersWithBalance = allOrders.filter(o => o.importo_da_pagare > 0).length;
-    return { totalOrders, totalValue, totalToCollect, ordersWithBalance };
-  }, [data, allOrders]);
+  // Statistiche dall'RPC server-side (dati completi, non paginati)
+  const stats = useMemo(() => ({
+    totalOrders: kpiData?.total_orders ?? data?.pages[0]?.totalCount ?? 0,
+    totalValue: kpiData?.total_value ?? 0,
+    totalToCollect: kpiData?.total_to_collect ?? 0,
+    ordersWithBalance: kpiData?.orders_with_balance ?? 0,
+  }), [kpiData, data]);
 
   const handleFiltersChange = useCallback((newFilters: OrderFiltersState) => {
     // When clearFilters is called (empty object), also reset date pills
