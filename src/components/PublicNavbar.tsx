@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo_Thermodmr.png";
@@ -67,7 +67,7 @@ const PublicNavbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 inset-x-0 z-50 bg-white border-b border-[hsl(0,0%,90%)] shadow-sm">
+    <nav className="fixed top-0 inset-x-0 z-50 bg-white border-b border-[hsl(0,0%,90%)] shadow-sm" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
         <Link to="/">
           <img src={logo} alt="ThermoDMR" className="h-9 sm:h-10 object-contain" />
@@ -195,6 +195,7 @@ const PublicNavbar = () => {
             >
               <div className="px-5 py-4 space-y-0.5">
                 {navLinks.map((item, idx) => {
+
                   const isActive = item.hasDropdown
                     ? isProductPage
                     : location.pathname === item.to;
@@ -267,6 +268,18 @@ const PublicNavbar = () => {
                     </div>
                   );
                 })}
+
+                {/* Mobile CTA */}
+                <div className="pt-3 mt-2 border-t border-[hsl(0,0%,92%)]">
+                  <a href="/#contatti" onClick={() => setMobileOpen(false)}>
+                    <Button
+                      className="w-full bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full min-h-[48px] shadow-[0_4px_20px_hsl(195,85%,45%,0.3)]"
+                    >
+                      Richiedi Preventivo
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </a>
+                </div>
               </div>
             </motion.div>
           </>

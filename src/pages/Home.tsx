@@ -84,8 +84,8 @@ const Hero = () => {
       <div className="absolute inset-0 bg-[hsl(0,0%,10%)]/60" />
       <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[hsl(0,0%,10%)]/80 to-transparent" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-28 sm:pt-32 pb-20 sm:pb-24 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center w-full">
-        <motion.div initial="hidden" animate="visible" variants={stagger} className="space-y-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-24 sm:pt-32 pb-16 sm:pb-24 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center w-full">
+        <motion.div initial="hidden" animate="visible" variants={stagger} className="space-y-6 sm:space-y-8">
           <motion.p
             variants={fadeUp}
             className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,60%)] uppercase"
@@ -95,7 +95,7 @@ const Hero = () => {
 
           <motion.h1
             variants={fadeUp}
-            className="text-3xl sm:text-5xl lg:text-[3.5rem] font-extrabold leading-[1.1] text-white"
+            className="text-2xl sm:text-5xl lg:text-[3.5rem] font-extrabold leading-[1.1] text-white"
           >
             Finestre di Design al{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[hsl(195,85%,50%)] to-[hsl(210,80%,55%)]">
@@ -131,7 +131,7 @@ const Hero = () => {
             </Button>
           </motion.div>
 
-          <motion.div variants={fadeUp} className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/70 pt-4">
+          <motion.div variants={fadeUp} className="grid grid-cols-2 sm:flex sm:flex-wrap gap-x-6 gap-y-3 text-sm text-white/70 pt-4">
             {["Profilo Tedesco", "Isolamento Classe A", "Garanzia 15 Anni", "Design Esclusivo"].map((t) => (
               <span key={t} className="flex items-center gap-1.5">
                 <CheckCircle2 className="h-4 w-4 text-[hsl(195,85%,55%)]" />
@@ -151,7 +151,7 @@ const Hero = () => {
             <img
               src={heroSerramento}
               alt="Serramento in PVC ThermoDMR"
-              className="w-[280px] sm:w-[340px] lg:w-[460px] object-contain drop-shadow-2xl"
+              className="w-[240px] sm:w-[340px] lg:w-[460px] object-contain drop-shadow-2xl"
             />
             <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 bg-[hsl(195,85%,45%)] text-white text-[10px] sm:text-xs font-bold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-lg">
               Consegna 2-6 Sett.
@@ -173,8 +173,8 @@ const ChiSiamo = () => {
   const [ref, inView] = useInView(inViewOptions);
 
   return (
-    <section ref={ref} id="chi-siamo" className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
+    <section ref={ref} id="chi-siamo" className="py-16 sm:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <motion.div
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
@@ -354,8 +354,8 @@ const Products = () => {
   const [ref, inView] = useInView(inViewOptions);
 
   return (
-    <section ref={ref} id="prodotti" className="py-24 bg-[hsl(0,0%,97%)]">
-      <div className="max-w-7xl mx-auto px-6">
+    <section ref={ref} id="prodotti" className="py-16 sm:py-24 bg-[hsl(0,0%,97%)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <motion.div
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
@@ -375,12 +375,12 @@ const Products = () => {
             <ThermometerSun className="h-6 w-6 text-[hsl(195,85%,45%)]" />
             Finestre in PVC
           </motion.h3>
-          <div className="grid sm:grid-cols-3 gap-6 mb-16">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-16">
             {pvcModels.map((m) => (
               <motion.div key={m.name} variants={fadeUp}>
                 <Link to={m.link} className="block h-full">
                   <div className="group rounded-2xl overflow-hidden border border-[hsl(0,0%,90%)] bg-white shadow-sm hover:shadow-xl hover:border-[hsl(195,85%,45%)]/30 hover:-translate-y-1 transition-all duration-300 h-full">
-                    <div className="relative h-44 overflow-hidden">
+                    <div className="relative h-36 sm:h-44 overflow-hidden">
                       <img src={m.image} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                       <div className="absolute inset-0 bg-gradient-to-t from-[hsl(0,0%,0%)]/30 to-transparent" />
                       <div className="absolute bottom-3 left-3 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[hsl(195,85%,45%)] text-white shadow-lg">
@@ -470,8 +470,8 @@ const WhyThermoDMR = () => {
   const [ref, inView] = useInView(inViewOptions);
 
   return (
-    <section ref={ref} id="vantaggi" className="py-24 bg-[hsl(0,0%,8%)]">
-      <div className="max-w-7xl mx-auto px-6">
+    <section ref={ref} id="vantaggi" className="py-16 sm:py-24 bg-[hsl(0,0%,8%)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <motion.div
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
@@ -551,8 +551,8 @@ const Guarantees = () => {
   const [ref, inView] = useInView(inViewOptions);
 
   return (
-    <section ref={ref} id="garanzie" className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
+    <section ref={ref} id="garanzie" className="py-16 sm:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <motion.div
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
@@ -601,8 +601,8 @@ const FindDealer = () => {
   const [ref, inView] = useInView(inViewOptions);
 
   return (
-    <section ref={ref} className="py-24 bg-[hsl(0,0%,97%)]">
-      <div className="max-w-5xl mx-auto px-6">
+    <section ref={ref} className="py-16 sm:py-24 bg-[hsl(0,0%,97%)]">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <motion.div
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
@@ -661,7 +661,7 @@ const BecomeDealer = () => {
   const [ref, inView] = useInView(inViewOptions);
 
   return (
-    <section ref={ref} className="py-28 relative overflow-hidden">
+    <section ref={ref} className="py-20 sm:py-28 relative overflow-hidden">
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: "url('/images/cta-bg.jpg')" }}
@@ -672,7 +672,7 @@ const BecomeDealer = () => {
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
         variants={stagger}
-        className="relative max-w-3xl mx-auto px-6 text-center"
+        className="relative max-w-3xl mx-auto px-4 sm:px-6 text-center"
       >
         <motion.h2 variants={fadeUp} className="text-3xl sm:text-5xl font-extrabold text-white mb-6 leading-tight">
           Vuoi Diventare un Rivenditore{" "}
@@ -760,8 +760,8 @@ const ContactForm = () => {
   };
 
   return (
-    <section ref={ref} id="contatti" className="py-24 bg-[hsl(0,0%,97%)]">
-      <div className="max-w-7xl mx-auto px-6">
+    <section ref={ref} id="contatti" className="py-16 sm:py-24 bg-[hsl(0,0%,97%)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <motion.div
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
@@ -780,7 +780,7 @@ const ContactForm = () => {
           </motion.div>
 
           <motion.div variants={fadeUp} className="max-w-2xl mx-auto">
-            <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg border border-[hsl(0,0%,90%)] p-5 sm:p-8 space-y-5">
+            <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg border border-[hsl(0,0%,90%)] p-4 sm:p-8 space-y-5">
               <div className="grid sm:grid-cols-2 gap-5">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-[hsl(0,0%,20%)]">Nome *</label>
