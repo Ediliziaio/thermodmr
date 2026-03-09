@@ -88,11 +88,6 @@ export function MobileDealerCard({ dealer }: MobileDealerCardProps) {
                   <span className="truncate">P.IVA: {dealer.p_iva}</span>
                 </div>
               </div>
-              {dealer.commissione_personalizzata && (
-                <Badge variant="secondary" className="flex-shrink-0">
-                  {dealer.commissione_personalizzata}%
-                </Badge>
-              )}
             </div>
 
             {/* Contact Info */}

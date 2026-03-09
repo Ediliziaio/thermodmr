@@ -285,23 +285,3 @@ export function exportPaymentsCustom(payments: any[], selectedColumns: string[])
   downloadCSV(csv, filename);
 }
 
-/**
- * Export commissions with custom columns
- */
-export function exportCommissionsCustom(commissions: any[], selectedColumns: string[]) {
-  const data = commissions.map(c => {
-    const row: Record<string, string> = {};
-    selectedColumns.forEach(col => {
-      const colDef = COMMISSION_COLUMNS.find(colDef => colDef.key === col);
-      if (!colDef) return;
-      
-      const value = getNestedValue(c, col);
-      row[colDef.label] = formatValueForExport(value, col);
-    });
-    return row;
-  });
-
-  const csv = arrayToCSV(data);
-  const filename = `provvigioni_${format(new Date(), "yyyy-MM-dd_HH-mm")}.csv`;
-  downloadCSV(csv, filename);
-}

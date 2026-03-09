@@ -173,14 +173,13 @@ export function DealerRowView({ dealers }: DealerRowViewProps) {
     <Card className="overflow-hidden">
       {/* Header */}
       <div className="flex items-center border-b px-4 py-2.5 bg-muted/50">
-        <div className="flex-1 grid grid-cols-[2fr_1.2fr_0.6fr_1fr_1fr_1fr_0.6fr] gap-4 items-center">
+        <div className="flex-1 grid grid-cols-[2fr_1.2fr_0.6fr_1fr_1fr_1fr] gap-4 items-center">
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Ragione Sociale</span>
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">P.IVA</span>
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider text-center">Ordini</span>
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Fatturato</span>
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Incassato</span>
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Da Incassare</span>
-          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider text-center">Comm.</span>
         </div>
         <div className="w-8 ml-2 shrink-0" />
       </div>

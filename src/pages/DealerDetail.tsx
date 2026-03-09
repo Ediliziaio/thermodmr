@@ -246,12 +246,6 @@ export default function DealerDetail() {
                 </div>
               )}
 
-              {dealer.commissione_personalizzata && (
-                <div className="pt-4 border-t">
-                  <p className="text-sm font-medium text-muted-foreground">Commissione Personalizzata</p>
-                  <p className="text-base font-semibold">{dealer.commissione_personalizzata}%</p>
-                </div>
-              )}
             </CardContent>
           </Card>
         </TabsContent>

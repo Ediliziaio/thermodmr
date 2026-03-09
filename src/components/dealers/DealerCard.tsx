@@ -131,14 +131,6 @@ export function DealerCard({ dealer }: DealerCardProps) {
               {formatCurrency(dealer.total_remaining || 0)}
             </span>
           </div>
-          {dealer.commissione_personalizzata && (
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Commissione:</span>
-              <Badge variant="secondary">
-                {dealer.commissione_personalizzata}%
-              </Badge>
-            </div>
-          )}
         </div>
 
         <Button
