@@ -131,7 +131,7 @@ const Hero = () => {
             </Button>
           </motion.div>
 
-          <motion.div variants={fadeUp} className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/70 pt-4">
+          <motion.div variants={fadeUp} className="grid grid-cols-2 sm:flex sm:flex-wrap gap-x-6 gap-y-3 text-sm text-white/70 pt-4">
             {["Profilo Tedesco", "Isolamento Classe A", "Garanzia 15 Anni", "Design Esclusivo"].map((t) => (
               <span key={t} className="flex items-center gap-1.5">
                 <CheckCircle2 className="h-4 w-4 text-[hsl(195,85%,55%)]" />
