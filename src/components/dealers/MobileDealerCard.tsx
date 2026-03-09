@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { motion, useMotionValue, useTransform, PanInfo } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Building2, LogIn, Mail, MapPin, Phone, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EditDealerDialog } from "./EditDealerDialog";
