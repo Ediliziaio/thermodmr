@@ -13,12 +13,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -28,9 +22,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, FileDown, Send, Loader2, Edit2, Check, X, Clock, AlertTriangle, ArrowRightCircle, Copy, CalendarIcon, Save } from "lucide-react";
+import { ArrowLeft, Loader2, Edit2, Check, X, Clock, AlertTriangle, ArrowRightCircle, Copy, Save } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatusStepper } from "@/components/orders/StatusStepper";
+import { OrderSchedulingCard } from "@/components/orders/OrderSchedulingCard";
 import type { Database } from "@/integrations/supabase/types";
 import { OrderLinesEditor } from "@/components/orders/OrderLinesEditor";
 import { PaymentsSection } from "@/components/orders/PaymentsSection";
@@ -57,8 +52,7 @@ import {
 } from "@/hooks/useOrders";
 import { formatCurrency, formatDate, getStatusLabel, getStatusColor } from "@/lib/utils";
 import { MODALITA_PAGAMENTO_OPTIONS, getModalitaPagamentoLabel } from "@/lib/orderConstants";
-import { differenceInDays, isPast, parseISO, format, startOfWeek, addWeeks, endOfWeek, getWeek, getYear } from "date-fns";
-import { it } from "date-fns/locale";
+import { differenceInDays, isPast, parseISO, format } from "date-fns";
 
 export default function OrderDetail() {
   const { id } = useParams<{ id: string }>();
