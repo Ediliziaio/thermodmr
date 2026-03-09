@@ -437,31 +437,33 @@ export default function OrderDetail() {
           </p>
         </div>
 
-        <div className="flex gap-2 flex-wrap">
-          {isPreventivo ? (
-            <>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => duplicateMutation.mutate()}
-                disabled={duplicateMutation.isPending}
-              >
-                {duplicateMutation.isPending ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Copy className="mr-2 h-4 w-4" />
-                )}
-                Duplica
-              </Button>
-              {isSuperAdmin && (
-                <Button onClick={() => setShowConvertDialog(true)} className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
-                  <ArrowRightCircle className="h-4 w-4" />
-                  Converti in Ordine
+        {!isDealerArea && (
+          <div className="flex gap-2 flex-wrap">
+            {isPreventivo ? (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => duplicateMutation.mutate()}
+                  disabled={duplicateMutation.isPending}
+                >
+                  {duplicateMutation.isPending ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Copy className="mr-2 h-4 w-4" />
+                  )}
+                  Duplica
                 </Button>
-              )}
-            </>
-          ) : null}
-        </div>
+                {isSuperAdmin && (
+                  <Button onClick={() => setShowConvertDialog(true)} className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
+                    <ArrowRightCircle className="h-4 w-4" />
+                    Converti in Ordine
+                  </Button>
+                )}
+              </>
+            ) : null}
+          </div>
+        )}
       </div>
 
       {isPreventivo ? (
