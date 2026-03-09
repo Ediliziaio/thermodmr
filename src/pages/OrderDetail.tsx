@@ -97,7 +97,7 @@ export default function OrderDetail() {
       setDataFineProduzione(order.data_fine_produzione ? parseISO(order.data_fine_produzione) : undefined);
       setSettimanaConsegna(order.settimana_consegna?.toString() || "");
       setDataConsegnaPrevista(order.data_consegna_prevista ? parseISO(order.data_consegna_prevista) : undefined);
-      setModalitaPagamento((order as any).modalita_pagamento || "");
+      setModalitaPagamento(order.modalita_pagamento || "");
     }
   }, [order]);
 
