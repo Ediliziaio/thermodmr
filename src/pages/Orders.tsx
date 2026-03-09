@@ -79,6 +79,12 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     };
   }, [filters.dataInserimentoFrom, filters.dataInserimentoTo]);
   
+  // Sort state (must be declared before kpiParams usage)
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({
+    key: 'data_inserimento',
+    direction: 'desc',
+  });
+
   const kpiParams = {
     searchQuery: debouncedSearch,
     dealerId: dealerId || filters.dealerId,
@@ -116,12 +122,6 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     orderTotal: number;
     amountPaid: number;
   }>({ open: false, orderId: "", orderTotal: 0, amountPaid: 0 });
-
-  // Sort state
-  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({
-    key: 'data_inserimento',
-    direction: 'desc',
-  });
 
   const handleSort = useCallback((key: string) => {
     setSortConfig(prev => ({
