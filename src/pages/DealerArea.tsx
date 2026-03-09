@@ -51,7 +51,7 @@ export default function DealerArea() {
           <Route index element={<DealerDashboard dealerId={id} dealerName={dealer?.ragione_sociale || undefined} />} />
           <Route path="preventivi" element={<DealerPreventivi dealerId={id} readOnly />} />
           <Route path="ordini" element={<Orders dealerId={id} />} />
-          <Route path="ordini/:orderId" element={<OrderDetail />} />
+          <Route path="ordini/:id" element={<OrderDetail />} />
           <Route path="pagamenti" element={<Pagamenti dealerId={id} />} />
           <Route path="assistenza" element={<DealerAssistenza dealerId={id} />} />
         </Routes>

@@ -23,6 +23,7 @@ type Attachment = Tables<"attachments">;
 interface AttachmentsSectionProps {
   orderId: string;
   attachments: Attachment[];
+  readOnly?: boolean;
 }
 
 /** Extract relative storage path from either a full URL or a relative path */
@@ -47,7 +48,7 @@ const safeFormatDate = (date: string | null | undefined): string => {
   }
 };
 
-export function AttachmentsSection({ orderId, attachments }: AttachmentsSectionProps) {
+export function AttachmentsSection({ orderId, attachments, readOnly = false }: AttachmentsSectionProps) {
   const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
@@ -164,10 +165,12 @@ export function AttachmentsSection({ orderId, attachments }: AttachmentsSectionP
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Allegati</CardTitle>
-        <Button onClick={handleFileUpload} size="sm" disabled={uploading}>
-          {uploading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Upload className="h-4 w-4 mr-2" />}
-          {uploading ? "Caricamento..." : "Carica File"}
-        </Button>
+        {!readOnly && (
+          <Button onClick={handleFileUpload} size="sm" disabled={uploading}>
+            {uploading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Upload className="h-4 w-4 mr-2" />}
+            {uploading ? "Caricamento..." : "Carica File"}
+          </Button>
+        )}
       </CardHeader>
       <CardContent>
         {attachments.length === 0 ? (
@@ -195,9 +198,11 @@ export function AttachmentsSection({ orderId, attachments }: AttachmentsSectionP
                   <Button variant="ghost" size="icon" onClick={() => handleDownload(attachment)}>
                     <Download className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" onClick={() => setDeleteConfirmId(attachment.id)} disabled={deleting === attachment.id}>
-                    {deleting === attachment.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4 text-destructive" />}
-                  </Button>
+                  {!readOnly && (
+                    <Button variant="ghost" size="icon" onClick={() => setDeleteConfirmId(attachment.id)} disabled={deleting === attachment.id}>
+                      {deleting === attachment.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4 text-destructive" />}
+                    </Button>
+                  )}
                 </div>
               </div>
             ))}

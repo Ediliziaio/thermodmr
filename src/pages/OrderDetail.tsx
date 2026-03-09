@@ -389,7 +389,7 @@ export default function OrderDetail() {
     <div className="space-y-6 pb-24">
       <Button variant="ghost" onClick={handleNavigateBack}>
         <ArrowLeft className="mr-2 h-4 w-4" />
-        Torna agli Ordini
+        {isDealerArea && isPreventivo ? "Torna ai Preventivi" : "Torna agli Ordini"}
       </Button>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -421,7 +421,7 @@ export default function OrderDetail() {
             ) : (
               <div className="flex items-center gap-2">
                 <h1 className="text-3xl font-bold text-foreground">{entityLabel} #{order.id}</h1>
-                {isSuperAdmin && (
+                {isSuperAdmin && !isDealerArea && (
                   <Button size="sm" variant="ghost" onClick={() => setIsEditingOrderId(true)}>
                     <Edit2 className="h-4 w-4" />
                   </Button>
@@ -437,31 +437,33 @@ export default function OrderDetail() {
           </p>
         </div>
 
-        <div className="flex gap-2 flex-wrap">
-          {isPreventivo ? (
-            <>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => duplicateMutation.mutate()}
-                disabled={duplicateMutation.isPending}
-              >
-                {duplicateMutation.isPending ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Copy className="mr-2 h-4 w-4" />
-                )}
-                Duplica
-              </Button>
-              {isSuperAdmin && (
-                <Button onClick={() => setShowConvertDialog(true)} className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
-                  <ArrowRightCircle className="h-4 w-4" />
-                  Converti in Ordine
+        {!isDealerArea && (
+          <div className="flex gap-2 flex-wrap">
+            {isPreventivo ? (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => duplicateMutation.mutate()}
+                  disabled={duplicateMutation.isPending}
+                >
+                  {duplicateMutation.isPending ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Copy className="mr-2 h-4 w-4" />
+                  )}
+                  Duplica
                 </Button>
-              )}
-            </>
-          ) : null}
-        </div>
+                {isSuperAdmin && (
+                  <Button onClick={() => setShowConvertDialog(true)} className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
+                    <ArrowRightCircle className="h-4 w-4" />
+                    Converti in Ordine
+                  </Button>
+                )}
+              </>
+            ) : null}
+          </div>
+        )}
       </div>
 
       {isPreventivo ? (
@@ -512,7 +514,7 @@ export default function OrderDetail() {
                   <Tabs defaultValue="descrizione">
                     <TabsList className="mb-4">
                       <TabsTrigger value="descrizione">Descrizione</TabsTrigger>
-                      <TabsTrigger value="note_interne">Note Interne</TabsTrigger>
+                      {!isDealerArea && <TabsTrigger value="note_interne">Note Interne</TabsTrigger>}
                     </TabsList>
                     <TabsContent value="descrizione" className="space-y-2">
                       <Textarea
@@ -520,22 +522,25 @@ export default function OrderDetail() {
                         className="min-h-[120px]"
                         value={noteRivenditore}
                         onChange={(e) => setNoteRivenditore(e.target.value)}
+                        readOnly={isDealerArea}
                       />
                     </TabsContent>
-                    <TabsContent value="note_interne" className="space-y-2">
-                      <Textarea
-                        placeholder="Note interne (non visibili al rivenditore)..."
-                        className="min-h-[120px]"
-                        value={noteInterna}
-                        onChange={(e) => setNoteInterna(e.target.value)}
-                      />
-                    </TabsContent>
+                    {!isDealerArea && (
+                      <TabsContent value="note_interne" className="space-y-2">
+                        <Textarea
+                          placeholder="Note interne (non visibili al rivenditore)..."
+                          className="min-h-[120px]"
+                          value={noteInterna}
+                          onChange={(e) => setNoteInterna(e.target.value)}
+                        />
+                      </TabsContent>
+                    )}
                   </Tabs>
                 </CardContent>
               </Card>
 
-              <AttachmentsSection orderId={order.id} attachments={orderAttachments as any} />
-              <TicketsSection orderId={order.id} />
+              <AttachmentsSection orderId={order.id} attachments={orderAttachments as any} readOnly={isDealerArea} />
+              {!isDealerArea && <TicketsSection orderId={order.id} />}
             </div>
 
             {/* Sidebar riepilogo */}
@@ -673,30 +678,33 @@ export default function OrderDetail() {
                   <Tabs defaultValue="note_rivenditore">
                     <TabsList className="mb-4">
                       <TabsTrigger value="note_rivenditore">Note Rivenditore</TabsTrigger>
-                      <TabsTrigger value="note_interne">Note Interne</TabsTrigger>
+                      {!isDealerArea && <TabsTrigger value="note_interne">Note Interne</TabsTrigger>}
                     </TabsList>
                     <TabsContent value="note_rivenditore" className="space-y-2">
                       <Textarea
                         placeholder="Note visibili al rivenditore..."
                         className="min-h-[120px]"
                         value={noteRivenditore}
+                        readOnly={isDealerArea}
                         onChange={(e) => setNoteRivenditore(e.target.value)}
                       />
                     </TabsContent>
-                    <TabsContent value="note_interne" className="space-y-2">
-                      <Textarea
-                        placeholder="Note interne (non visibili al rivenditore)..."
-                        className="min-h-[120px]"
-                        value={noteInterna}
-                        onChange={(e) => setNoteInterna(e.target.value)}
-                      />
-                    </TabsContent>
+                    {!isDealerArea && (
+                      <TabsContent value="note_interne" className="space-y-2">
+                        <Textarea
+                          placeholder="Note interne (non visibili al rivenditore)..."
+                          className="min-h-[120px]"
+                          value={noteInterna}
+                          onChange={(e) => setNoteInterna(e.target.value)}
+                        />
+                      </TabsContent>
+                    )}
                   </Tabs>
                 </CardContent>
               </Card>
 
-              <AttachmentsSection orderId={order.id} attachments={orderAttachments as any} />
-              <TicketsSection orderId={order.id} />
+              <AttachmentsSection orderId={order.id} attachments={orderAttachments as any} readOnly={isDealerArea} />
+              {!isDealerArea && <TicketsSection orderId={order.id} />}
             </div>
 
             {/* Sidebar */}
@@ -771,7 +779,7 @@ export default function OrderDetail() {
       )}
 
       {/* Fixed Save Bar */}
-      {hasUnsavedChanges && (
+      {hasUnsavedChanges && !isDealerArea && (
         <div className="fixed bottom-4 right-4 z-50 flex items-center gap-3 rounded-lg border bg-card p-4 shadow-lg">
           <span className="text-sm font-medium text-muted-foreground">Hai modifiche non salvate</span>
           <Button
