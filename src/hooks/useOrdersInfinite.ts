@@ -17,6 +17,8 @@ interface UseOrdersInfiniteParams {
   quickFilter?: string;
   importoMin?: number;
   importoMax?: number;
+  sortKey?: string;
+  sortDirection?: 'asc' | 'desc';
 }
 
 export const useOrdersInfinite = ({
