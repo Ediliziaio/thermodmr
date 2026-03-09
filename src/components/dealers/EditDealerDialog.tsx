@@ -20,6 +20,7 @@ export function EditDealerDialog({ dealer, trigger, open: controlledOpen, onOpen
   const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
   const setOpen = onOpenChange || setInternalOpen;
   const { mutate: updateDealer, isPending } = useUpdateDealer();
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [formData, setFormData] = useState({
     ragione_sociale: dealer.ragione_sociale,
