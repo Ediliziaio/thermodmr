@@ -396,8 +396,8 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Preventivi</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Gestisci i tuoi preventivi e convertili in ordini
+         <p className="text-sm text-muted-foreground mt-1">
+            {readOnly ? "Visualizza i tuoi preventivi" : "Gestisci i tuoi preventivi e convertili in ordini"}
           </p>
         </div>
         {canManage && (
