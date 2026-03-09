@@ -109,6 +109,7 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
     resolver: zodResolver(preventivoFormSchema),
     defaultValues: {
       dealer_id: defaultDealerId || "",
+      riferimento_preventivo: "",
       data_scadenza_preventivo: "",
       order_lines: [
         { categoria: "Infissi", descrizione: "", quantita: 1, prezzo_unitario: 0, sconto: 0, iva: 0 },
