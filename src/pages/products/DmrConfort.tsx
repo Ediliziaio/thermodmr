@@ -181,13 +181,13 @@ const DmrConfort = () => {
       </section>
 
       {/* Window Advantages - Inspired by Petecki */}
-      <section ref={advantagesRef} className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
+      <section ref={advantagesRef} className="py-16 sm:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div initial="hidden" animate={advantagesInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.div variants={fadeUp} className="text-center mb-14">
+            <motion.div variants={fadeUp} className="text-center mb-10 sm:mb-14">
               <p className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-3">Dettagli Tecnici</p>
-              <h2 className="text-3xl font-bold text-[hsl(0,0%,10%)]">Vantaggi della Finestra</h2>
-              <p className="text-[hsl(0,0%,45%)] mt-3 max-w-2xl mx-auto">
+              <h2 className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)]">Vantaggi della Finestra</h2>
+              <p className="text-[hsl(0,0%,45%)] mt-3 max-w-2xl mx-auto text-sm sm:text-base">
                 Ogni dettaglio del DMR CONFORT è progettato per garantire funzionalità, sicurezza e comfort abitativo superiore.
               </p>
             </motion.div>
