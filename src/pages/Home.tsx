@@ -95,7 +95,7 @@ const Hero = () => {
 
           <motion.h1
             variants={fadeUp}
-            className="text-3xl sm:text-5xl lg:text-[3.5rem] font-extrabold leading-[1.1] text-white"
+            className="text-2xl sm:text-5xl lg:text-[3.5rem] font-extrabold leading-[1.1] text-white"
           >
             Finestre di Design al{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[hsl(195,85%,50%)] to-[hsl(210,80%,55%)]">
