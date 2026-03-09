@@ -421,7 +421,7 @@ export default function OrderDetail() {
             ) : (
               <div className="flex items-center gap-2">
                 <h1 className="text-3xl font-bold text-foreground">{entityLabel} #{order.id}</h1>
-                {isSuperAdmin && (
+                {isSuperAdmin && !isDealerArea && (
                   <Button size="sm" variant="ghost" onClick={() => setIsEditingOrderId(true)}>
                     <Edit2 className="h-4 w-4" />
                   </Button>
