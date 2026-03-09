@@ -700,8 +700,8 @@ export default function OrderDetail() {
                 </CardContent>
               </Card>
 
-              <AttachmentsSection orderId={order.id} attachments={orderAttachments as any} />
-              <TicketsSection orderId={order.id} />
+              <AttachmentsSection orderId={order.id} attachments={orderAttachments as any} readOnly={isDealerArea} />
+              {!isDealerArea && <TicketsSection orderId={order.id} />}
             </div>
 
             {/* Sidebar */}
