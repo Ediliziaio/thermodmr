@@ -92,7 +92,7 @@ const DiventaRivenditore = () => {
       <PublicNavbar />
 
       {/* Hero */}
-      <section ref={heroRef} className="relative pt-20 min-h-[480px] sm:min-h-[540px] flex items-center overflow-hidden">
+      <section ref={heroRef} className="relative pt-20 min-h-[400px] sm:min-h-[540px] flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <img
             src="/images/cta-bg.jpg"
