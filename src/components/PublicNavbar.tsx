@@ -67,7 +67,7 @@ const PublicNavbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 inset-x-0 z-50 bg-white border-b border-[hsl(0,0%,90%)] shadow-sm">
+    <nav className="fixed top-0 inset-x-0 z-50 bg-white border-b border-[hsl(0,0%,90%)] shadow-sm" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
         <Link to="/">
           <img src={logo} alt="ThermoDMR" className="h-9 sm:h-10 object-contain" />
