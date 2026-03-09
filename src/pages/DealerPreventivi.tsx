@@ -38,6 +38,7 @@ import { NewPreventivoDialog, type PreventivoDefaultValues } from "@/components/
 
 interface DealerPreventiviProps {
   dealerId?: string;
+  readOnly?: boolean;
 }
 
 type StatusFilter = "tutti" | "validi" | "non_validi";
@@ -47,11 +48,11 @@ const isNonValido = (date: string | null) => {
   return new Date(date) < new Date();
 };
 
-export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
+export default function DealerPreventivi({ dealerId, readOnly = false }: DealerPreventiviProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { userRole } = useAuth();
-  const canManage = userRole === "super_admin" || userRole === "commerciale";
+  const canManage = !readOnly && (userRole === "super_admin" || userRole === "commerciale");
   const [convertId, setConvertId] = useState<string | null>(null);
   const [preventivoDialogOpen, setPreventivoDialogOpen] = useState(false);
   const [duplicateData, setDuplicateData] = useState<PreventivoDefaultValues | undefined>(undefined);
@@ -395,8 +396,8 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Preventivi</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Gestisci i tuoi preventivi e convertili in ordini
+         <p className="text-sm text-muted-foreground mt-1">
+            {readOnly ? "Visualizza i tuoi preventivi" : "Gestisci i tuoi preventivi e convertili in ordini"}
           </p>
         </div>
         {canManage && (
