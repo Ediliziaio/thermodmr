@@ -88,7 +88,7 @@ const GaranziePage = () => {
               initial="hidden"
               animate={inView ? "visible" : "hidden"}
               variants={fadeUp}
-              className="grid lg:grid-cols-2 gap-12 items-start p-8 rounded-2xl bg-[hsl(0,0%,97%)] border-l-4 border-[hsl(195,85%,45%)]"
+              className="grid lg:grid-cols-2 gap-6 sm:gap-12 items-start p-5 sm:p-8 rounded-2xl bg-[hsl(0,0%,97%)] border-l-4 border-[hsl(195,85%,45%)]"
             >
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
