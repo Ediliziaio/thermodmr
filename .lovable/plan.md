@@ -1,54 +1,39 @@
 
 
-# Verifica Allegati: Problemi Trovati e Fix
+# Verifica Allegati Preventivo — Problemi Trovati
 
-## Stato attuale del codice applicativo
+## Stato Attuale
 
-Il codice in `AttachmentsSection.tsx` e `NewPreventivoDialog.tsx` e' **corretto**:
-- Upload: salva il path relativo nel campo `url` (es. `orderId/timestamp-random.ext`)
-- Download: usa `createSignedUrl()` per generare URL temporanei (bucket privato)
-- Delete: rimuove sia il file dallo storage che il record dal DB
+L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
 
-## Problema trovato: Policy DELETE mancante sullo storage
+---
 
-Il bucket `order-attachments` ha solo 2 policy:
-- **SELECT** — per visualizzare/scaricare file
-- **INSERT** — per caricare file
+## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
 
-**Manca la policy DELETE** su `storage.objects`. Quando un utente tenta di eliminare un allegato, la rimozione del file dallo storage **fallisce silenziosamente** (il record DB viene eliminato, ma il file resta orfano nello storage).
+**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
 
-## Fix: Migration SQL
+Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
 
-Creare una migration che aggiunge la policy DELETE:
+**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
 
-```sql
-CREATE POLICY "Users can delete attachments"
-  ON storage.objects FOR DELETE
-  USING (
-    bucket_id = 'order-attachments'
-    AND auth.uid() IS NOT NULL
-    AND (
-      has_role(auth.uid(), 'super_admin'::app_role)
-      OR (storage.foldername(name))[1] IN (
-        SELECT id FROM public.orders WHERE creato_da_user_id = auth.uid()
-      )
-    )
-  );
-```
+Interventi:
+- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
+- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
+- Entrambi i file usano lo stesso pattern, la fix e' identica
 
-Questo permette:
-- **Super Admin**: eliminare qualsiasi allegato
-- **Rivenditori**: eliminare allegati solo dai propri ordini
+## Bug 2: `useCreatePreventivo` contiene codice morto
+
+**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
+
+- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
+- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
+
+**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
 
 ## Riepilogo
 
-| Componente | Stato |
-|---|---|
-| Upload file (storage + DB) | OK |
-| Download (signed URL) | OK |
-| Delete DB record | OK |
-| Delete file dallo storage | **BLOCCATO** — manca policy DELETE |
-| Allegati in creazione preventivo | OK |
-
-Una sola migration risolve il problema. Nessuna modifica al codice applicativo necessaria.
+| # | Tipo | File | Problema |
+|---|------|------|----------|
+| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
+| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
 
