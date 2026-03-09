@@ -31,9 +31,11 @@ export const useOrdersInfinite = ({
   quickFilter,
   importoMin,
   importoMax,
+  sortKey = 'data_inserimento',
+  sortDirection = 'desc',
 }: UseOrdersInfiniteParams = {}) => {
   return useInfiniteQuery({
-    queryKey: ["orders-infinite", searchQuery, dealerId, stato, dataFrom, dataTo, statoPagamento, quickFilter, importoMin, importoMax],
+    queryKey: ["orders-infinite", searchQuery, dealerId, stato, dataFrom, dataTo, statoPagamento, quickFilter, importoMin, importoMax, sortKey, sortDirection],
     queryFn: async ({ pageParam = 0 }) => {
       const from = pageParam * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
