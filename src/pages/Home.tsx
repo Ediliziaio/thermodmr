@@ -661,7 +661,7 @@ const BecomeDealer = () => {
   const [ref, inView] = useInView(inViewOptions);
 
   return (
-    <section ref={ref} className="py-28 relative overflow-hidden">
+    <section ref={ref} className="py-20 sm:py-28 relative overflow-hidden">
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: "url('/images/cta-bg.jpg')" }}
