@@ -120,10 +120,10 @@ const VantaggiPage = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-gradient-to-br from-[hsl(195,85%,40%)] to-[hsl(210,80%,40%)]">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-6">Inizia a Guadagnare di Più Oggi!</h2>
-          <p className="text-white/80 text-lg mb-8">
+      <section className="py-16 sm:py-20 bg-gradient-to-br from-[hsl(195,85%,40%)] to-[hsl(210,80%,40%)]">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+          <h2 className="text-2xl sm:text-4xl font-extrabold text-white mb-4 sm:mb-6">Inizia a Guadagnare di Più Oggi!</h2>
+          <p className="text-white/80 text-base sm:text-lg mb-6 sm:mb-8">
             Entra nella rete ThermoDMR e scopri cosa significa avere un partner produttore serio.
           </p>
           <Link to="/contatti">
