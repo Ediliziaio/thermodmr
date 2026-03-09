@@ -84,6 +84,12 @@ export interface PreventivoDefaultValues {
   }>;
 }
 
+const getDefault30DaysDate = () => {
+  const d = new Date();
+  d.setDate(d.getDate() + 30);
+  return d.toISOString().split("T")[0];
+};
+
 const calculateLineTotal = (line: z.infer<typeof orderLineSchema>) => {
   const subtotal = line.quantita * line.prezzo_unitario;
   return subtotal * (1 - line.sconto / 100);
@@ -110,7 +116,7 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
     defaultValues: {
       dealer_id: defaultDealerId || "",
       riferimento_preventivo: "",
-      data_scadenza_preventivo: "",
+      data_scadenza_preventivo: getDefault30DaysDate(),
       order_lines: [
         { categoria: "Infissi", descrizione: "", quantita: 1, prezzo_unitario: 0, sconto: 0, iva: 0 },
       ],
@@ -128,7 +134,7 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
         cliente_email: defaultValues.cliente_email || "",
         cliente_telefono: defaultValues.cliente_telefono || "",
         cliente_indirizzo: defaultValues.cliente_indirizzo || "",
-        data_scadenza_preventivo: "", // always empty for duplicates
+        data_scadenza_preventivo: getDefault30DaysDate(),
         note_rivenditore: defaultValues.note_rivenditore || "",
         note_interna: defaultValues.note_interna || "",
         order_lines: defaultValues.order_lines && defaultValues.order_lines.length > 0
