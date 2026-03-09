@@ -132,7 +132,7 @@ const DmrDomus = () => {
               </div>
             </div>
             <div className="space-y-6">
-              <h2 className="text-3xl font-bold text-[hsl(0,0%,10%)]">Caratteristiche Principali</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)]">Caratteristiche Principali</h2>
               <p className="text-[hsl(0,0%,40%)] leading-relaxed">
                 Il DMR DOMUS è dotato di un profilo a 6 camere isolanti con profondità costruttiva di 76 mm e 3 livelli di guarnizione con guarnizione mediana per una protezione termica e acustica ottimale fino a 47 dB. La saldatura invisibile garantisce una superficie perfettamente piana e un aspetto estetico superiore. La ferramenta ROTO NX antieffrazione consente di raggiungere fino alla classe RC3, mentre i rinforzi in acciaio zincato assicurano alta stabilità e lunga durata.
               </p>
