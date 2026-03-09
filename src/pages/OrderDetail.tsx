@@ -247,6 +247,59 @@ export default function OrderDetail() {
     }, 300);
   }, [handleSaveAll, pendingNavigation, navigate]);
 
+  // Duplicate preventivo mutation
+  const duplicateMutation = useMutation({
+    mutationFn: async () => {
+      if (!order) throw new Error("Order not found");
+      // Generate new preventivo ID
+      const { data: newId, error: idError } = await supabase.rpc("generate_next_order_id", { p_prefix: "PRV" });
+      if (idError) throw idError;
+
+      // Insert duplicated order
+      const { error: insertError } = await supabase.from("orders").insert({
+        id: newId as string,
+        dealer_id: order.dealer_id,
+        commerciale_id: order.commerciale_id,
+        creato_da_user_id: order.creato_da_user_id,
+        cliente_finale_id: order.cliente_finale_id,
+        stato: "preventivo" as any,
+        importo_totale: order.importo_totale,
+        importo_acconto: order.importo_acconto,
+        note_interna: order.note_interna,
+        note_rivenditore: order.note_rivenditore,
+        modalita_pagamento: order.modalita_pagamento,
+        data_consegna_prevista: order.data_consegna_prevista,
+      });
+      if (insertError) throw insertError;
+
+      // Copy order lines
+      if (orderLines.length > 0) {
+        const linesToInsert = orderLines.map(line => ({
+          ordine_id: newId as string,
+          categoria: line.categoria,
+          descrizione: line.descrizione,
+          quantita: line.quantita,
+          prezzo_unitario: Number(line.prezzo_unitario),
+          sconto: Number(line.sconto),
+          iva: Number(line.iva),
+          totale_riga: Number(line.totale_riga),
+        }));
+        const { error: linesError } = await supabase.from("order_lines").insert(linesToInsert);
+        if (linesError) throw linesError;
+      }
+
+      return newId as string;
+    },
+    onSuccess: (newId) => {
+      toast({ title: "Preventivo duplicato", description: `Nuovo preventivo: ${newId}` });
+      queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
+      navigate(`/ordini/${newId}`);
+    },
+    onError: () => {
+      toast({ title: "Errore nella duplicazione", variant: "destructive" });
+    },
+  });
+
   const convertMutation = useMutation({
     mutationFn: async (preventivoId: string) => {
       const newOrderId = await generateOrderId();
