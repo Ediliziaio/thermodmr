@@ -84,6 +84,12 @@ export interface PreventivoDefaultValues {
   }>;
 }
 
+const getDefault30DaysDate = () => {
+  const d = new Date();
+  d.setDate(d.getDate() + 30);
+  return d.toISOString().split("T")[0];
+};
+
 const calculateLineTotal = (line: z.infer<typeof orderLineSchema>) => {
   const subtotal = line.quantita * line.prezzo_unitario;
   return subtotal * (1 - line.sconto / 100);
