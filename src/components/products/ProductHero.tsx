@@ -72,7 +72,7 @@ const ProductHero = ({ category, title, titleAccent, description, heroImage, bad
             {category}
           </motion.p>
           <motion.div variants={fadeUp} className="flex items-center gap-3 flex-wrap mb-4">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
               {title} <span className="text-[hsl(195,85%,55%)]">{titleAccent}</span>
             </h1>
             {badge && (

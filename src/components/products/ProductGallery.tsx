@@ -63,8 +63,8 @@ const ProductGallery = ({ images }: ProductGalleryProps) => {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious className="-left-4 sm:-left-12 h-10 w-10 bg-white/90 hover:bg-white border-[hsl(0,0%,88%)] shadow-md" />
-              <CarouselNext className="-right-4 sm:-right-12 h-10 w-10 bg-white/90 hover:bg-white border-[hsl(0,0%,88%)] shadow-md" />
+              <CarouselPrevious className="hidden sm:flex -left-12 h-10 w-10 bg-white/90 hover:bg-white border-[hsl(0,0%,88%)] shadow-md" />
+              <CarouselNext className="hidden sm:flex -right-12 h-10 w-10 bg-white/90 hover:bg-white border-[hsl(0,0%,88%)] shadow-md" />
             </Carousel>
             {/* Dot indicators */}
             <div className="flex justify-center gap-2 mt-6">
