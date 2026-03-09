@@ -56,10 +56,22 @@ export function EditDealerDialog({ dealer, trigger, open: controlledOpen, onOpen
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    const newErrors: Record<string, string> = {};
+    const pivaError = validatePIva(formData.p_iva);
+    if (pivaError) newErrors.p_iva = pivaError;
+    const cfError = validateCodiceFiscale(formData.codice_fiscale);
+    if (cfError) newErrors.codice_fiscale = cfError;
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    setErrors({});
+
     updateDealer(
       {
         id: dealer.id,
         ...formData,
+        codice_fiscale: formData.codice_fiscale.toUpperCase(),
       },
       {
         onSuccess: () => {

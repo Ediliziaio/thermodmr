@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Plus } from "lucide-react";
 import { useCreateDealer } from "@/hooks/useDealers";
 import { useAuth } from "@/contexts/AuthContext";
+import { validatePIva, validateCodiceFiscale } from "@/lib/dealerValidation";
 
 interface NewDealerDialogProps {
   trigger?: React.ReactNode;
@@ -16,6 +17,7 @@ export default function NewDealerDialog({ trigger }: NewDealerDialogProps = {}) 
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
   const createDealer = useCreateDealer();
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [formData, setFormData] = useState({
     ragione_sociale: "",
@@ -33,26 +35,43 @@ export default function NewDealerDialog({ trigger }: NewDealerDialogProps = {}) 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    const newErrors: Record<string, string> = {};
+    const pivaError = validatePIva(formData.p_iva);
+    if (pivaError) newErrors.p_iva = pivaError;
+    const cfError = validateCodiceFiscale(formData.codice_fiscale);
+    if (cfError) newErrors.codice_fiscale = cfError;
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    setErrors({});
+
     if (!user?.id) return;
 
-    await createDealer.mutateAsync({
-      ...formData,
-      commerciale_owner_id: user.id,
-    });
+    try {
+      await createDealer.mutateAsync({
+        ...formData,
+        codice_fiscale: formData.codice_fiscale.toUpperCase(),
+        commerciale_owner_id: user.id,
+      });
 
-    setFormData({
-      ragione_sociale: "",
-      p_iva: "",
-      codice_fiscale: "",
-      email: "",
-      telefono: "",
-      indirizzo: "",
-      citta: "",
-      cap: "",
-      provincia: "",
-      note: "",
-    });
-    setOpen(false);
+      setFormData({
+        ragione_sociale: "",
+        p_iva: "",
+        codice_fiscale: "",
+        email: "",
+        telefono: "",
+        indirizzo: "",
+        citta: "",
+        cap: "",
+        provincia: "",
+        note: "",
+      });
+      setErrors({});
+      setOpen(false);
+    } catch {
+      // error handled by mutation
+    }
   };
 
   return (
