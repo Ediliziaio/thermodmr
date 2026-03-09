@@ -327,13 +327,23 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    {!isDealerArea && <TableHead className="w-12"><Checkbox checked={selectedPaymentIds.size === payments.length && payments.length > 0} onCheckedChange={toggleSelectAll} /></TableHead>}
-                    <TableHead>Data</TableHead>
+                    {!isDealerArea && <TableHead className="w-12"><Checkbox checked={selectedPaymentIds.size === sortedPayments.length && sortedPayments.length > 0} onCheckedChange={toggleSelectAll} /></TableHead>}
+                    <TableHead className="cursor-pointer select-none" onClick={() => handleSort('data_pagamento')}>
+                      <span className="flex items-center">Data <SortIcon columnKey="data_pagamento" /></span>
+                    </TableHead>
                     <TableHead>Ordine</TableHead>
-                    <TableHead>Dealer</TableHead>
-                    <TableHead>Tipo</TableHead>
-                    <TableHead>Metodo</TableHead>
-                    <TableHead className="text-right">Importo</TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={() => handleSort('dealer')}>
+                      <span className="flex items-center">Dealer <SortIcon columnKey="dealer" /></span>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={() => handleSort('tipo')}>
+                      <span className="flex items-center">Tipo <SortIcon columnKey="tipo" /></span>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={() => handleSort('metodo')}>
+                      <span className="flex items-center">Metodo <SortIcon columnKey="metodo" /></span>
+                    </TableHead>
+                    <TableHead className="text-right cursor-pointer select-none" onClick={() => handleSort('importo')}>
+                      <span className="flex items-center justify-end">Importo <SortIcon columnKey="importo" /></span>
+                    </TableHead>
                     <TableHead>Riferimento</TableHead>
                     {userRole === 'super_admin' && !isDealerArea && <TableHead className="w-12"></TableHead>}
                   </TableRow>
