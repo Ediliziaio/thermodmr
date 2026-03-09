@@ -73,9 +73,9 @@ const ContattiPage = () => {
       </section>
 
       {/* Contact section */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-5 gap-16">
+      <section className="py-16 sm:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid lg:grid-cols-5 gap-10 sm:gap-16">
             {/* Form */}
             <div className="lg:col-span-3">
               <form onSubmit={handleSubmit} className="bg-[hsl(0,0%,97%)] rounded-2xl border border-[hsl(0,0%,90%)] p-8 space-y-5">
