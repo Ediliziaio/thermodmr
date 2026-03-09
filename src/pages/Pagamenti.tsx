@@ -263,9 +263,9 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
           isMobile ? "flex gap-4 pb-4" : "grid gap-4 md:grid-cols-4"
         )} style={isMobile ? { minWidth: 'max-content' } : undefined}>
           {[
-            { title: "Totale Incassato", icon: Euro, value: formatCurrency(totaleIncassato), subtitle: `${payments.length} pagamenti` },
+            { title: "Totale Incassato", icon: Euro, value: formatCurrency(totaleIncassato), subtitle: `${numPagamenti} pagamenti` },
             { title: "Media Importo", icon: TrendingUp, value: formatCurrency(mediaImporto), subtitle: "per pagamento" },
-            { title: "Pagamenti in Attesa", icon: Clock, value: payments.filter(p => p.tipo === "acconto").length, subtitle: "acconti registrati" },
+            { title: "Num. Pagamenti", icon: Clock, value: numPagamenti, subtitle: "totali nel periodo" },
             { title: "Metodo Più Usato", icon: CreditCard, value: metodoPiuUsatoNome, subtitle: "più popolare", capitalize: true }
           ].map((stat, i) => (
             <Card key={i} className={isMobile ? "min-w-[160px]" : ""}>
