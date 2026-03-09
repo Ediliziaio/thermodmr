@@ -48,11 +48,11 @@ const isNonValido = (date: string | null) => {
   return new Date(date) < new Date();
 };
 
-export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
+export default function DealerPreventivi({ dealerId, readOnly = false }: DealerPreventiviProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { userRole } = useAuth();
-  const canManage = userRole === "super_admin" || userRole === "commerciale";
+  const canManage = !readOnly && (userRole === "super_admin" || userRole === "commerciale");
   const [convertId, setConvertId] = useState<string | null>(null);
   const [preventivoDialogOpen, setPreventivoDialogOpen] = useState(false);
   const [duplicateData, setDuplicateData] = useState<PreventivoDefaultValues | undefined>(undefined);
