@@ -37,7 +37,7 @@ function DealerRow({ dealer }: { dealer: DealerWithStats }) {
           isOpen && "bg-muted/30"
         )}
       >
-        <div className="flex-1 grid grid-cols-[2fr_1.2fr_0.6fr_1fr_1fr_1fr] gap-4 items-center min-w-0">
+        <div className="flex-1 grid grid-cols-[2fr_1fr_0.5fr_0.9fr_0.9fr_0.9fr_1fr] gap-4 items-center min-w-0">
           <span className="font-medium truncate">{dealer.ragione_sociale}</span>
           <span className="text-sm text-muted-foreground truncate">{dealer.p_iva}</span>
           <span className="text-sm text-center">{dealer.orders_count || 0}</span>
@@ -52,6 +52,12 @@ function DealerRow({ dealer }: { dealer: DealerWithStats }) {
               : "text-muted-foreground"
           )}>
             {formatCurrency(totalRemaining)}
+          </span>
+          <span className="flex justify-end">
+            {(() => {
+              const activity = getDealerActivityInfo(dealer.last_order_date);
+              return <Badge variant={activity.variant} className="text-xs">{activity.label}</Badge>;
+            })()}
           </span>
         </div>
         <CollapsibleTrigger asChild>
