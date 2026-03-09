@@ -678,24 +678,27 @@ export default function OrderDetail() {
                   <Tabs defaultValue="note_rivenditore">
                     <TabsList className="mb-4">
                       <TabsTrigger value="note_rivenditore">Note Rivenditore</TabsTrigger>
-                      <TabsTrigger value="note_interne">Note Interne</TabsTrigger>
+                      {!isDealerArea && <TabsTrigger value="note_interne">Note Interne</TabsTrigger>}
                     </TabsList>
                     <TabsContent value="note_rivenditore" className="space-y-2">
                       <Textarea
                         placeholder="Note visibili al rivenditore..."
                         className="min-h-[120px]"
                         value={noteRivenditore}
+                        readOnly={isDealerArea}
                         onChange={(e) => setNoteRivenditore(e.target.value)}
                       />
                     </TabsContent>
-                    <TabsContent value="note_interne" className="space-y-2">
-                      <Textarea
-                        placeholder="Note interne (non visibili al rivenditore)..."
-                        className="min-h-[120px]"
-                        value={noteInterna}
-                        onChange={(e) => setNoteInterna(e.target.value)}
-                      />
-                    </TabsContent>
+                    {!isDealerArea && (
+                      <TabsContent value="note_interne" className="space-y-2">
+                        <Textarea
+                          placeholder="Note interne (non visibili al rivenditore)..."
+                          className="min-h-[120px]"
+                          value={noteInterna}
+                          onChange={(e) => setNoteInterna(e.target.value)}
+                        />
+                      </TabsContent>
+                    )}
                   </Tabs>
                 </CardContent>
               </Card>
