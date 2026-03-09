@@ -54,14 +54,14 @@ const ChiSiamo = () => {
       </section>
 
       {/* Storia */}
-      <section ref={ref1} className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div initial="hidden" animate={inView1 ? "visible" : "hidden"} variants={stagger} className="grid lg:grid-cols-2 gap-16 items-center">
+      <section ref={ref1} className="py-16 sm:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <motion.div initial="hidden" animate={inView1 ? "visible" : "hidden"} variants={stagger} className="grid lg:grid-cols-2 gap-10 sm:gap-16 items-center">
             <motion.div variants={fadeUp}>
               <img src={imgInfissiEsterni} alt="Infissi esterni ThermoDMR" className="w-full rounded-3xl shadow-xl object-cover aspect-[4/3]" />
             </motion.div>
-            <motion.div variants={fadeUp} className="space-y-6">
-              <h2 className="text-3xl font-bold text-[hsl(0,0%,10%)]">La Nostra Storia</h2>
+            <motion.div variants={fadeUp} className="space-y-4 sm:space-y-6">
+              <h2 className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)]">La Nostra Storia</h2>
               <p className="text-[hsl(0,0%,40%)] leading-relaxed">
                 ThermoDMR nasce dalla passione per il serramento e dalla volontà di offrire ai rivenditori un partner affidabile.
                 Abbiamo investito in tecnologia e processi produttivi per eliminare ogni intermediario e garantire
