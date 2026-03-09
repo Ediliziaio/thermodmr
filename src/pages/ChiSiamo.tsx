@@ -126,8 +126,8 @@ const ChiSiamo = () => {
       </section>
 
       {/* Trova il Rivenditore */}
-      <section ref={ref4} className="py-20 bg-[hsl(0,0%,97%)]">
-        <div className="max-w-3xl mx-auto px-6 text-center">
+      <section ref={ref4} className="py-16 sm:py-20 bg-[hsl(0,0%,97%)]">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <motion.div initial="hidden" animate={inView4 ? "visible" : "hidden"} variants={stagger}>
             <motion.div variants={fadeUp} className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[hsl(195,85%,45%)] text-white mb-6">
               <MapPin className="h-8 w-8" />
