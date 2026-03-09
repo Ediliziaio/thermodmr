@@ -116,17 +116,26 @@ export function MobileDealerCard({ dealer }: MobileDealerCardProps) {
               </div>
             </div>
 
-            {/* Stats */}
-            <div className="pt-3 border-t grid grid-cols-2 gap-3">
-              <div className="space-y-1">
-                <p className="text-xs text-muted-foreground">Ordini</p>
-                <p className="text-lg font-semibold">{dealer.orders_count || 0}</p>
+            {/* Activity + Stats */}
+            <div className="pt-3 border-t space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">Ultimo ordine</span>
+                {(() => {
+                  const activity = getDealerActivityInfo(dealer.last_order_date);
+                  return <Badge variant={activity.variant} className="text-xs">{activity.label}</Badge>;
+                })()}
               </div>
-              <div className="space-y-1 text-right">
-                <p className="text-xs text-muted-foreground">Fatturato</p>
-                <p className="text-lg font-semibold">
-                  {formatCurrency(dealer.total_revenue || 0)}
-                </p>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <p className="text-xs text-muted-foreground">Ordini</p>
+                  <p className="text-lg font-semibold">{dealer.orders_count || 0}</p>
+                </div>
+                <div className="space-y-1 text-right">
+                  <p className="text-xs text-muted-foreground">Fatturato</p>
+                  <p className="text-lg font-semibold">
+                    {formatCurrency(dealer.total_revenue || 0)}
+                  </p>
+                </div>
               </div>
             </div>
 

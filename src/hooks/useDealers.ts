@@ -9,6 +9,9 @@ export interface DealerWithStats extends Tables<"dealers"> {
   total_revenue?: number;
   total_paid?: number;
   total_remaining?: number;
+  last_order_date?: string | null;
+  last_order_id?: string | null;
+  preventivi_count?: number;
 }
 
 export const useCreateDealer = () => {

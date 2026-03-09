@@ -185,6 +185,8 @@ export default function Dealers() {
         </div>
       </div>
 
+      <DealersMiniDashboard dealers={allDealers} totalCount={totalCount} />
+
       <DealerFiltersComponent
         onFiltersChange={setFilters}
         resultsCount={totalCount}
