@@ -514,7 +514,7 @@ export default function OrderDetail() {
                   <Tabs defaultValue="descrizione">
                     <TabsList className="mb-4">
                       <TabsTrigger value="descrizione">Descrizione</TabsTrigger>
-                      <TabsTrigger value="note_interne">Note Interne</TabsTrigger>
+                      {!isDealerArea && <TabsTrigger value="note_interne">Note Interne</TabsTrigger>}
                     </TabsList>
                     <TabsContent value="descrizione" className="space-y-2">
                       <Textarea
