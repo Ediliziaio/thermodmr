@@ -104,7 +104,7 @@ const VantaggiPage = () => {
             <motion.div variants={fadeUp} className="text-center mb-16">
               <h2 className="text-3xl font-bold text-[hsl(0,0%,10%)]">E Non È Tutto...</h2>
             </motion.div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
               {extraAdvantages.map((a) => (
                 <motion.div key={a.title} variants={fadeUp} className="p-6 rounded-2xl bg-[hsl(0,0%,97%)] border border-[hsl(0,0%,90%)] text-center hover:shadow-md transition-shadow">
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[hsl(195,85%,45%)] text-white mb-4">
