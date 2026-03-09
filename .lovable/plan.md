@@ -1,20 +1,29 @@
 
-# Analisi Area Super Admin — Implementazione Completata
 
-## Fase 1 — Criticità (COMPLETATA)
+# Piano: Aprire il dettaglio preventivo dalla sezione Rivenditori
 
-1. ✅ **AuthContext race condition**: Aggiunto `roleFetchedForUserId` ref per evitare fetch duplicati del ruolo
-2. ✅ **Route /kpi protetta**: Aggiunto `requiredRole="super_admin"` alla route Analytics
-3. ✅ **Analytics error state**: Allineato al pattern standard con Card + AlertCircle + RefreshCw + refetch()
-4. ✅ **useRealtimeSync ottimizzato**: Aggiunto debounce (300ms) e ridotto il numero di query invalidate per evento
+## Problema
+Quando il rivenditore clicca su un preventivo nella lista, la pagina di dettaglio mostra "Ordine non trovato". Questo perché la route in `DealerArea.tsx` definisce il parametro come `:orderId`, ma `OrderDetail.tsx` lo legge come `useParams<{ id }>()` — risulta `undefined`.
 
-## Fase 2 — Performance (COMPLETATA)
+Inoltre, anche se il dettaglio si aprisse, il rivenditore vedrebbe azioni di modifica (textarea note, Duplica, Converti) che non dovrebbe vedere.
 
-5. ✅ **useAllTickets con limit e search**: Aggiunto `.limit(100)` e filtro `ilike` per ricerca
-6. ✅ **DealerDetail orders limitati**: Aggiunto `.limit(50)` alla query ordini
-7. ✅ **useUnifiedAnalytics parallelizzato**: Orders e Payments query eseguite con `Promise.all()`
+## Modifiche
 
-## Fase 3 — UX (COMPLETATA)
+### 1. `src/pages/DealerArea.tsx` — Fix parametro route
+Rinominare `:orderId` in `:id` per allinearsi a ciò che `OrderDetail` si aspetta:
+```
+<Route path="ordini/:id" element={<OrderDetail />} />
+```
 
-8. ✅ **Pagamenti: frecce ordinamento colonne**: Aggiunto sortConfig + handleSort + SortIcon su Data, Dealer, Tipo, Metodo, Importo
-9. ✅ **Assistenza migliorata**: Mini-dashboard KPI (aperti, in gestione, chiusi, urgenti), barra di ricerca, ordinamento colonne, layout mobile con card
+### 2. `src/pages/OrderDetail.tsx` — Modalità read-only per dealer area
+Usare il flag `isDealerArea` già presente per:
+- Nascondere i pulsanti "Duplica" e "Converti in Ordine"
+- Rendere le textarea delle note in sola lettura
+- Nascondere il pulsante "Modifica ID"
+- Nascondere l'upload allegati (mostrare solo lista + download)
+- Cambiare il testo "Torna agli Ordini" in "Torna ai Preventivi" quando è un preventivo
+- Nascondere il FAB "Salva modifiche"
+
+### 3. `src/components/orders/AttachmentsSection.tsx` — Prop read-only
+Aggiungere un prop `readOnly?: boolean` per nascondere il pulsante "Carica File" e il pulsante "Elimina" su ogni allegato, mantenendo solo la visualizzazione e il download.
+
