@@ -29,12 +29,15 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useDeletePayment, useBulkDeletePayments } from "@/hooks/usePayments";
 import { useRealtimeSync } from "@/hooks/useRealtimeSync";
 import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { formatCurrency, formatDate, cn } from "@/lib/utils";
 import { getTipoBadgeVariant } from "@/lib/paymentConstants";
 import { toast } from "@/hooks/use-toast";
 import { useInView } from "react-intersection-observer";
 import { exportPaymentsCustom, PAYMENT_COLUMNS } from "@/lib/exportUtils";
 import { ExportColumnsDialog } from "@/components/export/ExportColumnsDialog";
+import { format } from "date-fns";
 
 interface PagamentiProps {
   dealerId?: string;
@@ -118,19 +121,33 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
 
+  // Stats da RPC server-side (dati completi, non solo pagine caricate)
+  const { data: paymentStats } = useQuery({
+    queryKey: ["payment-stats", dateRange, tipoFilter, metodoFilter, dealerId],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_payment_stats", {
+        p_date_from: dateRange?.from ? format(dateRange.from, "yyyy-MM-dd") : null,
+        p_date_to: dateRange?.to ? format(dateRange.to, "yyyy-MM-dd") : null,
+        p_tipo: tipoFilter !== "all" ? tipoFilter : null,
+        p_metodo: metodoFilter !== "all" ? metodoFilter : null,
+        p_dealer_id: dealerId || null,
+      });
+      if (error) throw error;
+      return data as { totale_incassato: number; media_importo: number; num_pagamenti: number; metodo_piu_usato: string | null };
+    },
+    staleTime: 2 * 60 * 1000,
+  });
 
-  const totaleIncassato = payments.reduce((sum, p) => sum + Number(p.importo), 0);
-  const mediaImporto = payments.length > 0 ? totaleIncassato / payments.length : 0;
-  const metodoPiuUsato = payments.reduce((acc, p) => {
-    acc[p.metodo] = (acc[p.metodo] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
-  const metodoPiuUsatoNome = Object.entries(metodoPiuUsato).sort((a, b) => b[1] - a[1])[0]?.[0] || "N/A";
+  const totaleIncassato = paymentStats?.totale_incassato ?? 0;
+  const mediaImporto = paymentStats?.media_importo ?? 0;
+  const numPagamenti = paymentStats?.num_pagamenti ?? 0;
+  const metodoPiuUsatoNome = paymentStats?.metodo_piu_usato ?? "N/A";
 
   const handleResetFilters = () => {
     setDateRange(undefined);
     setTipoFilter("all");
     setMetodoFilter("all");
+    setSearchQuery("");
   };
 
   const togglePaymentSelection = (id: string) => {
@@ -246,9 +263,9 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
           isMobile ? "flex gap-4 pb-4" : "grid gap-4 md:grid-cols-4"
         )} style={isMobile ? { minWidth: 'max-content' } : undefined}>
           {[
-            { title: "Totale Incassato", icon: Euro, value: formatCurrency(totaleIncassato), subtitle: `${payments.length} pagamenti` },
+            { title: "Totale Incassato", icon: Euro, value: formatCurrency(totaleIncassato), subtitle: `${numPagamenti} pagamenti` },
             { title: "Media Importo", icon: TrendingUp, value: formatCurrency(mediaImporto), subtitle: "per pagamento" },
-            { title: "Pagamenti in Attesa", icon: Clock, value: payments.filter(p => p.tipo === "acconto").length, subtitle: "acconti registrati" },
+            { title: "Num. Pagamenti", icon: Clock, value: numPagamenti, subtitle: "totali nel periodo" },
             { title: "Metodo Più Usato", icon: CreditCard, value: metodoPiuUsatoNome, subtitle: "più popolare", capitalize: true }
           ].map((stat, i) => (
             <Card key={i} className={isMobile ? "min-w-[160px]" : ""}>

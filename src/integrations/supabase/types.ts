@@ -1068,6 +1068,16 @@ export type Database = {
         Returns: Json
       }
       get_order_stats: { Args: { p_order_id: string }; Returns: Json }
+      get_payment_stats: {
+        Args: {
+          p_date_from?: string
+          p_date_to?: string
+          p_dealer_id?: string
+          p_metodo?: string
+          p_tipo?: string
+        }
+        Returns: Json
+      }
       get_revenue_by_date_range: {
         Args: {
           p_commerciale_id?: string
