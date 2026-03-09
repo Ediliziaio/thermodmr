@@ -27,7 +27,6 @@ export default function NewDealerDialog({ trigger }: NewDealerDialogProps = {}) 
     citta: "",
     cap: "",
     provincia: "",
-    commissione_personalizzata: "",
     note: "",
   });
 
@@ -38,9 +37,6 @@ export default function NewDealerDialog({ trigger }: NewDealerDialogProps = {}) 
 
     await createDealer.mutateAsync({
       ...formData,
-      commissione_personalizzata: formData.commissione_personalizzata 
-        ? parseFloat(formData.commissione_personalizzata) 
-        : undefined,
       commerciale_owner_id: user.id,
     });
 
