@@ -101,7 +101,9 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
         query = query.eq("dealer_id", dealerId);
       }
 
-      const { data, error } = await query.order("data_inserimento", { ascending: false });
+      const { data, error } = await query
+        .order("data_inserimento", { ascending: false })
+        .limit(500);
       if (error) throw error;
       return data;
     },

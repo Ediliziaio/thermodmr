@@ -350,6 +350,14 @@ export default function Assistenza() {
         </Card>
       )}
 
+      {/* Truncation warning */}
+      {tickets.length >= 100 && (
+        <div className="flex items-center justify-center gap-2 py-3 text-sm text-muted-foreground bg-muted/50 rounded-lg">
+          <AlertCircle className="h-4 w-4" />
+          <span>Mostrati i primi 100 ticket. Usa i filtri per affinare la ricerca.</span>
+        </div>
+      )}
+
       {selectedTicket && (
         <TicketDetailDialog
           ticketId={selectedTicket.id}

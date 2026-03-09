@@ -51,7 +51,8 @@ export default function DealerDetail() {
   const totalRevenue = dealer?.total_revenue || 0;
   const totalPaid = dealer?.total_paid || 0;
   const totalToPay = dealer?.total_remaining || 0;
-  const avgTicket = dealerOrders.length > 0 ? totalRevenue / dealerOrders.length : 0;
+  const ordersCount = dealer?.orders_count || 0;
+  const avgTicket = ordersCount > 0 ? totalRevenue / ordersCount : 0;
 
   const ordersByStatus = {
     da_confermare: dealerOrders.filter((o) => o.stato === "da_confermare").length,
