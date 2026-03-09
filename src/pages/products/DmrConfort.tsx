@@ -139,7 +139,7 @@ const DmrConfort = () => {
               </div>
             </div>
             <div className="space-y-6">
-              <h2 className="text-3xl font-bold text-[hsl(0,0%,10%)]">Caratteristiche Principali</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)]">Caratteristiche Principali</h2>
               <p className="text-[hsl(0,0%,40%)] leading-relaxed">
                 Il DMR CONFORT presenta profili alti solo 113 mm e un pacchetto vetro accuratamente selezionato per far entrare molta più luce naturale negli ambienti. Garantisce un efficace isolamento del calore con bollette più basse e temperature confortevoli tutto l'anno, oltre a una riduzione del rumore esterno fino a 46 dB. I profili sono realizzati per molti anni di utilizzo, resistenti agli agenti esterni e di facile manutenzione. Sistema sviluppato pensando al riciclaggio, con una forma versatile per progetti sia moderni che classici.
               </p>
