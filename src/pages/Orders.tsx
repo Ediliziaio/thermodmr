@@ -28,7 +28,7 @@ import { CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { format, subMonths, startOfMonth, startOfYear, endOfYear, subYears } from "date-fns";
 import { it } from "date-fns/locale";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/contexts/AuthContext";
