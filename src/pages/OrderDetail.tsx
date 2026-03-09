@@ -53,6 +53,7 @@ import {
   useUpdateOrderId,
   useUpdateOrderLines,
   useUpdateOrderDates,
+  generateOrderId,
 } from "@/hooks/useOrders";
 import { formatCurrency, formatDate, getStatusLabel, getStatusColor } from "@/lib/utils";
 import { MODALITA_PAGAMENTO_OPTIONS, getModalitaPagamentoLabel } from "@/lib/orderConstants";
