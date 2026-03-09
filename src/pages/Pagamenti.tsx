@@ -29,12 +29,15 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useDeletePayment, useBulkDeletePayments } from "@/hooks/usePayments";
 import { useRealtimeSync } from "@/hooks/useRealtimeSync";
 import { useAuth } from "@/contexts/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { formatCurrency, formatDate, cn } from "@/lib/utils";
 import { getTipoBadgeVariant } from "@/lib/paymentConstants";
 import { toast } from "@/hooks/use-toast";
 import { useInView } from "react-intersection-observer";
 import { exportPaymentsCustom, PAYMENT_COLUMNS } from "@/lib/exportUtils";
 import { ExportColumnsDialog } from "@/components/export/ExportColumnsDialog";
+import { format } from "date-fns";
 
 interface PagamentiProps {
   dealerId?: string;
