@@ -107,13 +107,13 @@ const DiventaRivenditore = () => {
             <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,65%)] uppercase mb-4">
               Partnership
             </motion.p>
-            <motion.h1 variants={fadeUp} className="text-2xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-4 sm:mb-6">
+            <motion.h1 variants={fadeUp} className="text-2xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-4 sm:mb-4 sm:mb-6">
               Diventa Rivenditore{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[hsl(195,85%,50%)] to-[hsl(210,80%,55%)]">
                 ThermoDMR
               </span>
             </motion.h1>
-            <motion.p variants={fadeUp} className="text-lg text-white/75 leading-relaxed max-w-2xl mb-8">
+            <motion.p variants={fadeUp} classNambase sm:text-lg text-white/75 leading-relaxed max-w-2xl mb-6 sm:x-w-2xl mb-8">
               Entra nella nostra rete di rivenditori e offri ai tuoi clienti serramenti di qualità superiore
               con profilo tedesco, margini competitivi e supporto dedicato.
             </motion.p>
