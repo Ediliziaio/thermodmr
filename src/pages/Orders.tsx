@@ -19,7 +19,7 @@ import { ExportColumnsDialog } from "@/components/export/ExportColumnsDialog";
 import { toast } from "@/hooks/use-toast";
 import { useDealersDropdown } from "@/hooks/useDealersDropdown";
 import { OrdersTable } from "@/components/orders/OrdersTable";
-import { useMemo, useState, useEffect, useCallback } from "react";
+import { useMemo, useState, useEffect, useCallback, useRef } from "react";
 import { useInView } from "react-intersection-observer";
 import { formatCurrency, cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
