@@ -84,8 +84,8 @@ const Hero = () => {
       <div className="absolute inset-0 bg-[hsl(0,0%,10%)]/60" />
       <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[hsl(0,0%,10%)]/80 to-transparent" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-28 sm:pt-32 pb-20 sm:pb-24 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center w-full">
-        <motion.div initial="hidden" animate="visible" variants={stagger} className="space-y-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-24 sm:pt-32 pb-16 sm:pb-24 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center w-full">
+        <motion.div initial="hidden" animate="visible" variants={stagger} className="space-y-6 sm:space-y-8">
           <motion.p
             variants={fadeUp}
             className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,60%)] uppercase"
