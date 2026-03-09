@@ -50,7 +50,6 @@ export default function NewDealerDialog({ trigger }: NewDealerDialogProps = {}) 
       citta: "",
       cap: "",
       provincia: "",
-      commissione_personalizzata: "",
       note: "",
     });
     setOpen(false);
