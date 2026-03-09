@@ -510,6 +510,14 @@ export default function OrderDetail() {
                         : "Non specificato"}
                     </p>
                   </div>
+                  {(order as any).riferimento_preventivo && (
+                    <div>
+                      <span className="text-muted-foreground">Riferimento</span>
+                      <p className="font-medium text-foreground">
+                        {(order as any).riferimento_preventivo}
+                      </p>
+                    </div>
+                  )}
                   <div className="h-px bg-border" />
                   <div>
                     <span className="text-muted-foreground">Data Inserimento</span>

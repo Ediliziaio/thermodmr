@@ -289,6 +289,21 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
               )}
             />
 
+            {/* Riferimento Preventivo */}
+            <FormField
+              control={form.control}
+              name="riferimento_preventivo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Riferimento Preventivo</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Es. PRV-cliente-001, rif. interno..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             {/* Data Scadenza Preventivo */}
             <FormField
               control={form.control}
