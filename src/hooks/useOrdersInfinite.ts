@@ -90,8 +90,10 @@ export const useOrdersInfinite = ({
       } else if (quickFilter === "ritardo") {
         query = query.lt("data_consegna_prevista", new Date().toISOString().split("T")[0]).neq("stato", "consegnato");
       } else if (quickFilter === "urgenti") {
-        // Urgenti = overdue OR (has balance AND not delivered) — handled via OR filter
-        query = query.neq("stato", "consegnato");
+        // Urgenti = overdue OR has balance, excludes delivered
+        const today = new Date().toISOString().split("T")[0];
+        query = query.neq("stato", "consegnato")
+          .or(`data_consegna_prevista.lt.${today},importo_da_pagare.gt.0`);
       }
 
       // Ricerca su campi ordine + dealer/cliente tramite pre-query
