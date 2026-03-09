@@ -30,6 +30,7 @@ export const useCreateDealer = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["dealers-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["dealer-global-stats"] });
       toast({
         title: "Rivenditore creato",
         description: "Il rivenditore è stato creato con successo.",
