@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Loader2, AlertCircle, RefreshCw, X, Trash2, Download, Plus, FileText, List, Kanban } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useOrdersInfinite } from "@/hooks/useOrdersInfinite";
+import { useOrdersInfinite, useOrdersKpi } from "@/hooks/useOrdersInfinite";
 import { useUpdateOrderStatus } from "@/hooks/useOrders";
 import { NewOrderDialog } from "@/components/orders/NewOrderDialog";
 import { NewPreventivoDialog } from "@/components/orders/NewPreventivoDialog";
@@ -69,8 +69,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     };
   }, [filters.dataInserimentoFrom, filters.dataInserimentoTo]);
   
-  // Pass all filters server-side
-  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useOrdersInfinite({
+  const kpiParams = {
     searchQuery,
     dealerId: dealerId || filters.dealerId,
     stato: filters.stato,
@@ -80,7 +79,11 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     quickFilter: filters.quickFilter,
     importoMin: filters.importoMin,
     importoMax: filters.importoMax,
-  });
+  };
+
+  // Pass all filters server-side
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useOrdersInfinite(kpiParams);
+  const { data: kpiData } = useOrdersKpi(kpiParams);
   const updateOrderStatus = useUpdateOrderStatus();
   const { data: dealers = [] } = useDealersDropdown();
   const { ref, inView } = useInView();
@@ -233,14 +236,13 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     ? sortedOrders.filter(o => selectedOrderIds.has(o.id!))
     : sortedOrders;
 
-  // Statistiche per l'header (dal totalCount server-side + dati caricati)
-  const stats = useMemo(() => {
-    const totalOrders = data?.pages[0]?.totalCount || 0;
-    const totalValue = allOrders.reduce((sum, o) => sum + o.importo_totale, 0);
-    const totalToCollect = allOrders.reduce((sum, o) => sum + o.importo_da_pagare, 0);
-    const ordersWithBalance = allOrders.filter(o => o.importo_da_pagare > 0).length;
-    return { totalOrders, totalValue, totalToCollect, ordersWithBalance };
-  }, [data, allOrders]);
+  // Statistiche dall'RPC server-side (dati completi, non paginati)
+  const stats = useMemo(() => ({
+    totalOrders: kpiData?.total_orders ?? data?.pages[0]?.totalCount ?? 0,
+    totalValue: kpiData?.total_value ?? 0,
+    totalToCollect: kpiData?.total_to_collect ?? 0,
+    ordersWithBalance: kpiData?.orders_with_balance ?? 0,
+  }), [kpiData, data]);
 
   const handleFiltersChange = useCallback((newFilters: OrderFiltersState) => {
     // When clearFilters is called (empty object), also reset date pills
