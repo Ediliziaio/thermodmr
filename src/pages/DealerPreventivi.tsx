@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,6 +25,7 @@ import {
 import {
   FileText, ArrowRightCircle, Eye, AlertTriangle, CheckCircle2, Plus, Copy,
   Search, BarChart3, Euro, Clock, XCircle, CalendarIcon, ChevronDown, Trash2, X,
+  ArrowUp, ArrowDown, ArrowUpDown,
 } from "lucide-react";
 import { format, subDays, addDays } from "date-fns";
 import { it } from "date-fns/locale";
@@ -67,6 +68,26 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("tutti");
   const [dateFrom, setDateFrom] = useState<Date | undefined>();
   const [dateTo, setDateTo] = useState<Date | undefined>();
+
+  // Sort state
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({
+    key: 'data_inserimento',
+    direction: 'desc',
+  });
+
+  const handleSort = useCallback((key: string) => {
+    setSortConfig(prev => ({
+      key,
+      direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc',
+    }));
+  }, []);
+
+  const SortIcon = ({ columnKey }: { columnKey: string }) => {
+    if (sortConfig.key !== columnKey) return <ArrowUpDown className="h-3 w-3 ml-1 text-muted-foreground/50" />;
+    return sortConfig.direction === 'asc' 
+      ? <ArrowUp className="h-3 w-3 ml-1" /> 
+      : <ArrowDown className="h-3 w-3 ml-1" />;
+  };
 
   const { data: preventivi, isLoading } = useQuery({
     queryKey: ["dealer-preventivi", dealerId],
@@ -120,8 +141,28 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
         if (d > end) return false;
       }
       return true;
+    }).sort((a, b) => {
+      const { key, direction } = sortConfig;
+      const mult = direction === 'asc' ? 1 : -1;
+      
+      const getVal = (p: any) => {
+        switch (key) {
+          case 'id': return p.id || '';
+          case 'dealer': return (p.dealers as any)?.ragione_sociale || '';
+          case 'data_inserimento': return p.data_inserimento || '';
+          case 'importo_totale': return Number(p.importo_totale) || 0;
+          case 'data_scadenza_preventivo': return p.data_scadenza_preventivo || '';
+          case 'stato': return isNonValido(p.data_scadenza_preventivo) ? 1 : 0;
+          default: return '';
+        }
+      };
+      
+      const va = getVal(a);
+      const vb = getVal(b);
+      if (typeof va === 'number' && typeof vb === 'number') return (va - vb) * mult;
+      return String(va).localeCompare(String(vb), 'it') * mult;
     });
-  }, [preventivi, searchTerm, dealerFilter, statusFilter, dateFrom, dateTo]);
+  }, [preventivi, searchTerm, dealerFilter, statusFilter, dateFrom, dateTo, sortConfig]);
 
   // KPI stats (dynamically based on active filters)
   const stats = useMemo(() => {
@@ -645,12 +686,25 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                         />
                       </TableHead>
                     )}
-                    <TableHead>ID Preventivo</TableHead>
-                    {!dealerId && <TableHead>Rivenditore</TableHead>}
-                    <TableHead>Data Creazione</TableHead>
-                    <TableHead>Importo Totale</TableHead>
-                    <TableHead>Scadenza</TableHead>
-                    <TableHead>Stato</TableHead>
+                    {[
+                      { key: 'id', label: 'ID Preventivo' },
+                      ...(!dealerId ? [{ key: 'dealer', label: 'Rivenditore' }] : []),
+                      { key: 'data_inserimento', label: 'Data Creazione' },
+                      { key: 'importo_totale', label: 'Importo Totale' },
+                      { key: 'data_scadenza_preventivo', label: 'Scadenza' },
+                      { key: 'stato', label: 'Stato' },
+                    ].map(col => (
+                      <TableHead
+                        key={col.key}
+                        className="cursor-pointer select-none hover:text-foreground transition-colors"
+                        onClick={() => handleSort(col.key)}
+                      >
+                        <span className="inline-flex items-center">
+                          {col.label}
+                          <SortIcon columnKey={col.key} />
+                        </span>
+                      </TableHead>
+                    ))}
                     {canManage && <TableHead className="text-right">Azioni</TableHead>}
                   </TableRow>
                 </TableHeader>

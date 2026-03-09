@@ -19,9 +19,10 @@ import { exportOrdersCustom, ORDER_COLUMNS } from "@/lib/exportUtils";
 import { ExportColumnsDialog } from "@/components/export/ExportColumnsDialog";
 import { toast } from "@/hooks/use-toast";
 import { useDealersInfinite } from "@/hooks/useDealersInfinite";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import { useInView } from "react-intersection-observer";
 import { formatCurrency, formatDate, getStatusColor, getStatusLabel, cn } from "@/lib/utils";
+import { ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
@@ -92,6 +93,26 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     orderTotal: number;
     amountPaid: number;
   }>({ open: false, orderId: "", orderTotal: 0, amountPaid: 0 });
+
+  // Sort state
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({
+    key: 'data_inserimento',
+    direction: 'desc',
+  });
+
+  const handleSort = useCallback((key: string) => {
+    setSortConfig(prev => ({
+      key,
+      direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc',
+    }));
+  }, []);
+
+  const SortIcon = ({ columnKey }: { columnKey: string }) => {
+    if (sortConfig.key !== columnKey) return <ArrowUpDown className="h-3 w-3 ml-1 text-muted-foreground/50" />;
+    return sortConfig.direction === 'asc' 
+      ? <ArrowUp className="h-3 w-3 ml-1" /> 
+      : <ArrowDown className="h-3 w-3 ml-1" />;
+  };
 
   // Helper functions for selection
   const toggleOrderSelection = (orderId: string) => {
@@ -206,8 +227,32 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
         if (!(isOverdue || (hasBalance && isNotDelivered))) return false;
       }
       return true;
+    }).sort((a, b) => {
+      const { key, direction } = sortConfig;
+      const mult = direction === 'asc' ? 1 : -1;
+      
+      const getVal = (o: any) => {
+        switch (key) {
+          case 'id': return o.id || '';
+          case 'dealer': return o.dealers?.ragione_sociale || '';
+          case 'cliente': return o.clients ? `${o.clients.nome} ${o.clients.cognome}` : '';
+          case 'stato': return o.stato || '';
+          case 'data_inserimento': return o.data_inserimento || '';
+          case 'importo_totale': return o.importo_totale ?? 0;
+          case 'importo_acconto': return o.importo_acconto ?? 0;
+          case 'importo_da_pagare': return o.importo_da_pagare ?? 0;
+          case 'data_consegna_prevista': return o.data_consegna_prevista || '';
+          case 'settimana_consegna': return o.settimana_consegna ?? 0;
+          default: return '';
+        }
+      };
+      
+      const va = getVal(a);
+      const vb = getVal(b);
+      if (typeof va === 'number' && typeof vb === 'number') return (va - vb) * mult;
+      return String(va).localeCompare(String(vb), 'it') * mult;
     });
-  }, [allOrders, filters]);
+  }, [allOrders, filters, sortConfig]);
 
   const handleExportCSV = (selectedColumns: string[], data: any[]) => {
     exportOrdersCustom(data, selectedColumns);
@@ -474,16 +519,29 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                               />
                             </th>
                           )}
-                          <th className="pb-3 pr-4">ID Ordine</th>
-                          <th className="pb-3 pr-4">Rivenditore</th>
-                          <th className="pb-3 pr-4">Cliente</th>
-                          <th className="pb-3 pr-4">Stato</th>
-                          <th className="pb-3 pr-4">Data Inserimento</th>
-                          <th className="pb-3 pr-4">Importo Totale</th>
-                          <th className="pb-3 pr-4">Acconto</th>
-                          <th className="pb-3 pr-4">Importo da Pagare</th>
-                          <th className="pb-3 pr-4">Consegna Prevista</th>
-                          <th className="pb-3 pr-4">Sett.</th>
+                          {[
+                            { key: 'id', label: 'ID Ordine' },
+                            { key: 'dealer', label: 'Rivenditore' },
+                            { key: 'cliente', label: 'Cliente' },
+                            { key: 'stato', label: 'Stato' },
+                            { key: 'data_inserimento', label: 'Data Inserimento' },
+                            { key: 'importo_totale', label: 'Importo Totale' },
+                            { key: 'importo_acconto', label: 'Acconto' },
+                            { key: 'importo_da_pagare', label: 'Importo da Pagare' },
+                            { key: 'data_consegna_prevista', label: 'Consegna Prevista' },
+                            { key: 'settimana_consegna', label: 'Sett.' },
+                          ].map(col => (
+                            <th
+                              key={col.key}
+                              className="pb-3 pr-4 cursor-pointer select-none hover:text-foreground transition-colors"
+                              onClick={() => handleSort(col.key)}
+                            >
+                              <span className="inline-flex items-center">
+                                {col.label}
+                                <SortIcon columnKey={col.key} />
+                              </span>
+                            </th>
+                          ))}
                           {!isDealerArea && <th className="pb-3">Azioni</th>}
                         </tr>
                       </thead>
