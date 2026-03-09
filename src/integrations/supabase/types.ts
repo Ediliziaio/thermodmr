@@ -930,9 +930,12 @@ export type Database = {
           email: string | null
           id: string | null
           indirizzo: string | null
+          last_order_date: string | null
+          last_order_id: string | null
           note: string | null
           orders_count: number | null
           p_iva: string | null
+          preventivi_count: number | null
           provincia: string | null
           ragione_sociale: string | null
           telefono: string | null

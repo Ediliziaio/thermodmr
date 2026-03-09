@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,6 +13,8 @@ import { DeleteDealerDialog } from "./DeleteDealerDialog";
 import type { DealerWithStats } from "@/hooks/useDealers";
 import { useNavigate } from "react-router-dom";
 import { formatCurrency, cn } from "@/lib/utils";
+import { getDealerActivityInfo } from "@/lib/dealerActivityUtils";
+import { Badge } from "@/components/ui/badge";
 
 interface DealerCardProps {
   dealer: DealerWithStats;
@@ -109,6 +110,13 @@ export function DealerCard({ dealer }: DealerCardProps) {
         </div>
 
         <div className="pt-4 border-t space-y-1">
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-muted-foreground">Ultimo ordine:</span>
+            {(() => {
+              const activity = getDealerActivityInfo(dealer.last_order_date);
+              return <Badge variant={activity.variant} className="text-xs">{activity.label}</Badge>;
+            })()}
+          </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Ordini:</span>
             <span className="font-medium">{dealer.orders_count || 0}</span>

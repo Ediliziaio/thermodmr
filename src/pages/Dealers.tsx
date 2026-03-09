@@ -8,6 +8,7 @@ import { MobileDealerFilters } from "@/components/dealers/MobileDealerFilters";
 import { DealerCard } from "@/components/dealers/DealerCard";
 import { DealerRowView } from "@/components/dealers/DealerRowView";
 import { MobileDealerCard } from "@/components/dealers/MobileDealerCard";
+import { DealersMiniDashboard } from "@/components/dealers/DealersMiniDashboard";
 import { useInView } from "react-intersection-observer";
 import { useEffect, useMemo, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -183,6 +184,8 @@ export default function Dealers() {
           <NewDealerDialog />
         </div>
       </div>
+
+      <DealersMiniDashboard dealers={allDealers} totalCount={totalCount} />
 
       <DealerFiltersComponent
         onFiltersChange={setFilters}

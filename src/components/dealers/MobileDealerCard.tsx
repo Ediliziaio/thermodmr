@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { motion, useMotionValue, useTransform, PanInfo } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Building2, LogIn, Mail, MapPin, Phone, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EditDealerDialog } from "./EditDealerDialog";
@@ -9,6 +8,8 @@ import { DeleteDealerDialog } from "./DeleteDealerDialog";
 import type { DealerWithStats } from "@/hooks/useDealers";
 import { useNavigate } from "react-router-dom";
 import { formatCurrency } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { getDealerActivityInfo } from "@/lib/dealerActivityUtils";
 
 interface MobileDealerCardProps {
   dealer: DealerWithStats;
@@ -114,17 +115,26 @@ export function MobileDealerCard({ dealer }: MobileDealerCardProps) {
               </div>
             </div>
 
-            {/* Stats */}
-            <div className="pt-3 border-t grid grid-cols-2 gap-3">
-              <div className="space-y-1">
-                <p className="text-xs text-muted-foreground">Ordini</p>
-                <p className="text-lg font-semibold">{dealer.orders_count || 0}</p>
+            {/* Activity + Stats */}
+            <div className="pt-3 border-t space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-muted-foreground">Ultimo ordine</span>
+                {(() => {
+                  const activity = getDealerActivityInfo(dealer.last_order_date);
+                  return <Badge variant={activity.variant} className="text-xs">{activity.label}</Badge>;
+                })()}
               </div>
-              <div className="space-y-1 text-right">
-                <p className="text-xs text-muted-foreground">Fatturato</p>
-                <p className="text-lg font-semibold">
-                  {formatCurrency(dealer.total_revenue || 0)}
-                </p>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <p className="text-xs text-muted-foreground">Ordini</p>
+                  <p className="text-lg font-semibold">{dealer.orders_count || 0}</p>
+                </div>
+                <div className="space-y-1 text-right">
+                  <p className="text-xs text-muted-foreground">Fatturato</p>
+                  <p className="text-lg font-semibold">
+                    {formatCurrency(dealer.total_revenue || 0)}
+                  </p>
+                </div>
               </div>
             </div>
 

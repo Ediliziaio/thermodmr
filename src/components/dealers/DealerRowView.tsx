@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ChevronDown, Eye, LogIn, Mail, MapPin, Pencil, Phone, Trash2, TrendingUp, TrendingDown, ShoppingCart } from "lucide-react";
+import { ChevronDown, Eye, LogIn, Mail, MapPin, Pencil, Phone, Trash2, TrendingUp, TrendingDown, ShoppingCart, Clock } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { getDealerActivityInfo } from "@/lib/dealerActivityUtils";
+import { format } from "date-fns";
+import { it } from "date-fns/locale";
 import { EditDealerDialog } from "./EditDealerDialog";
 import { DeleteDealerDialog } from "./DeleteDealerDialog";
 import type { DealerWithStats } from "@/hooks/useDealers";
@@ -33,7 +36,7 @@ function DealerRow({ dealer }: { dealer: DealerWithStats }) {
           isOpen && "bg-muted/30"
         )}
       >
-        <div className="flex-1 grid grid-cols-[2fr_1.2fr_0.6fr_1fr_1fr_1fr] gap-4 items-center min-w-0">
+        <div className="flex-1 grid grid-cols-[2fr_1fr_0.5fr_0.9fr_0.9fr_0.9fr_1fr] gap-4 items-center min-w-0">
           <span className="font-medium truncate">{dealer.ragione_sociale}</span>
           <span className="text-sm text-muted-foreground truncate">{dealer.p_iva}</span>
           <span className="text-sm text-center">{dealer.orders_count || 0}</span>
@@ -48,6 +51,12 @@ function DealerRow({ dealer }: { dealer: DealerWithStats }) {
               : "text-muted-foreground"
           )}>
             {formatCurrency(totalRemaining)}
+          </span>
+          <span className="flex justify-end">
+            {(() => {
+              const activity = getDealerActivityInfo(dealer.last_order_date);
+              return <Badge variant={activity.variant} className="text-xs">{activity.label}</Badge>;
+            })()}
           </span>
         </div>
         <CollapsibleTrigger asChild>
@@ -173,13 +182,14 @@ export function DealerRowView({ dealers }: DealerRowViewProps) {
     <Card className="overflow-hidden">
       {/* Header */}
       <div className="flex items-center border-b px-4 py-2.5 bg-muted/50">
-        <div className="flex-1 grid grid-cols-[2fr_1.2fr_0.6fr_1fr_1fr_1fr] gap-4 items-center">
+        <div className="flex-1 grid grid-cols-[2fr_1fr_0.5fr_0.9fr_0.9fr_0.9fr_1fr] gap-4 items-center">
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Ragione Sociale</span>
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">P.IVA</span>
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider text-center">Ordini</span>
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Fatturato</span>
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Incassato</span>
           <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Da Incassare</span>
+          <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider text-right">Ultimo Ordine</span>
         </div>
         <div className="w-8 ml-2 shrink-0" />
       </div>

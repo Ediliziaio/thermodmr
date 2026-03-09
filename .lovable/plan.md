@@ -1,60 +1,39 @@
 
 
-# Miglioramento UX Rivenditori con Mini-Dashboard e Indicatori di Attività
+# Verifica Allegati Preventivo — Problemi Trovati
 
-## Cosa cambia
+## Stato Attuale
 
-La pagina Rivenditori avrà una **mini-dashboard in alto** con KPI aggregati su tutti i rivenditori, e ogni rivenditore mostrerà indicatori di attività come "ultimo ordine" e "giorni dall'ultimo ordine" con badge colorati per evidenziare rivenditori inattivi.
+L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
 
-## Modifiche
+---
 
-### 1. Database: Aggiornare la view `dealers_with_stats`
-Aggiungere alla view:
-- `last_order_date` — data dell'ultimo ordine inserito
-- `last_order_id` — ID dell'ultimo ordine
-- `preventivi_count` — numero preventivi attivi
+## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
 
-Questi dati vengono calcolati dal subquery laterale esistente senza impatto sulle performance.
+**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
 
-### 2. Nuovo componente: `src/components/dealers/DealersMiniDashboard.tsx`
-Una riga di 4-5 card KPI compatte sopra i filtri:
-- **Rivenditori Totali** — conteggio
-- **Fatturato Totale** — somma `total_revenue`
-- **Incassato Totale** — somma `total_paid`
-- **Da Incassare** — somma `total_remaining` (ambra se > 0)
-- **Rivenditori Inattivi** — quanti non fanno ordini da >30 giorni (badge rosso)
+Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
 
-I dati vengono calcolati client-side da `allDealers` già disponibili, senza query extra.
+**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
 
-### 3. `src/pages/Dealers.tsx`
-- Inserire `DealersMiniDashboard` tra header e filtri
-- Passare `allDealers` e `totalCount` al componente
+Interventi:
+- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
+- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
+- Entrambi i file usano lo stesso pattern, la fix e' identica
 
-### 4. `src/components/dealers/DealerRowView.tsx`
-- Aggiungere colonna "Ultimo Ordine" nel grid (con data formattata)
-- Mostrare un badge colorato nell'espansione:
-  - **Verde**: ultimo ordine < 15 giorni
-  - **Giallo**: 15-30 giorni
-  - **Rosso**: > 30 giorni o mai ordinato
-- Aggiornare grid a `grid-cols-[2fr_1.2fr_0.6fr_1fr_1fr_1fr_0.8fr]`
+## Bug 2: `useCreatePreventivo` contiene codice morto
 
-### 5. `src/components/dealers/DealerCard.tsx`
-- Aggiungere indicatore "Ultimo ordine: X giorni fa" con colore semantico nella sezione stats
+**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
 
-### 6. `src/components/dealers/MobileDealerCard.tsx`
-- Aggiungere badge "Ultimo ordine: X gg fa" con colore semantico
+- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
+- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
 
-### 7. `src/hooks/useDealers.ts` — Aggiornare tipo `DealerWithStats`
-- Aggiungere campi opzionali: `last_order_date?: string`, `last_order_id?: string`, `preventivi_count?: number`
+**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
 
-## Dettaglio tecnico
+## Riepilogo
 
-La view aggiornata aggiungerà al subquery laterale:
-```sql
-max(o.data_inserimento) AS last_order_date,
-(SELECT o2.id FROM orders o2 WHERE o2.dealer_id = d.id ORDER BY o2.data_inserimento DESC LIMIT 1) AS last_order_id,
-count(o.id) FILTER (WHERE o.stato = 'preventivo') AS preventivi_count
-```
-
-La logica "giorni di inattività" è calcolata client-side con `differenceInDays(new Date(), new Date(dealer.last_order_date))` usando `date-fns`.
+| # | Tipo | File | Problema |
+|---|------|------|----------|
+| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
+| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
 
