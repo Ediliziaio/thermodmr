@@ -131,6 +131,7 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
     setDateRange(undefined);
     setTipoFilter("all");
     setMetodoFilter("all");
+    setSearchQuery("");
   };
 
   const togglePaymentSelection = (id: string) => {

@@ -41,6 +41,17 @@ export const usePaymentsInfinite = ({ dateRange, tipoFilter, metodoFilter, searc
       const from = pageParam * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
 
+      // If searching by dealer name, first find matching dealer IDs
+      let matchingDealerIds: string[] | null = null;
+      if (searchQuery && searchQuery.trim()) {
+        const search = searchQuery.trim().toLowerCase();
+        const { data: matchingDealers } = await supabase
+          .from("dealers")
+          .select("id")
+          .ilike("ragione_sociale", `%${search}%`);
+        matchingDealerIds = matchingDealers?.map(d => d.id) || [];
+      }
+
       let query = supabase
         .from("payments")
         .select(
@@ -76,17 +87,22 @@ export const usePaymentsInfinite = ({ dateRange, tipoFilter, metodoFilter, searc
         query = query.eq("tipo", tipoFilter as "acconto" | "saldo" | "parziale");
       }
       if (metodoFilter !== "all") {
-        query = query.eq("metodo", metodoFilter);
+        // Case-insensitive match per gestire mismatch tra filtri e dati
+        query = query.ilike("metodo", metodoFilter);
       }
 
-      // Full-text search su riferimento, metodo, ragione sociale dealer
+      // Full-text search: riferimento/metodo direttamente, dealer via pre-query
       if (searchQuery && searchQuery.trim()) {
         const search = searchQuery.trim().toLowerCase();
-        query = query.or(
-          `riferimento.ilike.%${search}%,` +
-          `metodo.ilike.%${search}%,` +
-          `orders.dealers.ragione_sociale.ilike.%${search}%`
-        );
+        if (matchingDealerIds && matchingDealerIds.length > 0) {
+          query = query.or(
+            `riferimento.ilike.%${search}%,metodo.ilike.%${search}%,orders.dealer_id.in.(${matchingDealerIds.join(",")})`
+          );
+        } else {
+          query = query.or(
+            `riferimento.ilike.%${search}%,metodo.ilike.%${search}%`
+          );
+        }
       }
 
       const { data, error, count } = await query;
