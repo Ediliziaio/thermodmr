@@ -380,7 +380,7 @@ const Products = () => {
               <motion.div key={m.name} variants={fadeUp}>
                 <Link to={m.link} className="block h-full">
                   <div className="group rounded-2xl overflow-hidden border border-[hsl(0,0%,90%)] bg-white shadow-sm hover:shadow-xl hover:border-[hsl(195,85%,45%)]/30 hover:-translate-y-1 transition-all duration-300 h-full">
-                    <div className="relative h-44 overflow-hidden">
+                    <div className="relative h-36 sm:h-44 overflow-hidden">
                       <img src={m.image} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
                       <div className="absolute inset-0 bg-gradient-to-t from-[hsl(0,0%,0%)]/30 to-transparent" />
                       <div className="absolute bottom-3 left-3 inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[hsl(195,85%,45%)] text-white shadow-lg">
