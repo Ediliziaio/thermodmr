@@ -168,7 +168,6 @@ export const useBulkUpdateOrderStatus = () => {
       orderIds: string[]; 
       stato: string;
     }) => {
-      // Aggiorna tutti gli ordini in parallelo
       const updates = orderIds.map(orderId =>
         supabase
           .from("orders")
@@ -177,8 +176,6 @@ export const useBulkUpdateOrderStatus = () => {
       );
 
       const results = await Promise.all(updates);
-      
-      // Controlla se ci sono errori
       const errors = results.filter(r => r.error);
       if (errors.length > 0) {
         throw new Error(`${errors.length} ordini non sono stati aggiornati`);
@@ -216,9 +213,6 @@ export const useBulkDeleteOrders = () => {
     }: { 
       orderIds: string[];
     }) => {
-      // Elimina tutti gli ordini in parallelo
-      // Le righe, pagamenti, allegati e provvigioni verranno eliminati automaticamente
-      // grazie alle foreign key con ON DELETE CASCADE
       const deletes = orderIds.map(orderId =>
         supabase
           .from("orders")
@@ -227,8 +221,6 @@ export const useBulkDeleteOrders = () => {
       );
 
       const results = await Promise.all(deletes);
-      
-      // Controlla se ci sono errori
       const errors = results.filter(r => r.error);
       if (errors.length > 0) {
         throw new Error(`${errors.length} ordini non sono stati eliminati`);
@@ -305,46 +297,17 @@ export const useUpdateOrderId = () => {
   });
 };
 
-const generatePreventivoId = async (): Promise<string> => {
-  const year = new Date().getFullYear();
-  const { data: last } = await supabase
-    .from("orders")
-    .select("id")
-    .ilike("id", `PRV-${year}-%`)
-    .order("id", { ascending: false })
-    .limit(1)
-    .single();
-
-  let nextNumber = 1;
-  if (last?.id) {
-    const match = last.id.match(/PRV-\d{4}-(\d{4})/);
-    if (match) {
-      nextNumber = parseInt(match[1], 10) + 1;
-    }
-  }
-
-  return `PRV-${year}-${nextNumber.toString().padStart(4, "0")}`;
+// Atomic ID generation via server-side sequence
+export const generateOrderId = async (): Promise<string> => {
+  const { data, error } = await supabase.rpc("generate_next_order_id", { p_prefix: "ORD" });
+  if (error) throw error;
+  return data as string;
 };
 
-export const generateOrderId = async (): Promise<string> => {
-  const year = new Date().getFullYear();
-  const { data: lastOrder } = await supabase
-    .from("orders")
-    .select("id")
-    .ilike("id", `ORD-${year}-%`)
-    .order("id", { ascending: false })
-    .limit(1)
-    .single();
-
-  let nextNumber = 1;
-  if (lastOrder?.id) {
-    const match = lastOrder.id.match(/ORD-\d{4}-(\d{4})/);
-    if (match) {
-      nextNumber = parseInt(match[1], 10) + 1;
-    }
-  }
-
-  return `ORD-${year}-${nextNumber.toString().padStart(4, "0")}`;
+const generatePreventivoId = async (): Promise<string> => {
+  const { data, error } = await supabase.rpc("generate_next_order_id", { p_prefix: "PRV" });
+  if (error) throw error;
+  return data as string;
 };
 
 export const useCreateOrder = () => {
@@ -459,56 +422,28 @@ export const useCreateOrder = () => {
   });
 };
 
+// Atomic order lines update via server-side RPC
 export const useUpdateOrderLines = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ orderId, lines }: { orderId: string; lines: any[] }) => {
-      // 1. Delete existing lines
-      const { error: deleteError } = await supabase
-        .from("order_lines")
-        .delete()
-        .eq("ordine_id", orderId);
+      const linesJsonb = lines.map((line: any) => ({
+        categoria: line.categoria || "Finestra",
+        descrizione: line.descrizione || "",
+        quantita: line.quantita || 1,
+        prezzo_unitario: line.prezzoUnitario || 0,
+        sconto: line.sconto || 0,
+        iva: line.iva || 0,
+      }));
 
-      if (deleteError) throw deleteError;
-
-      // 2. Insert new lines and calculate total
-      let importoTotale = 0;
-      const orderLinesData = lines.map((line: any) => {
-        const subtotal = (line.quantita || 1) * (line.prezzoUnitario || 0);
-        const afterDiscount = subtotal * (1 - (line.sconto || 0) / 100);
-        const withIva = afterDiscount * (1 + (line.iva || 0) / 100);
-        importoTotale += withIva;
-
-        return {
-          ordine_id: orderId,
-          categoria: line.categoria || "Finestra",
-          descrizione: line.descrizione || "",
-          quantita: line.quantita || 1,
-          prezzo_unitario: line.prezzoUnitario || 0,
-          sconto: line.sconto || 0,
-          iva: line.iva || 0,
-          totale_riga: withIva,
-        };
+      const { data, error } = await supabase.rpc("update_order_lines_atomic", {
+        p_order_id: orderId,
+        p_lines: linesJsonb,
       });
 
-      if (orderLinesData.length > 0) {
-        const { error: insertError } = await supabase
-          .from("order_lines")
-          .insert(orderLinesData);
-
-        if (insertError) throw insertError;
-      }
-
-      // 3. Update order total
-      const { error: updateError } = await supabase
-        .from("orders")
-        .update({ importo_totale: importoTotale })
-        .eq("id", orderId);
-
-      if (updateError) throw updateError;
-
-      return { orderId, importoTotale };
+      if (error) throw error;
+      return { orderId, importoTotale: (data as any)?.importo_totale };
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["order", data.orderId] });

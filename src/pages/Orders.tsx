@@ -37,8 +37,6 @@ import { useRealtimeSync } from "@/hooks/useRealtimeSync";
 
 type ViewMode = "lista" | "pipeline";
 
-// ORDER_STATUSES moved to OrdersTable component
-
 interface OrdersProps {
   dealerId?: string;
 }
@@ -54,19 +52,37 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
   const [searchQuery, setSearchQuery] = useState("");
   
   const now = new Date();
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: startOfYear(now),
-    to: endOfYear(now),
-  });
   const [activeFilter, setActiveFilter] = useState<string | null>("year");
   
-  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useOrdersInfinite({ searchQuery, dealerId });
-  const updateOrderStatus = useUpdateOrderStatus();
-  const { data: dealers = [] } = useDealersDropdown();
+  // Single source of truth for filters (including dates)
   const [filters, setFilters] = useState<OrderFiltersState>({
     dataInserimentoFrom: format(startOfYear(now), 'yyyy-MM-dd'),
     dataInserimentoTo: format(endOfYear(now), 'yyyy-MM-dd'),
   });
+
+  // Calendar date range derived from filters
+  const dateRange: DateRange | undefined = useMemo(() => {
+    if (!filters.dataInserimentoFrom && !filters.dataInserimentoTo) return undefined;
+    return {
+      from: filters.dataInserimentoFrom ? new Date(filters.dataInserimentoFrom) : undefined,
+      to: filters.dataInserimentoTo ? new Date(filters.dataInserimentoTo) : undefined,
+    };
+  }, [filters.dataInserimentoFrom, filters.dataInserimentoTo]);
+  
+  // Pass all filters server-side
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useOrdersInfinite({
+    searchQuery,
+    dealerId: dealerId || filters.dealerId,
+    stato: filters.stato,
+    dataFrom: filters.dataInserimentoFrom,
+    dataTo: filters.dataInserimentoTo,
+    statoPagamento: filters.statoPagamento,
+    quickFilter: filters.quickFilter,
+    importoMin: filters.importoMin,
+    importoMax: filters.importoMax,
+  });
+  const updateOrderStatus = useUpdateOrderStatus();
+  const { data: dealers = [] } = useDealersDropdown();
   const { ref, inView } = useInView();
   const [selectedOrderIds, setSelectedOrderIds] = useState<Set<string>>(new Set());
   const [bulkStatusDialogOpen, setBulkStatusDialogOpen] = useState(false);
@@ -110,14 +126,6 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     });
   };
 
-  const toggleSelectAll = () => {
-    if (selectedOrderIds.size === filteredOrders.length && filteredOrders.length > 0) {
-      setSelectedOrderIds(new Set());
-    } else {
-      setSelectedOrderIds(new Set(filteredOrders.map(o => o.id!)));
-    }
-  };
-
   const clearSelection = () => setSelectedOrderIds(new Set());
 
   // Clear selection when filters change
@@ -125,36 +133,47 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     clearSelection();
   }, [filters]);
 
-  // Sync dateRange to filters
-  useEffect(() => {
-    setFilters(prev => ({
-      ...prev,
-      dataInserimentoFrom: dateRange?.from ? format(dateRange.from, 'yyyy-MM-dd') : undefined,
-      dataInserimentoTo: dateRange?.to ? format(dateRange.to, 'yyyy-MM-dd') : undefined,
-    }));
-  }, [dateRange]);
-
   const setQuickFilter = (type: '3months' | '6months' | 'year' | 'lastyear' | 'all') => {
     const n = new Date();
     setActiveFilter(type);
     if (type === 'all') {
-      setDateRange(undefined);
+      setFilters(prev => ({ ...prev, dataInserimentoFrom: undefined, dataInserimentoTo: undefined }));
       return;
     }
+    let from: Date;
+    let to: Date;
     switch (type) {
       case '3months':
-        setDateRange({ from: startOfMonth(subMonths(n, 3)), to: n });
+        from = startOfMonth(subMonths(n, 3));
+        to = n;
         break;
       case '6months':
-        setDateRange({ from: startOfMonth(subMonths(n, 6)), to: n });
+        from = startOfMonth(subMonths(n, 6));
+        to = n;
         break;
       case 'year':
-        setDateRange({ from: startOfYear(n), to: endOfYear(n) });
+        from = startOfYear(n);
+        to = endOfYear(n);
         break;
       case 'lastyear':
-        setDateRange({ from: startOfYear(subYears(n, 1)), to: endOfYear(subYears(n, 1)) });
+        from = startOfYear(subYears(n, 1));
+        to = endOfYear(subYears(n, 1));
         break;
     }
+    setFilters(prev => ({
+      ...prev,
+      dataInserimentoFrom: format(from, 'yyyy-MM-dd'),
+      dataInserimentoTo: format(to, 'yyyy-MM-dd'),
+    }));
+  };
+
+  const handleCalendarSelect = (range: DateRange | undefined) => {
+    setActiveFilter(null);
+    setFilters(prev => ({
+      ...prev,
+      dataInserimentoFrom: range?.from ? format(range.from, 'yyyy-MM-dd') : undefined,
+      dataInserimentoTo: range?.to ? format(range.to, 'yyyy-MM-dd') : undefined,
+    }));
   };
 
   // Carica automaticamente la prossima pagina quando l'utente scorre fino in fondo
@@ -169,48 +188,9 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     return data?.pages.flatMap((page) => page.data) || [];
   }, [data]);
 
-  const filteredOrders = useMemo(() => {
-    return allOrders.filter((order) => {
-      if (filters.stato && order.stato !== filters.stato) return false;
-      if (filters.dealerId && order.dealer_id !== filters.dealerId) return false;
-      if (filters.dataInserimentoFrom) {
-        const orderDate = new Date(order.data_inserimento);
-        if (orderDate < new Date(filters.dataInserimentoFrom)) return false;
-      }
-      if (filters.dataInserimentoTo) {
-        const orderDate = new Date(order.data_inserimento);
-        const filterDate = new Date(filters.dataInserimentoTo);
-        filterDate.setHours(23, 59, 59, 999);
-        if (orderDate > filterDate) return false;
-      }
-      if (filters.importoMin && order.importo_totale < filters.importoMin) return false;
-      if (filters.importoMax && order.importo_totale > filters.importoMax) return false;
-      if (filters.searchTerm) {
-        const searchLower = filters.searchTerm.toLowerCase();
-        const matchesId = order.id.toLowerCase().includes(searchLower);
-        const matchesDealer = order.dealers?.ragione_sociale?.toLowerCase().includes(searchLower);
-        const matchesClient = order.clients
-          ? `${order.clients.nome} ${order.clients.cognome}`.toLowerCase().includes(searchLower)
-          : false;
-        if (!matchesId && !matchesDealer && !matchesClient) return false;
-      }
-      if (filters.statoPagamento) {
-        if (filters.statoPagamento === 'pagato' && order.importo_da_pagare > 0) return false;
-        if (filters.statoPagamento === 'non_pagato' && order.importo_pagato > 0) return false;
-        if (filters.statoPagamento === 'parziale' && (order.importo_pagato === 0 || order.importo_da_pagare === 0)) return false;
-      }
-      if (filters.quickFilter === 'saldo' && order.importo_da_pagare === 0) return false;
-      if (filters.quickFilter === 'ritardo') {
-        if (!order.data_consegna_prevista || new Date(order.data_consegna_prevista) >= new Date()) return false;
-      }
-      if (filters.quickFilter === 'urgenti') {
-        const isOverdue = order.data_consegna_prevista && new Date(order.data_consegna_prevista) < new Date();
-        const hasBalance = order.importo_da_pagare > 0;
-        const isNotDelivered = order.stato !== 'consegnato';
-        if (!(isOverdue || (hasBalance && isNotDelivered))) return false;
-      }
-      return true;
-    }).sort((a, b) => {
+  // Client-side sort only (filters are now server-side)
+  const sortedOrders = useMemo(() => {
+    return [...allOrders].sort((a, b) => {
       const { key, direction } = sortConfig;
       const mult = direction === 'asc' ? 1 : -1;
       
@@ -235,24 +215,40 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
       if (typeof va === 'number' && typeof vb === 'number') return (va - vb) * mult;
       return String(va).localeCompare(String(vb), 'it') * mult;
     });
-  }, [allOrders, filters, sortConfig]);
+  }, [allOrders, sortConfig]);
+
+  const toggleSelectAll = () => {
+    if (selectedOrderIds.size === sortedOrders.length && sortedOrders.length > 0) {
+      setSelectedOrderIds(new Set());
+    } else {
+      setSelectedOrderIds(new Set(sortedOrders.map(o => o.id!)));
+    }
+  };
 
   const handleExportCSV = (selectedColumns: string[], data: any[]) => {
     exportOrdersCustom(data, selectedColumns);
   };
 
   const ordersToExport = selectedOrderIds.size > 0 
-    ? filteredOrders.filter(o => selectedOrderIds.has(o.id!))
-    : filteredOrders;
+    ? sortedOrders.filter(o => selectedOrderIds.has(o.id!))
+    : sortedOrders;
 
-  // Statistiche per l'header
+  // Statistiche per l'header (dal totalCount server-side + dati caricati)
   const stats = useMemo(() => {
-    const totalOrders = filteredOrders.length;
-    const totalValue = filteredOrders.reduce((sum, o) => sum + o.importo_totale, 0);
-    const totalToCollect = filteredOrders.reduce((sum, o) => sum + o.importo_da_pagare, 0);
-    const ordersWithBalance = filteredOrders.filter(o => o.importo_da_pagare > 0).length;
+    const totalOrders = data?.pages[0]?.totalCount || 0;
+    const totalValue = allOrders.reduce((sum, o) => sum + o.importo_totale, 0);
+    const totalToCollect = allOrders.reduce((sum, o) => sum + o.importo_da_pagare, 0);
+    const ordersWithBalance = allOrders.filter(o => o.importo_da_pagare > 0).length;
     return { totalOrders, totalValue, totalToCollect, ordersWithBalance };
-  }, [filteredOrders]);
+  }, [data, allOrders]);
+
+  const handleFiltersChange = useCallback((newFilters: OrderFiltersState) => {
+    // When clearFilters is called (empty object), also reset date pills
+    if (Object.keys(newFilters).length === 0) {
+      setActiveFilter(null);
+    }
+    setFilters(newFilters);
+  }, []);
 
   if (isLoading && !data) {
     return (
@@ -332,10 +328,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                 <Calendar
                   mode="range"
                   selected={dateRange}
-                  onSelect={(range) => {
-                    setDateRange(range);
-                    setActiveFilter(null);
-                  }}
+                  onSelect={handleCalendarSelect}
                   numberOfMonths={isMobile ? 1 : 2}
                   locale={it}
                   className="pointer-events-auto"
@@ -446,7 +439,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
         {isMobile ? (
           <>
             <MobileOrdersList
-              orders={filteredOrders}
+              orders={sortedOrders}
               selectedOrderIds={selectedOrderIds}
               onToggleSelect={toggleOrderSelection}
               onViewDetails={(id) => isDealerArea ? navigate(`../ordini/${id}`, { relative: 'path' }) : navigate(`/ordini/${id}`)}
@@ -454,7 +447,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
             />
             <MobileOrderFilters
               filters={filters}
-              onFiltersChange={setFilters}
+              onFiltersChange={handleFiltersChange}
               dealers={dealers || []}
               searchQuery={searchQuery}
               onSearchQueryChange={setSearchQuery}
@@ -464,19 +457,19 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
           <>
             <OrderFilters
               filters={filters}
-              onFiltersChange={setFilters}
+              onFiltersChange={handleFiltersChange}
               dealers={dealers || []}
               searchQuery={searchQuery}
               onSearchQueryChange={setSearchQuery}
             />
-            <OrderPipelineDnD orders={filteredOrders} isDealerArea={isDealerArea} />
+            <OrderPipelineDnD orders={sortedOrders} isDealerArea={isDealerArea} />
           </>
         ) : (
           <>
             {/* Filtri Desktop */}
             <OrderFilters
               filters={filters}
-              onFiltersChange={setFilters}
+              onFiltersChange={handleFiltersChange}
               dealers={dealers || []}
               searchQuery={searchQuery}
               onSearchQueryChange={setSearchQuery}
@@ -488,9 +481,9 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                 <CardTitle>Lista Ordini</CardTitle>
               </CardHeader>
               <CardContent>
-                {filteredOrders.length > 0 ? (
+                {sortedOrders.length > 0 ? (
                   <OrdersTable
-                    orders={filteredOrders}
+                    orders={sortedOrders}
                     selectedOrderIds={selectedOrderIds}
                     onToggleSelect={toggleOrderSelection}
                     onToggleSelectAll={toggleSelectAll}
@@ -577,7 +570,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                     variant="outline"
                     size="sm"
                     onClick={() => setExportDialogOpen(true)}
-                    disabled={filteredOrders.length === 0}
+                    disabled={sortedOrders.length === 0}
                   >
                     <Download className="h-4 w-4 mr-2" />
                     Esporta CSV {selectedOrderIds.size > 0 && `(${selectedOrderIds.size})`}
