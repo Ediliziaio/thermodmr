@@ -1,39 +1,33 @@
 
 
-# Verifica Allegati Preventivo — Problemi Trovati
+# Aggiungere ordinamento colonne con frecce su/giù in Ordini e Preventivi
 
-## Stato Attuale
+## Cosa cambia
+Ogni intestazione di colonna delle tabelle in **Ordini** (`Orders.tsx`) e **Preventivi** (`DealerPreventivi.tsx`) diventerà cliccabile con icone freccia su/giù per ordinare i dati in modo ascendente o discendente.
 
-L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
+## Dettaglio tecnico
 
----
+### 1. Stato di ordinamento
+In entrambi i file, aggiungere uno stato `sortConfig`:
+- `{ key: string; direction: 'asc' | 'desc' }` — default `{ key: 'data_inserimento', direction: 'desc' }`
+- Una funzione `handleSort(key)` che toggli la direzione se si clicca sulla stessa colonna, altrimenti imposta `asc`
 
-## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
+### 2. `src/pages/Orders.tsx`
+- Aggiungere `sortConfig` state e `handleSort` function
+- Nel `useMemo` di `filteredOrders`, dopo il filtraggio, aggiungere un `.sort()` in base a `sortConfig`
+- Colonne ordinabili: ID Ordine, Rivenditore, Cliente, Stato, Data Inserimento, Importo Totale, Acconto, Importo da Pagare, Consegna Prevista, Settimana
+- Sostituire ogni `<th>` con un `<th>` cliccabile che mostra `ArrowUp`/`ArrowDown`/`ArrowUpDown` da lucide-react
 
-**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
+### 3. `src/pages/DealerPreventivi.tsx`
+- Stessa logica: `sortConfig` state, `handleSort`, sorting nel `useMemo`
+- Colonne ordinabili: ID Preventivo, Rivenditore, Data Creazione, Importo Totale, Scadenza, Stato
+- Aggiornare i `<TableHead>` per renderli cliccabili con icone freccia
 
-Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
+### 4. Icone
+- Colonna attiva ordinamento ascendente: `ArrowUp`
+- Colonna attiva ordinamento discendente: `ArrowDown`
+- Colonne non attive: `ArrowUpDown` (più piccola e muted)
+- Importare `ArrowUp`, `ArrowDown`, `ArrowUpDown` da lucide-react
 
-**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
-
-Interventi:
-- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
-- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
-- Entrambi i file usano lo stesso pattern, la fix e' identica
-
-## Bug 2: `useCreatePreventivo` contiene codice morto
-
-**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
-
-- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
-- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
-
-**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
-
-## Riepilogo
-
-| # | Tipo | File | Problema |
-|---|------|------|----------|
-| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
-| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
+Nessuna modifica al database o alle API. L'ordinamento è puramente client-side sui dati già filtrati.
 
