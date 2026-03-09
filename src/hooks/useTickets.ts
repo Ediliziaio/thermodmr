@@ -43,17 +43,21 @@ export function useTicketsByOrder(orderId: string) {
   });
 }
 
-export function useAllTickets(filters?: { stato?: string; priorita?: string }) {
+export function useAllTickets(filters?: { stato?: string; priorita?: string; search?: string; limit?: number }) {
   return useQuery({
     queryKey: ["tickets", "all", filters],
     queryFn: async () => {
       let query = supabase
         .from("support_tickets")
         .select("*, profiles:creato_da_user_id(display_name, email), orders!inner(dealer_id, dealers(ragione_sociale))")
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false })
+        .limit(filters?.limit || 100);
 
       if (filters?.stato) query = query.eq("stato", filters.stato);
       if (filters?.priorita) query = query.eq("priorita", filters.priorita);
+      if (filters?.search) {
+        query = query.ilike("oggetto", `%${filters.search}%`);
+      }
 
       const { data, error } = await query;
       if (error) throw error;

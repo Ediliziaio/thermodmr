@@ -39,7 +39,8 @@ export default function DealerDetail() {
         .from("orders_with_payment_stats")
         .select("*")
         .eq("dealer_id", id!)
-        .order("data_inserimento", { ascending: false });
+        .order("data_inserimento", { ascending: false })
+        .limit(50);
       if (error) throw error;
       return data || [];
     },

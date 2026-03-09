@@ -142,7 +142,7 @@ const App = () => (
             <Route
               path="/kpi"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiredRole="super_admin">
                   <Layout>
                     <Analytics />
                   </Layout>

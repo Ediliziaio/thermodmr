@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,7 +24,7 @@ import { PaymentTrendsChart } from "@/components/payments/PaymentTrendsChart";
 import { usePaymentsInfinite } from "@/hooks/usePaymentsInfinite";
 import { DateRange } from "react-day-picker";
 import { useNavigate } from "react-router-dom";
-import { Euro, TrendingUp, Clock, CreditCard, Download, Trash2, X, List, Calendar as CalendarIcon, Loader2, RefreshCw, Plus, AlertCircle } from "lucide-react";
+import { Euro, TrendingUp, Clock, CreditCard, Download, Trash2, X, List, Calendar as CalendarIcon, Loader2, RefreshCw, Plus, AlertCircle, ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useDeletePayment, useBulkDeletePayments } from "@/hooks/usePayments";
 import { useRealtimeSync } from "@/hooks/useRealtimeSync";
@@ -59,6 +59,24 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
   const [newPaymentDialogOpen, setNewPaymentDialogOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"table" | "timeline">("table");
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({
+    key: 'data_pagamento',
+    direction: 'desc',
+  });
+
+  const handleSort = useCallback((key: string) => {
+    setSortConfig(prev => ({
+      key,
+      direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc',
+    }));
+  }, []);
+
+  const SortIcon = ({ columnKey }: { columnKey: string }) => {
+    if (sortConfig.key !== columnKey) return <ArrowUpDown className="h-3 w-3 ml-1 text-muted-foreground/50" />;
+    return sortConfig.direction === 'asc'
+      ? <ArrowUp className="h-3 w-3 ml-1" />
+      : <ArrowDown className="h-3 w-3 ml-1" />;
+  };
 
   // Infinite scroll
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = usePaymentsInfinite({
@@ -75,6 +93,22 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
     () => data?.pages.flatMap(page => page.data) || [],
     [data]
   );
+
+  // Sort payments
+  const sortedPayments = useMemo(() => {
+    return [...payments].sort((a, b) => {
+      const { key, direction } = sortConfig;
+      const mult = direction === 'asc' ? 1 : -1;
+      switch (key) {
+        case 'data_pagamento': return (new Date(a.data_pagamento).getTime() - new Date(b.data_pagamento).getTime()) * mult;
+        case 'importo': return (Number(a.importo) - Number(b.importo)) * mult;
+        case 'tipo': return (a.tipo || '').localeCompare(b.tipo || '', 'it') * mult;
+        case 'metodo': return (a.metodo || '').localeCompare(b.metodo || '', 'it') * mult;
+        case 'dealer': return ((a as any).orders?.dealers?.ragione_sociale || '').localeCompare((b as any).orders?.dealers?.ragione_sociale || '', 'it') * mult;
+        default: return 0;
+      }
+    });
+  }, [payments, sortConfig]);
 
   // Auto-fetch next page when scrolling
   useEffect(() => {
@@ -293,22 +327,32 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    {!isDealerArea && <TableHead className="w-12"><Checkbox checked={selectedPaymentIds.size === payments.length && payments.length > 0} onCheckedChange={toggleSelectAll} /></TableHead>}
-                    <TableHead>Data</TableHead>
+                    {!isDealerArea && <TableHead className="w-12"><Checkbox checked={selectedPaymentIds.size === sortedPayments.length && sortedPayments.length > 0} onCheckedChange={toggleSelectAll} /></TableHead>}
+                    <TableHead className="cursor-pointer select-none" onClick={() => handleSort('data_pagamento')}>
+                      <span className="flex items-center">Data <SortIcon columnKey="data_pagamento" /></span>
+                    </TableHead>
                     <TableHead>Ordine</TableHead>
-                    <TableHead>Dealer</TableHead>
-                    <TableHead>Tipo</TableHead>
-                    <TableHead>Metodo</TableHead>
-                    <TableHead className="text-right">Importo</TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={() => handleSort('dealer')}>
+                      <span className="flex items-center">Dealer <SortIcon columnKey="dealer" /></span>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={() => handleSort('tipo')}>
+                      <span className="flex items-center">Tipo <SortIcon columnKey="tipo" /></span>
+                    </TableHead>
+                    <TableHead className="cursor-pointer select-none" onClick={() => handleSort('metodo')}>
+                      <span className="flex items-center">Metodo <SortIcon columnKey="metodo" /></span>
+                    </TableHead>
+                    <TableHead className="text-right cursor-pointer select-none" onClick={() => handleSort('importo')}>
+                      <span className="flex items-center justify-end">Importo <SortIcon columnKey="importo" /></span>
+                    </TableHead>
                     <TableHead>Riferimento</TableHead>
                     {userRole === 'super_admin' && !isDealerArea && <TableHead className="w-12"></TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {payments.length === 0 ? (
+                  {sortedPayments.length === 0 ? (
                     <TableRow><TableCell colSpan={isDealerArea ? 7 : (userRole === 'super_admin' ? 9 : 8)} className="text-center py-8 text-muted-foreground">Nessun pagamento trovato</TableCell></TableRow>
                   ) : (
-                    payments.map((payment) => (
+                    sortedPayments.map((payment) => (
                       <TableRow key={payment.id} className={selectedPaymentIds.has(payment.id) ? 'bg-muted/50' : ''}>
                         {!isDealerArea && <TableCell><Checkbox checked={selectedPaymentIds.has(payment.id)} onCheckedChange={() => togglePaymentSelection(payment.id)} /></TableCell>}
                         <TableCell>{formatDate(payment.data_pagamento)}</TableCell>

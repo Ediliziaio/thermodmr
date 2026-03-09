@@ -54,7 +54,7 @@ export const useUnifiedAnalytics = ({ commercialeId, dealerId, months = 6 }: Uni
       const startDate = startOfMonth(subMonths(now, months - 1));
       const endDate = endOfMonth(now);
 
-      // Fetch orders with payment stats
+      // Build queries
       let ordersQuery = supabase
         .from("orders_with_payment_stats")
         .select(`
@@ -64,17 +64,6 @@ export const useUnifiedAnalytics = ({ commercialeId, dealerId, months = 6 }: Uni
         .gte("data_inserimento", startDate.toISOString())
         .lte("data_inserimento", endDate.toISOString());
 
-      if (commercialeId) {
-        ordersQuery = ordersQuery.eq("commerciale_id", commercialeId);
-      }
-      if (dealerId) {
-        ordersQuery = ordersQuery.eq("dealer_id", dealerId);
-      }
-
-      const { data: orders, error: ordersError } = await ordersQuery;
-      if (ordersError) throw ordersError;
-
-      // Fetch payments
       let paymentsQuery = supabase
         .from("payments")
         .select(`
@@ -85,14 +74,25 @@ export const useUnifiedAnalytics = ({ commercialeId, dealerId, months = 6 }: Uni
         .lte("data_pagamento", endDate.toISOString());
 
       if (commercialeId) {
+        ordersQuery = ordersQuery.eq("commerciale_id", commercialeId);
         paymentsQuery = paymentsQuery.eq("orders.commerciale_id", commercialeId);
       }
       if (dealerId) {
+        ordersQuery = ordersQuery.eq("dealer_id", dealerId);
         paymentsQuery = paymentsQuery.eq("orders.dealer_id", dealerId);
       }
 
-      const { data: payments, error: paymentsError } = await paymentsQuery;
-      if (paymentsError) throw paymentsError;
+      // Execute in parallel
+      const [ordersResult, paymentsResult] = await Promise.all([
+        ordersQuery,
+        paymentsQuery,
+      ]);
+
+      if (ordersResult.error) throw ordersResult.error;
+      if (paymentsResult.error) throw paymentsResult.error;
+
+      const orders = ordersResult.data;
+      const payments = paymentsResult.data;
 
       // Calculate Order Trends (monthly)
       const monthsInterval = eachMonthOfInterval({ start: startDate, end: endDate });

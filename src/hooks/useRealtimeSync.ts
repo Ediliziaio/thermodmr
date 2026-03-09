@@ -1,70 +1,76 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
  * Hook per sincronizzare Ordini e Pagamenti in real-time
- * Invalida le query di entrambe le sezioni quando cambiano dati collegati
+ * Con debounce per evitare invalidazioni massive
  */
 export const useRealtimeSync = () => {
   const queryClient = useQueryClient();
+  const debounceTimerRef = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
+
+  const debouncedInvalidate = useCallback((keys: string[][], delay = 300) => {
+    const batchKey = keys.map(k => k.join("-")).join("|");
+    
+    if (debounceTimerRef.current[batchKey]) {
+      clearTimeout(debounceTimerRef.current[batchKey]);
+    }
+    
+    debounceTimerRef.current[batchKey] = setTimeout(() => {
+      keys.forEach(key => {
+        queryClient.invalidateQueries({ queryKey: key });
+      });
+      delete debounceTimerRef.current[batchKey];
+    }, delay);
+  }, [queryClient]);
 
   useEffect(() => {
     const channel = supabase
       .channel("orders-payments-sync")
       .on(
         "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "orders",
-        },
+        { event: "*", schema: "public", table: "orders" },
         () => {
-          // Batch invalidation: ordini + dipendenze
-          queryClient.invalidateQueries({ queryKey: ["orders"] });
-          queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
-          queryClient.invalidateQueries({ queryKey: ["order"] });
-          queryClient.invalidateQueries({ queryKey: ["allPayments"] });
-          queryClient.invalidateQueries({ queryKey: ["payments-infinite"] });
-          queryClient.invalidateQueries({ queryKey: ["order-payments"] });
-          queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
-          queryClient.invalidateQueries({ queryKey: ["upcoming-deadlines"] });
+          debouncedInvalidate([
+            ["orders"],
+            ["orders-infinite"],
+            ["order"],
+            ["dashboard-kpis"],
+            ["upcoming-deadlines"],
+          ]);
         }
       )
       .on(
         "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "payments",
-        },
+        { event: "*", schema: "public", table: "payments" },
         () => {
-          queryClient.invalidateQueries({ queryKey: ["allPayments"] });
-          queryClient.invalidateQueries({ queryKey: ["payments-infinite"] });
-          queryClient.invalidateQueries({ queryKey: ["order-payments"] });
-          queryClient.invalidateQueries({ queryKey: ["orders"] });
-          queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
-          queryClient.invalidateQueries({ queryKey: ["order"] });
-          queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
-          queryClient.invalidateQueries({ queryKey: ["revenue-data"] });
+          debouncedInvalidate([
+            ["allPayments"],
+            ["payments-infinite"],
+            ["order-payments"],
+            ["dashboard-kpis"],
+            ["revenue-data"],
+          ]);
         }
       )
       .on(
         "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "dealers",
-        },
+        { event: "*", schema: "public", table: "dealers" },
         () => {
-          queryClient.invalidateQueries({ queryKey: ["dealers-infinite"] });
-          queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
+          debouncedInvalidate([
+            ["dealers-infinite"],
+            ["dashboard-kpis"],
+          ], 500);
         }
       )
       .subscribe();
 
     return () => {
+      // Clear all pending debounce timers
+      Object.values(debounceTimerRef.current).forEach(clearTimeout);
+      debounceTimerRef.current = {};
       supabase.removeChannel(channel);
     };
-  }, [queryClient]);
+  }, [queryClient, debouncedInvalidate]);
 };
