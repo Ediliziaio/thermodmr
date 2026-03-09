@@ -122,16 +122,16 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
     });
   }, [preventivi, searchTerm, dealerFilter, statusFilter, dateFrom, dateTo]);
 
-  // KPI stats (from ALL preventivi, not filtered)
+  // KPI stats (dynamically based on active filters)
   const stats = useMemo(() => {
-    if (!preventivi) return { total: 0, value: 0, valid: 0, expired: 0, avgTicket: 0 };
-    const total = preventivi.length;
-    const value = preventivi.reduce((sum, p) => sum + Number(p.importo_totale), 0);
-    const expired = preventivi.filter((p) => isNonValido(p.data_scadenza_preventivo)).length;
+    if (!filteredPreventivi) return { total: 0, value: 0, valid: 0, expired: 0, avgTicket: 0 };
+    const total = filteredPreventivi.length;
+    const value = filteredPreventivi.reduce((sum, p) => sum + Number(p.importo_totale), 0);
+    const expired = filteredPreventivi.filter((p) => isNonValido(p.data_scadenza_preventivo)).length;
     const valid = total - expired;
     const avgTicket = total > 0 ? value / total : 0;
     return { total, value, valid, expired, avgTicket };
-  }, [preventivi]);
+  }, [filteredPreventivi]);
 
   // --- Mutations ---
 
