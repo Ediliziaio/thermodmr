@@ -56,6 +56,7 @@ const UserManagementSection = () => {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="super_admin">Super Admin</SelectItem>
+            <SelectItem value="commerciale">Commerciale</SelectItem>
             <SelectItem value="rivenditore">Rivenditore</SelectItem>
           </SelectContent>
         </Select>
