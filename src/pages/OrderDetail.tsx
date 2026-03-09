@@ -178,7 +178,7 @@ export default function OrderDetail() {
       currFineProd !== origFineProd ||
       (settimanaConsegna || "") !== (order.settimana_consegna?.toString() || "") ||
       currConsegna !== origConsegna ||
-      (modalitaPagamento || "") !== ((order as any).modalita_pagamento || "");
+      (modalitaPagamento || "") !== (order.modalita_pagamento || "");
 
     if (datesChanged) {
       promises.push(
