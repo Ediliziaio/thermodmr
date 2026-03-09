@@ -9,8 +9,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, AlertCircle, Building2, MapPin, Phone, Mail, FileText, ShoppingCart, Euro, TrendingUp, Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatCurrency, formatDate, getStatusColor, getStatusLabel } from "@/lib/utils";
-import { RevenueTimelineChart } from "@/components/analytics/charts/RevenueTimelineChart";
-import { OrdersDistributionChart } from "@/components/analytics/charts/OrdersDistributionChart";
+import { DealerRevenueChart } from "@/components/dealers/DealerRevenueChart";
+import { DealerOrdersDistribution } from "@/components/dealers/DealerOrdersDistribution";
 
 export default function DealerDetail() {
   const { id } = useParams<{ id: string }>();
