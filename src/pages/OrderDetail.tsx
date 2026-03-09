@@ -522,16 +522,19 @@ export default function OrderDetail() {
                         className="min-h-[120px]"
                         value={noteRivenditore}
                         onChange={(e) => setNoteRivenditore(e.target.value)}
+                        readOnly={isDealerArea}
                       />
                     </TabsContent>
-                    <TabsContent value="note_interne" className="space-y-2">
-                      <Textarea
-                        placeholder="Note interne (non visibili al rivenditore)..."
-                        className="min-h-[120px]"
-                        value={noteInterna}
-                        onChange={(e) => setNoteInterna(e.target.value)}
-                      />
-                    </TabsContent>
+                    {!isDealerArea && (
+                      <TabsContent value="note_interne" className="space-y-2">
+                        <Textarea
+                          placeholder="Note interne (non visibili al rivenditore)..."
+                          className="min-h-[120px]"
+                          value={noteInterna}
+                          onChange={(e) => setNoteInterna(e.target.value)}
+                        />
+                      </TabsContent>
+                    )}
                   </Tabs>
                 </CardContent>
               </Card>
