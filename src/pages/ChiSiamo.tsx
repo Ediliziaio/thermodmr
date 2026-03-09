@@ -82,12 +82,12 @@ const ChiSiamo = () => {
       </section>
 
       {/* Valori */}
-      <section ref={ref2} className="py-24 bg-[hsl(0,0%,97%)]">
-        <div className="max-w-7xl mx-auto px-6">
+      <section ref={ref2} className="py-16 sm:py-24 bg-[hsl(0,0%,97%)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div initial="hidden" animate={inView2 ? "visible" : "hidden"} variants={stagger}>
-            <motion.div variants={fadeUp} className="text-center mb-16">
-              <p className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">I Nostri Valori</p>
-              <h2 className="text-3xl sm:text-4xl font-bold text-[hsl(0,0%,10%)]">Cosa Ci Guida Ogni Giorno</h2>
+            <motion.div variants={fadeUp} className="text-center mb-10 sm:mb-16">
+              <p className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-3 sm:mb-4">I Nostri Valori</p>
+              <h2 className="text-2xl sm:text-4xl font-bold text-[hsl(0,0%,10%)]">Cosa Ci Guida Ogni Giorno</h2>
             </motion.div>
             <div className="grid sm:grid-cols-2 gap-8">
               {values.map((v) => (
