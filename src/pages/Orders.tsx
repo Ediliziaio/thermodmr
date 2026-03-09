@@ -50,6 +50,16 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
   const isMobile = useIsMobile();
   const isDealerArea = !!dealerId;
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  
+  // Debounce search input (300ms)
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchQuery(value);
+    clearTimeout(searchTimerRef.current);
+    searchTimerRef.current = setTimeout(() => setDebouncedSearch(value), 300);
+  }, []);
+  useEffect(() => () => clearTimeout(searchTimerRef.current), []);
   
   const now = new Date();
   const [activeFilter, setActiveFilter] = useState<string | null>("year");
