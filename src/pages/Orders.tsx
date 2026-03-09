@@ -94,6 +94,26 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     amountPaid: number;
   }>({ open: false, orderId: "", orderTotal: 0, amountPaid: 0 });
 
+  // Sort state
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({
+    key: 'data_inserimento',
+    direction: 'desc',
+  });
+
+  const handleSort = useCallback((key: string) => {
+    setSortConfig(prev => ({
+      key,
+      direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc',
+    }));
+  }, []);
+
+  const SortIcon = ({ columnKey }: { columnKey: string }) => {
+    if (sortConfig.key !== columnKey) return <ArrowUpDown className="h-3 w-3 ml-1 text-muted-foreground/50" />;
+    return sortConfig.direction === 'asc' 
+      ? <ArrowUp className="h-3 w-3 ml-1" /> 
+      : <ArrowDown className="h-3 w-3 ml-1" />;
+  };
+
   // Helper functions for selection
   const toggleOrderSelection = (orderId: string) => {
     setSelectedOrderIds(prev => {
