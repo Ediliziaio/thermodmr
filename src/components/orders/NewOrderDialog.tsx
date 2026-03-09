@@ -81,8 +81,7 @@ export function NewOrderDialog({ open: controlledOpen, onOpenChange: controlledO
   const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
   const setOpen = controlledOnOpenChange || setInternalOpen;
   
-  const { data: dealersData } = useDealersInfinite();
-  const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
+  const { data: dealers = [] } = useDealersDropdown();
   const createOrderMutation = useCreateOrder();
 
   const form = useForm<OrderFormValues>({
