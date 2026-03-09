@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Loader2, AlertCircle, RefreshCw, X, Trash2, Download, Plus, FileText, List, Kanban } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useOrdersInfinite } from "@/hooks/useOrdersInfinite";
+import { useOrdersInfinite, useOrdersKpi } from "@/hooks/useOrdersInfinite";
 import { useUpdateOrderStatus } from "@/hooks/useOrders";
 import { NewOrderDialog } from "@/components/orders/NewOrderDialog";
 import { NewPreventivoDialog } from "@/components/orders/NewPreventivoDialog";

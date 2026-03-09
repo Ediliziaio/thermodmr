@@ -142,3 +142,33 @@ export const useOrdersInfinite = ({
     staleTime: 2 * 60 * 1000,
   });
 };
+
+/**
+ * Hook per KPI ordini calcolati server-side (usa RPC get_orders_kpi_filtered)
+ */
+export const useOrdersKpi = (params: UseOrdersInfiniteParams = {}) => {
+  return useQuery({
+    queryKey: ["orders-kpi", params.searchQuery, params.dealerId, params.stato, params.dataFrom, params.dataTo, params.statoPagamento, params.quickFilter, params.importoMin, params.importoMax],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc("get_orders_kpi_filtered", {
+        p_dealer_id: params.dealerId || null,
+        p_stato: params.stato || null,
+        p_data_from: params.dataFrom || null,
+        p_data_to: params.dataTo ? `${params.dataTo}T23:59:59.999Z` : null,
+        p_stato_pagamento: params.statoPagamento || null,
+        p_quick_filter: params.quickFilter || null,
+        p_importo_min: params.importoMin ?? null,
+        p_importo_max: params.importoMax ?? null,
+        p_search: params.searchQuery?.trim() || null,
+      });
+      if (error) throw error;
+      return data as {
+        total_orders: number;
+        total_value: number;
+        total_to_collect: number;
+        orders_with_balance: number;
+      };
+    },
+    staleTime: 2 * 60 * 1000,
+  });
+};
