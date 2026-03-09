@@ -24,7 +24,7 @@ import { PaymentTrendsChart } from "@/components/payments/PaymentTrendsChart";
 import { usePaymentsInfinite } from "@/hooks/usePaymentsInfinite";
 import { DateRange } from "react-day-picker";
 import { useNavigate } from "react-router-dom";
-import { Euro, TrendingUp, Clock, CreditCard, Download, Trash2, X, List, Calendar as CalendarIcon, Loader2, RefreshCw, Plus, AlertCircle } from "lucide-react";
+import { Euro, TrendingUp, Clock, CreditCard, Download, Trash2, X, List, Calendar as CalendarIcon, Loader2, RefreshCw, Plus, AlertCircle, ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useDeletePayment, useBulkDeletePayments } from "@/hooks/usePayments";
 import { useRealtimeSync } from "@/hooks/useRealtimeSync";
