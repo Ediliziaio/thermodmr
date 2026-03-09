@@ -238,22 +238,6 @@ export const PAYMENT_COLUMNS = [
 ];
 
 /**
- * Column definitions for commissions
- */
-export const COMMISSION_COLUMNS = [
-  { key: "ordine_id", label: "ID Ordine", defaultSelected: true },
-  { key: "orders.dealers.ragione_sociale", label: "Rivenditore", defaultSelected: true },
-  { key: "profiles.display_name", label: "Commerciale", defaultSelected: true },
-  { key: "base_calcolo", label: "Base Calcolo", defaultSelected: true },
-  { key: "orders.importo_totale", label: "Importo Base", defaultSelected: true },
-  { key: "percentuale", label: "Percentuale %", defaultSelected: true },
-  { key: "importo_calcolato", label: "Provvigione €", defaultSelected: true },
-  { key: "stato_liquidazione", label: "Stato", defaultSelected: true },
-  { key: "data_liquidazione", label: "Data Liquidazione", defaultSelected: false },
-  { key: "created_at", label: "Data Creazione", defaultSelected: false },
-];
-
-/**
  * Export orders with custom columns
  */
 export function exportOrdersCustom(orders: any[], selectedColumns: string[]) {
