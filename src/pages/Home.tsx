@@ -672,7 +672,7 @@ const BecomeDealer = () => {
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
         variants={stagger}
-        className="relative max-w-3xl mx-auto px-6 text-center"
+        className="relative max-w-3xl mx-auto px-4 sm:px-6 text-center"
       >
         <motion.h2 variants={fadeUp} className="text-3xl sm:text-5xl font-extrabold text-white mb-6 leading-tight">
           Vuoi Diventare un Rivenditore{" "}
