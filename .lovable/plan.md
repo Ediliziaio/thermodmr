@@ -1,27 +1,20 @@
 
+# Analisi Area Super Admin — Implementazione Completata
 
-# Piano: Abilitare la chat assistenza nel dettaglio preventivo per il rivenditore
+## Fase 1 — Criticità (COMPLETATA)
 
-## Problema
-Attualmente, quando `isDealerArea` è `true`, la sezione `TicketsSection` è nascosta (righe 543 e 707 di `OrderDetail.tsx`). Il rivenditore non può quindi conversare tramite chat dal dettaglio preventivo.
+1. ✅ **AuthContext race condition**: Aggiunto `roleFetchedForUserId` ref per evitare fetch duplicati del ruolo
+2. ✅ **Route /kpi protetta**: Aggiunto `requiredRole="super_admin"` alla route Analytics
+3. ✅ **Analytics error state**: Allineato al pattern standard con Card + AlertCircle + RefreshCw + refetch()
+4. ✅ **useRealtimeSync ottimizzato**: Aggiunto debounce (300ms) e ridotto il numero di query invalidate per evento
 
-## Soluzione
-Mostrare `TicketsSection` anche nell'area dealer, mantenendo tutto il resto in sola lettura. Il rivenditore potrà creare ticket e conversare, ma non modificare dati del preventivo.
+## Fase 2 — Performance (COMPLETATA)
 
-## Modifiche
+5. ✅ **useAllTickets con limit e search**: Aggiunto `.limit(100)` e filtro `ilike` per ricerca
+6. ✅ **DealerDetail orders limitati**: Aggiunto `.limit(50)` alla query ordini
+7. ✅ **useUnifiedAnalytics parallelizzato**: Orders e Payments query eseguite con `Promise.all()`
 
-### `src/pages/OrderDetail.tsx`
-- **Riga 543**: Rimuovere la condizione `!isDealerArea` dal rendering di `TicketsSection` nella sezione preventivo.
-- **Riga 707**: Rimuovere la condizione `!isDealerArea` dal rendering di `TicketsSection` nella sezione ordine.
+## Fase 3 — UX (COMPLETATA)
 
-In entrambi i casi, passare da:
-```tsx
-{!isDealerArea && <TicketsSection orderId={order.id} />}
-```
-a:
-```tsx
-<TicketsSection orderId={order.id} />
-```
-
-Nessun'altra modifica necessaria: `TicketsSection` e `TicketDetailDialog` funzionano già correttamente per i rivenditori (RLS permette creazione e visualizzazione dei propri ticket).
-
+8. ✅ **Pagamenti: frecce ordinamento colonne**: Aggiunto sortConfig + handleSort + SortIcon su Data, Dealer, Tipo, Metodo, Importo
+9. ✅ **Assistenza migliorata**: Mini-dashboard KPI (aperti, in gestione, chiusi, urgenti), barra di ricerca, ordinamento colonne, layout mobile con card
