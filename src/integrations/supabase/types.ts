@@ -1042,6 +1042,7 @@ export type Database = {
         Args: { p_days_to_keep?: number }
         Returns: number
       }
+      generate_next_order_id: { Args: { p_prefix?: string }; Returns: string }
       get_commerciale_stats: {
         Args: {
           p_commerciale_id: string
@@ -1102,6 +1103,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      update_order_lines_atomic: {
+        Args: { p_lines: Json; p_order_id: string }
+        Returns: Json
       }
       update_user_role: {
         Args: {
