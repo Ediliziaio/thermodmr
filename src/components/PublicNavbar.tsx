@@ -287,6 +287,8 @@ const PublicNavbar = () => {
         )}
       </AnimatePresence>
     </nav>
+    <WhatsAppFloating />
+    </>
   );
 };
 
