@@ -69,8 +69,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     };
   }, [filters.dataInserimentoFrom, filters.dataInserimentoTo]);
   
-  // Pass all filters server-side
-  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useOrdersInfinite({
+  const kpiParams = {
     searchQuery,
     dealerId: dealerId || filters.dealerId,
     stato: filters.stato,
@@ -80,7 +79,11 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     quickFilter: filters.quickFilter,
     importoMin: filters.importoMin,
     importoMax: filters.importoMax,
-  });
+  };
+
+  // Pass all filters server-side
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useOrdersInfinite(kpiParams);
+  const { data: kpiData } = useOrdersKpi(kpiParams);
   const updateOrderStatus = useUpdateOrderStatus();
   const { data: dealers = [] } = useDealersDropdown();
   const { ref, inView } = useInView();
