@@ -99,6 +99,7 @@ export const useDeleteDealer = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["dealers-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["dealer-global-stats"] });
       toast({
         title: "Rivenditore eliminato",
         description: "Il rivenditore è stato eliminato con successo.",

@@ -242,15 +242,8 @@ export default function DealerDetail() {
         {/* Tab: Panoramica (merged Analytics + Statistiche) */}
         <TabsContent value="panoramica" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
-            <RevenueTimelineChart
-              orders={dealerOrders}
-              months={6}
-              title="Trend Fatturato (6 Mesi)"
-            />
-            <OrdersDistributionChart
-              orders={dealerOrders}
-              title="Distribuzione Ordini per Stato"
-            />
+            <DealerRevenueChart dealerId={id!} />
+            <DealerOrdersDistribution dealerId={id!} />
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
