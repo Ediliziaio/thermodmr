@@ -13,41 +13,41 @@ export default function PaymentDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data: payment, isLoading: isLoadingPayment, error: paymentError, refetch: refetchPayment } = useQuery({
-    queryKey: ["payment-detail", id],
+  // Single consolidated query: payment + order + payment stats
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ["payment-detail-full", id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      // Fetch payment with order details in one query
+      const { data: payment, error: paymentError } = await supabase
         .from("payments")
         .select(`
           *,
           orders!inner(
             id, stato, importo_totale, dealer_id,
-            dealers!inner(ragione_sociale)
+            dealers!inner(ragione_sociale, email)
           )
         `)
         .eq("id", id!)
         .single();
-      if (error) throw error;
-      return data;
+      if (paymentError) throw paymentError;
+
+      // Fetch order payment stats from view
+      const { data: orderStats, error: statsError } = await supabase
+        .from("orders_with_payment_stats")
+        .select("importo_pagato, importo_da_pagare, percentuale_pagata, numero_pagamenti")
+        .eq("id", payment.ordine_id)
+        .single();
+      if (statsError) throw statsError;
+
+      return { payment, orderStats };
     },
     enabled: !!id,
   });
 
-  const { data: order, isLoading: isLoadingOrder } = useQuery({
-    queryKey: ["order-for-payment", payment?.ordine_id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("orders_with_payment_stats")
-        .select("*, dealers(ragione_sociale, email), clients(nome, cognome)")
-        .eq("id", payment!.ordine_id)
-        .single();
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!payment?.ordine_id,
-  });
+  const payment = data?.payment;
+  const orderStats = data?.orderStats;
 
-  if (isLoadingPayment || isLoadingOrder) {
+  if (isLoading) {
     return (
       <div className="space-y-6 p-6">
         <Skeleton className="h-12 w-64" />
@@ -63,7 +63,7 @@ export default function PaymentDetail() {
     );
   }
 
-  if (paymentError || !payment) {
+  if (error || !payment) {
     return (
       <div className="flex items-center justify-center min-h-[50vh] p-6">
         <Card className="max-w-md w-full">
@@ -72,11 +72,11 @@ export default function PaymentDetail() {
             <div className="text-center">
               <h3 className="font-semibold text-lg">Pagamento non trovato</h3>
               <p className="text-muted-foreground text-sm mt-1">
-                {paymentError ? "Errore nel caricamento del pagamento." : "Il pagamento richiesto non esiste."}
+                {error ? "Errore nel caricamento del pagamento." : "Il pagamento richiesto non esiste."}
               </p>
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" onClick={() => refetchPayment()}>
+              <Button variant="outline" onClick={() => refetch()}>
                 <RefreshCw className="h-4 w-4 mr-2" />Riprova
               </Button>
               <Link to="/pagamenti">
@@ -90,6 +90,11 @@ export default function PaymentDetail() {
       </div>
     );
   }
+
+  const order = payment.orders;
+  const importoPagato = orderStats?.importo_pagato ?? 0;
+  const importoDaPagare = orderStats?.importo_da_pagare ?? 0;
+  const percentualePagata = orderStats?.percentuale_pagata ?? 0;
 
   return (
     <div className="space-y-6 p-6">
@@ -171,59 +176,57 @@ export default function PaymentDetail() {
       </Card>
 
       {/* Ordine Collegato */}
-      {order && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <ShoppingCart className="h-5 w-5" />Ordine #{order.id}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Stato Ordine</p>
-                <Badge className={getStatusColor(order.stato!)}>
-                  {getStatusLabel(order.stato!)}
-                </Badge>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Importo Totale</p>
-                <p className="text-xl font-bold">{formatCurrency(order.importo_totale)}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Importo Pagato</p>
-                <p className="text-xl font-bold text-green-600">{formatCurrency(order.importo_pagato)}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Da Pagare</p>
-                <p className="text-xl font-bold text-orange-600">{formatCurrency(order.importo_da_pagare)}</p>
-              </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <ShoppingCart className="h-5 w-5" />Ordine #{order.id}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Stato Ordine</p>
+              <Badge className={getStatusColor(order.stato)}>
+                {getStatusLabel(order.stato)}
+              </Badge>
             </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Importo Totale</p>
+              <p className="text-xl font-bold">{formatCurrency(order.importo_totale)}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Importo Pagato</p>
+              <p className="text-xl font-bold text-green-600">{formatCurrency(importoPagato)}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Da Pagare</p>
+              <p className="text-xl font-bold text-orange-600">{formatCurrency(importoDaPagare)}</p>
+            </div>
+          </div>
 
-            {/* Progress Bar */}
-            <div className="pt-4 border-t">
-              <p className="text-sm font-medium text-muted-foreground mb-2">Progresso Pagamento</p>
-              <div className="flex items-center gap-3">
-                <div className="flex-1 bg-muted rounded-full h-3">
-                  <div
-                    className="bg-green-500 h-3 rounded-full transition-all"
-                    style={{ width: `${Math.min(order.percentuale_pagata ?? 0, 100)}%` }}
-                  />
-                </div>
-                <span className="text-sm font-medium min-w-[60px]">
-                  {(order.percentuale_pagata ?? 0).toFixed(0)}%
-                </span>
+          {/* Progress Bar */}
+          <div className="pt-4 border-t">
+            <p className="text-sm font-medium text-muted-foreground mb-2">Progresso Pagamento</p>
+            <div className="flex items-center gap-3">
+              <div className="flex-1 bg-muted rounded-full h-3">
+                <div
+                  className="bg-green-500 h-3 rounded-full transition-all"
+                  style={{ width: `${Math.min(percentualePagata, 100)}%` }}
+                />
               </div>
+              <span className="text-sm font-medium min-w-[60px]">
+                {percentualePagata.toFixed(0)}%
+              </span>
             </div>
+          </div>
 
-            <div className="pt-4 flex gap-2">
-              <Button variant="default" onClick={() => navigate(`/ordini/${order.id}`)}>
-                <Eye className="h-4 w-4 mr-2" />Visualizza Ordine Completo
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+          <div className="pt-4 flex gap-2">
+            <Button variant="default" onClick={() => navigate(`/ordini/${order.id}`)}>
+              <Eye className="h-4 w-4 mr-2" />Visualizza Ordine Completo
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
