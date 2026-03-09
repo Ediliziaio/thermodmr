@@ -375,7 +375,7 @@ const Products = () => {
             <ThermometerSun className="h-6 w-6 text-[hsl(195,85%,45%)]" />
             Finestre in PVC
           </motion.h3>
-          <div className="grid sm:grid-cols-3 gap-6 mb-16">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-16">
             {pvcModels.map((m) => (
               <motion.div key={m.name} variants={fadeUp}>
                 <Link to={m.link} className="block h-full">
