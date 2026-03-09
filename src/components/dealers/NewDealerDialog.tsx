@@ -86,9 +86,14 @@ export default function NewDealerDialog({ trigger }: NewDealerDialogProps = {}) 
               <Input
                 id="p_iva"
                 value={formData.p_iva}
-                onChange={(e) => setFormData({ ...formData, p_iva: e.target.value })}
+                onChange={(e) => {
+                  setFormData({ ...formData, p_iva: e.target.value });
+                  if (errors.p_iva) setErrors((prev) => ({ ...prev, p_iva: "" }));
+                }}
+                maxLength={11}
                 required
               />
+              {errors.p_iva && <p className="text-sm text-destructive mt-1">{errors.p_iva}</p>}
             </div>
 
             <div>
@@ -96,9 +101,14 @@ export default function NewDealerDialog({ trigger }: NewDealerDialogProps = {}) 
               <Input
                 id="codice_fiscale"
                 value={formData.codice_fiscale}
-                onChange={(e) => setFormData({ ...formData, codice_fiscale: e.target.value })}
+                onChange={(e) => {
+                  setFormData({ ...formData, codice_fiscale: e.target.value.toUpperCase() });
+                  if (errors.codice_fiscale) setErrors((prev) => ({ ...prev, codice_fiscale: "" }));
+                }}
+                maxLength={16}
                 required
               />
+              {errors.codice_fiscale && <p className="text-sm text-destructive mt-1">{errors.codice_fiscale}</p>}
             </div>
 
             <div>
