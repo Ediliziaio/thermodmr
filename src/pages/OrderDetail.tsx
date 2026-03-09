@@ -776,7 +776,7 @@ export default function OrderDetail() {
       )}
 
       {/* Fixed Save Bar */}
-      {hasUnsavedChanges && (
+      {hasUnsavedChanges && !isDealerArea && (
         <div className="fixed bottom-4 right-4 z-50 flex items-center gap-3 rounded-lg border bg-card p-4 shadow-lg">
           <span className="text-sm font-medium text-muted-foreground">Hai modifiche non salvate</span>
           <Button

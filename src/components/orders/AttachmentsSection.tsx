@@ -198,9 +198,11 @@ export function AttachmentsSection({ orderId, attachments, readOnly = false }: A
                   <Button variant="ghost" size="icon" onClick={() => handleDownload(attachment)}>
                     <Download className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" onClick={() => setDeleteConfirmId(attachment.id)} disabled={deleting === attachment.id}>
-                    {deleting === attachment.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4 text-destructive" />}
-                  </Button>
+                  {!readOnly && (
+                    <Button variant="ghost" size="icon" onClick={() => setDeleteConfirmId(attachment.id)} disabled={deleting === attachment.id}>
+                      {deleting === attachment.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4 text-destructive" />}
+                    </Button>
+                  )}
                 </div>
               </div>
             ))}
