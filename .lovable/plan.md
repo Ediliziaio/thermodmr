@@ -1,20 +1,35 @@
 
-# Analisi Area Super Admin — Implementazione Completata
 
-## Fase 1 — Criticità (COMPLETATA)
+# Piano: Aggiungere Preventivi (read-only) nell'Area Rivenditore
 
-1. ✅ **AuthContext race condition**: Aggiunto `roleFetchedForUserId` ref per evitare fetch duplicati del ruolo
-2. ✅ **Route /kpi protetta**: Aggiunto `requiredRole="super_admin"` alla route Analytics
-3. ✅ **Analytics error state**: Allineato al pattern standard con Card + AlertCircle + RefreshCw + refetch()
-4. ✅ **useRealtimeSync ottimizzato**: Aggiunto debounce (300ms) e ridotto il numero di query invalidate per evento
+## Problema
+L'Area Rivenditore mostra solo Ordini, Pagamenti e Assistenza. I preventivi sono esclusi (`DealerPreventivi` è importato ma la route è commentata, e la voce di navigazione è assente dalla sidebar).
 
-## Fase 2 — Performance (COMPLETATA)
+## Soluzione
+Riabilitare la sezione Preventivi nell'Area Rivenditore in modalità **sola lettura**: il rivenditore può visualizzare la lista e il dettaglio dei propri preventivi, ma non può creare, modificare, convertire o eliminare nulla.
 
-5. ✅ **useAllTickets con limit e search**: Aggiunto `.limit(100)` e filtro `ilike` per ricerca
-6. ✅ **DealerDetail orders limitati**: Aggiunto `.limit(50)` alla query ordini
-7. ✅ **useUnifiedAnalytics parallelizzato**: Orders e Payments query eseguite con `Promise.all()`
+## Modifiche
 
-## Fase 3 — UX (COMPLETATA)
+### 1. `src/components/DealerAreaLayout.tsx`
+- Aggiungere la voce **"Preventivi"** nella navigazione sidebar, con icona `FileText`, posizionata tra Dashboard e Ordini.
 
-8. ✅ **Pagamenti: frecce ordinamento colonne**: Aggiunto sortConfig + handleSort + SortIcon su Data, Dealer, Tipo, Metodo, Importo
-9. ✅ **Assistenza migliorata**: Mini-dashboard KPI (aperti, in gestione, chiusi, urgenti), barra di ricerca, ordinamento colonne, layout mobile con card
+### 2. `src/pages/DealerArea.tsx`
+- Riabilitare il lazy import di `DealerPreventivi`.
+- Aggiungere la route `preventivi` che passa `dealerId` e un nuovo prop `readOnly={true}`.
+
+### 3. `src/pages/DealerPreventivi.tsx`
+- Accettare un nuovo prop opzionale `readOnly?: boolean`.
+- Quando `readOnly` è `true`:
+  - Nascondere il pulsante "Nuovo Preventivo".
+  - Nascondere le checkbox di selezione e la barra azioni massive (bulk delete, bulk convert).
+  - Nascondere il dropdown di cambio stato inline su ogni riga.
+  - Nascondere le azioni "Converti in Ordine", "Duplica", "Elimina" nel menu contestuale.
+  - Mantenere il pulsante "Dettagli" (Eye) per la navigazione al dettaglio (read-only).
+  - Mantenere KPI, filtri e ordinamento (sono di sola lettura per natura).
+
+### 4. Navigazione dettaglio preventivo
+- Il click su "Dettagli" dal contesto dealer area navigherà al dettaglio ordine esistente (`OrderDetail`), che è già in modalità read-only per i rivenditori dato che `isDealerArea` è attivo.
+
+## Nessuna modifica al database
+Le RLS policies esistenti già consentono ai rivenditori di vedere i propri ordini (inclusi quelli con `stato = 'preventivo'`).
+
