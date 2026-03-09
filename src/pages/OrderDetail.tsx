@@ -53,6 +53,7 @@ import {
   useUpdateOrderId,
   useUpdateOrderLines,
   useUpdateOrderDates,
+  generateOrderId,
 } from "@/hooks/useOrders";
 import { formatCurrency, formatDate, getStatusLabel, getStatusColor } from "@/lib/utils";
 import { MODALITA_PAGAMENTO_OPTIONS, getModalitaPagamentoLabel } from "@/lib/orderConstants";
@@ -253,18 +254,25 @@ export default function OrderDetail() {
   }, [handleSaveAll, pendingNavigation, navigate]);
 
   const convertMutation = useMutation({
-    mutationFn: async (orderId: string) => {
+    mutationFn: async (preventivoId: string) => {
+      const newOrderId = await generateOrderId();
       const { error } = await supabase
         .from("orders")
-        .update({ stato: "da_confermare" as any })
-        .eq("id", orderId);
+        .update({
+          id: newOrderId,
+          stato: "da_confermare" as any,
+          riferimento_preventivo: preventivoId,
+        })
+        .eq("id", preventivoId);
       if (error) throw error;
+      return newOrderId;
     },
-    onSuccess: () => {
-      toast({ title: "Preventivo convertito in ordine con successo" });
-      queryClient.invalidateQueries({ queryKey: ["order", id] });
+    onSuccess: (newOrderId) => {
+      toast({ title: "Preventivo convertito in ordine", description: `Nuovo ID: ${newOrderId}` });
+      queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
       queryClient.invalidateQueries({ queryKey: ["orders"] });
       setShowConvertDialog(false);
+      navigate(`/ordini/${newOrderId}`, { replace: true });
     },
     onError: () => {
       toast({ title: "Errore durante la conversione del preventivo", variant: "destructive" });

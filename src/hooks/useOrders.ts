@@ -326,7 +326,7 @@ const generatePreventivoId = async (): Promise<string> => {
   return `PRV-${year}-${nextNumber.toString().padStart(4, "0")}`;
 };
 
-const generateOrderId = async (): Promise<string> => {
+export const generateOrderId = async (): Promise<string> => {
   const year = new Date().getFullYear();
   const { data: lastOrder } = await supabase
     .from("orders")

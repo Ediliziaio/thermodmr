@@ -31,6 +31,7 @@ import { it } from "date-fns/locale";
 import { formatCurrency, formatDate, cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
+import { generateOrderId } from "@/hooks/useOrders";
 import { useAuth } from "@/contexts/AuthContext";
 import { NewPreventivoDialog, type PreventivoDefaultValues } from "@/components/orders/NewPreventivoDialog";
 
@@ -136,17 +137,27 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
   // --- Mutations ---
 
   const convertMutation = useMutation({
-    mutationFn: async (id: string) => {
+    mutationFn: async (preventivoId: string) => {
+      // Generate new order ID
+      const newOrderId = await generateOrderId();
+      
+      // Update: new ID, status, and save old preventivo ID as reference
       const { error } = await supabase
         .from("orders")
-        .update({ stato: "da_confermare" as any })
-        .eq("id", id);
+        .update({
+          id: newOrderId,
+          stato: "da_confermare" as any,
+          riferimento_preventivo: preventivoId,
+        })
+        .eq("id", preventivoId);
       if (error) throw error;
+      return newOrderId;
     },
-    onSuccess: () => {
-      toast({ title: "Preventivo convertito in ordine con successo" });
+    onSuccess: (newOrderId) => {
+      toast({ title: "Preventivo convertito in ordine", description: `Nuovo ID: ${newOrderId}` });
       queryClient.invalidateQueries({ queryKey: ["dealer-preventivi"] });
       queryClient.invalidateQueries({ queryKey: ["dealer-order-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
       setConvertId(null);
     },
     onError: () => {
@@ -178,16 +189,29 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
 
   const bulkConvertMutation = useMutation({
     mutationFn: async (ids: string[]) => {
-      const { error } = await supabase
-        .from("orders")
-        .update({ stato: "da_confermare" as any })
-        .in("id", ids);
-      if (error) throw error;
+      // Convert each preventivo one by one to generate unique order IDs
+      const results = await Promise.all(
+        ids.map(async (preventivoId) => {
+          const newOrderId = await generateOrderId();
+          const { error } = await supabase
+            .from("orders")
+            .update({
+              id: newOrderId,
+              stato: "da_confermare" as any,
+              riferimento_preventivo: preventivoId,
+            })
+            .eq("id", preventivoId);
+          if (error) throw error;
+          return newOrderId;
+        })
+      );
+      return results;
     },
-    onSuccess: () => {
-      toast({ title: `${selectedIds.size} preventiv${selectedIds.size === 1 ? "o convertito" : "i convertiti"} in ordini` });
+    onSuccess: (newIds) => {
+      toast({ title: `${newIds.length} preventiv${newIds.length === 1 ? "o convertito" : "i convertiti"} in ordini` });
       queryClient.invalidateQueries({ queryKey: ["dealer-preventivi"] });
       queryClient.invalidateQueries({ queryKey: ["dealer-order-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
       setSelectedIds(new Set());
       setBulkConvertOpen(false);
     },
