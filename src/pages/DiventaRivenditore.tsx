@@ -142,9 +142,9 @@ const DiventaRivenditore = () => {
       </section>
 
       {/* Vantaggi */}
-      <section ref={vantaggiRef} id="vantaggi-rivenditore" className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div initial="hidden" animate={vantaggiInView ? "visible" : "hidden"} variants={stagger} className="text-center mb-16">
+      <section ref={vantaggiRef} id="vantaggi-rivenditore" className="py-16 sm:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <motion.div initial="hidden" animate={vantaggiInView ? "visible" : "hidden"} variants={stagger} className="text-center mb-10 sm:mb-16">
             <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
               I Vantaggi della Partnership
             </motion.p>
