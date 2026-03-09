@@ -48,7 +48,7 @@ export function NewPaymentDialog({ open: controlledOpen, onOpenChange }: NewPaym
 
   const createPayment = useCreatePayment();
 
-  // Fetch orders with payment stats for selection
+  // Fetch orders with payment stats — limited to non-completed, with pagination
   const { data: orders = [], isLoading } = useQuery({
     queryKey: ["ordersForPayment"],
     queryFn: async () => {
@@ -62,17 +62,21 @@ export function NewPaymentDialog({ open: controlledOpen, onOpenChange }: NewPaym
           importo_da_pagare,
           percentuale_pagata,
           data_inserimento,
+          dealer_id,
           dealers!inner(
             id,
-            ragione_sociale
+            ragione_sociale,
+            commerciale_owner_id
           )
         `)
-        .order("created_at", { ascending: false });
+        .neq("stato", "consegnato")
+        .order("created_at", { ascending: false })
+        .limit(500);
 
       if (error) throw error;
       return data as any[];
     },
-    staleTime: 5 * 60 * 1000, // 5 minuti
+    staleTime: 5 * 60 * 1000,
   });
 
   const selectedOrder = useMemo(
@@ -87,13 +91,10 @@ export function NewPaymentDialog({ open: controlledOpen, onOpenChange }: NewPaym
     setFormData((prev) => {
       const newData = { ...prev, ordineId: orderId };
 
-      // Auto-suggerisci importo basato sul tipo di pagamento
       if (!prev.importo || prev.importo === "0") {
         if (prev.tipo === "acconto" && order.importo_totale) {
-          // Suggerisci 30% per acconto
           newData.importo = (order.importo_totale * 0.3).toFixed(2);
         } else if (prev.tipo === "saldo" && order.importo_da_pagare) {
-          // Suggerisci l'intero importo rimanente per saldo
           newData.importo = order.importo_da_pagare.toFixed(2);
         }
       }
@@ -101,7 +102,6 @@ export function NewPaymentDialog({ open: controlledOpen, onOpenChange }: NewPaym
       return newData;
     });
 
-    // Mostra toast informativo se c'è ancora da pagare
     if (order.importo_da_pagare && order.importo_da_pagare > 0) {
       toast({
         title: "💡 Suggerimento",
@@ -133,11 +133,9 @@ export function NewPaymentDialog({ open: controlledOpen, onOpenChange }: NewPaym
       return;
     }
 
-    // Validazione avanzata: controlla se l'importo supera il da pagare
     if (selectedOrder && selectedOrder.importo_da_pagare !== undefined) {
       const importoDaPagare = selectedOrder.importo_da_pagare;
       if (importo > importoDaPagare + 0.01) {
-        // +0.01 per tolleranza arrotondamenti
         toast({
           title: "⚠️ Attenzione",
           description: `L'importo (${formatCurrency(importo)}) supera il rimanente da pagare (${formatCurrency(importoDaPagare)}).`,
@@ -219,7 +217,6 @@ export function NewPaymentDialog({ open: controlledOpen, onOpenChange }: NewPaym
                 )}
               </div>
 
-              {/* Progress Bar Pagamento */}
               {selectedOrder.percentuale_pagata !== undefined && (
                 <div className="space-y-2">
                   <div className="flex justify-between text-xs">

@@ -37,7 +37,7 @@ export const PaymentFilters = ({
       {onSearchQueryChange && (
         <div className="relative">
           <Input
-            placeholder="🔍 Ricerca full-text: riferimento, metodo, dealer..."
+            placeholder="🔍 Ricerca: riferimento, metodo, dealer, ID ordine..."
             value={searchQuery || ""}
             onChange={(e) => onSearchQueryChange(e.target.value)}
             className="pr-20"
@@ -105,10 +105,11 @@ export const PaymentFilters = ({
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Tutti i metodi</SelectItem>
-          <SelectItem value="bonifico">Bonifico</SelectItem>
-          <SelectItem value="carta">Carta</SelectItem>
-          <SelectItem value="contanti">Contanti</SelectItem>
-          <SelectItem value="assegno">Assegno</SelectItem>
+          <SelectItem value="Bonifico">Bonifico</SelectItem>
+          <SelectItem value="Carta di Credito">Carta di Credito</SelectItem>
+          <SelectItem value="Contante">Contante</SelectItem>
+          <SelectItem value="Assegno">Assegno</SelectItem>
+          <SelectItem value="PayPal">PayPal</SelectItem>
         </SelectContent>
       </Select>
 

@@ -32,25 +32,57 @@ interface UsePaymentsInfiniteParams {
   metodoFilter: string;
   searchQuery?: string;
   dealerId?: string;
+  sortKey?: string;
+  sortDirection?: "asc" | "desc";
 }
 
-export const usePaymentsInfinite = ({ dateRange, tipoFilter, metodoFilter, searchQuery, dealerId }: UsePaymentsInfiniteParams) => {
+// Map UI sort keys to DB columns
+const SORT_COLUMN_MAP: Record<string, string> = {
+  data_pagamento: "data_pagamento",
+  importo: "importo",
+  tipo: "tipo",
+  metodo: "metodo",
+  created_at: "created_at",
+};
+
+export const usePaymentsInfinite = ({
+  dateRange,
+  tipoFilter,
+  metodoFilter,
+  searchQuery,
+  dealerId,
+  sortKey = "data_pagamento",
+  sortDirection = "desc",
+}: UsePaymentsInfiniteParams) => {
   return useInfiniteQuery({
-    queryKey: ["payments-infinite", dateRange, tipoFilter, metodoFilter, searchQuery, dealerId],
+    queryKey: ["payments-infinite", dateRange, tipoFilter, metodoFilter, searchQuery, dealerId, sortKey, sortDirection],
     queryFn: async ({ pageParam = 0 }) => {
       const from = pageParam * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
 
-      // If searching by dealer name, first find matching dealer IDs
+      // If searching by dealer name or order_id, first find matching IDs
       let matchingDealerIds: string[] | null = null;
+      let matchingOrderIds: string[] | null = null;
       if (searchQuery && searchQuery.trim()) {
         const search = searchQuery.trim().toLowerCase();
+        
+        // Search dealers by name
         const { data: matchingDealers } = await supabase
           .from("dealers")
           .select("id")
           .ilike("ragione_sociale", `%${search}%`);
         matchingDealerIds = matchingDealers?.map(d => d.id) || [];
+
+        // Search orders by ID
+        const { data: matchingOrders } = await supabase
+          .from("orders")
+          .select("id")
+          .ilike("id", `%${search}%`);
+        matchingOrderIds = matchingOrders?.map(o => o.id) || [];
       }
+
+      // Determine sort column - only sort server-side for direct DB columns
+      const dbSortColumn = SORT_COLUMN_MAP[sortKey];
 
       let query = supabase
         .from("payments")
@@ -69,7 +101,7 @@ export const usePaymentsInfinite = ({ dateRange, tipoFilter, metodoFilter, searc
         `,
           { count: "exact" }
         )
-        .order("data_pagamento", { ascending: false })
+        .order(dbSortColumn || "data_pagamento", { ascending: sortDirection === "asc" })
         .range(from, to);
 
       // Filtro per dealer specifico
@@ -91,18 +123,25 @@ export const usePaymentsInfinite = ({ dateRange, tipoFilter, metodoFilter, searc
         query = query.ilike("metodo", metodoFilter);
       }
 
-      // Full-text search: riferimento/metodo direttamente, dealer via pre-query
+      // Full-text search: riferimento/metodo/ordine_id direttamente, dealer via pre-query
       if (searchQuery && searchQuery.trim()) {
         const search = searchQuery.trim().toLowerCase();
-        if (matchingDealerIds && matchingDealerIds.length > 0) {
-          query = query.or(
-            `riferimento.ilike.%${search}%,metodo.ilike.%${search}%,orders.dealer_id.in.(${matchingDealerIds.join(",")})`
-          );
-        } else {
-          query = query.or(
-            `riferimento.ilike.%${search}%,metodo.ilike.%${search}%`
-          );
+        const orParts: string[] = [
+          `riferimento.ilike.%${search}%`,
+          `metodo.ilike.%${search}%`,
+        ];
+
+        // Add matching order IDs to search
+        if (matchingOrderIds && matchingOrderIds.length > 0) {
+          orParts.push(`ordine_id.in.(${matchingOrderIds.join(",")})`);
         }
+
+        // Add matching dealer IDs via orders
+        if (matchingDealerIds && matchingDealerIds.length > 0) {
+          orParts.push(`orders.dealer_id.in.(${matchingDealerIds.join(",")})`);
+        }
+
+        query = query.or(orParts.join(","));
       }
 
       const { data, error, count } = await query;
@@ -117,6 +156,6 @@ export const usePaymentsInfinite = ({ dateRange, tipoFilter, metodoFilter, searc
     },
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 0,
-    staleTime: 2 * 60 * 1000, // 2 minuti
+    staleTime: 2 * 60 * 1000,
   });
 };

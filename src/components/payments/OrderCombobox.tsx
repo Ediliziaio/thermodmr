@@ -65,7 +65,7 @@ export function OrderCombobox({
     
     // Filtro "Solo Miei Dealer" - filtra per commerciale_owner_id del dealer
     if (statusFilter === "my_dealers" && user) {
-      const dealerOwnerId = (order.dealers as any)?.commerciale_owner_id;
+      const dealerOwnerId = (order as any)?.dealers?.commerciale_owner_id;
       if (dealerOwnerId !== user.id) {
         return false;
       }

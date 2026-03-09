@@ -57,6 +57,7 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
   const [tipoFilter, setTipoFilter] = useState("all");
   const [metodoFilter, setMetodoFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectedPaymentIds, setSelectedPaymentIds] = useState<Set<string>>(new Set());
   const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
   const [newPaymentDialogOpen, setNewPaymentDialogOpen] = useState(false);
@@ -66,6 +67,12 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
     key: 'data_pagamento',
     direction: 'desc',
   });
+
+  // Debounce search query (300ms)
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchQuery), 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   const handleSort = useCallback((key: string) => {
     setSortConfig(prev => ({
@@ -81,36 +88,34 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
       : <ArrowDown className="h-3 w-3 ml-1" />;
   };
 
-  // Infinite scroll
+  // Infinite scroll with server-side sorting
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = usePaymentsInfinite({
     dateRange,
     tipoFilter,
     metodoFilter,
-    searchQuery,
+    searchQuery: debouncedSearch,
     dealerId,
+    sortKey: sortConfig.key,
+    sortDirection: sortConfig.direction,
   });
   const { ref, inView } = useInView();
 
-  // Combine all pages
+  // Combine all pages — already sorted server-side
   const payments = useMemo(
     () => data?.pages.flatMap(page => page.data) || [],
     [data]
   );
 
-  // Sort payments
+  // For dealer sort (not a direct DB column), apply client-side sort
   const sortedPayments = useMemo(() => {
-    return [...payments].sort((a, b) => {
-      const { key, direction } = sortConfig;
-      const mult = direction === 'asc' ? 1 : -1;
-      switch (key) {
-        case 'data_pagamento': return (new Date(a.data_pagamento).getTime() - new Date(b.data_pagamento).getTime()) * mult;
-        case 'importo': return (Number(a.importo) - Number(b.importo)) * mult;
-        case 'tipo': return (a.tipo || '').localeCompare(b.tipo || '', 'it') * mult;
-        case 'metodo': return (a.metodo || '').localeCompare(b.metodo || '', 'it') * mult;
-        case 'dealer': return ((a as any).orders?.dealers?.ragione_sociale || '').localeCompare((b as any).orders?.dealers?.ragione_sociale || '', 'it') * mult;
-        default: return 0;
-      }
-    });
+    if (sortConfig.key === 'dealer') {
+      return [...payments].sort((a, b) => {
+        const mult = sortConfig.direction === 'asc' ? 1 : -1;
+        return (a.orders?.dealers?.ragione_sociale || '').localeCompare(b.orders?.dealers?.ragione_sociale || '', 'it') * mult;
+      });
+    }
+    // All other sorts are server-side
+    return payments;
   }, [payments, sortConfig]);
 
   // Auto-fetch next page when scrolling
@@ -120,10 +125,9 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-
   // Stats da RPC server-side (dati completi, non solo pagine caricate)
   const { data: paymentStats } = useQuery({
-    queryKey: ["payment-stats", dateRange, tipoFilter, metodoFilter, dealerId],
+    queryKey: ["payment-stats", dateRange, tipoFilter, metodoFilter, dealerId, debouncedSearch],
     queryFn: async () => {
       const { data, error } = await supabase.rpc("get_payment_stats", {
         p_date_from: dateRange?.from ? format(dateRange.from, "yyyy-MM-dd") : null,
