@@ -59,6 +59,24 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
   const [newPaymentDialogOpen, setNewPaymentDialogOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"table" | "timeline">("table");
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({
+    key: 'data_pagamento',
+    direction: 'desc',
+  });
+
+  const handleSort = useCallback((key: string) => {
+    setSortConfig(prev => ({
+      key,
+      direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc',
+    }));
+  }, []);
+
+  const SortIcon = ({ columnKey }: { columnKey: string }) => {
+    if (sortConfig.key !== columnKey) return <ArrowUpDown className="h-3 w-3 ml-1 text-muted-foreground/50" />;
+    return sortConfig.direction === 'asc'
+      ? <ArrowUp className="h-3 w-3 ml-1" />
+      : <ArrowDown className="h-3 w-3 ml-1" />;
+  };
 
   // Infinite scroll
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = usePaymentsInfinite({
