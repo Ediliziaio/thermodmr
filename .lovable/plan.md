@@ -1,39 +1,36 @@
 
 
-# Verifica Allegati Preventivo — Problemi Trovati
+# Conversione Preventivo → Ordine: Nuovo ID e Riferimento
 
-## Stato Attuale
+## Problema
+Attualmente la conversione cambia solo lo `stato` da `preventivo` a `da_confermare`, mantenendo l'ID `PRV-YYYY-NNNN`. L'utente vuole:
+1. Generare un nuovo ID `ORD-YYYY-NNNN` automaticamente
+2. Salvare il vecchio ID preventivo nel campo `riferimento_preventivo` (se non già valorizzato)
 
-L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
+## Modifiche
 
----
+### 1. `src/pages/DealerPreventivi.tsx` — convertMutation (riga 138-154)
+- Invece di fare solo `update({ stato })`, la mutation deve:
+  1. Leggere l'ordine corrente per ottenere l'ID preventivo e il `riferimento_preventivo` esistente
+  2. Generare un nuovo ID ordine con `generateOrderId()` (da importare o replicare)
+  3. Aggiornare il record con: `id = nuovoOrdId`, `stato = da_confermare`, `riferimento_preventivo = vecchioIdPreventivo` (se non già presente)
+- Stessa logica per `bulkConvertMutation` (riga ~176-195)
 
-## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
+### 2. `src/pages/OrderDetail.tsx` — convertMutation (riga 255-272)
+- Stessa logica: generare nuovo ID ordine, aggiornare `id`, `stato`, e `riferimento_preventivo`
+- Dopo la conversione, navigare al nuovo URL `/ordini/{nuovoId}`
 
-**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
+### 3. `src/hooks/useOrders.ts` — Esportare `generateOrderId`
+- Rendere la funzione `generateOrderId` (attualmente privata, riga ~308) esportabile, così può essere usata dai componenti di conversione
 
-Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
-
-**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
-
-Interventi:
-- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
-- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
-- Entrambi i file usano lo stesso pattern, la fix e' identica
-
-## Bug 2: `useCreatePreventivo` contiene codice morto
-
-**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
-
-- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
-- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
-
-**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
-
-## Riepilogo
-
-| # | Tipo | File | Problema |
-|---|------|------|----------|
-| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
-| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
+## Dettaglio tecnico
+La conversione farà:
+```sql
+UPDATE orders 
+SET id = 'ORD-2026-0005', 
+    stato = 'da_confermare',
+    riferimento_preventivo = 'PRV-2026-0003'  -- vecchio ID
+WHERE id = 'PRV-2026-0003';
+```
+Le tabelle collegate (`order_lines`, `payments`, `attachments`) si aggiorneranno automaticamente grazie alle foreign key con `ON UPDATE CASCADE` (da verificare; in caso contrario, l'update dell'ID potrebbe richiedere una migration per aggiungere `ON UPDATE CASCADE`).
 
