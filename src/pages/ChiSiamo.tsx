@@ -29,18 +29,18 @@ const ChiSiamo = () => {
       <PublicNavbar />
 
       {/* Hero */}
-      <section className="pt-28 sm:pt-32 pb-16 sm:pb-20 bg-[hsl(0,0%,97%)]">
+      <section className="pt-24 sm:pt-32 pb-14 sm:pb-20 bg-[hsl(0,0%,97%)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
             <motion.div initial="hidden" animate="visible" variants={stagger} className="max-w-xl">
-              <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
+              <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-3 sm:mb-4">
                 Chi Siamo
               </motion.p>
-              <motion.h1 variants={fadeUp} className="text-4xl sm:text-5xl font-extrabold text-[hsl(0,0%,10%)] leading-tight mb-6">
+              <motion.h1 variants={fadeUp} className="text-2xl sm:text-5xl font-extrabold text-[hsl(0,0%,10%)] leading-tight mb-4 sm:mb-6">
                 Produciamo Infissi di Qualità per{" "}
                 <span className="text-[hsl(195,85%,45%)]">Far Crescere la Tua Attività</span>
               </motion.h1>
-              <motion.p variants={fadeUp} className="text-lg text-[hsl(0,0%,40%)] leading-relaxed">
+              <motion.p variants={fadeUp} className="text-base sm:text-lg text-[hsl(0,0%,40%)] leading-relaxed">
                 Da oltre 10 anni produciamo serramenti internamente, senza intermediari.
                 Questo ci permette di offrirti il prezzo più competitivo sul mercato,
                 tempi di consegna da 2 a 6 settimane e un controllo qualità rigoroso su ogni singolo prodotto.
