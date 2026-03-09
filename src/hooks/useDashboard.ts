@@ -102,50 +102,24 @@ export const useDashboardKPIs = (startDate?: Date, endDate?: Date) => {
 };
 
 export const useRevenueData = (startDate?: Date, endDate?: Date) => {
-  const months = startDate && endDate 
-    ? Math.max(1, Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 30)))
-    : 6;
-
   return useQuery({
-    queryKey: ["revenue-data", startDate, endDate, months],
+    queryKey: ["revenue-data", startDate, endDate],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc("get_revenue_by_month", {
-        p_months: months,
+      const { data, error } = await supabase.rpc("get_revenue_by_date_range", {
+        p_start_date: startDate?.toISOString() ?? null,
+        p_end_date: endDate?.toISOString() ?? null,
         p_commerciale_id: null,
       });
 
       if (error) throw error;
 
-      let result = (data || []) as Array<{
+      return (data || []) as Array<{
         month: string;
+        month_iso: string;
         ricavi: number;
         acconti: number;
         incassato: number;
       }>;
-
-      if (startDate && endDate) {
-        result = result.filter(item => {
-          // Parse "Mon YYYY" format (e.g. "Mar 2026") using month_date if available,
-          // otherwise parse the label safely
-          const parts = item.month.split(' ');
-          if (parts.length === 2) {
-            const monthNames: Record<string, number> = {
-              'Gen': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'Mag': 4, 'Giu': 5,
-              'Lug': 6, 'Ago': 7, 'Set': 8, 'Ott': 9, 'Nov': 10, 'Dic': 11,
-              'Jan': 0, 'Jun': 5, 'Jul': 6, 'Aug': 7, 'Sep': 8, 'Oct': 9, 'Dec': 11
-            };
-            const monthIdx = monthNames[parts[0]];
-            const year = parseInt(parts[1]);
-            if (monthIdx !== undefined && !isNaN(year)) {
-              const itemDate = new Date(year, monthIdx, 1);
-              return itemDate >= startDate && itemDate <= endDate;
-            }
-          }
-          return true;
-        });
-      }
-
-      return result;
     },
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,

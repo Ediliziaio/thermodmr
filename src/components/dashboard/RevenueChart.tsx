@@ -15,7 +15,22 @@ interface RevenueChartProps {
 
 export function RevenueChart({ data, description }: RevenueChartProps) {
   const isMobile = useIsMobile();
-  
+
+  if (!data || data.length === 0) {
+    return (
+      <Card>
+        <CardHeader className={isMobile ? "p-4" : ""}>
+          <CardTitle className={isMobile ? "text-base" : ""}>Andamento Ricavi</CardTitle>
+          <CardDescription className={isMobile ? "text-xs" : ""}>{description || "Ultimi 6 mesi"}</CardDescription>
+        </CardHeader>
+        <CardContent className={isMobile ? "p-4 pt-0" : ""}>
+          <div className="flex items-center justify-center h-[220px] md:h-[300px] text-muted-foreground text-sm">
+            Nessun dato per questo periodo
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
