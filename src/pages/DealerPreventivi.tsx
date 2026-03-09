@@ -141,8 +141,28 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
         if (d > end) return false;
       }
       return true;
+    }).sort((a, b) => {
+      const { key, direction } = sortConfig;
+      const mult = direction === 'asc' ? 1 : -1;
+      
+      const getVal = (p: any) => {
+        switch (key) {
+          case 'id': return p.id || '';
+          case 'dealer': return (p.dealers as any)?.ragione_sociale || '';
+          case 'data_inserimento': return p.data_inserimento || '';
+          case 'importo_totale': return Number(p.importo_totale) || 0;
+          case 'data_scadenza_preventivo': return p.data_scadenza_preventivo || '';
+          case 'stato': return isNonValido(p.data_scadenza_preventivo) ? 1 : 0;
+          default: return '';
+        }
+      };
+      
+      const va = getVal(a);
+      const vb = getVal(b);
+      if (typeof va === 'number' && typeof vb === 'number') return (va - vb) * mult;
+      return String(va).localeCompare(String(vb), 'it') * mult;
     });
-  }, [preventivi, searchTerm, dealerFilter, statusFilter, dateFrom, dateTo]);
+  }, [preventivi, searchTerm, dealerFilter, statusFilter, dateFrom, dateTo, sortConfig]);
 
   // KPI stats (dynamically based on active filters)
   const stats = useMemo(() => {
