@@ -440,8 +440,17 @@ export default function OrderDetail() {
         <div className="flex gap-2 flex-wrap">
           {isPreventivo ? (
             <>
-              <Button variant="outline" size="sm">
-                <Copy className="mr-2 h-4 w-4" />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => duplicateMutation.mutate()}
+                disabled={duplicateMutation.isPending}
+              >
+                {duplicateMutation.isPending ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Copy className="mr-2 h-4 w-4" />
+                )}
                 Duplica
               </Button>
               {isSuperAdmin && (
