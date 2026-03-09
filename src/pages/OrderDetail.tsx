@@ -540,7 +540,7 @@ export default function OrderDetail() {
               </Card>
 
               <AttachmentsSection orderId={order.id} attachments={orderAttachments as any} readOnly={isDealerArea} />
-              {!isDealerArea && <TicketsSection orderId={order.id} />}
+              <TicketsSection orderId={order.id} />
             </div>
 
             {/* Sidebar riepilogo */}
