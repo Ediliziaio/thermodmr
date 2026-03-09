@@ -40,6 +40,17 @@ export const useOrdersInfinite = ({
       const from = pageParam * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
 
+      // Map sort keys to actual DB columns
+      const dbSortColumn = (() => {
+        switch (sortKey) {
+          case 'importo_totale': return 'importo_totale';
+          case 'importo_da_pagare': return 'importo_da_pagare';
+          case 'data_consegna_prevista': return 'data_consegna_prevista';
+          case 'importo_acconto': return 'importo_acconto';
+          default: return 'data_inserimento';
+        }
+      })();
+
       let query = supabase
         .from("orders_with_payment_stats")
         .select(
@@ -50,7 +61,7 @@ export const useOrdersInfinite = ({
         `,
           { count: "exact" }
         )
-        .order("data_inserimento", { ascending: false })
+        .order(dbSortColumn, { ascending: sortDirection === 'asc' })
         .neq("stato", "preventivo");
 
       // Filtro per dealer specifico
