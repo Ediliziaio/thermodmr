@@ -71,7 +71,7 @@ const Tapparelle = () => {
               </div>
             </div>
             <div className="space-y-6">
-              <h2 className="text-3xl font-bold text-[hsl(0,0%,10%)]">Caratteristiche Principali</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)]">Caratteristiche Principali</h2>
               <ul className="space-y-3">
                 {features.map((f) => (
                   <li key={f} className="flex items-center gap-3 text-[hsl(0,0%,35%)]">
