@@ -23,6 +23,7 @@ type Attachment = Tables<"attachments">;
 interface AttachmentsSectionProps {
   orderId: string;
   attachments: Attachment[];
+  readOnly?: boolean;
 }
 
 /** Extract relative storage path from either a full URL or a relative path */
