@@ -85,7 +85,6 @@ export function exportDealers(dealers: any[]) {
     "Provincia": d.provincia,
     "Fatturato Totale": formatCurrencyForExport(d.total_revenue),
     "Numero Ordini": d.orders_count || 0,
-    "Commissione Personalizzata": d.commissione_personalizzata ? formatCurrencyForExport(d.commissione_personalizzata) : "",
     "Data Creazione": formatDateForExport(d.created_at),
   }));
 
