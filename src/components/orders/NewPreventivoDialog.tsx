@@ -208,6 +208,7 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
   const onSubmit = async (values: PreventivoFormValues) => {
     const newPreventivo = await createPreventivoMutation.mutateAsync({
       dealer_id: values.dealer_id,
+      riferimento_preventivo: values.riferimento_preventivo,
       cliente_nome: values.cliente_nome,
       cliente_cognome: values.cliente_cognome,
       cliente_email: values.cliente_email,
