@@ -7,7 +7,11 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ChevronDown, Eye, LogIn, Mail, MapPin, Pencil, Phone, Trash2, TrendingUp, TrendingDown, ShoppingCart } from "lucide-react";
+import { ChevronDown, Eye, LogIn, Mail, MapPin, Pencil, Phone, Trash2, TrendingUp, TrendingDown, ShoppingCart, Clock } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { getDealerActivityInfo } from "@/lib/dealerActivityUtils";
+import { format } from "date-fns";
+import { it } from "date-fns/locale";
 import { EditDealerDialog } from "./EditDealerDialog";
 import { DeleteDealerDialog } from "./DeleteDealerDialog";
 import type { DealerWithStats } from "@/hooks/useDealers";
