@@ -760,8 +760,8 @@ const ContactForm = () => {
   };
 
   return (
-    <section ref={ref} id="contatti" className="py-24 bg-[hsl(0,0%,97%)]">
-      <div className="max-w-7xl mx-auto px-6">
+    <section ref={ref} id="contatti" className="py-16 sm:py-24 bg-[hsl(0,0%,97%)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <motion.div
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
