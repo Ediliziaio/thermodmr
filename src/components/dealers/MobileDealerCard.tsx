@@ -9,6 +9,8 @@ import { DeleteDealerDialog } from "./DeleteDealerDialog";
 import type { DealerWithStats } from "@/hooks/useDealers";
 import { useNavigate } from "react-router-dom";
 import { formatCurrency } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { getDealerActivityInfo } from "@/lib/dealerActivityUtils";
 
 interface MobileDealerCardProps {
   dealer: DealerWithStats;
