@@ -165,10 +165,12 @@ export function AttachmentsSection({ orderId, attachments, readOnly = false }: A
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Allegati</CardTitle>
-        <Button onClick={handleFileUpload} size="sm" disabled={uploading}>
-          {uploading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Upload className="h-4 w-4 mr-2" />}
-          {uploading ? "Caricamento..." : "Carica File"}
-        </Button>
+        {!readOnly && (
+          <Button onClick={handleFileUpload} size="sm" disabled={uploading}>
+            {uploading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Upload className="h-4 w-4 mr-2" />}
+            {uploading ? "Caricamento..." : "Carica File"}
+          </Button>
+        )}
       </CardHeader>
       <CardContent>
         {attachments.length === 0 ? (
