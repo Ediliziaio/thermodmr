@@ -38,6 +38,7 @@ import { NewPreventivoDialog, type PreventivoDefaultValues } from "@/components/
 
 interface DealerPreventiviProps {
   dealerId?: string;
+  readOnly?: boolean;
 }
 
 type StatusFilter = "tutti" | "validi" | "non_validi";
