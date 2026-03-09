@@ -1,39 +1,20 @@
 
+# Analisi Area Super Admin — Implementazione Completata
 
-# Verifica Allegati Preventivo — Problemi Trovati
+## Fase 1 — Criticità (COMPLETATA)
 
-## Stato Attuale
+1. ✅ **AuthContext race condition**: Aggiunto `roleFetchedForUserId` ref per evitare fetch duplicati del ruolo
+2. ✅ **Route /kpi protetta**: Aggiunto `requiredRole="super_admin"` alla route Analytics
+3. ✅ **Analytics error state**: Allineato al pattern standard con Card + AlertCircle + RefreshCw + refetch()
+4. ✅ **useRealtimeSync ottimizzato**: Aggiunto debounce (300ms) e ridotto il numero di query invalidate per evento
 
-L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
+## Fase 2 — Performance (COMPLETATA)
 
----
+5. ✅ **useAllTickets con limit e search**: Aggiunto `.limit(100)` e filtro `ilike` per ricerca
+6. ✅ **DealerDetail orders limitati**: Aggiunto `.limit(50)` alla query ordini
+7. ✅ **useUnifiedAnalytics parallelizzato**: Orders e Payments query eseguite con `Promise.all()`
 
-## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
+## Fase 3 — UX (COMPLETATA)
 
-**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
-
-Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
-
-**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
-
-Interventi:
-- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
-- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
-- Entrambi i file usano lo stesso pattern, la fix e' identica
-
-## Bug 2: `useCreatePreventivo` contiene codice morto
-
-**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
-
-- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
-- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
-
-**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
-
-## Riepilogo
-
-| # | Tipo | File | Problema |
-|---|------|------|----------|
-| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
-| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
-
+8. ✅ **Pagamenti: frecce ordinamento colonne**: Aggiunto sortConfig + handleSort + SortIcon su Data, Dealer, Tipo, Metodo, Importo
+9. ✅ **Assistenza migliorata**: Mini-dashboard KPI (aperti, in gestione, chiusi, urgenti), barra di ricerca, ordinamento colonne, layout mobile con card
