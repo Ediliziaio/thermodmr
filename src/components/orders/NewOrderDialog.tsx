@@ -29,7 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus, Trash2, Loader2 } from "lucide-react";
-import { useDealersInfinite } from "@/hooks/useDealersInfinite";
+import { useDealersDropdown } from "@/hooks/useDealersDropdown";
 import { useCreateOrder } from "@/hooks/useOrders";
 import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -81,8 +81,7 @@ export function NewOrderDialog({ open: controlledOpen, onOpenChange: controlledO
   const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
   const setOpen = controlledOnOpenChange || setInternalOpen;
   
-  const { data: dealersData } = useDealersInfinite();
-  const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
+  const { data: dealers = [] } = useDealersDropdown();
   const createOrderMutation = useCreateOrder();
 
   const form = useForm<OrderFormValues>({

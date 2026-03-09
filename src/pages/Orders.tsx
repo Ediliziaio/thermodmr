@@ -19,7 +19,7 @@ import { ExportColumnsDialog } from "@/components/export/ExportColumnsDialog";
 import { toast } from "@/hooks/use-toast";
 import { useDealersDropdown } from "@/hooks/useDealersDropdown";
 import { OrdersTable } from "@/components/orders/OrdersTable";
-import { useMemo, useState, useEffect, useCallback } from "react";
+import { useMemo, useState, useEffect, useCallback, useRef } from "react";
 import { useInView } from "react-intersection-observer";
 import { formatCurrency, cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
@@ -50,6 +50,16 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
   const isMobile = useIsMobile();
   const isDealerArea = !!dealerId;
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  
+  // Debounce search input (300ms)
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchQuery(value);
+    clearTimeout(searchTimerRef.current);
+    searchTimerRef.current = setTimeout(() => setDebouncedSearch(value), 300);
+  }, []);
+  useEffect(() => () => clearTimeout(searchTimerRef.current), []);
   
   const now = new Date();
   const [activeFilter, setActiveFilter] = useState<string | null>("year");
@@ -69,8 +79,14 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     };
   }, [filters.dataInserimentoFrom, filters.dataInserimentoTo]);
   
+  // Sort state (must be declared before kpiParams usage)
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({
+    key: 'data_inserimento',
+    direction: 'desc',
+  });
+
   const kpiParams = {
-    searchQuery,
+    searchQuery: debouncedSearch,
     dealerId: dealerId || filters.dealerId,
     stato: filters.stato,
     dataFrom: filters.dataInserimentoFrom,
@@ -81,8 +97,12 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     importoMax: filters.importoMax,
   };
 
-  // Pass all filters server-side
-  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useOrdersInfinite(kpiParams);
+  // Pass all filters server-side (including sort)
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useOrdersInfinite({
+    ...kpiParams,
+    sortKey: sortConfig.key,
+    sortDirection: sortConfig.direction,
+  });
   const { data: kpiData } = useOrdersKpi(kpiParams);
   const updateOrderStatus = useUpdateOrderStatus();
   const { data: dealers = [] } = useDealersDropdown();
@@ -94,7 +114,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const [preventivoDialogOpen, setPreventivoDialogOpen] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("lista");
-  
+
   // Quick payment state
   const [quickPayment, setQuickPayment] = useState<{
     open: boolean;
@@ -102,12 +122,6 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     orderTotal: number;
     amountPaid: number;
   }>({ open: false, orderId: "", orderTotal: 0, amountPaid: 0 });
-
-  // Sort state
-  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' }>({
-    key: 'data_inserimento',
-    direction: 'desc',
-  });
 
   const handleSort = useCallback((key: string) => {
     setSortConfig(prev => ({
@@ -191,34 +205,8 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     return data?.pages.flatMap((page) => page.data) || [];
   }, [data]);
 
-  // Client-side sort only (filters are now server-side)
-  const sortedOrders = useMemo(() => {
-    return [...allOrders].sort((a, b) => {
-      const { key, direction } = sortConfig;
-      const mult = direction === 'asc' ? 1 : -1;
-      
-      const getVal = (o: any) => {
-        switch (key) {
-          case 'id': return o.id || '';
-          case 'dealer': return o.dealers?.ragione_sociale || '';
-          case 'cliente': return o.clients ? `${o.clients.nome} ${o.clients.cognome}` : '';
-          case 'stato': return o.stato || '';
-          case 'data_inserimento': return o.data_inserimento || '';
-          case 'importo_totale': return o.importo_totale ?? 0;
-          case 'importo_acconto': return o.importo_acconto ?? 0;
-          case 'importo_da_pagare': return o.importo_da_pagare ?? 0;
-          case 'data_consegna_prevista': return o.data_consegna_prevista || '';
-          case 'settimana_consegna': return o.settimana_consegna ?? 0;
-          default: return '';
-        }
-      };
-      
-      const va = getVal(a);
-      const vb = getVal(b);
-      if (typeof va === 'number' && typeof vb === 'number') return (va - vb) * mult;
-      return String(va).localeCompare(String(vb), 'it') * mult;
-    });
-  }, [allOrders, sortConfig]);
+  // Server-side sorting — data arrives pre-sorted, just use allOrders directly
+  const sortedOrders = allOrders;
 
   const toggleSelectAll = () => {
     if (selectedOrderIds.size === sortedOrders.length && sortedOrders.length > 0) {
@@ -452,7 +440,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
               onFiltersChange={handleFiltersChange}
               dealers={dealers || []}
               searchQuery={searchQuery}
-              onSearchQueryChange={setSearchQuery}
+              onSearchQueryChange={handleSearchChange}
             />
           </>
         ) : viewMode === "pipeline" ? (
@@ -462,7 +450,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
               onFiltersChange={handleFiltersChange}
               dealers={dealers || []}
               searchQuery={searchQuery}
-              onSearchQueryChange={setSearchQuery}
+              onSearchQueryChange={handleSearchChange}
             />
             <OrderPipelineDnD orders={sortedOrders} isDealerArea={isDealerArea} />
           </>
@@ -474,7 +462,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
               onFiltersChange={handleFiltersChange}
               dealers={dealers || []}
               searchQuery={searchQuery}
-              onSearchQueryChange={setSearchQuery}
+              onSearchQueryChange={handleSearchChange}
             />
 
             {/* Orders Table */}
