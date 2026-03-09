@@ -25,6 +25,7 @@ import {
 import {
   FileText, ArrowRightCircle, Eye, AlertTriangle, CheckCircle2, Plus, Copy,
   Search, BarChart3, Euro, Clock, XCircle, CalendarIcon, ChevronDown, Trash2, X,
+  ArrowUp, ArrowDown, ArrowUpDown,
 } from "lucide-react";
 import { format, subDays, addDays } from "date-fns";
 import { it } from "date-fns/locale";
