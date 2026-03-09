@@ -142,26 +142,6 @@ export function exportPayments(payments: any[]) {
 }
 
 /**
- * Export commerciali to CSV
- */
-export function exportCommerciali(commerciali: any[]) {
-  const data = commerciali.map(c => ({
-    "Nome": c.display_name,
-    "Email": c.email,
-    "Stato": c.is_active ? "Attivo" : "Inattivo",
-    "Numero Rivenditori": c.dealers_count || 0,
-    "Numero Ordini": c.ordini_count || 0,
-    "Fatturato Totale": formatCurrencyForExport(c.fatturato_totale),
-    "Provvigioni Dovute": formatCurrencyForExport(c.provvigioni_dovute),
-    "Provvigioni Liquidate": formatCurrencyForExport(c.provvigioni_liquidate),
-  }));
-
-  const csv = arrayToCSV(data);
-  const filename = `commerciali_${format(new Date(), "yyyy-MM-dd_HH-mm")}.csv`;
-  downloadCSV(csv, filename);
-}
-
-/**
  * Get nested value from object using dot notation
  */
 function getNestedValue(obj: any, path: string): any {
