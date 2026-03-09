@@ -151,7 +151,7 @@ const Hero = () => {
             <img
               src={heroSerramento}
               alt="Serramento in PVC ThermoDMR"
-              className="w-[280px] sm:w-[340px] lg:w-[460px] object-contain drop-shadow-2xl"
+              className="w-[240px] sm:w-[340px] lg:w-[460px] object-contain drop-shadow-2xl"
             />
             <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 bg-[hsl(195,85%,45%)] text-white text-[10px] sm:text-xs font-bold px-3 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-lg">
               Consegna 2-6 Sett.
