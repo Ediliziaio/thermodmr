@@ -157,14 +157,16 @@ export function MobilePaymentsList({
         </div>
       )}
 
-      {/* FAB */}
-      <Button
-        size="lg"
-        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50"
-        onClick={onNewPayment}
-      >
-        <Plus className="h-6 w-6" />
-      </Button>
+      {/* FAB - solo per ruoli autorizzati */}
+      {userRole !== 'rivenditore' && (
+        <Button
+          size="lg"
+          className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50"
+          onClick={onNewPayment}
+        >
+          <Plus className="h-6 w-6" />
+        </Button>
+      )}
     </div>
   );
 }
