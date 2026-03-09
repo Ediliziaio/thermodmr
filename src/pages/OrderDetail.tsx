@@ -388,10 +388,6 @@ export default function OrderDetail() {
           {isPreventivo ? (
             <>
               <Button variant="outline" size="sm">
-                <FileDown className="mr-2 h-4 w-4" />
-                Esporta PDF
-              </Button>
-              <Button variant="outline" size="sm">
                 <Copy className="mr-2 h-4 w-4" />
                 Duplica
               </Button>
@@ -402,18 +398,7 @@ export default function OrderDetail() {
                 </Button>
               )}
             </>
-          ) : (
-            <>
-              <Button variant="outline" size="sm">
-                <FileDown className="mr-2 h-4 w-4" />
-                Esporta PDF
-              </Button>
-              <Button variant="outline" size="sm">
-                <Send className="mr-2 h-4 w-4" />
-                Invia Email
-              </Button>
-            </>
-          )}
+          ) : null}
         </div>
       </div>
 
