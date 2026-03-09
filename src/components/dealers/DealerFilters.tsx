@@ -26,9 +26,12 @@ export function DealerFilters({ onFiltersChange, resultsCount }: DealerFiltersPr
   const [provincia, setProvincia] = useState("");
   const [minRevenue, setMinRevenue] = useState("");
   const [maxRevenue, setMaxRevenue] = useState("");
+  const [debouncedMinRevenue, setDebouncedMinRevenue] = useState("");
+  const [debouncedMaxRevenue, setDebouncedMaxRevenue] = useState("");
   const [sortBy, setSortBy] = useState<FilterType["sortBy"]>("ragione_sociale");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const revenueDebounceRef = useRef<ReturnType<typeof setTimeout>>();
 
   // Debounce search input (300ms)
   useEffect(() => {
@@ -38,17 +41,26 @@ export function DealerFilters({ onFiltersChange, resultsCount }: DealerFiltersPr
     return () => clearTimeout(debounceRef.current);
   }, [search]);
 
+  // Debounce revenue filters (400ms)
+  useEffect(() => {
+    revenueDebounceRef.current = setTimeout(() => {
+      setDebouncedMinRevenue(minRevenue);
+      setDebouncedMaxRevenue(maxRevenue);
+    }, 400);
+    return () => clearTimeout(revenueDebounceRef.current);
+  }, [minRevenue, maxRevenue]);
+
   useEffect(() => {
     const filters: FilterType = {
       search: debouncedSearch || undefined,
       provincia: provincia && provincia.trim() ? provincia : undefined,
-      minRevenue: minRevenue ? parseFloat(minRevenue) : undefined,
-      maxRevenue: maxRevenue ? parseFloat(maxRevenue) : undefined,
+      minRevenue: debouncedMinRevenue ? parseFloat(debouncedMinRevenue) : undefined,
+      maxRevenue: debouncedMaxRevenue ? parseFloat(debouncedMaxRevenue) : undefined,
       sortBy,
       sortOrder,
     };
     onFiltersChange(filters);
-  }, [debouncedSearch, provincia, minRevenue, maxRevenue, sortBy, sortOrder, onFiltersChange]);
+  }, [debouncedSearch, provincia, debouncedMinRevenue, debouncedMaxRevenue, sortBy, sortOrder, onFiltersChange]);
 
   const clearFilters = () => {
     setSearch("");
@@ -56,6 +68,8 @@ export function DealerFilters({ onFiltersChange, resultsCount }: DealerFiltersPr
     setProvincia("");
     setMinRevenue("");
     setMaxRevenue("");
+    setDebouncedMinRevenue("");
+    setDebouncedMaxRevenue("");
     setSortBy("ragione_sociale");
     setSortOrder("asc");
   };

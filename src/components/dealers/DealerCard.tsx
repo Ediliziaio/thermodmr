@@ -24,10 +24,9 @@ export function DealerCard({ dealer }: DealerCardProps) {
   const navigate = useNavigate();
 
   const handleCardClick = (e: React.MouseEvent) => {
-    // Don't navigate if clicking on dropdown or interactive elements
     const target = e.target as HTMLElement;
     if (target.closest('[role="menu"]') || target.closest('button') || target.closest('a')) return;
-    navigate(`/rivenditori/${dealer.id}/area`);
+    navigate(`/rivenditori/${dealer.id}`);
   };
 
   return (

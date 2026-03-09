@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus } from "lucide-react";
 import { useCreateDealer } from "@/hooks/useDealers";
 import { useAuth } from "@/contexts/AuthContext";
 import { validatePIva, validateCodiceFiscale } from "@/lib/dealerValidation";
+import { PROVINCE_ITALIANE } from "@/lib/dealerConstants";
 
 interface NewDealerDialogProps {
   trigger?: React.ReactNode;
@@ -183,13 +185,19 @@ export default function NewDealerDialog({ trigger }: NewDealerDialogProps = {}) 
 
             <div>
               <Label htmlFor="provincia">Provincia *</Label>
-              <Input
-                id="provincia"
+              <Select
                 value={formData.provincia}
-                onChange={(e) => setFormData({ ...formData, provincia: e.target.value })}
-                maxLength={2}
-                required
-              />
+                onValueChange={(value) => setFormData({ ...formData, provincia: value })}
+              >
+                <SelectTrigger id="provincia">
+                  <SelectValue placeholder="Seleziona provincia" />
+                </SelectTrigger>
+                <SelectContent>
+                  {PROVINCE_ITALIANE.map((prov) => (
+                    <SelectItem key={prov} value={prov}>{prov}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
 
