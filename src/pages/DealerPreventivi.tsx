@@ -136,17 +136,27 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
   // --- Mutations ---
 
   const convertMutation = useMutation({
-    mutationFn: async (id: string) => {
+    mutationFn: async (preventivoId: string) => {
+      // Generate new order ID
+      const newOrderId = await generateOrderId();
+      
+      // Update: new ID, status, and save old preventivo ID as reference
       const { error } = await supabase
         .from("orders")
-        .update({ stato: "da_confermare" as any })
-        .eq("id", id);
+        .update({
+          id: newOrderId,
+          stato: "da_confermare" as any,
+          riferimento_preventivo: preventivoId,
+        })
+        .eq("id", preventivoId);
       if (error) throw error;
+      return newOrderId;
     },
-    onSuccess: () => {
-      toast({ title: "Preventivo convertito in ordine con successo" });
+    onSuccess: (newOrderId) => {
+      toast({ title: "Preventivo convertito in ordine", description: `Nuovo ID: ${newOrderId}` });
       queryClient.invalidateQueries({ queryKey: ["dealer-preventivi"] });
       queryClient.invalidateQueries({ queryKey: ["dealer-order-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
       setConvertId(null);
     },
     onError: () => {
