@@ -30,7 +30,6 @@ export function EditDealerDialog({ dealer, trigger, open: controlledOpen, onOpen
     cap: dealer.cap,
     citta: dealer.citta,
     provincia: dealer.provincia,
-    commissione_personalizzata: dealer.commissione_personalizzata?.toString() || "",
     note: dealer.note || "",
   });
 
@@ -41,9 +40,6 @@ export function EditDealerDialog({ dealer, trigger, open: controlledOpen, onOpen
       {
         id: dealer.id,
         ...formData,
-        commissione_personalizzata: formData.commissione_personalizzata
-          ? parseFloat(formData.commissione_personalizzata)
-          : null,
       },
       {
         onSuccess: () => {
@@ -171,26 +167,6 @@ export function EditDealerDialog({ dealer, trigger, open: controlledOpen, onOpen
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="commissione_personalizzata">
-                Commissione Personalizzata (%)
-              </Label>
-              <Input
-                id="commissione_personalizzata"
-                type="number"
-                step="0.01"
-                min="0"
-                max="100"
-                value={formData.commissione_personalizzata}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    commissione_personalizzata: e.target.value,
-                  })
-                }
-                placeholder="Lascia vuoto per usare default"
-              />
-            </div>
 
             <div className="col-span-2 space-y-2">
               <Label htmlFor="note">Note</Label>

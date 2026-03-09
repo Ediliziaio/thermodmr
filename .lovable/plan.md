@@ -1,30 +1,39 @@
 
-# Rimuovere riferimenti a Commissioni/Provvigioni dai Rivenditori
 
-## File da modificare
+# Verifica Allegati Preventivo — Problemi Trovati
 
-### 1. `src/components/dealers/DealerRowView.tsx`
-- Rimuovere la colonna "Comm." dall'header (riga 192)
-- Rimuovere il rendering di `commissione_personalizzata` nelle righe (righe 52-59)
-- Aggiornare il grid da `grid-cols-[2fr_1.2fr_0.6fr_1fr_1fr_1fr_0.6fr]` a `grid-cols-[2fr_1.2fr_0.6fr_1fr_1fr_1fr]` (sia header riga 185 che row riga 36)
+## Stato Attuale
 
-### 2. `src/components/dealers/DealerCard.tsx`
-- Rimuovere il blocco "Commissione" (righe 134-141)
+L'implementazione degli allegati nel dialog di creazione preventivo e' funzionalmente corretta nella struttura, ma presenta **2 bug reali** e **1 inconsistenza** da correggere.
 
-### 3. `src/components/dealers/MobileDealerCard.tsx`
-- Rimuovere il badge `commissione_personalizzata` (righe 91-95)
+---
 
-### 4. `src/components/dealers/NewDealerDialog.tsx`
-- Rimuovere il campo "Commissione Personalizzata (%)" dal form e dal formData
+## Bug 1 (CRITICO): `getPublicUrl` su bucket privato
 
-### 5. `src/components/dealers/EditDealerDialog.tsx`
-- Rimuovere il campo "Commissione Personalizzata (%)" dal form e dal formData
+**File coinvolti:** `NewPreventivoDialog.tsx` (riga 185-187), `AttachmentsSection.tsx` (riga 83-85)
 
-### 6. `src/pages/DealerDetail.tsx`
-- Rimuovere il blocco che mostra la commissione personalizzata (righe 249-254)
+Il bucket `order-attachments` e' privato (`Is Public: No`). Il codice usa `getPublicUrl()` che genera un URL non accessibile — il download/visualizzazione degli allegati **non funziona**.
 
-### 7. `src/lib/exportUtils.ts`
-- Rimuovere "Commissione Personalizzata" dall'export rivenditori (riga 88)
-- Rimuovere `exportCommissionsCustom`, `COMMISSION_COLUMNS` e l'export commerciali con provvigioni (righe 148-158, 260-344)
+**Fix:** Salvare nel DB il **path dello storage** (es. `preventivoId/timestamp-random.ext`) invece dell'URL pubblico. Quando l'utente vuole scaricare, generare un signed URL temporaneo con `createSignedUrl()`.
 
-Nessuna modifica al database: la colonna `commissione_personalizzata` resta per compatibilità storica, semplicemente non viene più mostrata nell'UI.
+Interventi:
+- `NewPreventivoDialog.tsx`: salvare `fileName` (path) come `url` nel record `attachments`
+- `AttachmentsSection.tsx`: stessa correzione per upload + usare `createSignedUrl` nel download
+- Entrambi i file usano lo stesso pattern, la fix e' identica
+
+## Bug 2: `useCreatePreventivo` contiene codice morto
+
+**File:** `src/hooks/useOrders.ts` (righe 500-501, 513, 531-533)
+
+- Riga 513: `data_consegna_prevista: values.data_consegna_prevista || null` — il campo non viene piu' passato dal dialog. Codice morto.
+- Righe 500-501 e 531-533: il calcolo `afterDiscount * (1 + line.iva / 100)` include ancora l'IVA. Con `iva: 0` funziona (`* 1`), ma e' inconsistente con il dialog.
+
+**Fix:** Rimuovere `data_consegna_prevista` dal payload e semplificare il calcolo totale rimuovendo la moltiplicazione IVA (allinearlo a `calculateLineTotal` del dialog).
+
+## Riepilogo
+
+| # | Tipo | File | Problema |
+|---|------|------|----------|
+| 1 | Bug critico | NewPreventivoDialog + AttachmentsSection | `getPublicUrl` su bucket privato, download non funziona |
+| 2 | Cleanup | useOrders.ts | Codice morto IVA e data_consegna nel hook preventivo |
+

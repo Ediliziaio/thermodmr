@@ -85,7 +85,6 @@ export function exportDealers(dealers: any[]) {
     "Provincia": d.provincia,
     "Fatturato Totale": formatCurrencyForExport(d.total_revenue),
     "Numero Ordini": d.orders_count || 0,
-    "Commissione Personalizzata": d.commissione_personalizzata ? formatCurrencyForExport(d.commissione_personalizzata) : "",
     "Data Creazione": formatDateForExport(d.created_at),
   }));
 
@@ -139,26 +138,6 @@ export function exportPayments(payments: any[]) {
 
   const csv = arrayToCSV(data);
   const filename = `pagamenti_${format(new Date(), "yyyy-MM-dd_HH-mm")}.csv`;
-  downloadCSV(csv, filename);
-}
-
-/**
- * Export commerciali to CSV
- */
-export function exportCommerciali(commerciali: any[]) {
-  const data = commerciali.map(c => ({
-    "Nome": c.display_name,
-    "Email": c.email,
-    "Stato": c.is_active ? "Attivo" : "Inattivo",
-    "Numero Rivenditori": c.dealers_count || 0,
-    "Numero Ordini": c.ordini_count || 0,
-    "Fatturato Totale": formatCurrencyForExport(c.fatturato_totale),
-    "Provvigioni Dovute": formatCurrencyForExport(c.provvigioni_dovute),
-    "Provvigioni Liquidate": formatCurrencyForExport(c.provvigioni_liquidate),
-  }));
-
-  const csv = arrayToCSV(data);
-  const filename = `commerciali_${format(new Date(), "yyyy-MM-dd_HH-mm")}.csv`;
   downloadCSV(csv, filename);
 }
 
@@ -259,22 +238,6 @@ export const PAYMENT_COLUMNS = [
 ];
 
 /**
- * Column definitions for commissions
- */
-export const COMMISSION_COLUMNS = [
-  { key: "ordine_id", label: "ID Ordine", defaultSelected: true },
-  { key: "orders.dealers.ragione_sociale", label: "Rivenditore", defaultSelected: true },
-  { key: "profiles.display_name", label: "Commerciale", defaultSelected: true },
-  { key: "base_calcolo", label: "Base Calcolo", defaultSelected: true },
-  { key: "orders.importo_totale", label: "Importo Base", defaultSelected: true },
-  { key: "percentuale", label: "Percentuale %", defaultSelected: true },
-  { key: "importo_calcolato", label: "Provvigione €", defaultSelected: true },
-  { key: "stato_liquidazione", label: "Stato", defaultSelected: true },
-  { key: "data_liquidazione", label: "Data Liquidazione", defaultSelected: false },
-  { key: "created_at", label: "Data Creazione", defaultSelected: false },
-];
-
-/**
  * Export orders with custom columns
  */
 export function exportOrdersCustom(orders: any[], selectedColumns: string[]) {
@@ -322,23 +285,3 @@ export function exportPaymentsCustom(payments: any[], selectedColumns: string[])
   downloadCSV(csv, filename);
 }
 
-/**
- * Export commissions with custom columns
- */
-export function exportCommissionsCustom(commissions: any[], selectedColumns: string[]) {
-  const data = commissions.map(c => {
-    const row: Record<string, string> = {};
-    selectedColumns.forEach(col => {
-      const colDef = COMMISSION_COLUMNS.find(colDef => colDef.key === col);
-      if (!colDef) return;
-      
-      const value = getNestedValue(c, col);
-      row[colDef.label] = formatValueForExport(value, col);
-    });
-    return row;
-  });
-
-  const csv = arrayToCSV(data);
-  const filename = `provvigioni_${format(new Date(), "yyyy-MM-dd_HH-mm")}.csv`;
-  downloadCSV(csv, filename);
-}

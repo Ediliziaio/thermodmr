@@ -27,7 +27,6 @@ export default function NewDealerDialog({ trigger }: NewDealerDialogProps = {}) 
     citta: "",
     cap: "",
     provincia: "",
-    commissione_personalizzata: "",
     note: "",
   });
 
@@ -38,9 +37,6 @@ export default function NewDealerDialog({ trigger }: NewDealerDialogProps = {}) 
 
     await createDealer.mutateAsync({
       ...formData,
-      commissione_personalizzata: formData.commissione_personalizzata 
-        ? parseFloat(formData.commissione_personalizzata) 
-        : undefined,
       commerciale_owner_id: user.id,
     });
 
@@ -54,7 +50,6 @@ export default function NewDealerDialog({ trigger }: NewDealerDialogProps = {}) 
       citta: "",
       cap: "",
       provincia: "",
-      commissione_personalizzata: "",
       note: "",
     });
     setOpen(false);
@@ -168,18 +163,6 @@ export default function NewDealerDialog({ trigger }: NewDealerDialogProps = {}) 
               />
             </div>
 
-            <div>
-              <Label htmlFor="commissione_personalizzata">Commissione Personalizzata (%)</Label>
-              <Input
-                id="commissione_personalizzata"
-                type="number"
-                step="0.1"
-                min="0"
-                max="100"
-                value={formData.commissione_personalizzata}
-                onChange={(e) => setFormData({ ...formData, commissione_personalizzata: e.target.value })}
-              />
-            </div>
 
             <div className="col-span-2">
               <Label htmlFor="note">Note</Label>
