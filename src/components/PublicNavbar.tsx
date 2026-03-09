@@ -4,6 +4,7 @@ import { Menu, X, ChevronDown, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo_Thermodmr.png";
+import WhatsAppFloating from "@/components/WhatsAppFloating";
 
 const productLinks = [
   { label: "Finestre in PVC", to: "/prodotti-pubblico" },
@@ -67,6 +68,7 @@ const PublicNavbar = () => {
   };
 
   return (
+    <>
     <nav className="fixed top-0 inset-x-0 z-50 bg-white border-b border-[hsl(0,0%,90%)] shadow-sm" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
         <Link to="/">
@@ -286,6 +288,8 @@ const PublicNavbar = () => {
         )}
       </AnimatePresence>
     </nav>
+    <WhatsAppFloating />
+    </>
   );
 };
 
