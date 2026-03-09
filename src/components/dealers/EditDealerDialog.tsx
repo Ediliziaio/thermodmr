@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Pencil } from "lucide-react";
 import { useUpdateDealer, type DealerWithStats } from "@/hooks/useDealers";
+import { validatePIva, validateCodiceFiscale } from "@/lib/dealerValidation";
 
 interface EditDealerDialogProps {
   dealer: DealerWithStats;
