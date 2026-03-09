@@ -98,8 +98,8 @@ const VantaggiPage = () => {
       </section>
 
       {/* Extra advantages */}
-      <section ref={ref2} className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
+      <section ref={ref2} className="py-16 sm:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div initial="hidden" animate={inView2 ? "visible" : "hidden"} variants={stagger}>
             <motion.div variants={fadeUp} className="text-center mb-16">
               <h2 className="text-3xl font-bold text-[hsl(0,0%,10%)]">E Non È Tutto...</h2>
