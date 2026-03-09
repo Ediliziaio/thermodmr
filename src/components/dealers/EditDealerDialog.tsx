@@ -30,7 +30,6 @@ export function EditDealerDialog({ dealer, trigger, open: controlledOpen, onOpen
     cap: dealer.cap,
     citta: dealer.citta,
     provincia: dealer.provincia,
-    commissione_personalizzata: dealer.commissione_personalizzata?.toString() || "",
     note: dealer.note || "",
   });
 
