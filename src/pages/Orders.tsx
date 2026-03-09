@@ -462,7 +462,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
               onFiltersChange={handleFiltersChange}
               dealers={dealers || []}
               searchQuery={searchQuery}
-              onSearchQueryChange={setSearchQuery}
+              onSearchQueryChange={handleSearchChange}
             />
 
             {/* Orders Table */}
