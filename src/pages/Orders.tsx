@@ -519,16 +519,29 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                               />
                             </th>
                           )}
-                          <th className="pb-3 pr-4">ID Ordine</th>
-                          <th className="pb-3 pr-4">Rivenditore</th>
-                          <th className="pb-3 pr-4">Cliente</th>
-                          <th className="pb-3 pr-4">Stato</th>
-                          <th className="pb-3 pr-4">Data Inserimento</th>
-                          <th className="pb-3 pr-4">Importo Totale</th>
-                          <th className="pb-3 pr-4">Acconto</th>
-                          <th className="pb-3 pr-4">Importo da Pagare</th>
-                          <th className="pb-3 pr-4">Consegna Prevista</th>
-                          <th className="pb-3 pr-4">Sett.</th>
+                          {[
+                            { key: 'id', label: 'ID Ordine' },
+                            { key: 'dealer', label: 'Rivenditore' },
+                            { key: 'cliente', label: 'Cliente' },
+                            { key: 'stato', label: 'Stato' },
+                            { key: 'data_inserimento', label: 'Data Inserimento' },
+                            { key: 'importo_totale', label: 'Importo Totale' },
+                            { key: 'importo_acconto', label: 'Acconto' },
+                            { key: 'importo_da_pagare', label: 'Importo da Pagare' },
+                            { key: 'data_consegna_prevista', label: 'Consegna Prevista' },
+                            { key: 'settimana_consegna', label: 'Sett.' },
+                          ].map(col => (
+                            <th
+                              key={col.key}
+                              className="pb-3 pr-4 cursor-pointer select-none hover:text-foreground transition-colors"
+                              onClick={() => handleSort(col.key)}
+                            >
+                              <span className="inline-flex items-center">
+                                {col.label}
+                                <SortIcon columnKey={col.key} />
+                              </span>
+                            </th>
+                          ))}
                           {!isDealerArea && <th className="pb-3">Azioni</th>}
                         </tr>
                       </thead>

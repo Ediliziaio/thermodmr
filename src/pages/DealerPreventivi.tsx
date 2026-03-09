@@ -686,12 +686,25 @@ export default function DealerPreventivi({ dealerId }: DealerPreventiviProps) {
                         />
                       </TableHead>
                     )}
-                    <TableHead>ID Preventivo</TableHead>
-                    {!dealerId && <TableHead>Rivenditore</TableHead>}
-                    <TableHead>Data Creazione</TableHead>
-                    <TableHead>Importo Totale</TableHead>
-                    <TableHead>Scadenza</TableHead>
-                    <TableHead>Stato</TableHead>
+                    {[
+                      { key: 'id', label: 'ID Preventivo' },
+                      ...(!dealerId ? [{ key: 'dealer', label: 'Rivenditore' }] : []),
+                      { key: 'data_inserimento', label: 'Data Creazione' },
+                      { key: 'importo_totale', label: 'Importo Totale' },
+                      { key: 'data_scadenza_preventivo', label: 'Scadenza' },
+                      { key: 'stato', label: 'Stato' },
+                    ].map(col => (
+                      <TableHead
+                        key={col.key}
+                        className="cursor-pointer select-none hover:text-foreground transition-colors"
+                        onClick={() => handleSort(col.key)}
+                      >
+                        <span className="inline-flex items-center">
+                          {col.label}
+                          <SortIcon columnKey={col.key} />
+                        </span>
+                      </TableHead>
+                    ))}
                     {canManage && <TableHead className="text-right">Azioni</TableHead>}
                   </TableRow>
                 </TableHeader>
