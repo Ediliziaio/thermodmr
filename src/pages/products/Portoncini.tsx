@@ -95,10 +95,10 @@ const Portoncini = () => {
 
       <ProductGallery images={galleryImages} />
 
-      <section ref={specsRef} className="py-24 bg-[hsl(0,0%,97%)]">
-        <div className="max-w-7xl mx-auto px-6">
+      <section ref={specsRef} className="py-16 sm:py-24 bg-[hsl(0,0%,97%)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div initial="hidden" animate={specsInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.h2 variants={fadeUp} className="text-3xl font-bold text-[hsl(0,0%,10%)] mb-12 text-center">Specifiche Tecniche</motion.h2>
+            <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-8 sm:mb-12 text-center">Specifiche Tecniche</motion.h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {specs.map((s) => (
                 <motion.div key={s.label} variants={fadeUp} className="bg-white rounded-2xl p-6 shadow-sm border border-[hsl(0,0%,92%)]">
