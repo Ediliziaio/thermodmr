@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +32,24 @@ export function EditDealerDialog({ dealer, trigger, open: controlledOpen, onOpen
     provincia: dealer.provincia,
     note: dealer.note || "",
   });
+
+  // Sync form data when dealer prop changes or dialog opens
+  useEffect(() => {
+    if (open) {
+      setFormData({
+        ragione_sociale: dealer.ragione_sociale,
+        p_iva: dealer.p_iva,
+        codice_fiscale: dealer.codice_fiscale,
+        email: dealer.email,
+        telefono: dealer.telefono,
+        indirizzo: dealer.indirizzo,
+        cap: dealer.cap,
+        citta: dealer.citta,
+        provincia: dealer.provincia,
+        note: dealer.note || "",
+      });
+    }
+  }, [open, dealer]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -166,7 +184,6 @@ export function EditDealerDialog({ dealer, trigger, open: controlledOpen, onOpen
                 required
               />
             </div>
-
 
             <div className="col-span-2 space-y-2">
               <Label htmlFor="note">Note</Label>

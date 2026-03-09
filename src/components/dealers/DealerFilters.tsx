@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -22,26 +22,37 @@ interface DealerFiltersProps {
 
 export function DealerFilters({ onFiltersChange, resultsCount }: DealerFiltersProps) {
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [provincia, setProvincia] = useState("");
   const [minRevenue, setMinRevenue] = useState("");
   const [maxRevenue, setMaxRevenue] = useState("");
   const [sortBy, setSortBy] = useState<FilterType["sortBy"]>("ragione_sociale");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+
+  // Debounce search input (300ms)
+  useEffect(() => {
+    debounceRef.current = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300);
+    return () => clearTimeout(debounceRef.current);
+  }, [search]);
 
   useEffect(() => {
     const filters: FilterType = {
-      search: search || undefined,
-      provincia: provincia || undefined,
+      search: debouncedSearch || undefined,
+      provincia: provincia && provincia.trim() ? provincia : undefined,
       minRevenue: minRevenue ? parseFloat(minRevenue) : undefined,
       maxRevenue: maxRevenue ? parseFloat(maxRevenue) : undefined,
       sortBy,
       sortOrder,
     };
     onFiltersChange(filters);
-  }, [search, provincia, minRevenue, maxRevenue, sortBy, sortOrder, onFiltersChange]);
+  }, [debouncedSearch, provincia, minRevenue, maxRevenue, sortBy, sortOrder, onFiltersChange]);
 
   const clearFilters = () => {
     setSearch("");
+    setDebouncedSearch("");
     setProvincia("");
     setMinRevenue("");
     setMaxRevenue("");
@@ -50,7 +61,7 @@ export function DealerFilters({ onFiltersChange, resultsCount }: DealerFiltersPr
   };
 
   const activeFiltersCount = [
-    search,
+    debouncedSearch,
     provincia,
     minRevenue,
     maxRevenue,
@@ -58,6 +69,10 @@ export function DealerFilters({ onFiltersChange, resultsCount }: DealerFiltersPr
 
   const toggleSortOrder = () => {
     setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+  };
+
+  const handleProvinciaChange = (value: string) => {
+    setProvincia(value === "all" ? "" : value);
   };
 
   return (
@@ -80,7 +95,7 @@ export function DealerFilters({ onFiltersChange, resultsCount }: DealerFiltersPr
                 variant="ghost"
                 size="icon"
                 className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
-                onClick={() => setSearch("")}
+                onClick={() => { setSearch(""); setDebouncedSearch(""); }}
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -93,12 +108,12 @@ export function DealerFilters({ onFiltersChange, resultsCount }: DealerFiltersPr
           {/* Provincia */}
           <div className="space-y-2">
             <Label htmlFor="provincia">Provincia</Label>
-            <Select value={provincia} onValueChange={setProvincia}>
+            <Select value={provincia || "all"} onValueChange={handleProvinciaChange}>
               <SelectTrigger id="provincia">
                 <SelectValue placeholder="Tutte" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value=" ">Tutte le province</SelectItem>
+                <SelectItem value="all">Tutte le province</SelectItem>
                 {PROVINCE_ITALIANE.map((prov) => (
                   <SelectItem key={prov} value={prov}>
                     {prov}
