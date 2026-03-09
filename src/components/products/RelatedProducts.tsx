@@ -31,13 +31,13 @@ const RelatedProducts = ({ currentSlug }: RelatedProductsProps) => {
   const related = allProducts.filter((p) => p.slug !== currentSlug).slice(0, 3);
 
   return (
-    <section ref={ref} className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
+    <section ref={ref} className="py-16 sm:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <motion.div initial="hidden" animate={inView ? "visible" : "hidden"} variants={stagger}>
-          <motion.h2 variants={fadeUp} className="text-3xl font-bold text-[hsl(0,0%,10%)] mb-12 text-center">
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-8 sm:mb-12 text-center">
             Scopri Anche
           </motion.h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {related.map((p) => (
               <motion.div key={p.slug} variants={fadeUp}>
                 <Link to={p.slug} className="group block rounded-2xl overflow-hidden border border-[hsl(0,0%,92%)] shadow-sm hover:shadow-lg transition-shadow">

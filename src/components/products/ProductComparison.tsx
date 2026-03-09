@@ -69,13 +69,13 @@ const ProductComparison = ({ currentSlug }: ProductComparisonProps) => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.05, rootMargin: "0px 0px -50px 0px" });
 
   return (
-    <section ref={ref} className="py-24 bg-[hsl(0,0%,97%)]">
-      <div className="max-w-5xl mx-auto px-6">
+    <section ref={ref} className="py-16 sm:py-24 bg-[hsl(0,0%,97%)]">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <motion.div initial="hidden" animate={inView ? "visible" : "hidden"} variants={stagger}>
-          <motion.h2 variants={fadeUp} className="text-3xl font-bold text-[hsl(0,0%,10%)] mb-4 text-center">
+          <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-4 text-center">
             Confronta i Modelli
           </motion.h2>
-          <motion.p variants={fadeUp} className="text-sm text-[hsl(0,0%,45%)] text-center mb-12">
+          <motion.p variants={fadeUp} className="text-sm text-[hsl(0,0%,45%)] text-center mb-8 sm:mb-12">
             Scopri le differenze tra le nostre finestre in PVC e scegli quella giusta per te.
           </motion.p>
 

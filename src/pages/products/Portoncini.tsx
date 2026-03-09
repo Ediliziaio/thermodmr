@@ -64,9 +64,9 @@ const Portoncini = () => {
         heroImage={imgPortoncinoIngresso}
       />
 
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+      <section className="py-16 sm:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             <div className="relative rounded-3xl overflow-hidden shadow-xl">
               <img src={imgPortoncinoIngresso} alt="Portoncino d'ingresso elegante" className="w-full aspect-[4/3] object-cover" loading="lazy" />
               <div className="absolute bottom-4 left-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[hsl(195,85%,45%)] text-white shadow-lg">
@@ -74,7 +74,7 @@ const Portoncini = () => {
               </div>
             </div>
             <div className="space-y-6">
-              <h2 className="text-3xl font-bold text-[hsl(0,0%,10%)]">Caratteristiche Principali</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)]">Caratteristiche Principali</h2>
               <ul className="space-y-3">
                 {features.map((f) => (
                   <li key={f} className="flex items-center gap-3 text-[hsl(0,0%,35%)]">
@@ -95,10 +95,10 @@ const Portoncini = () => {
 
       <ProductGallery images={galleryImages} />
 
-      <section ref={specsRef} className="py-24 bg-[hsl(0,0%,97%)]">
-        <div className="max-w-7xl mx-auto px-6">
+      <section ref={specsRef} className="py-16 sm:py-24 bg-[hsl(0,0%,97%)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div initial="hidden" animate={specsInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.h2 variants={fadeUp} className="text-3xl font-bold text-[hsl(0,0%,10%)] mb-12 text-center">Specifiche Tecniche</motion.h2>
+            <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-8 sm:mb-12 text-center">Specifiche Tecniche</motion.h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {specs.map((s) => (
                 <motion.div key={s.label} variants={fadeUp} className="bg-white rounded-2xl p-6 shadow-sm border border-[hsl(0,0%,92%)]">
@@ -111,10 +111,10 @@ const Portoncini = () => {
         </div>
       </section>
 
-      <section ref={benefitsRef} className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
+      <section ref={benefitsRef} className="py-16 sm:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div initial="hidden" animate={benefitsInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.h2 variants={fadeUp} className="text-3xl font-bold text-[hsl(0,0%,10%)] mb-12 text-center">Vantaggi Chiave</motion.h2>
+            <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-8 sm:mb-12 text-center">Vantaggi Chiave</motion.h2>
             <div className="grid md:grid-cols-3 gap-8">
               {benefits.map((b) => (
                 <motion.div key={b.title} variants={fadeUp} className="text-center space-y-4">
@@ -132,12 +132,12 @@ const Portoncini = () => {
 
       <RelatedProducts currentSlug="/prodotti/portoncini" />
 
-      <section className="py-20 bg-[hsl(195,85%,45%)]">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">Interessato ai Portoncini in PVC?</h2>
-          <p className="text-white/80 mb-8">Contattaci per un preventivo personalizzato e scopri le condizioni riservate ai rivenditori.</p>
+      <section className="py-16 sm:py-20 bg-[hsl(195,85%,45%)]">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Interessato ai Portoncini in PVC?</h2>
+          <p className="text-white/80 mb-6 sm:mb-8 text-sm sm:text-base">Contattaci per un preventivo personalizzato e scopri le condizioni riservate ai rivenditori.</p>
           <Link to="/contatti">
-            <Button className="bg-white text-[hsl(195,85%,45%)] hover:bg-white/90 font-semibold rounded-full px-10 py-3 text-lg shadow-xl">
+            <Button className="w-full sm:w-auto bg-white text-[hsl(195,85%,45%)] hover:bg-white/90 font-semibold rounded-full px-10 py-3 text-base sm:text-lg shadow-xl min-h-[48px]">
               Richiedi Preventivo <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
