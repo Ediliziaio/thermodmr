@@ -94,6 +94,22 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
     [data]
   );
 
+  // Sort payments
+  const sortedPayments = useMemo(() => {
+    return [...payments].sort((a, b) => {
+      const { key, direction } = sortConfig;
+      const mult = direction === 'asc' ? 1 : -1;
+      switch (key) {
+        case 'data_pagamento': return (new Date(a.data_pagamento).getTime() - new Date(b.data_pagamento).getTime()) * mult;
+        case 'importo': return (Number(a.importo) - Number(b.importo)) * mult;
+        case 'tipo': return (a.tipo || '').localeCompare(b.tipo || '', 'it') * mult;
+        case 'metodo': return (a.metodo || '').localeCompare(b.metodo || '', 'it') * mult;
+        case 'dealer': return ((a as any).orders?.dealers?.ragione_sociale || '').localeCompare((b as any).orders?.dealers?.ragione_sociale || '', 'it') * mult;
+        default: return 0;
+      }
+    });
+  }, [payments, sortConfig]);
+
   // Auto-fetch next page when scrolling
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
