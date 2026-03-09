@@ -31,6 +31,7 @@ import { it } from "date-fns/locale";
 import { formatCurrency, formatDate, cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
+import { generateOrderId } from "@/hooks/useOrders";
 import { useAuth } from "@/contexts/AuthContext";
 import { NewPreventivoDialog, type PreventivoDefaultValues } from "@/components/orders/NewPreventivoDialog";
 
