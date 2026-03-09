@@ -499,6 +499,7 @@ export type Database = {
           modalita_pagamento: string | null
           note_interna: string | null
           note_rivenditore: string | null
+          riferimento_preventivo: string | null
           settimana_consegna: number | null
           stato: Database["public"]["Enums"]["order_status"]
           updated_at: string
@@ -519,6 +520,7 @@ export type Database = {
           modalita_pagamento?: string | null
           note_interna?: string | null
           note_rivenditore?: string | null
+          riferimento_preventivo?: string | null
           settimana_consegna?: number | null
           stato?: Database["public"]["Enums"]["order_status"]
           updated_at?: string
@@ -539,6 +541,7 @@ export type Database = {
           modalita_pagamento?: string | null
           note_interna?: string | null
           note_rivenditore?: string | null
+          riferimento_preventivo?: string | null
           settimana_consegna?: number | null
           stato?: Database["public"]["Enums"]["order_status"]
           updated_at?: string

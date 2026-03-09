@@ -49,6 +49,7 @@ const orderLineSchema = z.object({
 
 const preventivoFormSchema = z.object({
   dealer_id: z.string().uuid("Seleziona un rivenditore"),
+  riferimento_preventivo: z.string().optional(),
   cliente_nome: z.string().optional(),
   cliente_cognome: z.string().optional(),
   cliente_email: z.string().email().optional().or(z.literal("")),
@@ -65,6 +66,7 @@ type PreventivoFormValues = z.infer<typeof preventivoFormSchema>;
 
 export interface PreventivoDefaultValues {
   dealer_id?: string;
+  riferimento_preventivo?: string;
   cliente_nome?: string;
   cliente_cognome?: string;
   cliente_email?: string;
@@ -107,6 +109,7 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
     resolver: zodResolver(preventivoFormSchema),
     defaultValues: {
       dealer_id: defaultDealerId || "",
+      riferimento_preventivo: "",
       data_scadenza_preventivo: "",
       order_lines: [
         { categoria: "Infissi", descrizione: "", quantita: 1, prezzo_unitario: 0, sconto: 0, iva: 0 },
@@ -119,6 +122,7 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
     if (defaultValues && open) {
       form.reset({
         dealer_id: defaultValues.dealer_id || defaultDealerId || "",
+        riferimento_preventivo: defaultValues.riferimento_preventivo || "",
         cliente_nome: defaultValues.cliente_nome || "",
         cliente_cognome: defaultValues.cliente_cognome || "",
         cliente_email: defaultValues.cliente_email || "",
@@ -204,6 +208,7 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
   const onSubmit = async (values: PreventivoFormValues) => {
     const newPreventivo = await createPreventivoMutation.mutateAsync({
       dealer_id: values.dealer_id,
+      riferimento_preventivo: values.riferimento_preventivo,
       cliente_nome: values.cliente_nome,
       cliente_cognome: values.cliente_cognome,
       cliente_email: values.cliente_email,
@@ -279,6 +284,21 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
                       ))}
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Riferimento Preventivo */}
+            <FormField
+              control={form.control}
+              name="riferimento_preventivo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Riferimento Preventivo</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Es. PRV-cliente-001, rif. interno..." {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

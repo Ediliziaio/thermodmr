@@ -634,6 +634,7 @@ export const useCreatePreventivo = () => {
         creato_da_user_id: user.id,
         cliente_finale_id: clienteFinaleId,
         data_scadenza_preventivo: values.data_scadenza_preventivo || null,
+        riferimento_preventivo: values.riferimento_preventivo || null,
         importo_acconto: 0,
         importo_totale: importoTotale,
         note_rivenditore: values.note_rivenditore || null,
