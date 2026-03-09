@@ -80,7 +80,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
   }, [filters.dataInserimentoFrom, filters.dataInserimentoTo]);
   
   const kpiParams = {
-    searchQuery,
+    searchQuery: debouncedSearch,
     dealerId: dealerId || filters.dealerId,
     stato: filters.stato,
     dataFrom: filters.dataInserimentoFrom,
@@ -91,19 +91,16 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     importoMax: filters.importoMax,
   };
 
-  // Pass all filters server-side
-  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useOrdersInfinite(kpiParams);
+  // Pass all filters server-side (including sort)
+  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useOrdersInfinite({
+    ...kpiParams,
+    sortKey: sortConfig.key,
+    sortDirection: sortConfig.direction,
+  });
   const { data: kpiData } = useOrdersKpi(kpiParams);
   const updateOrderStatus = useUpdateOrderStatus();
   const { data: dealers = [] } = useDealersDropdown();
   const { ref, inView } = useInView();
-  const [selectedOrderIds, setSelectedOrderIds] = useState<Set<string>>(new Set());
-  const [bulkStatusDialogOpen, setBulkStatusDialogOpen] = useState(false);
-  const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
-  const [newOrderDialogOpen, setNewOrderDialogOpen] = useState(false);
-  const [exportDialogOpen, setExportDialogOpen] = useState(false);
-  const [preventivoDialogOpen, setPreventivoDialogOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<ViewMode>("lista");
   
   // Quick payment state
   const [quickPayment, setQuickPayment] = useState<{
