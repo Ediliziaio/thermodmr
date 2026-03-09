@@ -49,6 +49,7 @@ const orderLineSchema = z.object({
 
 const preventivoFormSchema = z.object({
   dealer_id: z.string().uuid("Seleziona un rivenditore"),
+  riferimento_preventivo: z.string().optional(),
   cliente_nome: z.string().optional(),
   cliente_cognome: z.string().optional(),
   cliente_email: z.string().email().optional().or(z.literal("")),
