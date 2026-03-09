@@ -101,7 +101,14 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
   const updateOrderStatus = useUpdateOrderStatus();
   const { data: dealers = [] } = useDealersDropdown();
   const { ref, inView } = useInView();
-  
+  const [selectedOrderIds, setSelectedOrderIds] = useState<Set<string>>(new Set());
+  const [bulkStatusDialogOpen, setBulkStatusDialogOpen] = useState(false);
+  const [bulkDeleteDialogOpen, setBulkDeleteDialogOpen] = useState(false);
+  const [newOrderDialogOpen, setNewOrderDialogOpen] = useState(false);
+  const [exportDialogOpen, setExportDialogOpen] = useState(false);
+  const [preventivoDialogOpen, setPreventivoDialogOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>("lista");
+
   // Quick payment state
   const [quickPayment, setQuickPayment] = useState<{
     open: boolean;
