@@ -4,6 +4,7 @@ import { Menu, X, ChevronDown, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo_Thermodmr.png";
+import WhatsAppFloating from "@/components/WhatsAppFloating";
 
 const productLinks = [
   { label: "Finestre in PVC", to: "/prodotti-pubblico" },
