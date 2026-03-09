@@ -72,8 +72,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
   
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useOrdersInfinite({ searchQuery, dealerId });
   const updateOrderStatus = useUpdateOrderStatus();
-  const { data: dealersData } = useDealersInfinite();
-  const dealers = useMemo(() => dealersData?.pages.flatMap(p => p.data) || [], [dealersData]);
+  const { data: dealers = [] } = useDealersDropdown();
   const [filters, setFilters] = useState<OrderFiltersState>({
     dataInserimentoFrom: format(startOfYear(now), 'yyyy-MM-dd'),
     dataInserimentoTo: format(endOfYear(now), 'yyyy-MM-dd'),
