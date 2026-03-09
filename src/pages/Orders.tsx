@@ -39,15 +39,7 @@ import { useRealtimeSync } from "@/hooks/useRealtimeSync";
 
 type ViewMode = "lista" | "pipeline";
 
-const ORDER_STATUSES = [
-  { key: "preventivo", label: "Preventivo", color: "bg-slate-500" },
-  { key: "da_confermare", label: "Da Confermare", color: "bg-amber-500" },
-  { key: "da_pagare_acconto", label: "Da Pagare Acconto", color: "bg-orange-500" },
-  { key: "in_lavorazione", label: "In Lavorazione", color: "bg-blue-500" },
-  { key: "da_saldare", label: "Da Saldare", color: "bg-red-500" },
-  { key: "da_consegnare", label: "Da Consegnare", color: "bg-purple-500" },
-  { key: "consegnato", label: "Consegnato", color: "bg-green-500" },
-] as const;
+// ORDER_STATUSES moved to OrdersTable component
 
 interface OrdersProps {
   dealerId?: string;
