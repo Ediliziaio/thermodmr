@@ -97,13 +97,6 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     }));
   }, []);
 
-  const SortIcon = ({ columnKey }: { columnKey: string }) => {
-    if (sortConfig.key !== columnKey) return <ArrowUpDown className="h-3 w-3 ml-1 text-muted-foreground/50" />;
-    return sortConfig.direction === 'asc' 
-      ? <ArrowUp className="h-3 w-3 ml-1" /> 
-      : <ArrowDown className="h-3 w-3 ml-1" />;
-  };
-
   // Helper functions for selection
   const toggleOrderSelection = (orderId: string) => {
     setSelectedOrderIds(prev => {
