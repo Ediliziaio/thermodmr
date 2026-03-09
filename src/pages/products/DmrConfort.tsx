@@ -124,9 +124,9 @@ const DmrConfort = () => {
       />
 
       {/* Image + Features */}
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+      <section className="py-16 sm:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             <div className="relative rounded-3xl overflow-hidden shadow-xl bg-[hsl(0,0%,96%)] flex items-center justify-center p-8">
               <img
                 src={dmrConfortProfile}
