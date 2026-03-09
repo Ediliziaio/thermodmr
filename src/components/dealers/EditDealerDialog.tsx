@@ -197,14 +197,19 @@ export function EditDealerDialog({ dealer, trigger, open: controlledOpen, onOpen
 
             <div className="space-y-2">
               <Label htmlFor="provincia">Provincia *</Label>
-              <Input
-                id="provincia"
+              <Select
                 value={formData.provincia}
-                onChange={(e) =>
-                  setFormData({ ...formData, provincia: e.target.value })
-                }
-                required
-              />
+                onValueChange={(value) => setFormData({ ...formData, provincia: value })}
+              >
+                <SelectTrigger id="provincia">
+                  <SelectValue placeholder="Seleziona provincia" />
+                </SelectTrigger>
+                <SelectContent>
+                  {PROVINCE_ITALIANE.map((prov) => (
+                    <SelectItem key={prov} value={prov}>{prov}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="col-span-2 space-y-2">

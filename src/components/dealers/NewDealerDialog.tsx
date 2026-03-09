@@ -185,13 +185,19 @@ export default function NewDealerDialog({ trigger }: NewDealerDialogProps = {}) 
 
             <div>
               <Label htmlFor="provincia">Provincia *</Label>
-              <Input
-                id="provincia"
+              <Select
                 value={formData.provincia}
-                onChange={(e) => setFormData({ ...formData, provincia: e.target.value })}
-                maxLength={2}
-                required
-              />
+                onValueChange={(value) => setFormData({ ...formData, provincia: value })}
+              >
+                <SelectTrigger id="provincia">
+                  <SelectValue placeholder="Seleziona provincia" />
+                </SelectTrigger>
+                <SelectContent>
+                  {PROVINCE_ITALIANE.map((prov) => (
+                    <SelectItem key={prov} value={prov}>{prov}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
 

@@ -68,6 +68,8 @@ export function DealerFilters({ onFiltersChange, resultsCount }: DealerFiltersPr
     setProvincia("");
     setMinRevenue("");
     setMaxRevenue("");
+    setDebouncedMinRevenue("");
+    setDebouncedMaxRevenue("");
     setSortBy("ragione_sociale");
     setSortOrder("asc");
   };

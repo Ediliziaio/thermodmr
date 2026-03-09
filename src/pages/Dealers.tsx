@@ -113,10 +113,10 @@ export default function Dealers() {
                 {allDealers.map((dealer, index) => (
                   <motion.div
                     key={dealer.id}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ delay: Math.min(index * 0.05, 0.5) }}
+                    transition={{ delay: index < 10 ? index * 0.03 : 0, duration: 0.2 }}
                   >
                     <MobileDealerCard dealer={dealer} />
                   </motion.div>
