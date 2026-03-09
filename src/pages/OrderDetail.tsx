@@ -13,12 +13,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -28,9 +22,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, FileDown, Send, Loader2, Edit2, Check, X, Clock, AlertTriangle, ArrowRightCircle, Copy, CalendarIcon, Save } from "lucide-react";
+import { ArrowLeft, Loader2, Edit2, Check, X, Clock, AlertTriangle, ArrowRightCircle, Copy, Save } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatusStepper } from "@/components/orders/StatusStepper";
+import { OrderSchedulingCard } from "@/components/orders/OrderSchedulingCard";
 import type { Database } from "@/integrations/supabase/types";
 import { OrderLinesEditor } from "@/components/orders/OrderLinesEditor";
 import { PaymentsSection } from "@/components/orders/PaymentsSection";
@@ -57,8 +52,7 @@ import {
 } from "@/hooks/useOrders";
 import { formatCurrency, formatDate, getStatusLabel, getStatusColor } from "@/lib/utils";
 import { MODALITA_PAGAMENTO_OPTIONS, getModalitaPagamentoLabel } from "@/lib/orderConstants";
-import { differenceInDays, isPast, parseISO, format, startOfWeek, addWeeks, endOfWeek, getWeek, getYear } from "date-fns";
-import { it } from "date-fns/locale";
+import { differenceInDays, isPast, parseISO, format } from "date-fns";
 
 export default function OrderDetail() {
   const { id } = useParams<{ id: string }>();
@@ -394,10 +388,6 @@ export default function OrderDetail() {
           {isPreventivo ? (
             <>
               <Button variant="outline" size="sm">
-                <FileDown className="mr-2 h-4 w-4" />
-                Esporta PDF
-              </Button>
-              <Button variant="outline" size="sm">
                 <Copy className="mr-2 h-4 w-4" />
                 Duplica
               </Button>
@@ -408,18 +398,7 @@ export default function OrderDetail() {
                 </Button>
               )}
             </>
-          ) : (
-            <>
-              <Button variant="outline" size="sm">
-                <FileDown className="mr-2 h-4 w-4" />
-                Esporta PDF
-              </Button>
-              <Button variant="outline" size="sm">
-                <Send className="mr-2 h-4 w-4" />
-                Invia Email
-              </Button>
-            </>
-          )}
+          ) : null}
         </div>
       </div>
 
@@ -715,126 +694,15 @@ export default function OrderDetail() {
                 </CardContent>
               </Card>
 
-              {/* Date Produzione & Consegna */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Produzione & Consegna</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {/* Data Fine Produzione */}
-                  <div className="space-y-1.5">
-                    <Label className="text-muted-foreground text-xs">Data Fine Produzione</Label>
-                    {isSuperAdmin ? (
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            className={cn(
-                              "w-full justify-start text-left font-normal",
-                              !dataFineProduzione && "text-muted-foreground"
-                            )}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {dataFineProduzione ? format(dataFineProduzione, "dd/MM/yyyy") : "Seleziona data"}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={dataFineProduzione}
-                            onSelect={setDataFineProduzione}
-                            initialFocus
-                            className={cn("p-3 pointer-events-auto")}
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    ) : (
-                      <p className="font-medium text-foreground">
-                        {dataFineProduzione ? format(dataFineProduzione, "dd/MM/yyyy") : "Da definire"}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Settimana Consegna */}
-                  <div className="space-y-1.5">
-                    <Label className="text-muted-foreground text-xs">Settimana Consegna</Label>
-                    {isSuperAdmin ? (
-                      <div className="space-y-1">
-                        <Select
-                          value={settimanaConsegna || ""}
-                          onValueChange={(val) => setSettimanaConsegna(val)}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Seleziona settimana" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {Array.from({ length: 53 }, (_, i) => {
-                              const weekNum = i + 1;
-                              const year = getYear(new Date());
-                              const ws = startOfWeek(addWeeks(new Date(year, 0, 4), weekNum - 1), { weekStartsOn: 1 });
-                              const monthNames = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
-                              const monthLabel = monthNames[ws.getMonth()];
-                              return (
-                                <SelectItem key={weekNum} value={String(weekNum)}>
-                                  {weekNum} - {monthLabel} {year}
-                                </SelectItem>
-                              );
-                            })}
-                          </SelectContent>
-                        </Select>
-                        {settimanaConsegna && Number(settimanaConsegna) >= 1 && Number(settimanaConsegna) <= 53 && (
-                          <p className="text-xs text-muted-foreground">
-                            {(() => {
-                              const year = getYear(new Date());
-                              const weekStart = startOfWeek(addWeeks(new Date(year, 0, 4), Number(settimanaConsegna) - 1), { weekStartsOn: 1 });
-                              const weekEnd = endOfWeek(weekStart, { weekStartsOn: 1 });
-                              return `${format(weekStart, "dd MMM", { locale: it })} - ${format(weekEnd, "dd MMM yyyy", { locale: it })}`;
-                            })()}
-                          </p>
-                        )}
-                      </div>
-                    ) : (
-                      <p className="font-medium text-foreground">
-                        {settimanaConsegna ? `Settimana ${settimanaConsegna}` : "Da definire"}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Data Consegna Prevista */}
-                  <div className="space-y-1.5">
-                    <Label className="text-muted-foreground text-xs">Data Consegna Prevista</Label>
-                    {isSuperAdmin ? (
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            className={cn(
-                              "w-full justify-start text-left font-normal",
-                              !dataConsegnaPrevista && "text-muted-foreground"
-                            )}
-                          >
-                            <CalendarIcon className="mr-2 h-4 w-4" />
-                            {dataConsegnaPrevista ? format(dataConsegnaPrevista, "dd/MM/yyyy") : "Seleziona data"}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={dataConsegnaPrevista}
-                            onSelect={setDataConsegnaPrevista}
-                            initialFocus
-                            className={cn("p-3 pointer-events-auto")}
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    ) : (
-                      <p className="font-medium text-foreground">
-                        {dataConsegnaPrevista ? format(dataConsegnaPrevista, "dd/MM/yyyy") : "Da definire"}
-                      </p>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+              <OrderSchedulingCard
+                isSuperAdmin={isSuperAdmin}
+                dataFineProduzione={dataFineProduzione}
+                setDataFineProduzione={setDataFineProduzione}
+                settimanaConsegna={settimanaConsegna}
+                setSettimanaConsegna={setSettimanaConsegna}
+                dataConsegnaPrevista={dataConsegnaPrevista}
+                setDataConsegnaPrevista={setDataConsegnaPrevista}
+              />
             </div>
           </div>
         </>

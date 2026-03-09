@@ -6,6 +6,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Eye, AlertCircle, Plus, ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
 import { formatCurrency, formatDate, getStatusColor, getStatusLabel, cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import type { OrderWithPaymentStats } from "@/types/orders";
 
 const ORDER_STATUSES = [
   { key: "preventivo", label: "Preventivo", color: "bg-slate-500" },
@@ -18,7 +19,7 @@ const ORDER_STATUSES = [
 ] as const;
 
 interface OrdersTableProps {
-  orders: any[];
+  orders: OrderWithPaymentStats[];
   selectedOrderIds: Set<string>;
   onToggleSelect: (id: string) => void;
   onToggleSelectAll: () => void;
@@ -132,14 +133,14 @@ export function OrdersTable({
                   <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                     {userRole === "super_admin" && !isDealerArea ? (
                       <Select
-                        value={order.stato}
+                        value={order.stato!}
                         onValueChange={(value) => {
                           if (value !== order.stato) onStatusChange(order.id!, value);
                         }}
                       >
                         <SelectTrigger className="h-auto border-none bg-transparent p-0 shadow-none focus:ring-0 [&>svg]:ml-1 [&>svg]:h-3 [&>svg]:w-3">
-                          <Badge variant="outline" className={getStatusColor(order.stato)}>
-                            {getStatusLabel(order.stato)}
+                          <Badge variant="outline" className={getStatusColor(order.stato!)}>
+                            {getStatusLabel(order.stato!)}
                           </Badge>
                         </SelectTrigger>
                         <SelectContent>
@@ -154,8 +155,8 @@ export function OrdersTable({
                         </SelectContent>
                       </Select>
                     ) : (
-                      <Badge variant="outline" className={getStatusColor(order.stato)}>
-                        {getStatusLabel(order.stato)}
+                      <Badge variant="outline" className={getStatusColor(order.stato!)}>
+                        {getStatusLabel(order.stato!)}
                       </Badge>
                     )}
                     {hasUrgentBalance && (
@@ -167,13 +168,13 @@ export function OrdersTable({
                   </div>
                 </td>
                 <td className="py-4 pr-4 text-sm">
-                  {formatDate(new Date(order.data_inserimento))}
+                  {formatDate(new Date(order.data_inserimento!))}
                 </td>
                 <td className="py-4 pr-4 font-medium">
-                  {formatCurrency(order.importo_totale)}
+                  {formatCurrency(order.importo_totale!)}
                 </td>
                 <td className="py-4 pr-4 text-sm">
-                  {formatCurrency(order.importo_acconto)}
+                  {formatCurrency(order.importo_acconto!)}
                 </td>
                 <td className="py-4 pr-4">
                   <Tooltip>
@@ -184,7 +185,7 @@ export function OrdersTable({
                             "font-medium text-sm",
                             order.importo_da_pagare === 0
                               ? "text-green-600"
-                              : order.importo_da_pagare > order.importo_totale * 0.5
+                              : order.importo_da_pagare > order.importo_totale! * 0.5
                                 ? "text-red-600"
                                 : "text-orange-600"
                           )}>
@@ -197,7 +198,7 @@ export function OrdersTable({
                               className="h-5 w-5 rounded-full"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                onQuickPayment(order.id!, order.importo_totale, order.importo_pagato);
+                                onQuickPayment(order.id!, order.importo_totale!, order.importo_pagato);
                               }}
                             >
                               <Plus className="h-3 w-3" />
@@ -210,11 +211,11 @@ export function OrdersTable({
                               "h-1.5 rounded-full transition-all",
                               order.percentuale_pagata === 100
                                 ? "bg-green-500"
-                                : order.percentuale_pagata > 50
+                                : (order.percentuale_pagata ?? 0) > 50
                                   ? "bg-orange-500"
                                   : "bg-red-500"
                             )}
-                            style={{ width: `${order.percentuale_pagata}%` }}
+                            style={{ width: `${order.percentuale_pagata ?? 0}%` }}
                           />
                         </div>
                         <p className="text-xs text-muted-foreground">
@@ -225,7 +226,7 @@ export function OrdersTable({
                     <TooltipContent>
                       <div className="space-y-1">
                         <p className="font-medium">Dettaglio Pagamenti</p>
-                        <p className="text-sm">Totale: {formatCurrency(order.importo_totale)}</p>
+                        <p className="text-sm">Totale: {formatCurrency(order.importo_totale!)}</p>
                         <p className="text-sm">Pagato: {formatCurrency(order.importo_pagato)}</p>
                         <p className="text-sm">Mancante: {formatCurrency(order.importo_da_pagare)}</p>
                         {order.data_ultimo_pagamento && (
@@ -245,9 +246,9 @@ export function OrdersTable({
                   </span>
                 </td>
                 <td className="py-4 pr-4 text-sm text-center">
-                  {order.settimana_consegna ? (
+                  {(order as any).settimana_consegna ? (
                     <Badge variant="outline" className="font-mono">
-                      W{order.settimana_consegna}
+                      W{(order as any).settimana_consegna}
                     </Badge>
                   ) : (
                     <span className="text-muted-foreground">-</span>
