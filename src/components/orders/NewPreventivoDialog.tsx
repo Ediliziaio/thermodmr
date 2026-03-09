@@ -116,7 +116,7 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
     defaultValues: {
       dealer_id: defaultDealerId || "",
       riferimento_preventivo: "",
-      data_scadenza_preventivo: "",
+      data_scadenza_preventivo: getDefault30DaysDate(),
       order_lines: [
         { categoria: "Infissi", descrizione: "", quantita: 1, prezzo_unitario: 0, sconto: 0, iva: 0 },
       ],
