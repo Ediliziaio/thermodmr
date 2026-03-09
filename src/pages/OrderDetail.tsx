@@ -389,7 +389,7 @@ export default function OrderDetail() {
     <div className="space-y-6 pb-24">
       <Button variant="ghost" onClick={handleNavigateBack}>
         <ArrowLeft className="mr-2 h-4 w-4" />
-        Torna agli Ordini
+        {isDealerArea && isPreventivo ? "Torna ai Preventivi" : "Torna agli Ordini"}
       </Button>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
