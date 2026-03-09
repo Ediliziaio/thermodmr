@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Pencil } from "lucide-react";
 import { useUpdateDealer, type DealerWithStats } from "@/hooks/useDealers";
+import { validatePIva, validateCodiceFiscale } from "@/lib/dealerValidation";
 
 interface EditDealerDialogProps {
   dealer: DealerWithStats;
@@ -19,6 +20,7 @@ export function EditDealerDialog({ dealer, trigger, open: controlledOpen, onOpen
   const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
   const setOpen = onOpenChange || setInternalOpen;
   const { mutate: updateDealer, isPending } = useUpdateDealer();
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [formData, setFormData] = useState({
     ragione_sociale: dealer.ragione_sociale,
@@ -54,10 +56,22 @@ export function EditDealerDialog({ dealer, trigger, open: controlledOpen, onOpen
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    const newErrors: Record<string, string> = {};
+    const pivaError = validatePIva(formData.p_iva);
+    if (pivaError) newErrors.p_iva = pivaError;
+    const cfError = validateCodiceFiscale(formData.codice_fiscale);
+    if (cfError) newErrors.codice_fiscale = cfError;
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    setErrors({});
+
     updateDealer(
       {
         id: dealer.id,
         ...formData,
+        codice_fiscale: formData.codice_fiscale.toUpperCase(),
       },
       {
         onSuccess: () => {
@@ -101,9 +115,14 @@ export function EditDealerDialog({ dealer, trigger, open: controlledOpen, onOpen
               <Input
                 id="p_iva"
                 value={formData.p_iva}
-                onChange={(e) => setFormData({ ...formData, p_iva: e.target.value })}
+                onChange={(e) => {
+                  setFormData({ ...formData, p_iva: e.target.value });
+                  if (errors.p_iva) setErrors((prev) => ({ ...prev, p_iva: "" }));
+                }}
+                maxLength={11}
                 required
               />
+              {errors.p_iva && <p className="text-sm text-destructive mt-1">{errors.p_iva}</p>}
             </div>
 
             <div className="space-y-2">
@@ -111,11 +130,14 @@ export function EditDealerDialog({ dealer, trigger, open: controlledOpen, onOpen
               <Input
                 id="codice_fiscale"
                 value={formData.codice_fiscale}
-                onChange={(e) =>
-                  setFormData({ ...formData, codice_fiscale: e.target.value })
-                }
+                onChange={(e) => {
+                  setFormData({ ...formData, codice_fiscale: e.target.value.toUpperCase() });
+                  if (errors.codice_fiscale) setErrors((prev) => ({ ...prev, codice_fiscale: "" }));
+                }}
+                maxLength={16}
                 required
               />
+              {errors.codice_fiscale && <p className="text-sm text-destructive mt-1">{errors.codice_fiscale}</p>}
             </div>
 
             <div className="space-y-2">

@@ -9,8 +9,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, AlertCircle, Building2, MapPin, Phone, Mail, FileText, ShoppingCart, Euro, TrendingUp, Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatCurrency, formatDate, getStatusColor, getStatusLabel } from "@/lib/utils";
-import { RevenueTimelineChart } from "@/components/analytics/charts/RevenueTimelineChart";
-import { OrdersDistributionChart } from "@/components/analytics/charts/OrdersDistributionChart";
+import { DealerRevenueChart } from "@/components/dealers/DealerRevenueChart";
+import { DealerOrdersDistribution } from "@/components/dealers/DealerOrdersDistribution";
 
 export default function DealerDetail() {
   const { id } = useParams<{ id: string }>();
@@ -242,15 +242,8 @@ export default function DealerDetail() {
         {/* Tab: Panoramica (merged Analytics + Statistiche) */}
         <TabsContent value="panoramica" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
-            <RevenueTimelineChart
-              orders={dealerOrders}
-              months={6}
-              title="Trend Fatturato (6 Mesi)"
-            />
-            <OrdersDistributionChart
-              orders={dealerOrders}
-              title="Distribuzione Ordini per Stato"
-            />
+            <DealerRevenueChart dealerId={id!} />
+            <DealerOrdersDistribution dealerId={id!} />
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
