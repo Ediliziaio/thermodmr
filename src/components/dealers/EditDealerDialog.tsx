@@ -40,9 +40,6 @@ export function EditDealerDialog({ dealer, trigger, open: controlledOpen, onOpen
       {
         id: dealer.id,
         ...formData,
-        commissione_personalizzata: formData.commissione_personalizzata
-          ? parseFloat(formData.commissione_personalizzata)
-          : null,
       },
       {
         onSuccess: () => {
