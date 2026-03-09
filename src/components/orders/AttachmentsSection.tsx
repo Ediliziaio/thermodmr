@@ -48,7 +48,7 @@ const safeFormatDate = (date: string | null | undefined): string => {
   }
 };
 
-export function AttachmentsSection({ orderId, attachments }: AttachmentsSectionProps) {
+export function AttachmentsSection({ orderId, attachments, readOnly = false }: AttachmentsSectionProps) {
   const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
