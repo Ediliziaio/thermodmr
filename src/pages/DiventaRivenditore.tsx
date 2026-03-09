@@ -175,9 +175,9 @@ const DiventaRivenditore = () => {
       </section>
 
       {/* Come Funziona */}
-      <section ref={stepsRef} className="py-24 bg-[hsl(0,0%,97%)]">
-        <div className="max-w-5xl mx-auto px-6">
-          <motion.div initial="hidden" animate={stepsInView ? "visible" : "hidden"} variants={stagger} className="text-center mb-16">
+      <section ref={stepsRef} className="py-16 sm:py-24 bg-[hsl(0,0%,97%)]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <motion.div initial="hidden" animate={stepsInView ? "visible" : "hidden"} variants={stagger} className="text-center mb-10 sm:mb-16">
             <motion.p variants={fadeUp} className="text-xs font-bold tracking-[0.3em] text-[hsl(195,85%,45%)] uppercase mb-4">
               Il Percorso
             </motion.p>
