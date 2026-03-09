@@ -195,6 +195,7 @@ const PublicNavbar = () => {
             >
               <div className="px-5 py-4 space-y-0.5">
                 {navLinks.map((item, idx) => {
+
                   const isActive = item.hasDropdown
                     ? isProductPage
                     : location.pathname === item.to;

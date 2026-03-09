@@ -780,7 +780,7 @@ const ContactForm = () => {
           </motion.div>
 
           <motion.div variants={fadeUp} className="max-w-2xl mx-auto">
-            <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg border border-[hsl(0,0%,90%)] p-5 sm:p-8 space-y-5">
+            <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg border border-[hsl(0,0%,90%)] p-4 sm:p-8 space-y-5">
               <div className="grid sm:grid-cols-2 gap-5">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-[hsl(0,0%,20%)]">Nome *</label>

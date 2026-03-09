@@ -5,7 +5,7 @@ import logo from "@/assets/logo_Thermodmr.png";
 const PublicFooter = () => (
   <footer className="bg-[hsl(0,0%,8%)] py-12 sm:py-16 border-t border-white/5">
     <div className="max-w-7xl mx-auto px-4 sm:px-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-12 mb-12">
         {/* Brand */}
         <div className="space-y-4">
           <img src={logo} alt="ThermoDMR" className="h-10 object-contain brightness-0 invert opacity-90" />
