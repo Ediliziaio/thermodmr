@@ -122,6 +122,7 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
     if (defaultValues && open) {
       form.reset({
         dealer_id: defaultValues.dealer_id || defaultDealerId || "",
+        riferimento_preventivo: defaultValues.riferimento_preventivo || "",
         cliente_nome: defaultValues.cliente_nome || "",
         cliente_cognome: defaultValues.cliente_cognome || "",
         cliente_email: defaultValues.cliente_email || "",
