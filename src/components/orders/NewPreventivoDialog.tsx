@@ -134,7 +134,7 @@ export function NewPreventivoDialog({ open, onOpenChange, defaultDealerId, defau
         cliente_email: defaultValues.cliente_email || "",
         cliente_telefono: defaultValues.cliente_telefono || "",
         cliente_indirizzo: defaultValues.cliente_indirizzo || "",
-        data_scadenza_preventivo: "", // always empty for duplicates
+        data_scadenza_preventivo: getDefault30DaysDate(),
         note_rivenditore: defaultValues.note_rivenditore || "",
         note_interna: defaultValues.note_interna || "",
         order_lines: defaultValues.order_lines && defaultValues.order_lines.length > 0
