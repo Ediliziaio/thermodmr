@@ -29,7 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus, Trash2, Loader2 } from "lucide-react";
-import { useDealersInfinite } from "@/hooks/useDealersInfinite";
+import { useDealersDropdown } from "@/hooks/useDealersDropdown";
 import { useCreateOrder } from "@/hooks/useOrders";
 import { useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
