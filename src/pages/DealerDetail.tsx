@@ -35,8 +35,9 @@ export default function DealerDetail() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("orders_with_payment_stats")
-        .select("*")
+        .select("id, stato, data_inserimento, importo_totale, importo_pagato, importo_da_pagare")
         .eq("dealer_id", id!)
+        .neq("stato", "preventivo") // exclude quotes from order history
         .order("data_inserimento", { ascending: false })
         .limit(50);
       if (error) throw error;
@@ -47,10 +48,13 @@ export default function DealerDetail() {
 
   const totalRevenue = dealer?.total_revenue || 0;
   const totalPaid = dealer?.total_paid || 0;
-  const totalToPay = dealer?.total_remaining || 0;
+  const totalToPay = Math.max(0, dealer?.total_remaining || 0);
   const ordersCount = dealer?.orders_count || 0;
+  // avgTicket: use ordersCount from the view (all confirmed orders, not capped at 50)
+  // dealerOrders is limited to 50 records, using its .length would skew the average for high-volume dealers
   const avgTicket = ordersCount > 0 ? totalRevenue / ordersCount : 0;
   const hasMoreOrders = ordersCount > 50;
+  const collectionPct = totalRevenue > 0 ? Math.min(100, (totalPaid / totalRevenue) * 100) : 0;
 
   if (isLoadingDealer) {
     return (
@@ -274,13 +278,11 @@ export default function DealerDetail() {
                       <div className="flex-1 bg-muted rounded-full h-2">
                         <div
                           className="bg-green-500 h-2 rounded-full transition-all"
-                          style={{
-                            width: `${totalRevenue > 0 ? (totalPaid / totalRevenue) * 100 : 0}%`,
-                          }}
+                          style={{ width: `${collectionPct}%` }}
                         />
                       </div>
                       <span className="text-sm font-medium">
-                        {totalRevenue > 0 ? ((totalPaid / totalRevenue) * 100).toFixed(1) : 0}%
+                        {collectionPct.toFixed(1)}%
                       </span>
                     </div>
                   </div>
@@ -355,7 +357,7 @@ export default function DealerDetail() {
                     <div className="text-center pt-4">
                       <Button
                         variant="outline"
-                        onClick={() => navigate(`/ordini?dealer=${id}`)}
+                        onClick={() => navigate(`/rivenditori/${id}/area/ordini`)}
                       >
                         Vedi tutti gli ordini ({ordersCount})
                       </Button>

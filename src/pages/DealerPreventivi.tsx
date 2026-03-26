@@ -202,6 +202,8 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
       queryClient.invalidateQueries({ queryKey: ["dealer-preventivi"] });
       queryClient.invalidateQueries({ queryKey: ["dealer-order-stats"] });
       queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["orders-kpi"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
       setConvertId(null);
     },
     onError: () => {
@@ -233,8 +235,8 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
 
   const bulkConvertMutation = useMutation({
     mutationFn: async (ids: string[]) => {
-      // Convert each preventivo one by one to generate unique order IDs
-      const results = await Promise.all(
+      // Use allSettled so partial failures don't abort the whole batch
+      const results = await Promise.allSettled(
         ids.map(async (preventivoId) => {
           const newOrderId = await generateOrderId();
           const { error } = await supabase
@@ -249,13 +251,25 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
           return newOrderId;
         })
       );
-      return results;
+      const succeeded = results.filter(r => r.status === "fulfilled").length;
+      const failed = results.filter(r => r.status === "rejected").length;
+      return { succeeded, failed };
     },
-    onSuccess: (newIds) => {
-      toast({ title: `${newIds.length} preventiv${newIds.length === 1 ? "o convertito" : "i convertiti"} in ordini` });
-      queryClient.invalidateQueries({ queryKey: ["dealer-preventivi"] });
-      queryClient.invalidateQueries({ queryKey: ["dealer-order-stats"] });
-      queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
+    onSuccess: ({ succeeded, failed }) => {
+      if (succeeded > 0) {
+        toast({
+          title: `${succeeded} preventiv${succeeded === 1 ? "o convertito" : "i convertiti"} in ordini`,
+          description: failed > 0 ? `${failed} non convertit${failed === 1 ? "o" : "i"} per errore` : undefined,
+          variant: failed > 0 ? "destructive" : "default",
+        });
+        queryClient.invalidateQueries({ queryKey: ["dealer-preventivi"] });
+        queryClient.invalidateQueries({ queryKey: ["dealer-order-stats"] });
+        queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
+        queryClient.invalidateQueries({ queryKey: ["orders-kpi"] });
+        queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
+      } else {
+        toast({ title: "Errore: nessun preventivo convertito", variant: "destructive" });
+      }
       setSelectedIds(new Set());
       setBulkConvertOpen(false);
     },
@@ -283,6 +297,8 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
       toast({ title: `${selectedIds.size} preventiv${selectedIds.size === 1 ? "o eliminato" : "i eliminati"}` });
       queryClient.invalidateQueries({ queryKey: ["dealer-preventivi"] });
       queryClient.invalidateQueries({ queryKey: ["dealer-order-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["orders-kpi"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
       setSelectedIds(new Set());
       setBulkDeleteOpen(false);
     },

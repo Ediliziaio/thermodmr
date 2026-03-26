@@ -38,6 +38,11 @@ export const useRealtimeSync = () => {
             ["order"],
             ["dashboard-kpis"],
             ["upcoming-deadlines"],
+            ["dealer-order-stats"],
+            ["dealer-recent-activity"],
+            ["dealer-payment-reminders"],
+            ["dealers-infinite"],
+            ["dealer-detail"],
           ]);
         }
       )
@@ -51,6 +56,10 @@ export const useRealtimeSync = () => {
             ["order-payments"],
             ["dashboard-kpis"],
             ["revenue-data"],
+            ["dealer-order-stats"],
+            ["dealer-payment-reminders"],
+            ["dealer-recent-activity"],
+            ["dealers-infinite"],
           ]);
         }
       )
@@ -62,6 +71,24 @@ export const useRealtimeSync = () => {
             ["dealers-infinite"],
             ["dashboard-kpis"],
           ], 500);
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "support_tickets" },
+        () => {
+          debouncedInvalidate([
+            ["tickets"],
+          ], 400);
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "ticket_messages" },
+        () => {
+          debouncedInvalidate([
+            ["ticket-messages"],
+          ], 200);
         }
       )
       .subscribe();

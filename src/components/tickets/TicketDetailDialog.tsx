@@ -16,8 +16,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Send, Paperclip, Image, FileText, Download } from "lucide-react";
+import { Loader2, Send, Paperclip, FileText, Download } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "@/hooks/use-toast";
 import {
   useTicketMessages,
   useCreateTicketMessage,
@@ -80,6 +81,7 @@ export function TicketDetailDialog({
         .upload(path, file);
       if (error) {
         setUploading(false);
+        toast({ title: "Errore upload", description: error.message, variant: "destructive" });
         return;
       }
       allegato = { url: path, nome: file.name, tipo: file.type };

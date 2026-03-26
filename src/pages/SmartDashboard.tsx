@@ -5,7 +5,7 @@ import { Loader2, AlertCircle } from "lucide-react";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function SmartDashboard() {
-  const { userRole, loading } = useAuth();
+  const { user, userRole, loading } = useAuth();
 
   if (loading) {
     return (
@@ -19,7 +19,13 @@ export default function SmartDashboard() {
     return <Dashboard />;
   }
 
-  if (userRole === "commerciale" || userRole === "rivenditore") {
+  // Commerciale gets a scoped dashboard showing only their dealers/orders
+  if (userRole === "commerciale") {
+    return <Dashboard commercialeId={user?.id} />;
+  }
+
+  // Rivenditore has no global dashboard — go directly to orders
+  if (userRole === "rivenditore") {
     return <Navigate to="/ordini" replace />;
   }
 

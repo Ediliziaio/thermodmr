@@ -73,13 +73,23 @@ const ResetPasswordDialog = ({ userId, userName, trigger }: ResetPasswordDialogP
   };
 
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
-      {trigger || (
-        <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
-          <KeyRound className="h-4 w-4 mr-2" />
-          Reset Password
-        </Button>
-      )}
+    <>
+      {/* Trigger outside AlertDialog so onClick always fires regardless of prop source */}
+      <span
+        role="button"
+        tabIndex={0}
+        className="contents"
+        onClick={() => setOpen(true)}
+        onKeyDown={(e) => e.key === "Enter" && setOpen(true)}
+      >
+        {trigger || (
+          <Button variant="outline" size="sm">
+            <KeyRound className="h-4 w-4 mr-2" />
+            Reset Password
+          </Button>
+        )}
+      </span>
+      <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent className="max-w-md">
         {!newPassword ? (
           <>
@@ -159,6 +169,7 @@ const ResetPasswordDialog = ({ userId, userName, trigger }: ResetPasswordDialogP
         )}
       </AlertDialogContent>
     </AlertDialog>
+    </>
   );
 };
 

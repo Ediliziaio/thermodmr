@@ -1,8 +1,7 @@
 import { useParams } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
-import { useInView } from "react-intersection-observer";
-import { useDealersInfinite } from "@/hooks/useDealersInfinite";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { DealerAreaLayout } from "@/components/DealerAreaLayout";
 import DealerDashboard from "./DealerDashboard";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -23,15 +22,22 @@ const PageLoader = () => (
 
 export default function DealerArea() {
   const { id } = useParams<{ id: string }>();
-  const { data: dealersData, isLoading, fetchNextPage, hasNextPage } = useDealersInfinite();
-  const { ref, inView } = useInView();
 
-  useEffect(() => {
-    if (inView && hasNextPage) fetchNextPage();
-  }, [inView, hasNextPage, fetchNextPage]);
-
-  const allDealers = dealersData?.pages.flatMap((p) => p.data) || [];
-  const dealer = allDealers.find((d) => d.id === id);
+  // Fetch dealer by ID directly — avoids searching through paginated list
+  const { data: dealer, isLoading } = useQuery({
+    queryKey: ["dealer-detail", id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("dealers")
+        .select("id, ragione_sociale")
+        .eq("id", id!)
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!id,
+    staleTime: 5 * 60 * 1000,
+  });
 
   if (isLoading) {
     return (
@@ -56,7 +62,6 @@ export default function DealerArea() {
           <Route path="assistenza" element={<DealerAssistenza dealerId={id} />} />
         </Routes>
       </Suspense>
-      {hasNextPage && <div ref={ref} />}
     </DealerAreaLayout>
   );
 }

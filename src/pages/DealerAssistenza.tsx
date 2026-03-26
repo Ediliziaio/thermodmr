@@ -49,19 +49,11 @@ export default function DealerAssistenza({ dealerId }: DealerAssistenzaProps) {
   const { data: tickets = [], isLoading } = useQuery({
     queryKey: ["tickets", "dealer", dealerId, statoFilter],
     queryFn: async () => {
-      // Get orders for this dealer, then tickets for those orders
-      const { data: orders } = await supabase
-        .from("orders")
-        .select("id")
-        .eq("dealer_id", dealerId!);
-
-      if (!orders || orders.length === 0) return [];
-
-      const orderIds = orders.map((o) => o.id);
+      // Single query: join support_tickets → orders filtered by dealer_id
       let query = supabase
         .from("support_tickets")
-        .select("*, profiles:creato_da_user_id(display_name, email)")
-        .in("ordine_id", orderIds)
+        .select("*, profiles:creato_da_user_id(display_name, email), orders!inner(id, dealer_id)")
+        .eq("orders.dealer_id", dealerId!)
         .order("created_at", { ascending: false });
 
       if (statoFilter) query = query.eq("stato", statoFilter);
@@ -73,7 +65,8 @@ export default function DealerAssistenza({ dealerId }: DealerAssistenzaProps) {
     enabled: !!dealerId,
   });
 
-  const openCount = tickets.filter((t) => t.stato !== "chiuso").length;
+  // Count only "aperto" (consistent with superadmin badge logic)
+  const openCount = tickets.filter((t) => t.stato === "aperto").length;
 
   return (
     <div className="space-y-4">

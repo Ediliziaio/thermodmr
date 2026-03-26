@@ -237,14 +237,14 @@ export default function OrderDetail() {
   }, [pendingNavigation, navigate]);
 
   const handleSaveAndNavigate = useCallback(async () => {
-    await handleSaveAll();
-    setShowUnsavedDialog(false);
-    // Small delay to let mutations complete
-    setTimeout(() => {
+    try {
+      await handleSaveAll();
+    } finally {
+      setShowUnsavedDialog(false);
       if (pendingNavigation === "__back__") navigate(-1);
       else if (pendingNavigation) navigate(pendingNavigation);
       setPendingNavigation(null);
-    }, 300);
+    }
   }, [handleSaveAll, pendingNavigation, navigate]);
 
   // Duplicate preventivo mutation
@@ -293,7 +293,8 @@ export default function OrderDetail() {
     onSuccess: (newId) => {
       toast({ title: "Preventivo duplicato", description: `Nuovo preventivo: ${newId}` });
       queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
-      navigate(`/ordini/${newId}`);
+      if (isDealerArea) navigate(`../${newId}`, { relative: "path" });
+      else navigate(`/ordini/${newId}`);
     },
     onError: () => {
       toast({ title: "Errore nella duplicazione", variant: "destructive" });

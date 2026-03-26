@@ -41,7 +41,10 @@ export function Layout({ children }: LayoutProps) {
   const location = useLocation();
   const { user, userRole, signOut } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { data: openTicketsCount = 0 } = useOpenTicketsCount();
+  // Only super_admin sees the Assistenza menu — skip the query entirely for other roles
+  const isSuperAdmin = userRole === "super_admin";
+  const { data: openTicketsCount = 0 } = useOpenTicketsCount(isSuperAdmin);
+  const showTicketsBadge = isSuperAdmin && openTicketsCount > 0;
 
   const getRoleLabel = (role: string | null) => {
     switch (role) {
@@ -87,7 +90,7 @@ export function Layout({ children }: LayoutProps) {
               >
                 <item.icon className="h-5 w-5" />
                 {item.name}
-                {item.name === "Assistenza" && openTicketsCount > 0 && (
+                {item.name === "Assistenza" && showTicketsBadge && (
                   <span className="ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-xs font-bold px-1.5">
                     {openTicketsCount}
                   </span>

@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import type { TablesInsert } from "@/integrations/supabase/types";
 import { useAuth } from "@/contexts/AuthContext";
+import { calcLineTotal } from "@/lib/orderConstants";
 
 // Re-export tipi centralizzati per retrocompatibilità
 export type { OrderWithDetails, OrderWithPaymentStats } from "@/types/orders";
@@ -97,6 +98,11 @@ export const useUpdateOrderStatus = () => {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["order", variables.orderId] });
       queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
+      queryClient.invalidateQueries({ queryKey: ["dealer-order-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["upcoming-deadlines"] });
+      queryClient.invalidateQueries({ queryKey: ["orders-kpi"] });
       toast({
         title: "Stato aggiornato",
         description: "Lo stato dell'ordine è stato aggiornato con successo.",
@@ -141,6 +147,7 @@ export const useUpdateOrderNotes = () => {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["order", variables.orderId] });
+      queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
       toast({
         title: "Note aggiornate",
         description: "Le note dell'ordine sono state aggiornate con successo.",
@@ -161,34 +168,29 @@ export const useBulkUpdateOrderStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ 
-      orderIds, 
-      stato 
-    }: { 
-      orderIds: string[]; 
+    mutationFn: async ({
+      orderIds,
+      stato
+    }: {
+      orderIds: string[];
       stato: string;
     }) => {
-      const updates = orderIds.map(orderId =>
-        supabase
-          .from("orders")
-          .update({ stato: stato as any })
-          .eq("id", orderId)
-      );
+      if (orderIds.length === 0) return { success: 0, failed: 0 };
 
-      const results = await Promise.all(updates);
-      const errors = results.filter(r => r.error);
-      if (errors.length > 0) {
-        throw new Error(`${errors.length} ordini non sono stati aggiornati`);
-      }
+      const { error } = await supabase
+        .from("orders")
+        .update({ stato: stato as any })
+        .in("id", orderIds);
 
-      return {
-        success: results.length - errors.length,
-        failed: errors.length,
-      };
+      if (error) throw new Error(error.message);
+
+      return { success: orderIds.length, failed: 0 };
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
       queryClient.invalidateQueries({ queryKey: ["orders"] });
+      queryClient.invalidateQueries({ queryKey: ["orders-kpi"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
       toast({
         title: "Aggiornamento completato",
         description: `${data.success} ${data.success === 1 ? 'ordine aggiornato' : 'ordini aggiornati'} con successo.`,
@@ -208,32 +210,27 @@ export const useBulkDeleteOrders = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ 
-      orderIds 
-    }: { 
+    mutationFn: async ({
+      orderIds
+    }: {
       orderIds: string[];
     }) => {
-      const deletes = orderIds.map(orderId =>
-        supabase
-          .from("orders")
-          .delete()
-          .eq("id", orderId)
-      );
+      if (orderIds.length === 0) return { success: 0, failed: 0 };
 
-      const results = await Promise.all(deletes);
-      const errors = results.filter(r => r.error);
-      if (errors.length > 0) {
-        throw new Error(`${errors.length} ordini non sono stati eliminati`);
-      }
+      const { error } = await supabase
+        .from("orders")
+        .delete()
+        .in("id", orderIds);
 
-      return {
-        success: results.length - errors.length,
-        failed: errors.length,
-      };
+      if (error) throw new Error(error.message);
+
+      return { success: orderIds.length, failed: 0 };
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
       queryClient.invalidateQueries({ queryKey: ["orders"] });
+      queryClient.invalidateQueries({ queryKey: ["orders-kpi"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
       toast({
         title: "Eliminazione completata",
         description: `${data.success} ${data.success === 1 ? 'ordine eliminato' : 'ordini eliminati'} con successo.`,
@@ -327,16 +324,18 @@ export const useCreateOrder = () => {
       if (!dealer) throw new Error("Dealer not found");
 
       let clienteFinaleId: string | null = null;
-      if (values.cliente_nome && values.cliente_cognome) {
+      const nomeCliente = values.cliente_nome?.trim();
+      const cognomeCliente = values.cliente_cognome?.trim();
+      if (nomeCliente && cognomeCliente) {
         const { data: newClient, error: clientError } = await supabase
           .from("clients")
           .insert({
             dealer_id: values.dealer_id,
-            nome: values.cliente_nome,
-            cognome: values.cliente_cognome,
-            email: values.cliente_email || null,
-            telefono: values.cliente_telefono || null,
-            indirizzo: values.cliente_indirizzo || null,
+            nome: nomeCliente,
+            cognome: cognomeCliente,
+            email: values.cliente_email?.trim() || null,
+            telefono: values.cliente_telefono?.trim() || null,
+            indirizzo: values.cliente_indirizzo?.trim() || null,
           })
           .select()
           .single();
@@ -347,12 +346,7 @@ export const useCreateOrder = () => {
 
       const orderId = await generateOrderId();
       const importoTotale = values.order_lines.reduce(
-        (sum: number, line: any) => {
-          const subtotal = line.quantita * line.prezzo_unitario;
-          const afterDiscount = subtotal * (1 - line.sconto / 100);
-          const total = afterDiscount * (1 + line.iva / 100);
-          return sum + total;
-        },
+        (sum: number, line: any) => sum + calcLineTotal(line),
         0
       );
 
@@ -379,22 +373,16 @@ export const useCreateOrder = () => {
 
       if (orderError) throw orderError;
 
-      const orderLinesData = values.order_lines.map((line: any) => {
-        const subtotal = line.quantita * line.prezzo_unitario;
-        const afterDiscount = subtotal * (1 - line.sconto / 100);
-        const total = afterDiscount * (1 + line.iva / 100);
-
-        return {
-          ordine_id: newOrder.id,
-          categoria: line.categoria,
-          descrizione: line.descrizione,
-          quantita: line.quantita,
-          prezzo_unitario: line.prezzo_unitario,
-          sconto: line.sconto,
-          iva: line.iva,
-          totale_riga: total,
-        };
-      });
+      const orderLinesData = values.order_lines.map((line: any) => ({
+        ordine_id: newOrder.id,
+        categoria: line.categoria,
+        descrizione: line.descrizione,
+        quantita: line.quantita,
+        prezzo_unitario: line.prezzo_unitario,
+        sconto: line.sconto,
+        iva: line.iva,
+        totale_riga: calcLineTotal(line),
+      }));
 
       const { error: linesError } = await supabase
         .from("order_lines")
@@ -406,6 +394,8 @@ export const useCreateOrder = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["orders-kpi"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
       toast({
         title: "Ordine creato",
         description: `Ordine ${data.id} creato con successo`,
@@ -501,6 +491,8 @@ export const useUpdateOrderDates = () => {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["order", variables.orderId] });
       queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["upcoming-deadlines"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
       toast({
         title: "Date aggiornate",
         description: "Le date dell'ordine sono state aggiornate con successo.",
@@ -534,16 +526,18 @@ export const useCreatePreventivo = () => {
       if (!dealer) throw new Error("Dealer not found");
 
       let clienteFinaleId: string | null = null;
-      if (values.cliente_nome && values.cliente_cognome) {
+      const nomeClientePrv = values.cliente_nome?.trim();
+      const cognomeClientePrv = values.cliente_cognome?.trim();
+      if (nomeClientePrv && cognomeClientePrv) {
         const { data: newClient, error: clientError } = await supabase
           .from("clients")
           .insert({
             dealer_id: values.dealer_id,
-            nome: values.cliente_nome,
-            cognome: values.cliente_cognome,
-            email: values.cliente_email || null,
-            telefono: values.cliente_telefono || null,
-            indirizzo: values.cliente_indirizzo || null,
+            nome: nomeClientePrv,
+            cognome: cognomeClientePrv,
+            email: values.cliente_email?.trim() || null,
+            telefono: values.cliente_telefono?.trim() || null,
+            indirizzo: values.cliente_indirizzo?.trim() || null,
           })
           .select()
           .single();
@@ -554,11 +548,7 @@ export const useCreatePreventivo = () => {
 
       const preventivoId = await generatePreventivoId();
       const importoTotale = values.order_lines.reduce(
-        (sum: number, line: any) => {
-          const subtotal = line.quantita * line.prezzo_unitario;
-          const afterDiscount = subtotal * (1 - line.sconto / 100);
-          return sum + afterDiscount;
-        },
+        (sum: number, line: any) => sum + calcLineTotal(line),
         0
       );
 
@@ -586,21 +576,16 @@ export const useCreatePreventivo = () => {
 
       if (orderError) throw orderError;
 
-      const orderLinesData = values.order_lines.map((line: any) => {
-        const subtotal = line.quantita * line.prezzo_unitario;
-        const afterDiscount = subtotal * (1 - line.sconto / 100);
-
-        return {
-          ordine_id: newOrder.id,
-          categoria: line.categoria,
-          descrizione: line.descrizione,
-          quantita: line.quantita,
-          prezzo_unitario: line.prezzo_unitario,
-          sconto: line.sconto,
-          iva: line.iva,
-          totale_riga: afterDiscount,
-        };
-      });
+      const orderLinesData = values.order_lines.map((line: any) => ({
+        ordine_id: newOrder.id,
+        categoria: line.categoria,
+        descrizione: line.descrizione,
+        quantita: line.quantita,
+        prezzo_unitario: line.prezzo_unitario,
+        sconto: line.sconto,
+        iva: line.iva,
+        totale_riga: calcLineTotal(line),
+      }));
 
       const { error: linesError } = await supabase
         .from("order_lines")

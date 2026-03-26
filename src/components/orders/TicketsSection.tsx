@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import { Headphones, Plus, Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "@/hooks/use-toast";
 import { useTicketsByOrder, useCreateTicket } from "@/hooks/useTickets";
 import { TicketDetailDialog } from "@/components/tickets/TicketDetailDialog";
 import {
@@ -63,6 +64,7 @@ export function TicketsSection({ orderId }: TicketsSectionProps) {
         .upload(path, file);
       if (error) {
         setUploading(false);
+        toast({ title: "Errore upload", description: error.message, variant: "destructive" });
         return;
       }
       allegato = { url: path, nome: file.name, tipo: file.type };
@@ -211,13 +213,17 @@ export function TicketsSection({ orderId }: TicketsSectionProps) {
       </Dialog>
 
       {/* Ticket Detail */}
-      {selectedTicketId && (
-        <TicketDetailDialog
-          ticketId={selectedTicketId}
-          open={!!selectedTicketId}
-          onOpenChange={(open) => !open && setSelectedTicketId(null)}
-        />
-      )}
+      {selectedTicketId && (() => {
+        const t = tickets.find(tk => tk.id === selectedTicketId);
+        return (
+          <TicketDetailDialog
+            ticketId={selectedTicketId}
+            open={!!selectedTicketId}
+            onOpenChange={(open) => !open && setSelectedTicketId(null)}
+            ticketInfo={t ? { oggetto: t.oggetto, stato: t.stato, ordine_id: t.ordine_id } : undefined}
+          />
+        );
+      })()}
     </>
   );
 }

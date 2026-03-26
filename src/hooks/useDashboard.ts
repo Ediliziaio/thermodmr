@@ -35,21 +35,21 @@ const calcDelta = (current: number, previous: number): number => {
   return ((current - previous) / previous) * 100;
 };
 
-export const useDashboardKPIs = (startDate?: Date, endDate?: Date) => {
+export const useDashboardKPIs = (startDate?: Date, endDate?: Date, commercialeId?: string | null) => {
   return useQuery({
-    queryKey: ["dashboard-kpis", startDate, endDate],
+    queryKey: ["dashboard-kpis", startDate, endDate, commercialeId],
     queryFn: async (): Promise<DashboardKPIs> => {
       const [kpisResult, dealersResult] = await Promise.all([
         supabase.rpc("get_dashboard_kpis", {
-          p_start_date: startDate?.toISOString(),
-          p_end_date: endDate?.toISOString(),
-          p_commerciale_id: null,
+          p_start_date: startDate?.toISOString() ?? null,
+          p_end_date: endDate?.toISOString() ?? null,
+          p_commerciale_id: commercialeId ?? null,
         }),
         supabase.rpc("get_top_dealers", {
           p_limit: 5,
-          p_commerciale_id: null,
-          p_start_date: startDate?.toISOString(),
-          p_end_date: endDate?.toISOString(),
+          p_commerciale_id: commercialeId ?? null,
+          p_start_date: startDate?.toISOString() ?? null,
+          p_end_date: endDate?.toISOString() ?? null,
         }),
       ]);
 
@@ -59,17 +59,20 @@ export const useDashboardKPIs = (startDate?: Date, endDate?: Date) => {
         comparisonResult = await supabase.rpc("get_dashboard_kpis_comparison", {
           p_start_date: startDate?.toISOString() ?? null,
           p_end_date: endDate?.toISOString() ?? null,
-          p_commerciale_id: null,
+          p_commerciale_id: commercialeId ?? null,
         });
-      } catch (_) {
-        // Silently ignore comparison errors
+        if (comparisonResult.error) {
+          console.warn("[Dashboard] comparison RPC error:", comparisonResult.error.message);
+        }
+      } catch (err) {
+        console.warn("[Dashboard] comparison RPC failed:", err);
       }
 
       if (kpisResult.error) throw kpisResult.error;
       if (dealersResult.error) throw dealersResult.error;
 
       const kpis = kpisResult.data as any;
-      const daSaldare = kpis.totalRevenue - kpis.totalIncassato;
+      const daSaldare = Math.max(0, kpis.totalRevenue - kpis.totalIncassato);
 
       // Compute deltas from comparison
       let deltas = { revenue: 0, acconti: 0, incassato: 0, orders: 0 };
@@ -101,14 +104,14 @@ export const useDashboardKPIs = (startDate?: Date, endDate?: Date) => {
   });
 };
 
-export const useRevenueData = (startDate?: Date, endDate?: Date) => {
+export const useRevenueData = (startDate?: Date, endDate?: Date, commercialeId?: string | null) => {
   return useQuery({
-    queryKey: ["revenue-data", startDate, endDate],
+    queryKey: ["revenue-data", startDate, endDate, commercialeId],
     queryFn: async () => {
       const { data, error } = await supabase.rpc("get_revenue_by_date_range", {
         p_start_date: startDate?.toISOString() ?? null,
         p_end_date: endDate?.toISOString() ?? null,
-        p_commerciale_id: null,
+        p_commerciale_id: commercialeId ?? null,
       });
 
       if (error) throw error;

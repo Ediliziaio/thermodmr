@@ -1,7 +1,8 @@
 import { ReactNode } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -10,6 +11,7 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
   const { user, userRole, loading } = useAuth();
+  const navigate = useNavigate();
 
   if (loading) {
     return (
@@ -26,11 +28,14 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
   if (requiredRole && userRole !== requiredRole && userRole !== "super_admin") {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-foreground mb-2">Accesso Negato</h1>
+        <div className="text-center space-y-4">
+          <h1 className="text-2xl font-bold text-foreground">Accesso Negato</h1>
           <p className="text-muted-foreground">
             Non hai i permessi necessari per accedere a questa pagina.
           </p>
+          <Button variant="outline" onClick={() => navigate("/")}>
+            Torna alla Home
+          </Button>
         </div>
       </div>
     );

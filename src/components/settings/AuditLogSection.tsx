@@ -33,6 +33,7 @@ const AuditLogSection = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["auditLog", entityFilter, page],
+    staleTime: 30 * 1000,
     queryFn: async () => {
       let query = supabase
         .from("audit_log")

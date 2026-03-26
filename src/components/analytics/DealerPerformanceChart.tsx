@@ -49,10 +49,11 @@ export function DealerPerformanceChart({ data, title = "Performance Dealers" }: 
   const getInitials = (name: string) => {
     return name
       .split(" ")
+      .filter(n => n.length > 0)
       .map(n => n[0])
       .join("")
       .toUpperCase()
-      .substring(0, 2);
+      .substring(0, 2) || "?";
   };
 
   const getRankBadge = (index: number) => {
@@ -61,6 +62,25 @@ export function DealerPerformanceChart({ data, title = "Performance Dealers" }: 
     if (index === 2) return <Badge className="bg-orange-600">🥉 3°</Badge>;
     return <Badge variant="outline">{index + 1}°</Badge>;
   };
+
+  if (data.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Users className="h-5 w-5 text-muted-foreground" />
+            <CardTitle>{title}</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col items-center justify-center py-12 text-muted-foreground gap-2">
+            <Users className="h-10 w-10 opacity-40" />
+            <p className="text-sm">Nessun dealer con ordini nel periodo selezionato</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>

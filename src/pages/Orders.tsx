@@ -329,9 +329,9 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
         </div>
 
         {/* Action Buttons */}
-        {!isMobile && !isDealerArea && (
+        {!isDealerArea && (
           <div className="flex gap-2">
-            {userRole === "super_admin" && (
+            {userRole === "super_admin" && !isMobile && (
               <>
                 <Button variant="outline" onClick={() => setPreventivoDialogOpen(true)}>
                   <FileText className="mr-2 h-4 w-4" />
@@ -492,16 +492,16 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                       <FileText className="h-8 w-8 text-muted-foreground" />
                     </div>
                     <h3 className="text-lg font-semibold mb-2">
-                      {allOrders && allOrders.length > 0
+                      {totalCount > 0
                         ? "Nessun ordine corrisponde ai filtri"
                         : "Nessun ordine trovato"}
                     </h3>
                     <p className="text-sm text-muted-foreground max-w-sm mb-6">
-                      {allOrders && allOrders.length > 0
+                      {totalCount > 0
                         ? "Prova a modificare i filtri di ricerca"
                         : "Crea il tuo primo ordine per iniziare"}
                     </p>
-                    {!allOrders?.length && userRole === 'super_admin' && (
+                    {totalCount === 0 && userRole === 'super_admin' && (
                       <Button onClick={() => setNewOrderDialogOpen(true)}>
                         <Plus className="h-4 w-4 mr-2" />
                         Crea Ordine

@@ -19,6 +19,7 @@ interface UseOrdersInfiniteParams {
   importoMax?: number;
   sortKey?: string;
   sortDirection?: 'asc' | 'desc';
+  enabled?: boolean;
 }
 
 export const useOrdersInfinite = ({
@@ -33,20 +34,27 @@ export const useOrdersInfinite = ({
   importoMax,
   sortKey = 'data_inserimento',
   sortDirection = 'desc',
+  enabled = true,
 }: UseOrdersInfiniteParams = {}) => {
   return useInfiniteQuery({
     queryKey: ["orders-infinite", searchQuery, dealerId, stato, dataFrom, dataTo, statoPagamento, quickFilter, importoMin, importoMax, sortKey, sortDirection],
+    enabled,
     queryFn: async ({ pageParam = 0 }) => {
       const from = pageParam * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
 
       // Map sort keys to actual DB columns
+      // Note: "dealer" sorts by ragione_sociale on the joined dealers table —
+      // not a direct DB column on orders_with_payment_stats, so we fall back
+      // to data_inserimento and handle it client-side in Orders.tsx.
       const dbSortColumn = (() => {
         switch (sortKey) {
           case 'importo_totale': return 'importo_totale';
           case 'importo_da_pagare': return 'importo_da_pagare';
           case 'data_consegna_prevista': return 'data_consegna_prevista';
           case 'importo_acconto': return 'importo_acconto';
+          case 'stato': return 'stato';
+          case 'updated_at': return 'updated_at';
           default: return 'data_inserimento';
         }
       })();
@@ -114,6 +122,8 @@ export const useOrdersInfinite = ({
       // Ricerca su campi ordine + dealer/cliente tramite pre-query
       if (searchQuery && searchQuery.trim()) {
         const search = searchQuery.trim().toLowerCase();
+        // Sanitize chars that break PostgREST .or() filter syntax (comma = separator, parens = grouping)
+        const sanitizedSearch = search.replace(/[,()]/g, "");
         
         // Pre-query: trova dealer e clienti che matchano la ricerca
         const [dealerRes, clientRes] = await Promise.all([
@@ -126,9 +136,9 @@ export const useOrdersInfinite = ({
         
         // Build OR filter combining order fields + matched dealer/client IDs
         const orParts = [
-          `id.ilike.%${search}%`,
-          `note_interna.ilike.%${search}%`,
-          `note_rivenditore.ilike.%${search}%`,
+          `id.ilike.%${sanitizedSearch}%`,
+          `note_interna.ilike.%${sanitizedSearch}%`,
+          `note_rivenditore.ilike.%${sanitizedSearch}%`,
         ];
         if (dealerIds.length > 0) {
           orParts.push(`dealer_id.in.(${dealerIds.join(",")})`);

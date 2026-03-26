@@ -164,10 +164,10 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
   };
 
   const toggleSelectAll = () => {
-    if (selectedPaymentIds.size === payments.length) {
+    if (selectedPaymentIds.size === sortedPayments.length && sortedPayments.length > 0) {
       setSelectedPaymentIds(new Set());
     } else {
-      setSelectedPaymentIds(new Set(payments.map(p => p.id)));
+      setSelectedPaymentIds(new Set(sortedPayments.map(p => p.id)));
     }
   };
 
@@ -256,7 +256,12 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
             {payments.length < totalCount && ` · ${payments.length} caricati`}
           </p>
         </div>
-        {!isMobile && !isDealerArea && <NewPaymentDialog open={newPaymentDialogOpen} onOpenChange={setNewPaymentDialogOpen} />}
+        {!isMobile && !isDealerArea && (
+          <Button onClick={() => setNewPaymentDialogOpen(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            Nuovo Pagamento
+          </Button>
+        )}
       </div>
 
       {/* Stats Cards */}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -35,7 +35,7 @@ export function QuickPaymentDialog({
   orderTotal,
   amountPaid,
 }: QuickPaymentDialogProps) {
-  const remaining = orderTotal - amountPaid;
+  const remaining = Math.max(0, orderTotal - amountPaid);
   const createPayment = useCreatePayment();
 
   const [form, setForm] = useState({
@@ -45,6 +45,13 @@ export function QuickPaymentDialog({
     metodo: "Bonifico",
     riferimento: "",
   });
+
+  // Sync importo when dialog opens or remaining changes
+  useEffect(() => {
+    if (open) {
+      setForm(prev => ({ ...prev, importo: remaining }));
+    }
+  }, [open, remaining]);
 
   const handleSubmit = () => {
     if (!form.importo || form.importo <= 0) {

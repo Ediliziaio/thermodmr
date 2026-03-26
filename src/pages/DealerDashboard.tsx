@@ -70,8 +70,8 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
   }
 
   const newActivitiesCount = activities?.filter(a => a.isNew).length || 0;
-  const globalPaymentPercentage = stats.totalRevenue > 0 
-    ? (stats.totalPaid / stats.totalRevenue) * 100 
+  const globalPaymentPercentage = stats.totalRevenue > 0
+    ? Math.min(100, (stats.totalPaid / stats.totalRevenue) * 100)
     : 0;
 
   const basePath = dealerId ? `/rivenditori/${dealerId}/area` : "";

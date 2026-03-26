@@ -55,7 +55,7 @@ function normalizeLine(raw: any): OrderLine {
     quantita: Number(raw.quantita) || 1,
     prezzoUnitario: Number(raw.prezzo_unitario ?? raw.prezzoUnitario) || 0,
     sconto: Number(raw.sconto) || 0,
-    iva: Number(raw.iva) ?? 22,
+    iva: raw.iva != null ? Number(raw.iva) : 22,
     totaleRiga: Number(raw.totale_riga ?? raw.totaleRiga) || 0,
     misure: raw.misure,
   };

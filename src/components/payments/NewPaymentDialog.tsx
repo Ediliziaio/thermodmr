@@ -69,7 +69,9 @@ export function NewPaymentDialog({ open: controlledOpen, onOpenChange }: NewPaym
             commerciale_owner_id
           )
         `)
-        .neq("stato", "consegnato")
+        // Include also "consegnato" orders that still have a balance
+        .or("stato.neq.consegnato,importo_da_pagare.gt.0")
+        .neq("stato", "preventivo")
         .order("created_at", { ascending: false })
         .limit(500);
 
@@ -91,11 +93,11 @@ export function NewPaymentDialog({ open: controlledOpen, onOpenChange }: NewPaym
     setFormData((prev) => {
       const newData = { ...prev, ordineId: orderId };
 
+      // Auto-fill importo with remaining balance whenever not yet typed
       if (!prev.importo || prev.importo === "0") {
-        if (prev.tipo === "acconto" && order.importo_totale) {
-          newData.importo = (order.importo_totale * 0.3).toFixed(2);
-        } else if (prev.tipo === "saldo" && order.importo_da_pagare) {
-          newData.importo = order.importo_da_pagare.toFixed(2);
+        const remaining = order.importo_da_pagare;
+        if (remaining > 0) {
+          newData.importo = remaining.toFixed(2);
         }
       }
 

@@ -34,6 +34,7 @@ interface UsePaymentsInfiniteParams {
   dealerId?: string;
   sortKey?: string;
   sortDirection?: "asc" | "desc";
+  enabled?: boolean;
 }
 
 // Map UI sort keys to DB columns
@@ -53,9 +54,11 @@ export const usePaymentsInfinite = ({
   dealerId,
   sortKey = "data_pagamento",
   sortDirection = "desc",
+  enabled = true,
 }: UsePaymentsInfiniteParams) => {
   return useInfiniteQuery({
     queryKey: ["payments-infinite", dateRange, tipoFilter, metodoFilter, searchQuery, dealerId, sortKey, sortDirection],
+    enabled,
     queryFn: async ({ pageParam = 0 }) => {
       const from = pageParam * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
@@ -65,19 +68,21 @@ export const usePaymentsInfinite = ({
       let matchingOrderIds: string[] | null = null;
       if (searchQuery && searchQuery.trim()) {
         const search = searchQuery.trim().toLowerCase();
-        
+        // Sanitize chars that break PostgREST .or() filter syntax
+        const sanitizedSearch = search.replace(/[,()]/g, "");
+
         // Search dealers by name
         const { data: matchingDealers } = await supabase
           .from("dealers")
           .select("id")
-          .ilike("ragione_sociale", `%${search}%`);
+          .ilike("ragione_sociale", `%${sanitizedSearch}%`);
         matchingDealerIds = matchingDealers?.map(d => d.id) || [];
 
         // Search orders by ID
         const { data: matchingOrders } = await supabase
           .from("orders")
           .select("id")
-          .ilike("id", `%${search}%`);
+          .ilike("id", `%${sanitizedSearch}%`);
         matchingOrderIds = matchingOrders?.map(o => o.id) || [];
       }
 
@@ -125,10 +130,10 @@ export const usePaymentsInfinite = ({
 
       // Full-text search: riferimento/metodo/ordine_id direttamente, dealer via pre-query
       if (searchQuery && searchQuery.trim()) {
-        const search = searchQuery.trim().toLowerCase();
+        const sanitizedSearch = searchQuery.trim().toLowerCase().replace(/[,()]/g, "");
         const orParts: string[] = [
-          `riferimento.ilike.%${search}%`,
-          `metodo.ilike.%${search}%`,
+          `riferimento.ilike.%${sanitizedSearch}%`,
+          `metodo.ilike.%${sanitizedSearch}%`,
         ];
 
         // Add matching order IDs to search

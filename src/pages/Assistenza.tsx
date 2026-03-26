@@ -51,11 +51,15 @@ export default function Assistenza() {
 
   const isMobile = useIsMobile();
 
+  // Filtered tickets for the table
   const { data: tickets = [], isLoading } = useAllTickets({
     stato: statoFilter || undefined,
     priorita: prioritaFilter || undefined,
     search: searchQuery || undefined,
   });
+
+  // Global stats — always unfiltered to show real KPIs regardless of active filters
+  const { data: allTicketsForStats = [] } = useAllTickets({ limit: 500 });
 
   // Sort tickets client-side
   const sortedTickets = useMemo(() => {
@@ -90,14 +94,14 @@ export default function Assistenza() {
       : <ArrowDown className="h-3 w-3 ml-1" />;
   };
 
-  // KPI stats
+  // KPI stats — use unfiltered dataset so cards always show global numbers
   const stats = useMemo(() => {
-    const open = tickets.filter(t => t.stato === "aperto").length;
-    const inProgress = tickets.filter(t => t.stato === "in_gestione").length;
-    const closed = tickets.filter(t => t.stato === "chiuso").length;
-    const urgent = tickets.filter(t => t.priorita === "urgente" || t.priorita === "alta").length;
+    const open = allTicketsForStats.filter(t => t.stato === "aperto").length;
+    const inProgress = allTicketsForStats.filter(t => t.stato === "in_gestione").length;
+    const closed = allTicketsForStats.filter(t => t.stato === "chiuso").length;
+    const urgent = allTicketsForStats.filter(t => t.priorita === "urgente" || t.priorita === "alta").length;
     return { open, inProgress, closed, urgent };
-  }, [tickets]);
+  }, [allTicketsForStats]);
 
   return (
     <div className="space-y-4">

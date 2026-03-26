@@ -37,11 +37,12 @@ export const useCreatePayment = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
       queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
-      queryClient.invalidateQueries({ queryKey: ["orderPayments"] });
+      queryClient.invalidateQueries({ queryKey: ["order-payments"] }); // matches useOrderPayments key
       queryClient.invalidateQueries({ queryKey: ["allPayments"] });
       queryClient.invalidateQueries({ queryKey: ["payments-infinite"] });
       queryClient.invalidateQueries({ queryKey: ["payment-stats"] });
       queryClient.invalidateQueries({ queryKey: ["ordersForPayment"] });
+      queryClient.invalidateQueries({ queryKey: ["dealer-order-stats"] });
       toast({
         title: "Pagamento registrato",
         description: "Il pagamento è stato registrato con successo.",
@@ -72,10 +73,11 @@ export const useDeletePayment = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["orders"] });
       queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
-      queryClient.invalidateQueries({ queryKey: ["orderPayments"] });
+      queryClient.invalidateQueries({ queryKey: ["order-payments"] });
       queryClient.invalidateQueries({ queryKey: ["allPayments"] });
       queryClient.invalidateQueries({ queryKey: ["payments-infinite"] });
       queryClient.invalidateQueries({ queryKey: ["payment-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["dealer-order-stats"] });
       toast({
         title: "Pagamento eliminato",
         description: "Il pagamento è stato eliminato con successo.",

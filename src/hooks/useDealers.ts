@@ -30,7 +30,10 @@ export const useCreateDealer = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["dealers-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["dealers-all-for-filter"] });
       queryClient.invalidateQueries({ queryKey: ["dealer-global-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
+      queryClient.invalidateQueries({ queryKey: ["ordersForPayment"] });
       toast({
         title: "Rivenditore creato",
         description: "Il rivenditore è stato creato con successo.",
@@ -67,8 +70,11 @@ export const useUpdateDealer = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["dealers-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["dealers-all-for-filter"] });
       queryClient.invalidateQueries({ queryKey: ["dealer-detail", data.id] });
       queryClient.invalidateQueries({ queryKey: ["dealer-global-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
+      queryClient.invalidateQueries({ queryKey: ["ordersForPayment"] });
       toast({
         title: "Rivenditore aggiornato",
         description: "Il rivenditore è stato aggiornato con successo.",
@@ -97,9 +103,12 @@ export const useDeleteDealer = () => {
 
       if (error) throw error;
     },
-    onSuccess: () => {
+    onSuccess: (_, id) => {
       queryClient.invalidateQueries({ queryKey: ["dealers-infinite"] });
+      queryClient.invalidateQueries({ queryKey: ["dealers-all-for-filter"] });
       queryClient.invalidateQueries({ queryKey: ["dealer-global-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
+      queryClient.removeQueries({ queryKey: ["dealer-detail", id] });
       toast({
         title: "Rivenditore eliminato",
         description: "Il rivenditore è stato eliminato con successo.",

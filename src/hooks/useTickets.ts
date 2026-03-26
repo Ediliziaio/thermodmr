@@ -66,7 +66,7 @@ export function useAllTickets(filters?: { stato?: string; priorita?: string; sea
   });
 }
 
-export function useOpenTicketsCount() {
+export function useOpenTicketsCount(enabled = true) {
   return useQuery({
     queryKey: ["tickets", "open-count"],
     queryFn: async () => {
@@ -77,7 +77,8 @@ export function useOpenTicketsCount() {
       if (error) throw error;
       return count || 0;
     },
-    refetchInterval: 30000,
+    refetchInterval: enabled ? 30000 : false,
+    enabled,
   });
 }
 
@@ -131,7 +132,11 @@ export function useCreateTicket() {
         msgData.allegato_tipo = ticket.allegato.tipo;
       }
       const { error: msgError } = await supabase.from("ticket_messages").insert(msgData);
-      if (msgError) throw msgError;
+      if (msgError) {
+        // Rollback: delete the orphaned ticket so it doesn't appear without a message
+        await supabase.from("support_tickets").delete().eq("id", newTicket.id);
+        throw msgError;
+      }
 
       return newTicket;
     },

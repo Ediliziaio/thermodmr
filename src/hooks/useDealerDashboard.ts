@@ -34,17 +34,18 @@ export const useDealerOrderStats = (dealerId?: string) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      // Get orders for this dealer
+      // Get orders for this dealer — select only required fields
       let query = supabase
         .from("orders_with_payment_stats")
-        .select("*");
-      
+        .select("id, stato, importo_totale, importo_pagato, dealer_id, creato_da_user_id")
+        .neq("stato", "preventivo"); // exclude drafts from stats
+
       if (dealerId) {
         query = query.eq("dealer_id", dealerId);
       } else {
         query = query.eq("creato_da_user_id", user.id);
       }
-      
+
       const { data: orders, error } = await query;
 
       if (error) throw error;
@@ -67,12 +68,15 @@ export const useDealerOrderStats = (dealerId?: string) => {
       };
 
       orders.forEach((order) => {
-        stats.ordersByStatus[order.stato as keyof typeof stats.ordersByStatus]++;
-        stats.totalRevenue += Number(order.importo_totale);
-        stats.totalPaid += Number(order.importo_pagato || 0);
+        const stato = order.stato as keyof typeof stats.ordersByStatus;
+        if (stato in stats.ordersByStatus) {
+          stats.ordersByStatus[stato]++;
+        }
+        stats.totalRevenue += Number(order.importo_totale) || 0;
+        stats.totalPaid += Number(order.importo_pagato) || 0;
       });
 
-      stats.totalRemaining = stats.totalRevenue - stats.totalPaid;
+      stats.totalRemaining = Math.max(0, stats.totalRevenue - stats.totalPaid);
 
       return stats;
     },
@@ -104,25 +108,33 @@ export const useRecentActivity = (dealerId?: string) => {
 
       if (error) throw error;
 
+      // Guard: no orders → skip payments query (IN () would crash)
+      if (!orders || orders.length === 0) return [];
+
       const activities: RecentActivity[] = [];
 
       // Check for recent status changes (within last 7 days)
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
+      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
       orders.forEach((order) => {
         const updatedAt = new Date(order.updated_at);
         const createdAt = new Date(order.created_at);
-        
-        // If order was updated recently and it's not just created
-        if (updatedAt > sevenDaysAgo && updatedAt.getTime() !== createdAt.getTime()) {
+
+        if (updatedAt > sevenDaysAgo) {
+          // Distinguish new order from status change: if updated > 5s after creation it's a real update
+          const isStatusChange = updatedAt.getTime() - createdAt.getTime() > 5000;
           activities.push({
-            id: `status-${order.id}`,
-            type: "status_change",
+            id: `${isStatusChange ? "status" : "new_order"}-${order.id}`,
+            type: isStatusChange ? "status_change" : "new_order",
             orderId: order.id,
-            message: `Ordine ${order.id} aggiornato a stato: ${getStatusLabel(order.stato)}`,
+            message: isStatusChange
+              ? `Ordine ${order.id} aggiornato a stato: ${getStatusLabel(order.stato)}`
+              : `Nuovo ordine ${order.id} creato`,
             timestamp: updatedAt,
-            isNew: updatedAt > new Date(Date.now() - 24 * 60 * 60 * 1000), // New if within 24h
+            isNew: updatedAt > oneDayAgo,
           });
         }
       });

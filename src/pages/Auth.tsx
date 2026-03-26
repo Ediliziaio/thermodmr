@@ -36,6 +36,7 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("login");
+  const [signupSuccess, setSignupSuccess] = useState(false);
 
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [signupData, setSignupData] = useState({
@@ -93,6 +94,9 @@ const Auth = () => {
         } else {
           setError(error.message);
         }
+      } else {
+        // Registration submitted — may require email confirmation
+        setSignupSuccess(true);
       }
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -106,6 +110,7 @@ const Auth = () => {
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     setError(null);
+    setSignupSuccess(false);
   };
 
   return (
@@ -178,6 +183,14 @@ const Auth = () => {
               </TabsContent>
 
               <TabsContent value="signup" className="space-y-4">
+                {signupSuccess ? (
+                  <Alert className="animate-in fade-in-0 slide-in-from-top-1 border-green-500 bg-green-50 dark:bg-green-950">
+                    <AlertCircle className="h-4 w-4 text-green-600" />
+                    <AlertDescription className="text-green-700 dark:text-green-300">
+                      Registrazione completata. Controlla la tua email per confermare l'account prima di accedere.
+                    </AlertDescription>
+                  </Alert>
+                ) : (
                 <form onSubmit={handleSignup} className="space-y-4">
                   {error && (
                     <Alert variant="destructive" className="animate-in fade-in-0 slide-in-from-top-1">
@@ -245,9 +258,9 @@ const Auth = () => {
                     />
                   </div>
 
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
+                  <Button
+                    type="submit"
+                    className="w-full"
                     disabled={isLoading}
                     size="lg"
                   >
@@ -261,6 +274,7 @@ const Auth = () => {
                     )}
                   </Button>
                 </form>
+                )}
               </TabsContent>
             </Tabs>
           </CardContent>

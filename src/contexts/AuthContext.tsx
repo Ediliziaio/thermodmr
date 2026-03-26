@@ -22,55 +22,70 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [userRole, setUserRole] = useState<UserRole | null>(null);
+  // loading stays true until BOTH session and role are resolved
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  
+
   // Prevent duplicate role fetches
   const roleFetchedForUserId = useRef<string | null>(null);
+  // Track in-flight role fetch so we don't set loading=false prematurely
+  const roleFetchPending = useRef(false);
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        
+
         if (session?.user) {
-          // Only fetch role if not already fetched for this user
           if (roleFetchedForUserId.current !== session.user.id) {
             roleFetchedForUserId.current = session.user.id;
+            roleFetchPending.current = true;
             setTimeout(() => {
-              fetchUserRole(session.user.id);
+              fetchUserRole(session.user.id).finally(() => {
+                roleFetchPending.current = false;
+                setLoading(false);
+              });
             }, 0);
+          } else {
+            // Role already loaded for this user
+            setLoading(false);
           }
         } else {
           setUserRole(null);
           roleFetchedForUserId.current = null;
+          roleFetchPending.current = false;
+          setLoading(false);
         }
-        
-        setLoading(false);
       }
     );
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      
+
       if (session?.user) {
         if (roleFetchedForUserId.current !== session.user.id) {
           roleFetchedForUserId.current = session.user.id;
-          setTimeout(() => {
-            fetchUserRole(session.user.id);
-          }, 0);
+          roleFetchPending.current = true;
+          fetchUserRole(session.user.id).finally(() => {
+            roleFetchPending.current = false;
+            setLoading(false);
+          });
+        } else if (!roleFetchPending.current) {
+          // Role already fetched AND no fetch in flight — safe to stop loading
+          setLoading(false);
         }
+        // else: onAuthStateChange is still fetching the role → it will call setLoading(false)
+      } else {
+        setLoading(false);
       }
-      
-      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  const fetchUserRole = async (userId: string) => {
+  const fetchUserRole = async (userId: string): Promise<void> => {
     try {
       const { data, error } = await supabase
         .from("user_roles")
@@ -79,11 +94,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         .maybeSingle();
 
       if (error) throw error;
-      setUserRole(data?.role || null);
+      setUserRole((data?.role as UserRole) || null);
     } catch (error) {
       console.error("Error fetching user role:", error);
       setUserRole(null);
-      // Reset so it can be retried
+      // Reset so it can be retried on next auth event
       roleFetchedForUserId.current = null;
     }
   };
@@ -105,7 +120,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signUp = async (email: string, password: string, displayName: string) => {
     const redirectUrl = `${window.location.origin}/`;
-    
+
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -116,11 +131,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         },
       },
     });
-    
-    if (!error) {
-      navigate("/");
-    }
-    
+
+    // Do NOT navigate here — caller (Auth.tsx) handles confirmation flow
     return { error };
   };
 

@@ -10,6 +10,8 @@ import { useCreateDealer } from "@/hooks/useDealers";
 import { useAuth } from "@/contexts/AuthContext";
 import { validatePIva, validateCodiceFiscale } from "@/lib/dealerValidation";
 import { PROVINCE_ITALIANE } from "@/lib/dealerConstants";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 interface NewDealerDialogProps {
   trigger?: React.ReactNode;
@@ -17,9 +19,30 @@ interface NewDealerDialogProps {
 
 export default function NewDealerDialog({ trigger }: NewDealerDialogProps = {}) {
   const [open, setOpen] = useState(false);
-  const { user } = useAuth();
+  const { user, userRole } = useAuth();
   const createDealer = useCreateDealer();
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const isSuperAdmin = userRole === "super_admin";
+
+  // Fetch lista commerciali solo per super_admin
+  const { data: commerciali = [] } = useQuery({
+    queryKey: ["commerciali-list"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("user_roles")
+        .select("user_id, profiles(display_name, email)")
+        .eq("role", "commerciale");
+      if (error) throw error;
+      return (data || []).map((r: any) => ({
+        id: r.user_id,
+        label: r.profiles?.display_name || r.profiles?.email || r.user_id,
+      }));
+    },
+    enabled: isSuperAdmin && open,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const [selectedCommercialeId, setSelectedCommercialeId] = useState<string>("");
 
   const [formData, setFormData] = useState({
     ragione_sociale: "",
@@ -50,11 +73,16 @@ export default function NewDealerDialog({ trigger }: NewDealerDialogProps = {}) 
 
     if (!user?.id) return;
 
+    // Super admin può assegnare a un commerciale specifico; altrimenti usa se stesso
+    const commercialeId = isSuperAdmin && selectedCommercialeId
+      ? selectedCommercialeId
+      : user.id;
+
     try {
       await createDealer.mutateAsync({
         ...formData,
         codice_fiscale: formData.codice_fiscale.toUpperCase(),
-        commerciale_owner_id: user.id,
+        commerciale_owner_id: commercialeId,
       });
 
       setFormData({
@@ -70,6 +98,7 @@ export default function NewDealerDialog({ trigger }: NewDealerDialogProps = {}) 
         note: "",
       });
       setErrors({});
+      setSelectedCommercialeId("");
       setOpen(false);
     } catch {
       // error handled by mutation
@@ -210,6 +239,25 @@ export default function NewDealerDialog({ trigger }: NewDealerDialogProps = {}) 
                 rows={3}
               />
             </div>
+
+            {isSuperAdmin && commerciali.length > 0 && (
+              <div className="col-span-2">
+                <Label htmlFor="commerciale">Assegna a Commerciale</Label>
+                <Select
+                  value={selectedCommercialeId}
+                  onValueChange={setSelectedCommercialeId}
+                >
+                  <SelectTrigger id="commerciale">
+                    <SelectValue placeholder="Seleziona commerciale (opzionale)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {commerciali.map((c) => (
+                      <SelectItem key={c.id} value={c.id}>{c.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
 
           <div className="flex justify-end gap-2">

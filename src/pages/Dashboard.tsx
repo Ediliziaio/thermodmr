@@ -29,13 +29,6 @@ const STATUS_CHART_COLORS: Record<string, string> = {
   consegnato: "hsl(142, 71%, 45%)",
 };
 
-const FILTER_LABELS: Record<string, string> = {
-  "3months": "Ultimi 3 Mesi",
-  "6months": "Ultimi 6 Mesi",
-  year: `Anno ${new Date().getFullYear()}`,
-  lastyear: `Anno ${new Date().getFullYear() - 1}`,
-  all: "Tutto",
-};
 
 function DeltaIndicator({ value }: { value: number }) {
   if (value === 0) return <Minus className="h-3 w-3 text-muted-foreground" />;
@@ -50,26 +43,41 @@ function DeltaIndicator({ value }: { value: number }) {
   );
 }
 
-export default function Dashboard() {
+interface DashboardProps {
+  commercialeId?: string | null;
+}
+
+export default function Dashboard({ commercialeId }: DashboardProps = {}) {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
-  
+
   const now = new Date();
+
+  const FILTER_LABELS: Record<string, string> = {
+    "3months": "Ultimi 3 Mesi",
+    "6months": "Ultimi 6 Mesi",
+    year: `Anno ${now.getFullYear()}`,
+    lastyear: `Anno ${now.getFullYear() - 1}`,
+    all: "Tutto",
+  };
+
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: startOfYear(now),
     to: endOfYear(now),
   });
   const [activeFilter, setActiveFilter] = useState<string | null>("year");
-  
+
   useRealtimeSync();
-  
+
   const { data: kpis, isLoading: kpisLoading, error: kpisError, refetch } = useDashboardKPIs(
     dateRange?.from,
-    dateRange?.to
+    dateRange?.to,
+    commercialeId
   );
   const { data: revenueData, isLoading: revenueLoading } = useRevenueData(
     dateRange?.from,
-    dateRange?.to
+    dateRange?.to,
+    commercialeId
   );
 
   const setQuickFilter = (type: '3months' | '6months' | 'year' | 'lastyear' | 'all') => {
@@ -108,7 +116,9 @@ export default function Dashboard() {
 
   const revenueChartDescription = activeFilter
     ? FILTER_LABELS[activeFilter] || "Periodo personalizzato"
-    : "Ultimi 6 mesi";
+    : dateRange?.from
+    ? formatDateRange() || "Periodo personalizzato"
+    : "Tutto il periodo";
 
   if (kpisLoading) {
     return (
@@ -164,7 +174,7 @@ export default function Dashboard() {
         <div className="min-w-0">
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Dashboard</h1>
           <p className="text-sm text-muted-foreground mt-1 flex items-center gap-2">
-            Panoramica generale
+            {commercialeId ? "I tuoi rivenditori e ordini" : "Panoramica generale"}
             <span className="inline-flex items-center gap-1 text-xs text-muted-foreground/60">
               <Radio className="h-3 w-3 text-green-500 animate-pulse" />
               Live

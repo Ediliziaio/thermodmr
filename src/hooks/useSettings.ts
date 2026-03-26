@@ -23,10 +23,11 @@ export const useSettings = (category?: string) => {
       }
       
       const { data, error } = await query.order("key");
-      
+
       if (error) throw error;
       return data as Setting[];
     },
+    staleTime: 10 * 60 * 1000, // impostazioni di sistema cambiano raramente
   });
 };
 
@@ -67,24 +68,20 @@ export const useUsers = () => {
   return useQuery({
     queryKey: ["users"],
     queryFn: async () => {
-      const { data: profiles, error: profilesError } = await supabase
+      // Single query with embedded user_roles — avoids double round-trip and client-side join
+      const { data: profiles, error } = await supabase
         .from("profiles")
-        .select("*")
+        .select("*, user_roles(role)")
         .order("display_name");
-      
-      if (profilesError) throw profilesError;
-      
-      const { data: roles, error: rolesError } = await supabase
-        .from("user_roles")
-        .select("*");
-      
-      if (rolesError) throw rolesError;
-      
-      return profiles.map((profile) => ({
+
+      if (error) throw error;
+
+      return (profiles || []).map((profile) => ({
         ...profile,
-        roles: roles.filter((r) => r.user_id === profile.id).map((r) => r.role),
+        roles: (profile.user_roles || []).map((r: { role: string }) => r.role),
       }));
     },
+    staleTime: 2 * 60 * 1000, // profili non cambiano di frequente
   });
 };
 
@@ -102,6 +99,7 @@ export const useUpdateUserRole = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
+      queryClient.invalidateQueries({ queryKey: ["commerciali-list"] });
       toast({
         title: "Ruolo aggiornato",
         description: "Il ruolo dell'utente è stato modificato con successo",

@@ -36,3 +36,18 @@ export const getModalitaPagamentoLabel = (value: string | null | undefined): str
 
 export type OrderLineCategory = (typeof ORDER_LINE_CATEGORIES)[number];
 export type OrderFormCategory = (typeof ORDER_FORM_CATEGORIES)[number];
+
+/**
+ * Calcola il totale di una riga ordine/preventivo (IVA inclusa).
+ * Unica fonte di verità per evitare divergenze tra creazione ordine e preventivo.
+ */
+export const calcLineTotal = (line: {
+  quantita: number;
+  prezzo_unitario: number;
+  sconto: number;
+  iva: number;
+}): number => {
+  const subtotal = line.quantita * line.prezzo_unitario;
+  const afterDiscount = subtotal * (1 - line.sconto / 100);
+  return afterDiscount * (1 + line.iva / 100);
+};

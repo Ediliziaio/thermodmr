@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -10,7 +10,8 @@ import { OrderTrendsChart } from "@/components/analytics/OrderTrendsChart";
 import { PaymentTrendsDetailedChart } from "@/components/analytics/PaymentTrendsDetailedChart";
 import { DealerPerformanceChart } from "@/components/analytics/DealerPerformanceChart";
 import { useAuth } from "@/contexts/AuthContext";
-import { useDealersInfinite } from "@/hooks/useDealersInfinite";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
 export default function Analytics() {
@@ -23,12 +24,19 @@ export default function Analytics() {
     months,
   });
 
-  const { data: dealersData } = useDealersInfinite();
-
-  const dealers = useMemo(
-    () => dealersData?.pages.flatMap(p => p.data) || [],
-    [dealersData]
-  );
+  // Fetch all dealers (id + name only) for the filter dropdown — avoids infinite pagination truncation
+  const { data: dealers = [] } = useQuery({
+    queryKey: ["dealers-all-for-filter"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("dealers")
+        .select("id, ragione_sociale")
+        .order("ragione_sociale");
+      if (error) throw error;
+      return data as { id: string; ragione_sociale: string }[];
+    },
+    staleTime: 10 * 60 * 1000,
+  });
 
   const handleExportData = () => {
     if (!analytics) return;
@@ -47,7 +55,10 @@ export default function Analytics() {
     const a = document.createElement("a");
     a.href = url;
     a.download = `analytics-${new Date().toISOString().split("T")[0]}.csv`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
 
     toast({
       title: "Export completato",

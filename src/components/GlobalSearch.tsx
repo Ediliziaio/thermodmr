@@ -24,11 +24,14 @@ interface GlobalSearchProps {
   className?: string;
 }
 
+// Escape special regex metacharacters to prevent ReDoS or broken patterns
+const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 // Utility per evidenziare il testo che matcha la query
 const highlightMatch = (text: string, query: string) => {
   if (!query.trim()) return text;
-  
-  const regex = new RegExp(`(${query.trim()})`, "gi");
+
+  const regex = new RegExp(`(${escapeRegex(query.trim())})`, "gi");
   const parts = text.split(regex);
   
   return (
@@ -160,15 +163,19 @@ export function GlobalSearch({ className }: GlobalSearchProps) {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // Fetch data with search query
+  // Fetch data with search query — only when the user has typed ≥2 chars
+  const searchEnabled = debouncedQuery.trim().length >= 2;
+
   const { data: ordersData, isLoading: ordersLoading } = useOrdersInfinite({
     searchQuery: debouncedQuery,
+    enabled: searchEnabled,
   });
 
   const { data: paymentsData, isLoading: paymentsLoading } = usePaymentsInfinite({
     tipoFilter: "all",
     metodoFilter: "all",
     searchQuery: debouncedQuery,
+    enabled: searchEnabled,
   });
 
   const orders = useMemo(

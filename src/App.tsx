@@ -94,7 +94,7 @@ const App = () => (
             <Route
               path="/rivenditori"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiredRole="commerciale">
                   <Layout>
                     <Dealers />
                   </Layout>
@@ -104,7 +104,7 @@ const App = () => (
             <Route
               path="/rivenditori/:id"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiredRole="commerciale">
                   <Layout>
                     <DealerDetail />
                   </Layout>
@@ -122,7 +122,7 @@ const App = () => (
             <Route
               path="/pagamenti"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiredRole="commerciale">
                   <Layout>
                     <Pagamenti />
                   </Layout>
@@ -132,7 +132,7 @@ const App = () => (
             <Route
               path="/pagamenti/:id"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requiredRole="commerciale">
                   <Layout>
                     <PaymentDetail />
                   </Layout>

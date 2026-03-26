@@ -54,13 +54,14 @@ export const useUnifiedAnalytics = ({ commercialeId, dealerId, months = 6 }: Uni
       const startDate = startOfMonth(subMonths(now, months - 1));
       const endDate = endOfMonth(now);
 
-      // Build queries
+      // Build queries — exclude drafts (preventivo) and select only needed fields
       let ordersQuery = supabase
         .from("orders_with_payment_stats")
         .select(`
-          *,
+          id, stato, importo_totale, data_inserimento, dealer_id,
           dealers (id, ragione_sociale)
         `)
+        .neq("stato", "preventivo")
         .gte("data_inserimento", startDate.toISOString())
         .lte("data_inserimento", endDate.toISOString());
 
@@ -100,7 +101,8 @@ export const useUnifiedAnalytics = ({ commercialeId, dealerId, months = 6 }: Uni
         const monthStart = startOfMonth(month);
         const monthEnd = endOfMonth(month);
         const monthOrders = orders?.filter(o => {
-          const orderDate = new Date(o.data_inserimento!);
+          if (!o.data_inserimento) return false;
+          const orderDate = new Date(o.data_inserimento);
           return orderDate >= monthStart && orderDate <= monthEnd;
         }) || [];
 
@@ -144,8 +146,9 @@ export const useUnifiedAnalytics = ({ commercialeId, dealerId, months = 6 }: Uni
       }>();
 
       orders?.forEach(order => {
+        if (!order.dealer_id) return;
         const dealerName = order.dealers?.ragione_sociale || "N/A";
-        const dealerId = order.dealer_id!;
+        const dealerId = order.dealer_id;
         
         if (!dealerMap.has(dealerId)) {
           dealerMap.set(dealerId, {

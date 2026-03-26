@@ -36,7 +36,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency } from "@/lib/utils";
 import { IvaSelector } from "./IvaSelector";
-import { MODALITA_PAGAMENTO_OPTIONS } from "@/lib/orderConstants";
+import { MODALITA_PAGAMENTO_OPTIONS, calcLineTotal } from "@/lib/orderConstants";
 
 const orderLineSchema = z.object({
   categoria: z.string().min(1, "Categoria richiesta"),
@@ -64,12 +64,7 @@ const orderFormSchema = z.object({
 
 type OrderFormValues = z.infer<typeof orderFormSchema>;
 
-const calculateLineTotal = (line: z.infer<typeof orderLineSchema>) => {
-  const subtotal = line.quantita * line.prezzo_unitario;
-  const afterDiscount = subtotal * (1 - line.sconto / 100);
-  const total = afterDiscount * (1 + line.iva / 100);
-  return total;
-};
+// Uses calcLineTotal from orderConstants — consistent with server-side calculation
 
 interface NewOrderDialogProps {
   open?: boolean;
@@ -109,7 +104,7 @@ export function NewOrderDialog({ open: controlledOpen, onOpenChange: controlledO
 
   const watchedLines = form.watch("order_lines");
   const importoTotale = watchedLines.reduce(
-    (sum, line) => sum + calculateLineTotal(line),
+    (sum, line) => sum + calcLineTotal(line),
     0
   );
 
@@ -411,7 +406,7 @@ export function NewOrderDialog({ open: controlledOpen, onOpenChange: controlledO
                             </FormItem>
                           )} />
                           <span className="font-semibold whitespace-nowrap">
-                            Totale: {formatCurrency(calculateLineTotal(watchedLines[index]))}
+                            Totale: {formatCurrency(calcLineTotal(watchedLines[index]))}
                           </span>
                         </div>
                       </CardContent>
