@@ -33,6 +33,7 @@ import { format } from "date-fns";
 import { it } from "date-fns/locale";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function Assistenza() {
   const [statoFilter, setStatoFilter] = useState<string>("");
@@ -50,6 +51,7 @@ export default function Assistenza() {
   } | null>(null);
 
   const isMobile = useIsMobile();
+  const { t } = useLanguage();
 
   // Filtered tickets for the table
   const { data: tickets = [], isLoading } = useAllTickets({
@@ -109,15 +111,15 @@ export default function Assistenza() {
         <div>
           <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <Headphones className="h-6 w-6" />
-            Assistenza
+            {t.area.assistenza.titolo}
             {stats.open > 0 && (
               <Badge variant="destructive" className="ml-2">
-                {stats.open} aperti
+                {stats.open} {t.area.assistenza.aperti}
               </Badge>
             )}
           </h1>
           <p className="text-sm text-muted-foreground">
-            Gestisci i ticket di assistenza dei rivenditori
+            {t.area.assistenza.desc}
           </p>
         </div>
       </div>
@@ -133,7 +135,7 @@ export default function Assistenza() {
             <CardContent className="p-3">
               <div className="flex items-center gap-2 text-muted-foreground mb-1">
                 <AlertCircle className="h-3.5 w-3.5" />
-                <span className="text-xs font-medium">Aperti</span>
+                <span className="text-xs font-medium">{t.area.assistenza.aperti}</span>
               </div>
               <p className="text-xl font-bold">{stats.open}</p>
             </CardContent>
@@ -142,7 +144,7 @@ export default function Assistenza() {
             <CardContent className="p-3">
               <div className="flex items-center gap-2 text-muted-foreground mb-1">
                 <Clock className="h-3.5 w-3.5" />
-                <span className="text-xs font-medium">In Gestione</span>
+                <span className="text-xs font-medium">{t.area.assistenza.inGestione}</span>
               </div>
               <p className="text-xl font-bold">{stats.inProgress}</p>
             </CardContent>
@@ -151,7 +153,7 @@ export default function Assistenza() {
             <CardContent className="p-3">
               <div className="flex items-center gap-2 text-muted-foreground mb-1">
                 <CheckCircle2 className="h-3.5 w-3.5" />
-                <span className="text-xs font-medium">Chiusi</span>
+                <span className="text-xs font-medium">{t.area.assistenza.chiusi}</span>
               </div>
               <p className="text-xl font-bold">{stats.closed}</p>
             </CardContent>
@@ -160,7 +162,7 @@ export default function Assistenza() {
             <CardContent className="p-3">
               <div className="flex items-center gap-2 text-muted-foreground mb-1">
                 <AlertTriangle className="h-3.5 w-3.5" />
-                <span className="text-xs font-medium">Urgenti/Alta</span>
+                <span className="text-xs font-medium">{t.area.assistenza.urgenti}</span>
               </div>
               <p className="text-xl font-bold">{stats.urgent}</p>
             </CardContent>
@@ -173,7 +175,7 @@ export default function Assistenza() {
         <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Cerca per oggetto..."
+            placeholder={t.area.assistenza.cercaOggetto}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9"
@@ -182,10 +184,10 @@ export default function Assistenza() {
 
         <Select value={statoFilter} onValueChange={(v) => setStatoFilter(v === "all" ? "" : v)}>
           <SelectTrigger className="w-[160px]">
-            <SelectValue placeholder="Tutti gli stati" />
+            <SelectValue placeholder={t.area.assistenza.tuttiStati} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Tutti gli stati</SelectItem>
+            <SelectItem value="all">{t.area.assistenza.tuttiStati}</SelectItem>
             {TICKET_STATI.map((s) => (
               <SelectItem key={s.value} value={s.value}>
                 {s.label}
@@ -196,10 +198,10 @@ export default function Assistenza() {
 
         <Select value={prioritaFilter} onValueChange={(v) => setPrioritaFilter(v === "all" ? "" : v)}>
           <SelectTrigger className="w-[160px]">
-            <SelectValue placeholder="Tutte le priorità" />
+            <SelectValue placeholder={t.area.assistenza.tuttePriorita} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Tutte le priorità</SelectItem>
+            <SelectItem value="all">{t.area.assistenza.tuttePriorita}</SelectItem>
             {TICKET_PRIORITA.map((p) => (
               <SelectItem key={p.value} value={p.value}>
                 {p.label}
@@ -218,7 +220,7 @@ export default function Assistenza() {
               setSearchQuery("");
             }}
           >
-            Azzera filtri
+            {t.area.assistenza.azzeraFiltri}
           </Button>
         )}
       </div>
@@ -232,7 +234,7 @@ export default function Assistenza() {
             </div>
           ) : sortedTickets.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
-              Nessun ticket trovato.
+              {t.area.assistenza.nessunoTrovato}
             </div>
           ) : (
             sortedTickets.map((ticket) => (
@@ -284,25 +286,25 @@ export default function Assistenza() {
               </div>
             ) : sortedTickets.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
-                Nessun ticket trovato.
+                {t.area.assistenza.nessunoTrovato}
               </div>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="cursor-pointer select-none" onClick={() => handleSort('oggetto')}>
-                      <span className="flex items-center">Oggetto <SortIcon columnKey="oggetto" /></span>
+                      <span className="flex items-center">{t.area.assistenza.oggetto} <SortIcon columnKey="oggetto" /></span>
                     </TableHead>
-                    <TableHead>Ordine</TableHead>
-                    <TableHead>Rivenditore</TableHead>
+                    <TableHead>{t.area.assistenza.ordine}</TableHead>
+                    <TableHead>{t.area.assistenza.rivenditore}</TableHead>
                     <TableHead className="cursor-pointer select-none" onClick={() => handleSort('priorita')}>
-                      <span className="flex items-center">Priorità <SortIcon columnKey="priorita" /></span>
+                      <span className="flex items-center">{t.area.assistenza.priorita} <SortIcon columnKey="priorita" /></span>
                     </TableHead>
                     <TableHead className="cursor-pointer select-none" onClick={() => handleSort('stato')}>
-                      <span className="flex items-center">Stato <SortIcon columnKey="stato" /></span>
+                      <span className="flex items-center">{t.area.assistenza.stato} <SortIcon columnKey="stato" /></span>
                     </TableHead>
                     <TableHead className="cursor-pointer select-none" onClick={() => handleSort('created_at')}>
-                      <span className="flex items-center">Data <SortIcon columnKey="created_at" /></span>
+                      <span className="flex items-center">{t.area.assistenza.data} <SortIcon columnKey="created_at" /></span>
                     </TableHead>
                   </TableRow>
                 </TableHeader>
@@ -358,7 +360,7 @@ export default function Assistenza() {
       {tickets.length >= 100 && (
         <div className="flex items-center justify-center gap-2 py-3 text-sm text-muted-foreground bg-muted/50 rounded-lg">
           <AlertCircle className="h-4 w-4" />
-          <span>Mostrati i primi 100 ticket. Usa i filtri per affinare la ricerca.</span>
+          <span>{t.area.assistenza.primiCento}</span>
         </div>
       )}
 

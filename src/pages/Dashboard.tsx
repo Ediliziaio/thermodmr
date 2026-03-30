@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -50,15 +51,16 @@ interface DashboardProps {
 export default function Dashboard({ commercialeId }: DashboardProps = {}) {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const now = new Date();
 
   const FILTER_LABELS: Record<string, string> = {
-    "3months": "Ultimi 3 Mesi",
-    "6months": "Ultimi 6 Mesi",
+    "3months": t.area.common.tre_mesi,
+    "6months": t.area.common.sei_mesi,
     year: `Anno ${now.getFullYear()}`,
     lastyear: `Anno ${now.getFullYear() - 1}`,
-    all: "Tutto",
+    all: t.area.common.tutto,
   };
 
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
@@ -146,15 +148,15 @@ export default function Dashboard({ commercialeId }: DashboardProps = {}) {
         <Card className="max-w-md w-full">
           <CardHeader className="text-center">
             <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-2" />
-            <CardTitle>Errore nel caricamento</CardTitle>
+            <CardTitle>{t.area.common.erroreCaricamento}</CardTitle>
             <CardDescription>
-              Impossibile caricare i dati della dashboard. Verifica la connessione e riprova.
+              {t.area.dashboard.erroreImpossibile}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center">
             <Button onClick={() => refetch()} variant="default">
               <RefreshCw className="h-4 w-4 mr-2" />
-              Riprova
+              {t.area.common.riprova}
             </Button>
           </CardContent>
         </Card>
@@ -172,12 +174,12 @@ export default function Dashboard({ commercialeId }: DashboardProps = {}) {
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
         <div className="min-w-0">
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Dashboard</h1>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">{t.area.dashboard.titolo}</h1>
           <p className="text-sm text-muted-foreground mt-1 flex items-center gap-2">
-            {commercialeId ? "I tuoi rivenditori e ordini" : "Panoramica generale"}
+            {commercialeId ? t.area.dashboard.descRivenditori : t.area.dashboard.descGenerale}
             <span className="inline-flex items-center gap-1 text-xs text-muted-foreground/60">
               <Radio className="h-3 w-3 text-green-500 animate-pulse" />
-              Live
+              {t.area.common.live}
             </span>
           </p>
         </div>
@@ -196,7 +198,7 @@ export default function Dashboard({ commercialeId }: DashboardProps = {}) {
               >
                 {isMobile
                   ? { "3months": "3M", "6months": "6M", year: new Date().getFullYear().toString(), lastyear: (new Date().getFullYear() - 1).toString(), all: "∞" }[type]
-                  : { "3months": "3 Mesi", "6months": "6 Mesi", year: new Date().getFullYear().toString(), lastyear: (new Date().getFullYear() - 1).toString(), all: "Tutto" }[type]}
+                  : { "3months": t.area.common.tre_mesi, "6months": t.area.common.sei_mesi, year: new Date().getFullYear().toString(), lastyear: (new Date().getFullYear() - 1).toString(), all: t.area.common.tutto }[type]}
               </button>
             ))}
           </div>
@@ -237,13 +239,13 @@ export default function Dashboard({ commercialeId }: DashboardProps = {}) {
       <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Ricavi Totali</CardTitle>
+            <CardTitle className="text-sm font-medium">{t.area.dashboard.ricaviTotali}</CardTitle>
             <Euro className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatCurrency(kpis.totalRevenue)}</div>
             <div className="flex items-center justify-between mt-1">
-              <p className="text-xs text-muted-foreground">{kpis.totalOrders} ordini totali</p>
+              <p className="text-xs text-muted-foreground">{kpis.totalOrders} {t.area.dashboard.ordiniTotali_subtitle}</p>
               <DeltaIndicator value={kpis.deltas?.revenue ?? 0} />
             </div>
           </CardContent>
@@ -251,13 +253,13 @@ export default function Dashboard({ commercialeId }: DashboardProps = {}) {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Acconti Totali</CardTitle>
+            <CardTitle className="text-sm font-medium">{t.area.dashboard.accontiTotali}</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatCurrency(kpis.totalAcconti)}</div>
             <div className="flex items-center justify-between mt-1">
-              <p className="text-xs text-muted-foreground">Da ordini</p>
+              <p className="text-xs text-muted-foreground">{t.area.dashboard.daOrdini}</p>
               <DeltaIndicator value={kpis.deltas?.acconti ?? 0} />
             </div>
           </CardContent>
@@ -265,13 +267,13 @@ export default function Dashboard({ commercialeId }: DashboardProps = {}) {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Totale Incassato</CardTitle>
+            <CardTitle className="text-sm font-medium">{t.area.dashboard.totaleIncassato}</CardTitle>
             <CheckCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatCurrency(kpis.totalIncassato)}</div>
             <div className="flex items-center justify-between mt-1">
-              <p className="text-xs text-muted-foreground">Pagamenti ricevuti</p>
+              <p className="text-xs text-muted-foreground">{t.area.dashboard.pagamentiRicevuti}</p>
               <DeltaIndicator value={kpis.deltas?.incassato ?? 0} />
             </div>
           </CardContent>
@@ -279,7 +281,7 @@ export default function Dashboard({ commercialeId }: DashboardProps = {}) {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Da Saldare</CardTitle>
+            <CardTitle className="text-sm font-medium">{t.area.dashboard.daSaldare}</CardTitle>
             <AlertCircle className={cn("h-4 w-4", parseFloat(daSaldarePercent) > 50 ? "text-destructive" : "text-muted-foreground")} />
           </CardHeader>
           <CardContent>
@@ -287,7 +289,7 @@ export default function Dashboard({ commercialeId }: DashboardProps = {}) {
               {formatCurrency(daSaldare)}
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              {daSaldarePercent}% del totale
+              {daSaldarePercent}{t.area.dashboard.percentualeTotale}
             </p>
           </CardContent>
         </Card>
@@ -330,8 +332,8 @@ export default function Dashboard({ commercialeId }: DashboardProps = {}) {
         {/* Top Dealers */}
         <Card>
           <CardHeader className="p-4 sm:p-6">
-            <CardTitle className="text-lg md:text-xl">Top 5 Rivenditori</CardTitle>
-            <CardDescription className="text-xs md:text-sm">I 5 rivenditori con più fatturato</CardDescription>
+            <CardTitle className="text-lg md:text-xl">{t.area.dashboard.top5Rivenditori}</CardTitle>
+            <CardDescription className="text-xs md:text-sm">{t.area.dashboard.top5Desc}</CardDescription>
           </CardHeader>
           <CardContent>
             {kpis.topDealers.length > 0 ? (
@@ -345,7 +347,7 @@ export default function Dashboard({ commercialeId }: DashboardProps = {}) {
                     <div className="space-y-1">
                       <p className="font-medium">{dealer.ragione_sociale}</p>
                       <p className="text-sm text-muted-foreground">
-                        {dealer.ordersCount} ordini
+                        {dealer.ordersCount} {t.area.dashboard.ordini}
                       </p>
                     </div>
                     <div className="text-right space-y-1">
@@ -356,7 +358,7 @@ export default function Dashboard({ commercialeId }: DashboardProps = {}) {
               </div>
             ) : (
               <div className="text-center py-12">
-                <p className="text-muted-foreground">Nessun dato disponibile</p>
+                <p className="text-muted-foreground">{t.area.common.nessuDatoDisponibile}</p>
               </div>
             )}
           </CardContent>

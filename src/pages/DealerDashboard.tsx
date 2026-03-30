@@ -21,7 +21,7 @@ import { useDealerOrderStats, useRecentActivity, usePaymentReminders } from "@/h
 import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { it } from "date-fns/locale";
-
+import { useLanguage } from "@/i18n/LanguageContext";
 
 interface DealerDashboardProps {
   dealerId?: string;
@@ -30,6 +30,7 @@ interface DealerDashboardProps {
 
 export default function DealerDashboard({ dealerId, dealerName }: DealerDashboardProps) {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { data: stats, isLoading: statsLoading, refetch: refetchStats } = useDealerOrderStats(dealerId);
   const { data: activities, isLoading: activitiesLoading } = useRecentActivity(dealerId);
   const { data: reminders, isLoading: remindersLoading } = usePaymentReminders(dealerId);
@@ -53,15 +54,15 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
         <Card className="max-w-md w-full">
           <CardHeader className="text-center">
             <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-2" />
-            <CardTitle>Errore nel caricamento</CardTitle>
+            <CardTitle>{t.area.common.erroreCaricamento}</CardTitle>
             <CardDescription>
-              Impossibile caricare i dati della dashboard. Verifica la connessione e riprova.
+              {t.area.common.impossibileCaricareConnessione}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center">
             <Button onClick={() => refetchStats()} variant="default">
               <RefreshCw className="h-4 w-4 mr-2" />
-              Riprova
+              {t.area.common.riprova}
             </Button>
           </CardContent>
         </Card>
@@ -81,10 +82,10 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
       {/* Header */}
       <div>
         <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-          {dealerName ? `Dashboard ${dealerName}` : "Benvenuto"}
+          {dealerName ? `${t.area.dealerDashboard.benvenuto} ${dealerName}` : t.area.dealerDashboard.benvenuto}
         </h1>
         <p className="text-sm md:text-base text-muted-foreground mt-1">
-          Panoramica {dealerName ? "degli" : "dei tuoi"} ordini e pagamenti
+          {dealerName ? t.area.dealerDashboard.descAdmin : t.area.dealerDashboard.desc}
         </p>
       </div>
 
@@ -92,52 +93,52 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
       <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ordini Totali</CardTitle>
+            <CardTitle className="text-sm font-medium">{t.area.dealerDashboard.ordiniTotali}</CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalOrders}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Tutti gli ordini
+              {t.area.dealerDashboard.tuttiGliOrdini}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Valore Totale</CardTitle>
+            <CardTitle className="text-sm font-medium">{t.area.dealerDashboard.valoreTotale}</CardTitle>
             <Euro className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatCurrency(stats.totalRevenue)}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Importo complessivo ordini
+              {t.area.dealerDashboard.importoComplessivo}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pagato</CardTitle>
+            <CardTitle className="text-sm font-medium">{t.area.dealerDashboard.pagato}</CardTitle>
             <CheckCircle className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">{formatCurrency(stats.totalPaid)}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Pagamenti effettuati
+              {t.area.dealerDashboard.pagamentiEffettuati}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Da Pagare</CardTitle>
+            <CardTitle className="text-sm font-medium">{t.area.dealerDashboard.daPagare}</CardTitle>
             <AlertCircle className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-orange-500">{formatCurrency(stats.totalRemaining)}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Importo rimanente
+              {t.area.dealerDashboard.importoRimanente}
             </p>
           </CardContent>
         </Card>
@@ -147,13 +148,13 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
       <Card>
         <CardContent className="p-4 sm:p-6">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-sm font-medium">Progresso Pagamento Globale</p>
+            <p className="text-sm font-medium">{t.area.dealerDashboard.progressoPagamento}</p>
             <p className="text-sm font-bold">{globalPaymentPercentage.toFixed(1)}%</p>
           </div>
           <Progress value={globalPaymentPercentage} className="h-3" />
           <div className="flex items-center justify-between mt-2 text-xs text-muted-foreground">
-            <span>Pagato: {formatCurrency(stats.totalPaid)}</span>
-            <span>Totale: {formatCurrency(stats.totalRevenue)}</span>
+            <span>{t.area.dealerDashboard.pagato}: {formatCurrency(stats.totalPaid)}</span>
+            <span>{t.area.dealerDashboard.valoreTotale}: {formatCurrency(stats.totalRevenue)}</span>
           </div>
         </CardContent>
       </Card>
@@ -163,9 +164,9 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
         {/* Order Distribution by Status */}
         <Card>
           <CardHeader className="p-4 sm:p-6">
-            <CardTitle className="text-lg md:text-xl">Distribuzione Ordini per Stato</CardTitle>
+            <CardTitle className="text-lg md:text-xl">{t.area.dealerDashboard.distribuzionePerStato}</CardTitle>
             <CardDescription className="text-xs md:text-sm">
-              I tuoi ordini suddivisi per stato di avanzamento
+              {t.area.dealerDashboard.distribuzioneDesc}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 md:space-y-4 p-4 sm:p-6 pt-0">
@@ -175,7 +176,7 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
                   <Badge variant="outline" className={getStatusColor(status)}>
                     {getStatusLabel(status)}
                   </Badge>
-                  <span className="text-sm font-medium">{count} ordini</span>
+                  <span className="text-sm font-medium">{count} {t.area.nav.ordini}</span>
                 </div>
                 <Progress 
                   value={(count / stats.totalOrders) * 100} 
@@ -187,7 +188,7 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
             {stats.totalOrders === 0 && (
               <div className="text-center py-8 text-muted-foreground">
                 <Package className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p>Nessun ordine ancora</p>
+                <p>{t.area.common.nessuDatoDisponibile}</p>
               </div>
             )}
           </CardContent>
@@ -197,15 +198,15 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
         <Card>
           <CardHeader className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg md:text-xl">Attività Recente</CardTitle>
+              <CardTitle className="text-lg md:text-xl">{t.area.dealerDashboard.attivitaRecente}</CardTitle>
               {newActivitiesCount > 0 && (
                 <Badge variant="default" className="bg-primary text-xs">
-                  {newActivitiesCount} nuove
+                  {newActivitiesCount} {t.area.dealerDashboard.nuove}
                 </Badge>
               )}
             </div>
             <CardDescription className="text-xs md:text-sm">
-              Aggiornamenti sugli ordini degli ultimi 7 giorni
+              {t.area.dealerDashboard.attivitaDesc}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -252,7 +253,7 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
             ) : (
               <div className="text-center py-8 text-muted-foreground">
                 <Bell className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p>Nessuna notifica recente</p>
+                <p>{t.area.dealerDashboard.nessunNotifica}</p>
               </div>
             )}
           </CardContent>
@@ -270,7 +271,7 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
                   "h-5 w-5",
                   reminders && reminders.length > 0 ? "text-destructive" : "text-orange-500"
                 )} />
-                <CardTitle className="text-lg md:text-xl">Promemoria Pagamenti</CardTitle>
+                <CardTitle className="text-lg md:text-xl">{t.area.dealerDashboard.promemoriaPagementi}</CardTitle>
               </div>
               {reminders && reminders.length > 0 && (
                 <Badge variant="destructive" className="animate-pulse">
@@ -279,7 +280,7 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
               )}
             </div>
             <CardDescription className="text-xs md:text-sm">
-              Ordini che richiedono attenzione per i pagamenti
+              {t.area.dealerDashboard.promemoriaDesc}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -301,28 +302,28 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
                           <AlertCircle className="h-4 w-4 text-destructive" />
-                          <span className="font-medium">Ordine {reminder.orderId}</span>
+                          <span className="font-medium">{t.area.dealerDashboard.ordine} {reminder.orderId}</span>
                           <Badge variant="outline" className={getStatusColor(reminder.stato)}>
                             {getStatusLabel(reminder.stato)}
                           </Badge>
                         </div>
                         <div className="grid grid-cols-3 gap-4 text-sm">
                           <div>
-                            <p className="text-muted-foreground">Totale</p>
+                            <p className="text-muted-foreground">{t.area.dealerDashboard.totale}</p>
                             <p className="font-medium">{formatCurrency(reminder.totalAmount)}</p>
                           </div>
                           <div>
-                            <p className="text-muted-foreground">Pagato</p>
+                            <p className="text-muted-foreground">{t.area.dealerDashboard.pagato}</p>
                             <p className="font-medium text-green-600">{formatCurrency(reminder.paidAmount)}</p>
                           </div>
                           <div>
-                            <p className="text-muted-foreground">Rimanente</p>
+                            <p className="text-muted-foreground">{t.area.dealerDashboard.rimanente}</p>
                             <p className="font-bold text-destructive">{formatCurrency(reminder.remainingAmount)}</p>
                           </div>
                         </div>
                         <div className="mt-3">
                           <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
-                            <span>Progresso pagamento</span>
+                            <span>{t.area.dealerDashboard.progressoLabel}</span>
                             <span>{reminder.percentage.toFixed(1)}%</span>
                           </div>
                           <Progress value={reminder.percentage} className="h-2" />
@@ -335,8 +336,8 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
             ) : (
               <div className="text-center py-8 text-muted-foreground">
                 <CheckCircle className="h-12 w-12 mx-auto mb-3 opacity-50 text-green-600" />
-                <p className="text-sm font-medium">Tutto in regola!</p>
-                <p className="text-xs mt-1">Non ci sono pagamenti in sospeso.</p>
+                <p className="text-sm font-medium">{t.area.dealerDashboard.tuttoInRegola}</p>
+                <p className="text-xs mt-1">{t.area.dealerDashboard.nessunPagamentoSospeso}</p>
               </div>
             )}
           </CardContent>
@@ -346,43 +347,43 @@ export default function DealerDashboard({ dealerId, dealerName }: DealerDashboar
       {/* Quick Links - Read Only */}
       <Card>
         <CardHeader>
-          <CardTitle>Link Rapidi</CardTitle>
+          <CardTitle>{t.area.dealerDashboard.linkRapidi}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-3 md:grid-cols-3">
-            <Button 
-              onClick={() => navigate(`${basePath}/ordini`)} 
-              variant="outline" 
+            <Button
+              onClick={() => navigate(`${basePath}/ordini`)}
+              variant="outline"
               className="justify-start h-auto py-4"
             >
               <ShoppingCart className="h-5 w-5 mr-3" />
               <div className="text-left">
-                <p className="font-medium">Visualizza Ordini</p>
-                <p className="text-xs text-muted-foreground">Tutti i tuoi ordini</p>
+                <p className="font-medium">{t.area.dealerDashboard.visualizzaOrdini}</p>
+                <p className="text-xs text-muted-foreground">{t.area.dealerDashboard.tuttiOrdini}</p>
               </div>
             </Button>
-            
-            <Button 
-              onClick={() => navigate(`${basePath}/pagamenti`)} 
-              variant="outline" 
+
+            <Button
+              onClick={() => navigate(`${basePath}/pagamenti`)}
+              variant="outline"
               className="justify-start h-auto py-4"
             >
               <CreditCard className="h-5 w-5 mr-3" />
               <div className="text-left">
-                <p className="font-medium">Storico Pagamenti</p>
-                <p className="text-xs text-muted-foreground">Consulta i pagamenti</p>
+                <p className="font-medium">{t.area.dealerDashboard.storicoPagementi}</p>
+                <p className="text-xs text-muted-foreground">{t.area.dealerDashboard.consultaPagementi}</p>
               </div>
             </Button>
 
-            <Button 
-              onClick={() => navigate(`${basePath}/assistenza`)} 
-              variant="outline" 
+            <Button
+              onClick={() => navigate(`${basePath}/assistenza`)}
+              variant="outline"
               className="justify-start h-auto py-4"
             >
               <Headphones className="h-5 w-5 mr-3" />
               <div className="text-left">
-                <p className="font-medium">Assistenza</p>
-                <p className="text-xs text-muted-foreground">Apri un ticket</p>
+                <p className="font-medium">{t.area.nav.assistenza}</p>
+                <p className="text-xs text-muted-foreground">{t.area.dealerDashboard.apriTicket}</p>
               </div>
             </Button>
           </div>

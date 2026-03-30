@@ -38,6 +38,7 @@ import { useInView } from "react-intersection-observer";
 import { exportPaymentsCustom, PAYMENT_COLUMNS } from "@/lib/exportUtils";
 import { ExportColumnsDialog } from "@/components/export/ExportColumnsDialog";
 import { format } from "date-fns";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 interface PagamentiProps {
   dealerId?: string;
@@ -46,10 +47,11 @@ interface PagamentiProps {
 const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
   const isDealerArea = !!dealerId;
   useRealtimeSync();
-  
+
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const { userRole } = useAuth();
+  const { t } = useLanguage();
   const deletePaymentMutation = useDeletePayment();
   const bulkDeleteMutation = useBulkDeletePayments();
   
@@ -213,7 +215,7 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
           ))}
         </div>
         <Skeleton className="h-96" />
-        <p className="text-center text-muted-foreground text-sm">Caricamento pagamenti...</p>
+        <p className="text-center text-muted-foreground text-sm">{t.area.pagamenti.caricamento}</p>
       </div>
     );
   }
@@ -225,13 +227,13 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
           <CardContent className="flex flex-col items-center gap-4 pt-6">
             <AlertCircle className="h-12 w-12 text-destructive" />
             <div className="text-center">
-              <h3 className="font-semibold text-lg">Errore nel caricamento</h3>
+              <h3 className="font-semibold text-lg">{t.area.common.erroreCaricamento}</h3>
               <p className="text-muted-foreground text-sm mt-1">
-                Impossibile caricare i pagamenti. Verifica la connessione e riprova.
+                {t.area.common.impossibileCaricareConnessione}
               </p>
             </div>
             <Button onClick={() => refetch()}>
-              <RefreshCw className="h-4 w-4 mr-2" />Riprova
+              <RefreshCw className="h-4 w-4 mr-2" />{t.area.common.riprova}
             </Button>
           </CardContent>
         </Card>
@@ -246,20 +248,20 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
       <div className="flex justify-between items-start">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-semibold text-foreground">Pagamenti</h1>
+            <h1 className="text-3xl font-semibold text-foreground">{t.area.pagamenti.titolo}</h1>
             {selectedPaymentIds.size > 0 && (
-              <Badge variant="secondary">{selectedPaymentIds.size} selezionati</Badge>
+              <Badge variant="secondary">{selectedPaymentIds.size} {t.area.common.selezionati}</Badge>
             )}
           </div>
           <p className="text-muted-foreground mt-1">
-            {totalCount} pagamenti totali
+            {totalCount} {t.area.pagamenti.pagamenti}
             {payments.length < totalCount && ` · ${payments.length} caricati`}
           </p>
         </div>
         {!isMobile && !isDealerArea && (
           <Button onClick={() => setNewPaymentDialogOpen(true)}>
             <Plus className="h-4 w-4 mr-2" />
-            Nuovo Pagamento
+            {t.area.pagamenti.nuovoPagamento}
           </Button>
         )}
       </div>
@@ -272,10 +274,10 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
           isMobile ? "flex gap-4 pb-4" : "grid gap-4 md:grid-cols-4"
         )} style={isMobile ? { minWidth: 'max-content' } : undefined}>
           {[
-            { title: "Totale Incassato", icon: Euro, value: formatCurrency(totaleIncassato), subtitle: `${numPagamenti} pagamenti` },
-            { title: "Media Importo", icon: TrendingUp, value: formatCurrency(mediaImporto), subtitle: "per pagamento" },
-            { title: "Num. Pagamenti", icon: Clock, value: numPagamenti, subtitle: "totali nel periodo" },
-            { title: "Metodo Più Usato", icon: CreditCard, value: metodoPiuUsatoNome, subtitle: "più popolare", capitalize: true }
+            { title: t.area.pagamenti.totaleIncassato, icon: Euro, value: formatCurrency(totaleIncassato), subtitle: `${numPagamenti} ${t.area.pagamenti.pagamenti}` },
+            { title: t.area.pagamenti.mediaImporto, icon: TrendingUp, value: formatCurrency(mediaImporto), subtitle: t.area.pagamenti.perPagemento },
+            { title: t.area.pagamenti.numPagementi, icon: Clock, value: numPagamenti, subtitle: t.area.pagamenti.totaliPeriodo },
+            { title: t.area.pagamenti.metodoUsato, icon: CreditCard, value: metodoPiuUsatoNome, subtitle: t.area.pagamenti.piuPopolare, capitalize: true }
           ].map((stat, i) => (
             <Card key={i} className={isMobile ? "min-w-[160px]" : ""}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -333,13 +335,13 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
             </div>
             <div className="flex items-center gap-2">
               <Button variant={viewMode === "table" ? "default" : "outline"} size="sm" onClick={() => setViewMode("table")}>
-                <List className="h-4 w-4 mr-2" />Tabella
+                <List className="h-4 w-4 mr-2" />{t.area.pagamenti.tabella}
               </Button>
               <Button variant={viewMode === "timeline" ? "default" : "outline"} size="sm" onClick={() => setViewMode("timeline")}>
-                <CalendarIcon className="h-4 w-4 mr-2" />Timeline
+                <CalendarIcon className="h-4 w-4 mr-2" />{t.area.pagamenti.timeline}
               </Button>
               <Button variant="outline" size="sm" onClick={() => setExportDialogOpen(true)}>
-                <Download className="h-4 w-4 mr-2" />Esporta
+                <Download className="h-4 w-4 mr-2" />{t.area.pagamenti.esporta}
               </Button>
             </div>
           </div>
@@ -355,28 +357,28 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
                   <TableRow>
                     {!isDealerArea && <TableHead className="w-12"><Checkbox checked={selectedPaymentIds.size === sortedPayments.length && sortedPayments.length > 0} onCheckedChange={toggleSelectAll} /></TableHead>}
                     <TableHead className="cursor-pointer select-none" onClick={() => handleSort('data_pagamento')}>
-                      <span className="flex items-center">Data <SortIcon columnKey="data_pagamento" /></span>
+                      <span className="flex items-center">{t.area.pagamenti.data} <SortIcon columnKey="data_pagamento" /></span>
                     </TableHead>
-                    <TableHead>Ordine</TableHead>
+                    <TableHead>{t.area.dealerAssistenza.ordine}</TableHead>
                     <TableHead className="cursor-pointer select-none" onClick={() => handleSort('dealer')}>
-                      <span className="flex items-center">Dealer <SortIcon columnKey="dealer" /></span>
+                      <span className="flex items-center">{t.area.pagamenti.dealer} <SortIcon columnKey="dealer" /></span>
                     </TableHead>
                     <TableHead className="cursor-pointer select-none" onClick={() => handleSort('tipo')}>
-                      <span className="flex items-center">Tipo <SortIcon columnKey="tipo" /></span>
+                      <span className="flex items-center">{t.area.pagamenti.tipo} <SortIcon columnKey="tipo" /></span>
                     </TableHead>
                     <TableHead className="cursor-pointer select-none" onClick={() => handleSort('metodo')}>
-                      <span className="flex items-center">Metodo <SortIcon columnKey="metodo" /></span>
+                      <span className="flex items-center">{t.area.pagamenti.metodo} <SortIcon columnKey="metodo" /></span>
                     </TableHead>
                     <TableHead className="text-right cursor-pointer select-none" onClick={() => handleSort('importo')}>
-                      <span className="flex items-center justify-end">Importo <SortIcon columnKey="importo" /></span>
+                      <span className="flex items-center justify-end">{t.area.pagamenti.importo} <SortIcon columnKey="importo" /></span>
                     </TableHead>
-                    <TableHead>Riferimento</TableHead>
+                    <TableHead>{t.area.pagamenti.riferimento}</TableHead>
                     {userRole === 'super_admin' && !isDealerArea && <TableHead className="w-12"></TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {sortedPayments.length === 0 ? (
-                    <TableRow><TableCell colSpan={isDealerArea ? 7 : (userRole === 'super_admin' ? 9 : 8)} className="text-center py-8 text-muted-foreground">Nessun pagamento trovato</TableCell></TableRow>
+                    <TableRow><TableCell colSpan={isDealerArea ? 7 : (userRole === 'super_admin' ? 9 : 8)} className="text-center py-8 text-muted-foreground">{t.area.pagamenti.nessunoTrovato}</TableCell></TableRow>
                   ) : (
                     sortedPayments.map((payment) => (
                       <TableRow key={payment.id} className={selectedPaymentIds.has(payment.id) ? 'bg-muted/50' : ''}>
@@ -403,7 +405,7 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
                   {isFetchingNextPage && (
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      <span>Caricamento pagamenti...</span>
+                      <span>{t.area.pagamenti.caricamento}</span>
                     </div>
                   )}
                 </div>
@@ -423,15 +425,15 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
         <div className={cn("fixed z-50 animate-in slide-in-from-bottom-5", isMobile ? "bottom-20 left-4 right-4" : "bottom-6 left-1/2 -translate-x-1/2")}>
           <Card className="shadow-lg border-2">
             <CardContent className={cn("flex items-center gap-4", isMobile ? "p-3 flex-col" : "p-4")}>
-              <Badge variant="secondary">{selectedPaymentIds.size} pagamenti selezionati</Badge>
+              <Badge variant="secondary">{selectedPaymentIds.size} {t.area.pagamenti.pagamenti} {t.area.common.selezionati}</Badge>
               <div className="h-6 w-px bg-border" />
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={() => setExportDialogOpen(true)} disabled={payments.length === 0}>
                   <Download className="h-4 w-4 mr-2" />
-                  Esporta CSV {selectedPaymentIds.size > 0 && `(${selectedPaymentIds.size})`}
+                  {t.area.common.esportaCsv} {selectedPaymentIds.size > 0 && `(${selectedPaymentIds.size})`}
                 </Button>
-                {userRole === 'super_admin' && <Button variant="destructive" size="sm" onClick={() => setBulkDeleteDialogOpen(true)}><Trash2 className="h-4 w-4 mr-2" />Elimina</Button>}
-                <Button variant="ghost" size="sm" onClick={clearSelection}><X className="h-4 w-4 mr-2" />Annulla</Button>
+                {userRole === 'super_admin' && <Button variant="destructive" size="sm" onClick={() => setBulkDeleteDialogOpen(true)}><Trash2 className="h-4 w-4 mr-2" />{t.area.common.elimina}</Button>}
+                <Button variant="ghost" size="sm" onClick={clearSelection}><X className="h-4 w-4 mr-2" />{t.area.common.annulla}</Button>
               </div>
             </CardContent>
           </Card>
@@ -465,15 +467,15 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
       <AlertDialog open={!!deleteConfirmId} onOpenChange={(open) => !open && setDeleteConfirmId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Conferma eliminazione</AlertDialogTitle>
+            <AlertDialogTitle>{t.area.pagamenti.confermaEliminazione}</AlertDialogTitle>
             <AlertDialogDescription>
-              Sei sicuro di voler eliminare questo pagamento? L'azione non può essere annullata.
+              {t.area.pagamenti.confermaEliminazioneDesc}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Annulla</AlertDialogCancel>
+            <AlertDialogCancel>{t.area.common.annulla}</AlertDialogCancel>
             <AlertDialogAction onClick={confirmDeletePayment} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              Elimina
+              {t.area.common.elimina}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -11,32 +11,34 @@ import { z } from "zod";
 import { PasswordInput } from "@/components/auth/PasswordInput";
 import { PasswordStrengthIndicator } from "@/components/auth/PasswordStrengthIndicator";
 import { AuthHeader } from "@/components/auth/AuthHeader";
-
-const loginSchema = z.object({
-  email: z.string().email("Email non valida"),
-  password: z.string().min(6, "La password deve essere almeno 6 caratteri"),
-});
-
-const signupSchema = z.object({
-  email: z.string().email("Email non valida"),
-  password: z.string()
-    .min(8, "La password deve essere almeno 8 caratteri")
-    .regex(/[A-Z]/, "La password deve contenere almeno una maiuscola")
-    .regex(/[0-9]/, "La password deve contenere almeno un numero")
-    .regex(/[^A-Za-z0-9]/, "La password deve contenere almeno un carattere speciale"),
-  displayName: z.string().min(2, "Il nome deve essere almeno 2 caratteri"),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Le password non coincidono",
-  path: ["confirmPassword"],
-});
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const Auth = () => {
   const { signIn, signUp } = useAuth();
+  const { t } = useLanguage();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("login");
   const [signupSuccess, setSignupSuccess] = useState(false);
+
+  const loginSchema = z.object({
+    email: z.string().email(t.area.auth.emailNonValida),
+    password: z.string().min(6, t.area.auth.passwordMinimo6),
+  });
+
+  const signupSchema = z.object({
+    email: z.string().email(t.area.auth.emailNonValida),
+    password: z.string()
+      .min(8, t.area.auth.passwordMinimo8)
+      .regex(/[A-Z]/, t.area.auth.passwordMaiuscola)
+      .regex(/[0-9]/, t.area.auth.passwordNumero)
+      .regex(/[^A-Za-z0-9]/, t.area.auth.passwordSpeciale),
+    displayName: z.string().min(2, t.area.auth.nomeMinimo2),
+    confirmPassword: z.string(),
+  }).refine((data) => data.password === data.confirmPassword, {
+    message: t.area.auth.passwordNonCoincidono,
+    path: ["confirmPassword"],
+  });
 
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [signupData, setSignupData] = useState({
@@ -57,9 +59,9 @@ const Auth = () => {
 
       if (error) {
         if (error.message.includes("Invalid login credentials")) {
-          setError("Email o password non corretti");
+          setError(t.area.auth.emailPasswordNonCorretti);
         } else if (error.message.includes("rate limit")) {
-          setError("Troppi tentativi. Riprova tra qualche minuto.");
+          setError(t.area.auth.troppiTentativi);
         } else {
           setError(error.message);
         }
@@ -88,9 +90,9 @@ const Auth = () => {
 
       if (error) {
         if (error.message.includes("already registered")) {
-          setError("Questo indirizzo email è già registrato");
+          setError(t.area.auth.emailGiaRegistrata);
         } else if (error.message.includes("rate limit")) {
-          setError("Troppi tentativi. Riprova tra qualche minuto.");
+          setError(t.area.auth.troppiTentativi);
         } else {
           setError(error.message);
         }
@@ -122,8 +124,8 @@ const Auth = () => {
           <CardContent className="pt-6">
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
               <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="login">Accedi</TabsTrigger>
-                <TabsTrigger value="signup">Registrati</TabsTrigger>
+                <TabsTrigger value="login">{t.area.auth.accedi}</TabsTrigger>
+                <TabsTrigger value="signup">{t.area.auth.registrati}</TabsTrigger>
               </TabsList>
 
               <TabsContent value="login" className="space-y-4">
@@ -140,7 +142,7 @@ const Auth = () => {
                     <Input
                       id="login-email"
                       type="email"
-                      placeholder="nome@esempio.it"
+                      placeholder={t.area.auth.placeholder_email}
                       value={loginData.email}
                       onChange={(e) =>
                         setLoginData({ ...loginData, email: e.target.value })
@@ -173,10 +175,10 @@ const Auth = () => {
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Accesso in corso...
+                        {t.area.auth.accedendo}
                       </>
                     ) : (
-                      "Accedi"
+                      t.area.auth.accedi
                     )}
                   </Button>
                 </form>
@@ -187,7 +189,7 @@ const Auth = () => {
                   <Alert className="animate-in fade-in-0 slide-in-from-top-1 border-green-500 bg-green-50 dark:bg-green-950">
                     <AlertCircle className="h-4 w-4 text-green-600" />
                     <AlertDescription className="text-green-700 dark:text-green-300">
-                      Registrazione completata. Controlla la tua email per confermare l'account prima di accedere.
+                      {t.area.auth.registrazioneCompletata}
                     </AlertDescription>
                   </Alert>
                 ) : (
@@ -200,11 +202,11 @@ const Auth = () => {
                   )}
 
                   <div className="space-y-2">
-                    <Label htmlFor="signup-name">Nome Completo</Label>
+                    <Label htmlFor="signup-name">{t.area.auth.nomeCompleto}</Label>
                     <Input
                       id="signup-name"
                       type="text"
-                      placeholder="Mario Rossi"
+                      placeholder={t.area.auth.placeholder_nome}
                       value={signupData.displayName}
                       onChange={(e) =>
                         setSignupData({ ...signupData, displayName: e.target.value })
@@ -220,7 +222,7 @@ const Auth = () => {
                     <Input
                       id="signup-email"
                       type="email"
-                      placeholder="nome@esempio.it"
+                      placeholder={t.area.auth.placeholder_email}
                       value={signupData.email}
                       onChange={(e) =>
                         setSignupData({ ...signupData, email: e.target.value })
@@ -246,7 +248,7 @@ const Auth = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="signup-confirm">Conferma Password</Label>
+                    <Label htmlFor="signup-confirm">{t.area.auth.confermaPassword}</Label>
                     <PasswordInput
                       id="signup-confirm"
                       value={signupData.confirmPassword}
@@ -267,10 +269,10 @@ const Auth = () => {
                     {isLoading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Registrazione in corso...
+                        {t.area.auth.registrando}
                       </>
                     ) : (
-                      "Registrati"
+                      t.area.auth.registrati
                     )}
                   </Button>
                 </form>
@@ -282,7 +284,7 @@ const Auth = () => {
 
         {/* Footer */}
         <p className="text-center text-xs text-muted-foreground">
-          Accedendo, accetti i nostri termini di servizio e la privacy policy
+          {t.area.auth.accettaTermini}
         </p>
       </div>
     </div>

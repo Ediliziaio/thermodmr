@@ -33,6 +33,7 @@ import { AttachmentsSection } from "@/components/orders/AttachmentsSection";
 import { TicketsSection } from "@/components/orders/TicketsSection";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -59,6 +60,7 @@ export default function OrderDetail() {
   const navigate = useNavigate();
   const location = useLocation();
   const { userRole } = useAuth();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
 
   const isDealerArea = location.pathname.includes('/area/');
@@ -291,13 +293,13 @@ export default function OrderDetail() {
       return newId as string;
     },
     onSuccess: (newId) => {
-      toast({ title: "Preventivo duplicato", description: `Nuovo preventivo: ${newId}` });
+      toast({ title: t.area.orderDetail.preventivoDuplicato, description: `Nuovo preventivo: ${newId}` });
       queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
       if (isDealerArea) navigate(`../${newId}`, { relative: "path" });
       else navigate(`/ordini/${newId}`);
     },
     onError: () => {
-      toast({ title: "Errore nella duplicazione", variant: "destructive" });
+      toast({ title: t.area.orderDetail.erroreDuplicazione, variant: "destructive" });
     },
   });
 
@@ -316,14 +318,14 @@ export default function OrderDetail() {
       return newOrderId;
     },
     onSuccess: (newOrderId) => {
-      toast({ title: "Preventivo convertito in ordine", description: `Nuovo ID: ${newOrderId}` });
+      toast({ title: t.area.orderDetail.preventivoConvertito, description: `Nuovo ID: ${newOrderId}` });
       queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
       queryClient.invalidateQueries({ queryKey: ["orders"] });
       setShowConvertDialog(false);
       navigate(`/ordini/${newOrderId}`, { replace: true });
     },
     onError: () => {
-      toast({ title: "Errore durante la conversione del preventivo", variant: "destructive" });
+      toast({ title: t.area.orderDetail.erroreConversione, variant: "destructive" });
     },
   });
 
@@ -384,13 +386,13 @@ export default function OrderDetail() {
   const isScaduto = scadenzaDate ? isPast(scadenzaDate) : false;
   const giorniRimanenti = scadenzaDate ? differenceInDays(scadenzaDate, new Date()) : 0;
 
-  const entityLabel = isPreventivo ? "Preventivo" : "Ordine";
+  const entityLabel = isPreventivo ? t.area.orderDetail.preventivo : t.area.orderDetail.ordine;
 
   return (
     <div className="space-y-6 pb-24">
       <Button variant="ghost" onClick={handleNavigateBack}>
         <ArrowLeft className="mr-2 h-4 w-4" />
-        {isDealerArea && isPreventivo ? "Torna ai Preventivi" : "Torna agli Ordini"}
+        {isDealerArea && isPreventivo ? t.area.orderDetail.tornaPreventivi : t.area.orderDetail.tornaOrdini}
       </Button>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -822,7 +824,7 @@ export default function OrderDetail() {
               onClick={() => id && convertMutation.mutate(id)}
               disabled={convertMutation.isPending}
             >
-              {convertMutation.isPending ? "Conversione..." : "Conferma Conversione"}
+              {convertMutation.isPending ? t.area.orderDetail.conversione : t.area.orderDetail.confermaConversione}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

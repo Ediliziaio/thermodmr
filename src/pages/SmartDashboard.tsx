@@ -3,9 +3,11 @@ import Dashboard from "./Dashboard";
 import { Navigate } from "react-router-dom";
 import { Loader2, AlertCircle } from "lucide-react";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function SmartDashboard() {
   const { user, userRole, loading } = useAuth();
+  const { t } = useLanguage();
 
   if (loading) {
     return (
@@ -34,9 +36,9 @@ export default function SmartDashboard() {
       <Card className="max-w-md w-full">
         <CardHeader className="text-center">
           <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-2" />
-          <CardTitle>Accesso Negato</CardTitle>
+          <CardTitle>{t.area.smartDashboard.accessoNegato}</CardTitle>
           <CardDescription>
-            Non hai i permessi per accedere a questa sezione.
+            {t.area.smartDashboard.noPermessi}
           </CardDescription>
         </CardHeader>
       </Card>

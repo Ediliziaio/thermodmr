@@ -34,6 +34,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useRealtimeSync } from "@/hooks/useRealtimeSync";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 type ViewMode = "lista" | "pipeline";
 
@@ -43,10 +44,11 @@ interface OrdersProps {
 
 export default function Orders({ dealerId }: OrdersProps = {}) {
   useRealtimeSync();
-  
+
   const navigate = useNavigate();
-  
+
   const { userRole } = useAuth();
+  const { t } = useLanguage();
   const isMobile = useIsMobile();
   const isDealerArea = !!dealerId;
   const [searchQuery, setSearchQuery] = useState("");
@@ -244,7 +246,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] gap-3">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <p className="text-sm text-muted-foreground">Caricamento ordini...</p>
+        <p className="text-sm text-muted-foreground">{t.area.ordini.caricamento}</p>
       </div>
     );
   }
@@ -256,12 +258,12 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
           <CardContent className="flex flex-col items-center gap-4 pt-6">
             <AlertCircle className="h-12 w-12 text-destructive" />
             <div className="text-center">
-              <h3 className="font-semibold text-lg">Errore nel caricamento</h3>
+              <h3 className="font-semibold text-lg">{t.area.common.erroreCaricamento}</h3>
               <p className="text-muted-foreground text-sm mt-1">
-                Impossibile caricare gli ordini. Verifica la connessione e riprova.
+                {t.area.ordini.errore}
               </p>
             </div>
-            <Button onClick={() => refetch()}>Riprova</Button>
+            <Button onClick={() => refetch()}>{t.area.common.riprova}</Button>
           </CardContent>
         </Card>
       </div>
@@ -277,15 +279,15 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
         <div className="flex items-center justify-between gap-4">
           <div className="min-w-0">
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Ordini</h1>
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">{t.area.ordini.titolo}</h1>
               {selectedOrderIds.size > 0 && (
                 <Badge variant="secondary" className="text-sm">
-                  {selectedOrderIds.size} selezionati
+                  {selectedOrderIds.size} {t.area.common.selezionati}
                 </Badge>
               )}
             </div>
             <p className="text-sm text-muted-foreground mt-1">
-              Gestisci tutti gli ordini dei rivenditori
+              {t.area.ordini.desc}
             </p>
           </div>
           <div className="flex items-center gap-1.5">
@@ -303,7 +305,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                 >
                   {isMobile
                     ? { "3months": "3M", "6months": "6M", year: new Date().getFullYear().toString(), lastyear: (new Date().getFullYear() - 1).toString(), all: "∞" }[type]
-                    : { "3months": "3 Mesi", "6months": "6 Mesi", year: new Date().getFullYear().toString(), lastyear: (new Date().getFullYear() - 1).toString(), all: "Tutto" }[type]}
+                    : { "3months": t.area.common.tre_mesi, "6months": t.area.common.sei_mesi, year: new Date().getFullYear().toString(), lastyear: (new Date().getFullYear() - 1).toString(), all: t.area.common.tutto }[type]}
                 </button>
               ))}
             </div>
@@ -335,7 +337,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
               <>
                 <Button variant="outline" onClick={() => setPreventivoDialogOpen(true)}>
                   <FileText className="mr-2 h-4 w-4" />
-                  Nuovo Preventivo
+                  {t.area.ordini.nuovoPreventivo}
                 </Button>
                 <NewPreventivoDialog open={preventivoDialogOpen} onOpenChange={setPreventivoDialogOpen} />
               </>
@@ -349,7 +351,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
           <div className="flex items-center gap-4 flex-wrap">
             {/* Dealer Quick Filter */}
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-muted-foreground">Rivenditore:</span>
+              <span className="text-sm font-medium text-muted-foreground">{t.area.nav.rivenditori}:</span>
               <Select
                 value={filters.dealerId || "all"}
                 onValueChange={(v) =>
@@ -360,10 +362,10 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                 }
               >
                 <SelectTrigger className="w-[220px] h-9">
-                  <SelectValue placeholder="Tutti i rivenditori" />
+                  <SelectValue placeholder={t.area.ordini.tuttiRivenditori} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Tutti i rivenditori</SelectItem>
+                  <SelectItem value="all">{t.area.ordini.tuttiRivenditori}</SelectItem>
                   {dealers.map((d) => (
                     <SelectItem key={d.id} value={d.id!}>
                       {d.ragione_sociale}
@@ -382,11 +384,11 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
               <TabsList className="h-9">
                 <TabsTrigger value="lista" className="gap-1.5 text-xs px-3">
                   <List className="h-3.5 w-3.5" />
-                  Lista
+                  {t.area.ordini.lista}
                 </TabsTrigger>
                 <TabsTrigger value="pipeline" className="gap-1.5 text-xs px-3">
                   <Kanban className="h-3.5 w-3.5" />
-                  Pipeline
+                  {t.area.ordini.pipeline}
                 </TabsTrigger>
               </TabsList>
             </Tabs>
@@ -401,25 +403,25 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
         )} style={isMobile ? { minWidth: 'max-content' } : undefined}>
           <Card className={cn(isMobile && "min-w-[160px]")}>
             <CardContent className="py-3 px-4">
-              <p className="text-xs font-medium text-muted-foreground">Totale Ordini</p>
+              <p className="text-xs font-medium text-muted-foreground">{t.area.ordini.ordiniTotali}</p>
               <p className="text-xl font-bold mt-0.5">{stats.totalOrders}</p>
             </CardContent>
           </Card>
           <Card className={cn(isMobile && "min-w-[160px]")}>
             <CardContent className="py-3 px-4">
-              <p className="text-xs font-medium text-muted-foreground">Valore Totale</p>
+              <p className="text-xs font-medium text-muted-foreground">{t.area.ordini.valoreTotale}</p>
               <p className="text-xl font-bold mt-0.5">{formatCurrency(stats.totalValue)}</p>
             </CardContent>
           </Card>
           <Card className={cn(isMobile && "min-w-[160px]")}>
             <CardContent className="py-3 px-4">
-              <p className="text-xs font-medium text-muted-foreground">Da Incassare</p>
+              <p className="text-xs font-medium text-muted-foreground">{t.area.ordini.daIncassare}</p>
               <p className="text-xl font-bold mt-0.5 text-orange-600">{formatCurrency(stats.totalToCollect)}</p>
             </CardContent>
           </Card>
           <Card className={cn(isMobile && "min-w-[160px]")}>
             <CardContent className="py-3 px-4">
-              <p className="text-xs font-medium text-muted-foreground">Ordini con Saldo</p>
+              <p className="text-xs font-medium text-muted-foreground">{t.area.ordini.ordiniConSaldo}</p>
               <p className="text-xl font-bold mt-0.5 text-red-600">{stats.ordersWithBalance}</p>
             </CardContent>
           </Card>
@@ -468,7 +470,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
             {/* Orders Table */}
             <Card>
               <CardHeader>
-                <CardTitle>Lista Ordini</CardTitle>
+                <CardTitle>{t.area.ordini.listaOrdini}</CardTitle>
               </CardHeader>
               <CardContent>
                 {sortedOrders.length > 0 ? (
@@ -493,18 +495,18 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                     </div>
                     <h3 className="text-lg font-semibold mb-2">
                       {totalCount > 0
-                        ? "Nessun ordine corrisponde ai filtri"
-                        : "Nessun ordine trovato"}
+                        ? t.area.ordini.nessunOrdineFilti
+                        : t.area.ordini.nessunOrdineTrovato}
                     </h3>
                     <p className="text-sm text-muted-foreground max-w-sm mb-6">
                       {totalCount > 0
-                        ? "Prova a modificare i filtri di ricerca"
-                        : "Crea il tuo primo ordine per iniziare"}
+                        ? t.area.common.azzeraFiltri
+                        : t.area.ordini.creaOrdineSuggerimento}
                     </p>
                     {totalCount === 0 && userRole === 'super_admin' && (
                       <Button onClick={() => setNewOrderDialogOpen(true)}>
                         <Plus className="h-4 w-4 mr-2" />
-                        Crea Ordine
+                        {t.area.ordini.creaOrdine}
                       </Button>
                     )}
                   </div>
@@ -528,7 +530,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
               <CardContent className="flex items-center gap-4 p-4">
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary" className="text-sm">
-                    {selectedOrderIds.size} {selectedOrderIds.size === 1 ? 'ordine selezionato' : 'ordini selezionati'}
+                    {selectedOrderIds.size} {t.area.common.selezionati}
                   </Badge>
                 </div>
                 
@@ -543,7 +545,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                         onClick={() => setBulkStatusDialogOpen(true)}
                       >
                         <RefreshCw className="h-4 w-4 mr-2" />
-                        Aggiorna Stato
+                        {t.area.ordini.aggiornaStato}
                       </Button>
                       <Button
                         variant="destructive"
@@ -551,7 +553,7 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                         onClick={() => setBulkDeleteDialogOpen(true)}
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
-                        Elimina
+                        {t.area.common.elimina}
                       </Button>
                     </>
                   )}
@@ -563,16 +565,16 @@ export default function Orders({ dealerId }: OrdersProps = {}) {
                     disabled={sortedOrders.length === 0}
                   >
                     <Download className="h-4 w-4 mr-2" />
-                    Esporta CSV {selectedOrderIds.size > 0 && `(${selectedOrderIds.size})`}
+                    {t.area.common.esportaCsv} {selectedOrderIds.size > 0 && `(${selectedOrderIds.size})`}
                   </Button>
-                  
+
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={clearSelection}
                   >
                     <X className="h-4 w-4 mr-2" />
-                    Annulla
+                    {t.area.common.annulla}
                   </Button>
                 </div>
               </CardContent>

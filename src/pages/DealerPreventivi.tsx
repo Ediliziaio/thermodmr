@@ -35,6 +35,7 @@ import { toast } from "@/hooks/use-toast";
 import { generateOrderId } from "@/hooks/useOrders";
 import { useAuth } from "@/contexts/AuthContext";
 import { NewPreventivoDialog, type PreventivoDefaultValues } from "@/components/orders/NewPreventivoDialog";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 interface DealerPreventiviProps {
   dealerId?: string;
@@ -52,6 +53,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { userRole } = useAuth();
+  const { t } = useLanguage();
   const canManage = !readOnly && (userRole === "super_admin" || userRole === "commerciale");
   const [convertId, setConvertId] = useState<string | null>(null);
   const [preventivoDialogOpen, setPreventivoDialogOpen] = useState(false);
@@ -198,7 +200,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
       return newOrderId;
     },
     onSuccess: (newOrderId) => {
-      toast({ title: "Preventivo convertito in ordine", description: `Nuovo ID: ${newOrderId}` });
+      toast({ title: t.area.preventivi.convertito, description: `Nuovo ID: ${newOrderId}` });
       queryClient.invalidateQueries({ queryKey: ["dealer-preventivi"] });
       queryClient.invalidateQueries({ queryKey: ["dealer-order-stats"] });
       queryClient.invalidateQueries({ queryKey: ["orders-infinite"] });
@@ -207,7 +209,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
       setConvertId(null);
     },
     onError: () => {
-      toast({ title: "Errore nella conversione del preventivo", variant: "destructive" });
+      toast({ title: t.area.preventivi.erroreConversione, variant: "destructive" });
     },
   });
 
@@ -224,12 +226,12 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
       if (error) throw error;
     },
     onSuccess: (_, { makeValid }) => {
-      toast({ title: `Preventiv${selectedIds.size === 1 ? "o aggiornato" : "i aggiornati"} a "${makeValid ? "Valido" : "Non Valido"}"` });
+      toast({ title: `Preventiv${selectedIds.size === 1 ? t.area.preventivi.aggiornato : t.area.preventivi.aggiornatoPlur} a "${makeValid ? t.area.preventivi.valido : t.area.preventivi.nonValido}"` });
       queryClient.invalidateQueries({ queryKey: ["dealer-preventivi"] });
       setSelectedIds(new Set());
     },
     onError: () => {
-      toast({ title: "Errore nell'aggiornamento dello stato", variant: "destructive" });
+      toast({ title: t.area.preventivi.erroreAggiornamentoStato, variant: "destructive" });
     },
   });
 
@@ -258,8 +260,8 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
     onSuccess: ({ succeeded, failed }) => {
       if (succeeded > 0) {
         toast({
-          title: `${succeeded} preventiv${succeeded === 1 ? "o convertito" : "i convertiti"} in ordini`,
-          description: failed > 0 ? `${failed} non convertit${failed === 1 ? "o" : "i"} per errore` : undefined,
+          title: `${succeeded} preventiv${succeeded === 1 ? t.area.preventivi.preventiviConvertiti + "o" : t.area.preventivi.preventiviConvertiti + "i"} in ordini`,
+          description: failed > 0 ? `${failed} ${t.area.preventivi.nonConvertitiPerErrore}` : undefined,
           variant: failed > 0 ? "destructive" : "default",
         });
         queryClient.invalidateQueries({ queryKey: ["dealer-preventivi"] });
@@ -268,13 +270,13 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
         queryClient.invalidateQueries({ queryKey: ["orders-kpi"] });
         queryClient.invalidateQueries({ queryKey: ["dashboard-kpis"] });
       } else {
-        toast({ title: "Errore: nessun preventivo convertito", variant: "destructive" });
+        toast({ title: t.area.preventivi.erroreNessunoConvertito, variant: "destructive" });
       }
       setSelectedIds(new Set());
       setBulkConvertOpen(false);
     },
     onError: () => {
-      toast({ title: "Errore nella conversione", variant: "destructive" });
+      toast({ title: t.area.preventivi.erroreConversione, variant: "destructive" });
     },
   });
 
@@ -294,7 +296,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
       if (error) throw error;
     },
     onSuccess: () => {
-      toast({ title: `${selectedIds.size} preventiv${selectedIds.size === 1 ? "o eliminato" : "i eliminati"}` });
+      toast({ title: `${selectedIds.size} preventiv${selectedIds.size === 1 ? t.area.preventivi.eliminato : t.area.preventivi.eliminati}` });
       queryClient.invalidateQueries({ queryKey: ["dealer-preventivi"] });
       queryClient.invalidateQueries({ queryKey: ["dealer-order-stats"] });
       queryClient.invalidateQueries({ queryKey: ["orders-kpi"] });
@@ -303,7 +305,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
       setBulkDeleteOpen(false);
     },
     onError: () => {
-      toast({ title: "Errore nell'eliminazione", variant: "destructive" });
+      toast({ title: t.area.preventivi.erroreEliminazione, variant: "destructive" });
     },
   });
 
@@ -380,7 +382,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
       });
       setPreventivoDialogOpen(true);
     } catch {
-      toast({ title: "Errore nel caricamento dei dati per la duplicazione", variant: "destructive" });
+      toast({ title: t.area.preventivi.erroreCaricamentoDuplicazione, variant: "destructive" });
     } finally {
       setIsDuplicating(false);
     }
@@ -411,15 +413,15 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Preventivi</h1>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">{readOnly ? t.area.preventivi.titolo_dealer : t.area.preventivi.titolo_super}</h1>
          <p className="text-sm text-muted-foreground mt-1">
-            {readOnly ? "Visualizza i tuoi preventivi" : "Gestisci i tuoi preventivi e convertili in ordini"}
+            {readOnly ? t.area.preventivi.desc_dealer : t.area.preventivi.desc_super}
           </p>
         </div>
         {canManage && (
           <Button onClick={() => { setDuplicateData(undefined); setPreventivoDialogOpen(true); }}>
             <Plus className="mr-2 h-4 w-4" />
-            Nuovo Preventivo
+            {t.area.preventivi.nuovoPreventivo}
           </Button>
         )}
       </div>
@@ -431,7 +433,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
             <CardContent className="p-4">
               <div className="flex items-center gap-2 text-muted-foreground mb-1">
                 <BarChart3 className="h-4 w-4" />
-                <span className="text-xs font-medium uppercase tracking-wide">Totale</span>
+                <span className="text-xs font-medium uppercase tracking-wide">{t.area.preventivi.totaleKpi}</span>
               </div>
               <p className="text-2xl font-bold">{stats.total}</p>
             </CardContent>
@@ -440,7 +442,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
             <CardContent className="p-4">
               <div className="flex items-center gap-2 text-muted-foreground mb-1">
                 <Euro className="h-4 w-4" />
-                <span className="text-xs font-medium uppercase tracking-wide">Valore</span>
+                <span className="text-xs font-medium uppercase tracking-wide">{t.area.preventivi.valoreKpi}</span>
               </div>
               <p className="text-2xl font-bold">{formatCurrency(stats.value)}</p>
             </CardContent>
@@ -449,7 +451,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
             <CardContent className="p-4">
               <div className="flex items-center gap-2 text-muted-foreground mb-1">
                 <CheckCircle2 className="h-4 w-4 text-chart-2" />
-                <span className="text-xs font-medium uppercase tracking-wide">Validi</span>
+                <span className="text-xs font-medium uppercase tracking-wide">{t.area.preventivi.validiKpi}</span>
               </div>
               <p className="text-2xl font-bold text-chart-2">{stats.valid}</p>
             </CardContent>
@@ -458,7 +460,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
             <CardContent className="p-4">
               <div className="flex items-center gap-2 text-muted-foreground mb-1">
                 <XCircle className="h-4 w-4 text-destructive" />
-                <span className="text-xs font-medium uppercase tracking-wide">Non Validi</span>
+                <span className="text-xs font-medium uppercase tracking-wide">{t.area.preventivi.nonValidiKpi}</span>
               </div>
               <p className="text-2xl font-bold text-destructive">{stats.expired}</p>
             </CardContent>
@@ -473,7 +475,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Cerca per ID o rivenditore..."
+                placeholder={t.area.preventivi.cerca}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-9"
@@ -482,10 +484,10 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
             {!dealerId && dealerOptions.length > 1 && (
               <Select value={dealerFilter} onValueChange={setDealerFilter}>
                 <SelectTrigger className="w-full sm:w-[220px]">
-                  <SelectValue placeholder="Tutti i rivenditori" />
+                  <SelectValue placeholder={t.area.preventivi.tuttiRivenditori} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="tutti">Tutti i rivenditori</SelectItem>
+                  <SelectItem value="tutti">{t.area.preventivi.tuttiRivenditori}</SelectItem>
                   {dealerOptions.map(([id, name]) => (
                     <SelectItem key={id} value={id}>{name}</SelectItem>
                   ))}
@@ -498,7 +500,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
               <PopoverTrigger asChild>
                 <Button variant="outline" size="sm" className={cn("justify-start text-left font-normal", !dateFrom && "text-muted-foreground")}>
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {dateFrom ? format(dateFrom, "dd MMM yyyy", { locale: it }) : "Da"}
+                  {dateFrom ? format(dateFrom, "dd MMM yyyy", { locale: it }) : t.area.preventivi.da}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
@@ -516,7 +518,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
               <PopoverTrigger asChild>
                 <Button variant="outline" size="sm" className={cn("justify-start text-left font-normal", !dateTo && "text-muted-foreground")}>
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {dateTo ? format(dateTo, "dd MMM yyyy", { locale: it }) : "A"}
+                  {dateTo ? format(dateTo, "dd MMM yyyy", { locale: it }) : t.area.preventivi.a}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
@@ -539,12 +541,12 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
                 size="sm"
                 onClick={() => setStatusFilter(s)}
               >
-                {s === "tutti" && "Tutti"}
+                {s === "tutti" && t.area.preventivi.tutti}
                 {s === "validi" && (
-                  <><CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />Validi</>
+                  <><CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />{t.area.preventivi.validiKpi}</>
                 )}
                 {s === "non_validi" && (
-                  <><AlertTriangle className="h-3.5 w-3.5 mr-1.5" />Non Validi</>
+                  <><AlertTriangle className="h-3.5 w-3.5 mr-1.5" />{t.area.preventivi.nonValidiKpi}</>
                 )}
               </Button>
             ))}
@@ -555,7 +557,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
                 onClick={resetFilters}
                 className="text-muted-foreground"
               >
-                Cancella filtri
+                {t.area.common.azzeraFiltri}
               </Button>
             )}
             <span className="ml-auto text-sm text-muted-foreground">
@@ -610,11 +612,11 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
                             <Button variant="ghost" size="sm" className="h-7 px-2 gap-1">
                               {expired ? (
                                 <Badge variant="destructive" className="text-xs">
-                                  <AlertTriangle className="h-3 w-3 mr-1" />Non Valido
+                                  <AlertTriangle className="h-3 w-3 mr-1" />{t.area.preventivi.nonValido}
                                 </Badge>
                               ) : (
                                 <Badge className="text-xs bg-chart-2/10 text-chart-2 border-chart-2/20">
-                                  <CheckCircle2 className="h-3 w-3 mr-1" />Valido
+                                  <CheckCircle2 className="h-3 w-3 mr-1" />{t.area.preventivi.valido}
                                 </Badge>
                               )}
                               <ChevronDown className="h-3 w-3" />
@@ -622,24 +624,24 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
                             <DropdownMenuItem onClick={() => handleSingleStatusChange(p.id, true)} disabled={!expired}>
-                              <CheckCircle2 className="h-4 w-4 mr-2 text-chart-2" />Imposta Valido
+                              <CheckCircle2 className="h-4 w-4 mr-2 text-chart-2" />{t.area.preventivi.impostaValido}
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => handleSingleStatusChange(p.id, false)} disabled={expired}>
-                              <XCircle className="h-4 w-4 mr-2 text-destructive" />Imposta Non Valido
+                              <XCircle className="h-4 w-4 mr-2 text-destructive" />{t.area.preventivi.impostaNonValido}
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => setConvertId(p.id)}>
-                              <ArrowRightCircle className="h-4 w-4 mr-2" />Converti in Ordine
+                              <ArrowRightCircle className="h-4 w-4 mr-2" />{t.area.preventivi.convertiInOrdine}
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       ) : (
                         expired ? (
                           <Badge variant="destructive" className="text-xs animate-pulse">
-                            <AlertTriangle className="h-3 w-3 mr-1" />Non Valido
+                            <AlertTriangle className="h-3 w-3 mr-1" />{t.area.preventivi.nonValido}
                           </Badge>
                         ) : (
                           <Badge className="text-xs bg-chart-2/10 text-chart-2 border-chart-2/20 hover:bg-chart-2/20">
-                            <CheckCircle2 className="h-3 w-3 mr-1" />Valido
+                            <CheckCircle2 className="h-3 w-3 mr-1" />{t.area.preventivi.valido}
                           </Badge>
                         )
                       )}
@@ -649,16 +651,16 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
                     )}
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       <div>
-                        <p className="text-muted-foreground text-xs">Importo</p>
+                        <p className="text-muted-foreground text-xs">{t.area.preventivi.importoTotale}</p>
                         <p className="font-medium">{formatCurrency(Number(p.importo_totale))}</p>
                       </div>
                       <div>
-                        <p className="text-muted-foreground text-xs">Creato il</p>
+                        <p className="text-muted-foreground text-xs">{t.area.preventivi.dataCreazione}</p>
                         <p>{formatDate(p.data_inserimento)}</p>
                       </div>
                       {p.data_scadenza_preventivo && (
                         <div className="col-span-2">
-                          <p className="text-muted-foreground text-xs">Scadenza</p>
+                          <p className="text-muted-foreground text-xs">{t.area.preventivi.scadenza}</p>
                           <p className={expired ? "text-destructive font-medium" : ""}>
                             {formatDate(p.data_scadenza_preventivo)}
                           </p>
@@ -672,13 +674,13 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
                           disabled={isDuplicating}
                           onClick={(e) => { e.stopPropagation(); handleDuplicate(p.id); }}
                         >
-                          <Copy className="h-4 w-4 mr-2" />Duplica
+                          <Copy className="h-4 w-4 mr-2" />{t.area.preventivi.duplica}
                         </Button>
                         <Button
                           size="sm" className="flex-1"
                           onClick={(e) => { e.stopPropagation(); setConvertId(p.id); }}
                         >
-                          <ArrowRightCircle className="h-4 w-4 mr-2" />Converti
+                          <ArrowRightCircle className="h-4 w-4 mr-2" />{t.area.preventivi.converti}
                         </Button>
                       </div>
                     )}
@@ -706,12 +708,12 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
                       </TableHead>
                     )}
                     {[
-                      { key: 'id', label: 'ID Preventivo' },
-                      ...(!dealerId ? [{ key: 'dealer', label: 'Rivenditore' }] : []),
-                      { key: 'data_inserimento', label: 'Data Creazione' },
-                      { key: 'importo_totale', label: 'Importo Totale' },
-                      { key: 'data_scadenza_preventivo', label: 'Scadenza' },
-                      { key: 'stato', label: 'Stato' },
+                      { key: 'id', label: t.area.preventivi.idPreventivo },
+                      ...(!dealerId ? [{ key: 'dealer', label: t.area.preventivi.rivenditore }] : []),
+                      { key: 'data_inserimento', label: t.area.preventivi.dataCreazione },
+                      { key: 'importo_totale', label: t.area.preventivi.importoTotale },
+                      { key: 'data_scadenza_preventivo', label: t.area.preventivi.scadenza },
+                      { key: 'stato', label: t.area.preventivi.stato },
                     ].map(col => (
                       <TableHead
                         key={col.key}
@@ -724,7 +726,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
                         </span>
                       </TableHead>
                     ))}
-                    {canManage && <TableHead className="text-right">Azioni</TableHead>}
+                    {canManage && <TableHead className="text-right">{t.area.preventivi.azioni}</TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -766,11 +768,11 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
                                 <Button variant="ghost" size="sm" className="h-7 px-2 gap-1">
                                   {expired ? (
                                     <Badge variant="destructive">
-                                      <AlertTriangle className="h-3 w-3 mr-1" />Non Valido
+                                      <AlertTriangle className="h-3 w-3 mr-1" />{t.area.preventivi.nonValido}
                                     </Badge>
                                   ) : (
                                     <Badge className="bg-chart-2/10 text-chart-2 border-chart-2/20">
-                                      <CheckCircle2 className="h-3 w-3 mr-1" />Valido
+                                      <CheckCircle2 className="h-3 w-3 mr-1" />{t.area.preventivi.valido}
                                     </Badge>
                                   )}
                                   <ChevronDown className="h-3 w-3" />
@@ -778,24 +780,24 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="start">
                                 <DropdownMenuItem onClick={() => handleSingleStatusChange(p.id, true)} disabled={!expired}>
-                                  <CheckCircle2 className="h-4 w-4 mr-2 text-chart-2" />Imposta Valido
+                                  <CheckCircle2 className="h-4 w-4 mr-2 text-chart-2" />{t.area.preventivi.impostaValido}
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => handleSingleStatusChange(p.id, false)} disabled={expired}>
-                                  <XCircle className="h-4 w-4 mr-2 text-destructive" />Imposta Non Valido
+                                  <XCircle className="h-4 w-4 mr-2 text-destructive" />{t.area.preventivi.impostaNonValido}
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => setConvertId(p.id)}>
-                                  <ArrowRightCircle className="h-4 w-4 mr-2" />Converti in Ordine
+                                  <ArrowRightCircle className="h-4 w-4 mr-2" />{t.area.preventivi.convertiInOrdine}
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
                           ) : (
                             expired ? (
                               <Badge variant="destructive" className="animate-pulse">
-                                <AlertTriangle className="h-3 w-3 mr-1" />Non Valido
+                                <AlertTriangle className="h-3 w-3 mr-1" />{t.area.preventivi.nonValido}
                               </Badge>
                             ) : (
                               <Badge className="bg-chart-2/10 text-chart-2 border-chart-2/20 hover:bg-chart-2/20">
-                                <CheckCircle2 className="h-3 w-3 mr-1" />Valido
+                                <CheckCircle2 className="h-3 w-3 mr-1" />{t.area.preventivi.valido}
                               </Badge>
                             )
                           )}
@@ -810,7 +812,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
                                 <Copy className="h-4 w-4" />
                               </Button>
                               <Button size="sm" onClick={(e) => { e.stopPropagation(); setConvertId(p.id); }}>
-                                <ArrowRightCircle className="h-4 w-4 mr-1" />Converti
+                                <ArrowRightCircle className="h-4 w-4 mr-1" />{t.area.preventivi.converti}
                               </Button>
                             </div>
                           </TableCell>
@@ -827,10 +829,10 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
         <Card>
           <CardContent className="py-12 text-center">
             <Search className="h-12 w-12 mx-auto mb-3 text-muted-foreground opacity-50" />
-            <p className="text-muted-foreground font-medium">Nessun risultato</p>
-            <p className="text-sm text-muted-foreground mt-1">Prova a modificare i filtri di ricerca</p>
+            <p className="text-muted-foreground font-medium">{t.area.preventivi.nessunRisultato}</p>
+            <p className="text-sm text-muted-foreground mt-1">{t.area.preventivi.provaModificareFiltri}</p>
             <Button variant="outline" size="sm" className="mt-4" onClick={resetFilters}>
-              Cancella filtri
+              {t.area.common.azzeraFiltri}
             </Button>
           </CardContent>
         </Card>
@@ -838,11 +840,11 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
         <Card>
           <CardContent className="py-12 text-center">
             <FileText className="h-12 w-12 mx-auto mb-3 text-muted-foreground opacity-50" />
-            <p className="text-muted-foreground font-medium">Nessun preventivo</p>
+            <p className="text-muted-foreground font-medium">{t.area.preventivi.titolo_super}</p>
             <p className="text-sm text-muted-foreground mt-1">
               {canManage
-                ? "I preventivi appariranno qui quando verranno creati"
-                : "I preventivi verranno creati dal tuo commerciale di riferimento"}
+                ? t.area.preventivi.nessunoCreato
+                : t.area.preventivi.nessunoCreatoDealer}
             </p>
           </CardContent>
         </Card>
@@ -852,7 +854,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
       {canManage && selectedIds.size > 0 && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-background border rounded-lg shadow-lg p-3 flex items-center gap-3 flex-wrap max-w-[95vw]">
           <span className="text-sm font-medium whitespace-nowrap">
-            {selectedIds.size} selezionat{selectedIds.size === 1 ? "o" : "i"}
+            {selectedIds.size} {t.area.common.selezionati}
           </span>
           <div className="h-6 w-px bg-border" />
           <Button
@@ -861,7 +863,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
             onClick={() => updateStatusMutation.mutate({ ids: Array.from(selectedIds), makeValid: true })}
             disabled={updateStatusMutation.isPending}
           >
-            <CheckCircle2 className="h-4 w-4 mr-1.5 text-chart-2" />Valido
+            <CheckCircle2 className="h-4 w-4 mr-1.5 text-chart-2" />{t.area.preventivi.valido}
           </Button>
           <Button
             size="sm"
@@ -869,7 +871,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
             onClick={() => updateStatusMutation.mutate({ ids: Array.from(selectedIds), makeValid: false })}
             disabled={updateStatusMutation.isPending}
           >
-            <XCircle className="h-4 w-4 mr-1.5 text-destructive" />Non Valido
+            <XCircle className="h-4 w-4 mr-1.5 text-destructive" />{t.area.preventivi.nonValido}
           </Button>
           <Button
             size="sm"
@@ -877,7 +879,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
             onClick={() => setBulkConvertOpen(true)}
             disabled={bulkConvertMutation.isPending}
           >
-            <ArrowRightCircle className="h-4 w-4 mr-1.5" />Converti
+            <ArrowRightCircle className="h-4 w-4 mr-1.5" />{t.area.preventivi.converti}
           </Button>
           <Button
             size="sm"
@@ -885,7 +887,7 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
             onClick={() => setBulkDeleteOpen(true)}
             disabled={bulkDeleteMutation.isPending}
           >
-            <Trash2 className="h-4 w-4 mr-1.5" />Elimina
+            <Trash2 className="h-4 w-4 mr-1.5" />{t.area.common.elimina}
           </Button>
           <Button
             size="sm"
@@ -911,19 +913,18 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
       <AlertDialog open={!!convertId} onOpenChange={() => setConvertId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Converti in Ordine</AlertDialogTitle>
+            <AlertDialogTitle>{t.area.preventivi.convertiTitolo}</AlertDialogTitle>
             <AlertDialogDescription>
-              Sei sicuro di voler convertire questo preventivo in un ordine?
-              Il preventivo passerà allo stato "Da Confermare" e apparirà nella sezione Ordini.
+              {t.area.preventivi.convertiDesc}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Annulla</AlertDialogCancel>
+            <AlertDialogCancel>{t.area.common.annulla}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => convertId && convertMutation.mutate(convertId)}
               disabled={convertMutation.isPending}
             >
-              {convertMutation.isPending ? "Conversione..." : "Conferma Conversione"}
+              {convertMutation.isPending ? t.area.preventivi.conversioneLoading : t.area.preventivi.confermaConversioneBtn}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -933,19 +934,18 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
       <AlertDialog open={bulkConvertOpen} onOpenChange={setBulkConvertOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Converti {selectedIds.size} Preventiv{selectedIds.size === 1 ? "o" : "i"}</AlertDialogTitle>
+            <AlertDialogTitle>{t.area.preventivi.convertiBulkTitolo}{selectedIds.size === 1 ? "o" : "i"} ({selectedIds.size})</AlertDialogTitle>
             <AlertDialogDescription>
-              Sei sicuro di voler convertire {selectedIds.size} preventiv{selectedIds.size === 1 ? "o" : "i"} in ordini?
-              Passeranno allo stato "Da Confermare".
+              {t.area.preventivi.convertiBulkDesc}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Annulla</AlertDialogCancel>
+            <AlertDialogCancel>{t.area.common.annulla}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => bulkConvertMutation.mutate(Array.from(selectedIds))}
               disabled={bulkConvertMutation.isPending}
             >
-              {bulkConvertMutation.isPending ? "Conversione..." : "Conferma Conversione"}
+              {bulkConvertMutation.isPending ? t.area.preventivi.conversioneLoading : t.area.preventivi.confermaConversioneBtn}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -957,20 +957,20 @@ export default function DealerPreventivi({ dealerId, readOnly = false }: DealerP
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2 text-destructive">
               <AlertTriangle className="h-5 w-5" />
-              Elimina {selectedIds.size} Preventiv{selectedIds.size === 1 ? "o" : "i"}
+              {t.area.preventivi.eliminaBulkTitolo}{selectedIds.size === 1 ? "o" : "i"} ({selectedIds.size})
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Questa azione è irreversibile. Verranno eliminati permanentemente {selectedIds.size} preventiv{selectedIds.size === 1 ? "o" : "i"} e tutte le righe d'ordine associate.
+              {t.area.preventivi.eliminaBulkDesc}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Annulla</AlertDialogCancel>
+            <AlertDialogCancel>{t.area.common.annulla}</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={() => bulkDeleteMutation.mutate(Array.from(selectedIds))}
               disabled={bulkDeleteMutation.isPending}
             >
-              {bulkDeleteMutation.isPending ? "Eliminazione..." : "Elimina Definitivamente"}
+              {bulkDeleteMutation.isPending ? t.area.common.caricamento : t.area.preventivi.elimina}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

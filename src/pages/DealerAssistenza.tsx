@@ -32,12 +32,14 @@ import {
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 import type { SupportTicket } from "@/hooks/useTickets";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 interface DealerAssistenzaProps {
   dealerId?: string;
 }
 
 export default function DealerAssistenza({ dealerId }: DealerAssistenzaProps) {
+  const { t } = useLanguage();
   const [statoFilter, setStatoFilter] = useState<string>("");
   const [selectedTicket, setSelectedTicket] = useState<{
     id: string;
@@ -73,25 +75,25 @@ export default function DealerAssistenza({ dealerId }: DealerAssistenzaProps) {
       <div>
         <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
           <Headphones className="h-6 w-6" />
-          Assistenza
+          {t.area.dealerAssistenza.titolo}
           {openCount > 0 && (
             <Badge variant="destructive" className="ml-2">
-              {openCount} aperti
+              {openCount} {t.area.dealerAssistenza.aperti}
             </Badge>
           )}
         </h1>
         <p className="text-sm text-muted-foreground">
-          Ticket di assistenza per i tuoi ordini
+          {t.area.dealerAssistenza.desc}
         </p>
       </div>
 
       <div className="flex gap-3 flex-wrap">
         <Select value={statoFilter} onValueChange={(v) => setStatoFilter(v === "all" ? "" : v)}>
           <SelectTrigger className="w-[160px]">
-            <SelectValue placeholder="Tutti gli stati" />
+            <SelectValue placeholder={t.area.dealerAssistenza.tuttiStati} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Tutti gli stati</SelectItem>
+            <SelectItem value="all">{t.area.dealerAssistenza.tuttiStati}</SelectItem>
             {TICKET_STATI.map((s) => (
               <SelectItem key={s.value} value={s.value}>
                 {s.label}
@@ -101,7 +103,7 @@ export default function DealerAssistenza({ dealerId }: DealerAssistenzaProps) {
         </Select>
         {statoFilter && (
           <Button variant="ghost" size="sm" onClick={() => setStatoFilter("")}>
-            Azzera filtri
+            {t.area.dealerAssistenza.azzeraFiltri}
           </Button>
         )}
       </div>
@@ -114,17 +116,17 @@ export default function DealerAssistenza({ dealerId }: DealerAssistenzaProps) {
             </div>
           ) : tickets.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
-              Nessun ticket di assistenza trovato.
+              {t.area.dealerAssistenza.nessunoTrovato}
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Oggetto</TableHead>
-                  <TableHead>Ordine</TableHead>
-                  <TableHead>Priorità</TableHead>
-                  <TableHead>Stato</TableHead>
-                  <TableHead>Data</TableHead>
+                  <TableHead>{t.area.dealerAssistenza.oggetto}</TableHead>
+                  <TableHead>{t.area.dealerAssistenza.ordine}</TableHead>
+                  <TableHead>{t.area.dealerAssistenza.priorita}</TableHead>
+                  <TableHead>{t.area.dealerAssistenza.stato}</TableHead>
+                  <TableHead>{t.area.dealerAssistenza.data}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

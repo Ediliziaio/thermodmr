@@ -326,6 +326,383 @@ export interface Translations {
       galleryCaptions: string[];
     };
   };
+  area: {
+    nav: {
+      dashboard: string;
+      ordini: string;
+      preventivi: string;
+      rivenditori: string;
+      pagamenti: string;
+      assistenza: string;
+      kpi: string;
+      impostazioni: string;
+      esci: string;
+    };
+    roles: {
+      superAdmin: string;
+      commerciale: string;
+      rivenditore: string;
+      utente: string;
+    };
+    common: {
+      caricamento: string;
+      erroreCaricamento: string;
+      impossibileCaricareConnessione: string;
+      riprova: string;
+      annulla: string;
+      elimina: string;
+      esportaCsv: string;
+      indietro: string;
+      dettagli: string;
+      selezionati: string;
+      tutto: string;
+      tre_mesi: string;
+      sei_mesi: string;
+      nessuDatoDisponibile: string;
+      nessuRisultatoTrovato: string;
+      nuovo: string;
+      aggiornaStato: string;
+      azzeraFiltri: string;
+      tutti: string;
+      esporta: string;
+      salva: string;
+      conferma: string;
+      live: string;
+    };
+    auth: {
+      accedi: string;
+      registrati: string;
+      accedendo: string;
+      registrando: string;
+      nomeCompleto: string;
+      confermaPassword: string;
+      emailNonValida: string;
+      passwordMinimo6: string;
+      passwordMinimo8: string;
+      passwordMaiuscola: string;
+      passwordNumero: string;
+      passwordSpeciale: string;
+      nomeMinimo2: string;
+      passwordNonCoincidono: string;
+      emailPasswordNonCorretti: string;
+      troppiTentativi: string;
+      emailGiaRegistrata: string;
+      registrazioneCompletata: string;
+      accettaTermini: string;
+      placeholder_email: string;
+      placeholder_nome: string;
+      placeholder_password: string;
+    };
+    dashboard: {
+      titolo: string;
+      descRivenditori: string;
+      descGenerale: string;
+      ricaviTotali: string;
+      accontiTotali: string;
+      totaleIncassato: string;
+      daSaldare: string;
+      ordiniTotali_subtitle: string;
+      daOrdini: string;
+      pagamentiRicevuti: string;
+      percentualeTotale: string;
+      top5Rivenditori: string;
+      top5Desc: string;
+      ordini: string;
+      erroreImpossibile: string;
+    };
+    dealerDashboard: {
+      benvenuto: string;
+      desc: string;
+      descAdmin: string;
+      ordiniTotali: string;
+      tuttiGliOrdini: string;
+      valoreTotale: string;
+      importoComplessivo: string;
+      pagato: string;
+      pagamentiEffettuati: string;
+      daPagare: string;
+      importoRimanente: string;
+      progressoPagamento: string;
+      distribuzionePerStato: string;
+      distribuzioneDesc: string;
+      attivitaRecente: string;
+      nuove: string;
+      attivitaDesc: string;
+      nessunNotifica: string;
+      promemoriaPagementi: string;
+      promemoriaDesc: string;
+      ordine: string;
+      totale: string;
+      rimanente: string;
+      progressoLabel: string;
+      tuttoInRegola: string;
+      nessunPagamentoSospeso: string;
+      linkRapidi: string;
+      visualizzaOrdini: string;
+      tuttiOrdini: string;
+      storicoPagementi: string;
+      consultaPagementi: string;
+      apriTicket: string;
+    };
+    ordini: {
+      titolo: string;
+      desc: string;
+      nuovoPreventivo: string;
+      tuttiRivenditori: string;
+      lista: string;
+      pipeline: string;
+      ordiniTotali: string;
+      valoreTotale: string;
+      daIncassare: string;
+      ordiniConSaldo: string;
+      nessunOrdineFilti: string;
+      nessunOrdineTrovato: string;
+      creaOrdineSuggerimento: string;
+      creaOrdine: string;
+      listaOrdini: string;
+      aggiornaStato: string;
+      caricamento: string;
+      errore: string;
+    };
+    orderDetail: {
+      preventivoDuplicato: string;
+      erroreDuplicazione: string;
+      preventivoConvertito: string;
+      erroreConversione: string;
+      preventivo: string;
+      ordine: string;
+      tornaPreventivi: string;
+      tornaOrdini: string;
+      prodottiQuotati: string;
+      righeOrdine: string;
+      conversione: string;
+      confermaConversione: string;
+    };
+    dealers: {
+      titolo: string;
+      desc: string;
+      rivenditore: string;
+      rivenditori: string;
+      nessunRivenditore: string;
+      nessunRivenditoreHint: string;
+      nuovoRivenditore: string;
+      caricamento: string;
+    };
+    dealerDetail: {
+      tornaRivenditori: string;
+      piva: string;
+      entraArea: string;
+      ordiniTotali: string;
+      fatturatoTotale: string;
+      ticketMedio: string;
+      daIncassare: string;
+      informazioni: string;
+      panoramica: string;
+      datiAnagrafici: string;
+      ragioneSociale: string;
+      codiceFiscale: string;
+      email: string;
+      telefono: string;
+      indirizzo: string;
+      note: string;
+      riepilogoFinanziario: string;
+      incassato: string;
+      percentualeIncassata: string;
+      storicoOrdini: string;
+      idOrdine: string;
+      data: string;
+      stato: string;
+      importo: string;
+      pagato: string;
+      daPagare: string;
+      vediTuttiOrdini: string;
+      nessunOrdine: string;
+      nonTrovato: string;
+      erroreCaricamento: string;
+      indietro: string;
+    };
+    preventivi: {
+      titolo_super: string;
+      desc_super: string;
+      titolo_dealer: string;
+      desc_dealer: string;
+      cerca: string;
+      tuttiRivenditori: string;
+      tutti: string;
+      idPreventivo: string;
+      rivenditore: string;
+      dataCreazione: string;
+      importoTotale: string;
+      scadenza: string;
+      stato: string;
+      nessunoCreato: string;
+      nessunoCreatoDealer: string;
+      confermaConversione: string;
+      conversione: string;
+      confermaConversioneBtn: string;
+      elimina: string;
+      convertito: string;
+      erroreConversione: string;
+      valido: string;
+      nonValido: string;
+      nuovoPreventivo: string;
+      totaleKpi: string;
+      valoreKpi: string;
+      validiKpi: string;
+      nonValidiKpi: string;
+      da: string;
+      a: string;
+      azioni: string;
+      nessunRisultato: string;
+      provaModificareFiltri: string;
+      impostaValido: string;
+      impostaNonValido: string;
+      converti: string;
+      convertiInOrdine: string;
+      duplica: string;
+      aggiornato: string;
+      aggiornatoPlur: string;
+      erroreAggiornamentoStato: string;
+      preventiviConvertiti: string;
+      nonConvertitiPerErrore: string;
+      erroreNessunoConvertito: string;
+      eliminato: string;
+      eliminati: string;
+      erroreEliminazione: string;
+      erroreCaricamentoDuplicazione: string;
+      convertiTitolo: string;
+      convertiDesc: string;
+      conversioneLoading: string;
+      convertiBulkTitolo: string;
+      convertiBulkDesc: string;
+      eliminaBulkTitolo: string;
+      eliminaBulkDesc: string;
+    };
+    pagamenti: {
+      titolo: string;
+      nuovoPagamento: string;
+      totaleIncassato: string;
+      pagamenti: string;
+      mediaImporto: string;
+      perPagemento: string;
+      numPagementi: string;
+      totaliPeriodo: string;
+      metodoUsato: string;
+      piuPopolare: string;
+      tabella: string;
+      timeline: string;
+      esporta: string;
+      data: string;
+      dealer: string;
+      tipo: string;
+      metodo: string;
+      importo: string;
+      riferimento: string;
+      nessunoTrovato: string;
+      confermaEliminazione: string;
+      confermaEliminazioneDesc: string;
+      caricamento: string;
+    };
+    paymentDetail: {
+      titolo: string;
+      registratoIl: string;
+      dettagliPagemento: string;
+      tipoPagemento: string;
+      importo: string;
+      dataPagemento: string;
+      metodo: string;
+      riferimento: string;
+      idPagemento: string;
+      ricevuta: string;
+      visualizza: string;
+      scarica: string;
+      ordine: string;
+      statoOrdine: string;
+      importoTotale: string;
+      importoPagato: string;
+      daPagare: string;
+      progressoPagemento: string;
+      visualizzaOrdine: string;
+      nonTrovato: string;
+      erroreCaricamento: string;
+    };
+    analytics: {
+      titolo: string;
+      desc: string;
+      ultimi3: string;
+      ultimi6: string;
+      ultimoAnno: string;
+      periodo: string;
+      tuttiDealer: string;
+      resetFiltri: string;
+      ordiniTotali: string;
+      ricaviTotali: string;
+      pagamentiIncassati: string;
+      ticketMedio: string;
+      exportCompletato: string;
+      exportDesc: string;
+      metrica: string;
+      valore: string;
+      tassoConversione: string;
+      errore: string;
+    };
+    assistenza: {
+      titolo: string;
+      desc: string;
+      aperti: string;
+      inGestione: string;
+      chiusi: string;
+      urgenti: string;
+      cercaOggetto: string;
+      tuttiStati: string;
+      tuttePriorita: string;
+      azzeraFiltri: string;
+      oggetto: string;
+      ordine: string;
+      rivenditore: string;
+      priorita: string;
+      stato: string;
+      data: string;
+      nessunoTrovato: string;
+      primiCento: string;
+    };
+    dealerAssistenza: {
+      titolo: string;
+      aperti: string;
+      desc: string;
+      tuttiStati: string;
+      azzeraFiltri: string;
+      oggetto: string;
+      ordine: string;
+      priorita: string;
+      stato: string;
+      data: string;
+      nessunoTrovato: string;
+    };
+    impostazioni: {
+      titolo: string;
+      desc: string;
+      utentiRuoli: string;
+      utenti: string;
+      numerazione: string;
+      num: string;
+      templatePdf: string;
+      pdf: string;
+      integrazioni: string;
+      integ: string;
+      auditLog: string;
+      audit: string;
+    };
+    dealerAreaLayout: {
+      vistaRivenditore: string;
+      staiVisualizzando: string;
+      esciArea: string;
+    };
+    smartDashboard: {
+      accessoNegato: string;
+      noPermessi: string;
+    };
+  };
 }
 
 // ===========================================================================
@@ -912,6 +1289,383 @@ const it: Translations = {
       ],
     },
   },
+  area: {
+    nav: {
+      dashboard: "Dashboard",
+      ordini: "Ordini",
+      preventivi: "Preventivi",
+      rivenditori: "Rivenditori",
+      pagamenti: "Pagamenti",
+      assistenza: "Assistenza",
+      kpi: "KPI",
+      impostazioni: "Impostazioni",
+      esci: "Esci",
+    },
+    roles: {
+      superAdmin: "Super Admin",
+      commerciale: "Commerciale",
+      rivenditore: "Rivenditore",
+      utente: "Utente",
+    },
+    common: {
+      caricamento: "Caricamento...",
+      erroreCaricamento: "Errore nel caricamento",
+      impossibileCaricareConnessione: "Verifica la connessione e riprova.",
+      riprova: "Riprova",
+      annulla: "Annulla",
+      elimina: "Elimina",
+      esportaCsv: "Esporta CSV",
+      indietro: "Indietro",
+      dettagli: "Dettagli",
+      selezionati: "selezionati",
+      tutto: "Tutto",
+      tre_mesi: "3 Mesi",
+      sei_mesi: "6 Mesi",
+      nessuDatoDisponibile: "Nessun dato disponibile",
+      nessuRisultatoTrovato: "Nessun risultato trovato",
+      nuovo: "Nuovo",
+      aggiornaStato: "Aggiorna Stato",
+      azzeraFiltri: "Azzera filtri",
+      tutti: "Tutti",
+      esporta: "Esporta",
+      salva: "Salva",
+      conferma: "Conferma",
+      live: "Live",
+    },
+    auth: {
+      accedi: "Accedi",
+      registrati: "Registrati",
+      accedendo: "Accesso in corso...",
+      registrando: "Registrazione in corso...",
+      nomeCompleto: "Nome Completo",
+      confermaPassword: "Conferma Password",
+      emailNonValida: "Email non valida",
+      passwordMinimo6: "La password deve essere almeno 6 caratteri",
+      passwordMinimo8: "La password deve essere almeno 8 caratteri",
+      passwordMaiuscola: "La password deve contenere almeno una maiuscola",
+      passwordNumero: "La password deve contenere almeno un numero",
+      passwordSpeciale: "La password deve contenere almeno un carattere speciale",
+      nomeMinimo2: "Il nome deve essere almeno 2 caratteri",
+      passwordNonCoincidono: "Le password non coincidono",
+      emailPasswordNonCorretti: "Email o password non corretti",
+      troppiTentativi: "Troppi tentativi. Riprova tra qualche minuto.",
+      emailGiaRegistrata: "Questo indirizzo email è già registrato",
+      registrazioneCompletata: "Registrazione completata. Controlla la tua email per confermare l'account prima di accedere.",
+      accettaTermini: "Accedendo, accetti i nostri termini di servizio e la privacy policy",
+      placeholder_email: "nome@esempio.it",
+      placeholder_nome: "Mario Rossi",
+      placeholder_password: "••••••••",
+    },
+    dashboard: {
+      titolo: "Dashboard",
+      descRivenditori: "I tuoi rivenditori e ordini",
+      descGenerale: "Panoramica generale",
+      ricaviTotali: "Ricavi Totali",
+      accontiTotali: "Acconti Totali",
+      totaleIncassato: "Totale Incassato",
+      daSaldare: "Da Saldare",
+      ordiniTotali_subtitle: "ordini totali",
+      daOrdini: "Da ordini",
+      pagamentiRicevuti: "Pagamenti ricevuti",
+      percentualeTotale: "% del totale",
+      top5Rivenditori: "Top 5 Rivenditori",
+      top5Desc: "I 5 rivenditori con più fatturato",
+      ordini: "ordini",
+      erroreImpossibile: "Impossibile caricare i dati della dashboard. Verifica la connessione e riprova.",
+    },
+    dealerDashboard: {
+      benvenuto: "Benvenuto",
+      desc: "Panoramica dei tuoi ordini e pagamenti",
+      descAdmin: "Panoramica degli ordini e pagamenti",
+      ordiniTotali: "Ordini Totali",
+      tuttiGliOrdini: "Tutti gli ordini",
+      valoreTotale: "Valore Totale",
+      importoComplessivo: "Importo complessivo ordini",
+      pagato: "Pagato",
+      pagamentiEffettuati: "Pagamenti effettuati",
+      daPagare: "Da Pagare",
+      importoRimanente: "Importo rimanente",
+      progressoPagamento: "Progresso Pagamento Globale",
+      distribuzionePerStato: "Distribuzione Ordini per Stato",
+      distribuzioneDesc: "I tuoi ordini suddivisi per stato di avanzamento",
+      attivitaRecente: "Attività Recente",
+      nuove: "nuove",
+      attivitaDesc: "Aggiornamenti sugli ordini degli ultimi 7 giorni",
+      nessunNotifica: "Nessuna notifica recente",
+      promemoriaPagementi: "Promemoria Pagamenti",
+      promemoriaDesc: "Ordini che richiedono attenzione per i pagamenti",
+      ordine: "Ordine",
+      totale: "Totale",
+      rimanente: "Rimanente",
+      progressoLabel: "Progresso pagamento",
+      tuttoInRegola: "Tutto in regola!",
+      nessunPagamentoSospeso: "Non ci sono pagamenti in sospeso.",
+      linkRapidi: "Link Rapidi",
+      visualizzaOrdini: "Visualizza Ordini",
+      tuttiOrdini: "Tutti i tuoi ordini",
+      storicoPagementi: "Storico Pagamenti",
+      consultaPagementi: "Consulta i pagamenti",
+      apriTicket: "Apri un ticket",
+    },
+    ordini: {
+      titolo: "Ordini",
+      desc: "Gestisci tutti gli ordini dei rivenditori",
+      nuovoPreventivo: "Nuovo Preventivo",
+      tuttiRivenditori: "Tutti i rivenditori",
+      lista: "Lista",
+      pipeline: "Pipeline",
+      ordiniTotali: "Totale Ordini",
+      valoreTotale: "Valore Totale",
+      daIncassare: "Da Incassare",
+      ordiniConSaldo: "Ordini con Saldo",
+      nessunOrdineFilti: "Nessun ordine corrisponde ai filtri",
+      nessunOrdineTrovato: "Nessun ordine trovato",
+      creaOrdineSuggerimento: "Crea il tuo primo ordine per iniziare",
+      creaOrdine: "Crea Ordine",
+      listaOrdini: "Lista Ordini",
+      aggiornaStato: "Aggiorna Stato",
+      caricamento: "Caricamento ordini...",
+      errore: "Impossibile caricare gli ordini. Verifica la connessione e riprova.",
+    },
+    orderDetail: {
+      preventivoDuplicato: "Preventivo duplicato",
+      erroreDuplicazione: "Errore nella duplicazione",
+      preventivoConvertito: "Preventivo convertito in ordine",
+      erroreConversione: "Errore durante la conversione del preventivo",
+      preventivo: "Preventivo",
+      ordine: "Ordine",
+      tornaPreventivi: "Torna ai Preventivi",
+      tornaOrdini: "Torna agli Ordini",
+      prodottiQuotati: "Prodotti Quotati",
+      righeOrdine: "Righe Ordine",
+      conversione: "Conversione...",
+      confermaConversione: "Conferma Conversione",
+    },
+    dealers: {
+      titolo: "Rivenditori",
+      desc: "Gestisci i rivenditori e monitora le loro performance",
+      rivenditore: "rivenditore",
+      rivenditori: "rivenditori",
+      nessunRivenditore: "Nessun rivenditore trovato",
+      nessunRivenditoreHint: "Prova a modificare i filtri o aggiungi un nuovo rivenditore.",
+      nuovoRivenditore: "Nuovo Rivenditore",
+      caricamento: "Caricamento rivenditori...",
+    },
+    dealerDetail: {
+      tornaRivenditori: "Torna ai rivenditori",
+      piva: "P.IVA:",
+      entraArea: "Entra nell'Area Rivenditore",
+      ordiniTotali: "Ordini Totali",
+      fatturatoTotale: "Fatturato Totale",
+      ticketMedio: "Ticket Medio",
+      daIncassare: "Da Incassare",
+      informazioni: "Informazioni",
+      panoramica: "Panoramica",
+      datiAnagrafici: "Dati Anagrafici",
+      ragioneSociale: "Ragione Sociale",
+      codiceFiscale: "Codice Fiscale",
+      email: "Email",
+      telefono: "Telefono",
+      indirizzo: "Indirizzo",
+      note: "Note",
+      riepilogoFinanziario: "Riepilogo Finanziario",
+      incassato: "Incassato",
+      percentualeIncassata: "Percentuale Incassata",
+      storicoOrdini: "Storico Ordini",
+      idOrdine: "ID Ordine",
+      data: "Data",
+      stato: "Stato",
+      importo: "Importo",
+      pagato: "Pagato",
+      daPagare: "Da Pagare",
+      vediTuttiOrdini: "Vedi tutti gli ordini",
+      nessunOrdine: "Nessun ordine trovato",
+      nonTrovato: "Rivenditore non trovato",
+      erroreCaricamento: "Errore nel caricamento dei dati.",
+      indietro: "Indietro",
+    },
+    preventivi: {
+      titolo_super: "Preventivi",
+      desc_super: "Gestisci i tuoi preventivi e convertili in ordini",
+      titolo_dealer: "Preventivi",
+      desc_dealer: "Visualizza i tuoi preventivi",
+      cerca: "Cerca per ID o rivenditore...",
+      tuttiRivenditori: "Tutti i rivenditori",
+      tutti: "Tutti",
+      idPreventivo: "ID Preventivo",
+      rivenditore: "Rivenditore",
+      dataCreazione: "Data Creazione",
+      importoTotale: "Importo Totale",
+      scadenza: "Scadenza",
+      stato: "Stato",
+      nessunoCreato: "I preventivi appariranno qui quando verranno creati",
+      nessunoCreatoDealer: "I preventivi verranno creati dal tuo commerciale di riferimento",
+      confermaConversione: "Il preventivo passerà allo stato \"Da Confermare\" e apparirà nella sezione Ordini.",
+      conversione: "Conversione...",
+      confermaConversioneBtn: "Conferma Conversione",
+      elimina: "Elimina Definitivamente",
+      convertito: "Preventivo convertito in ordine",
+      erroreConversione: "Errore nella conversione del preventivo",
+      valido: "Valido",
+      nonValido: "Non Valido",
+      nuovoPreventivo: "Nuovo Preventivo",
+      totaleKpi: "Totale",
+      valoreKpi: "Valore",
+      validiKpi: "Validi",
+      nonValidiKpi: "Non Validi",
+      da: "Da",
+      a: "A",
+      azioni: "Azioni",
+      nessunRisultato: "Nessun risultato",
+      provaModificareFiltri: "Prova a modificare i filtri di ricerca",
+      impostaValido: "Imposta Valido",
+      impostaNonValido: "Imposta Non Valido",
+      converti: "Converti",
+      convertiInOrdine: "Converti in Ordine",
+      duplica: "Duplica",
+      aggiornato: "o aggiornato",
+      aggiornatoPlur: "i aggiornati",
+      erroreAggiornamentoStato: "Errore nell'aggiornamento dello stato",
+      preventiviConvertiti: "convertit",
+      nonConvertitiPerErrore: "non convertiti per errore",
+      erroreNessunoConvertito: "Errore: nessun preventivo convertito",
+      eliminato: "o eliminato",
+      eliminati: "i eliminati",
+      erroreEliminazione: "Errore nell'eliminazione",
+      erroreCaricamentoDuplicazione: "Errore nel caricamento dei dati per la duplicazione",
+      convertiTitolo: "Converti in Ordine",
+      convertiDesc: "Sei sicuro di voler convertire questo preventivo in un ordine? Il preventivo passerà allo stato \"Da Confermare\" e apparirà nella sezione Ordini.",
+      conversioneLoading: "Conversione...",
+      convertiBulkTitolo: "Converti Preventiv",
+      convertiBulkDesc: "Sei sicuro di voler convertire i preventivi selezionati in ordini? Passeranno allo stato \"Da Confermare\".",
+      eliminaBulkTitolo: "Elimina Preventiv",
+      eliminaBulkDesc: "Questa azione è irreversibile. Verranno eliminati permanentemente i preventivi selezionati e tutte le righe d'ordine associate.",
+    },
+    pagamenti: {
+      titolo: "Pagamenti",
+      nuovoPagamento: "Nuovo Pagamento",
+      totaleIncassato: "Totale Incassato",
+      pagamenti: "pagamenti",
+      mediaImporto: "Media Importo",
+      perPagemento: "per pagamento",
+      numPagementi: "Num. Pagamenti",
+      totaliPeriodo: "totali nel periodo",
+      metodoUsato: "Metodo Più Usato",
+      piuPopolare: "più popolare",
+      tabella: "Tabella",
+      timeline: "Timeline",
+      esporta: "Esporta",
+      data: "Data",
+      dealer: "Dealer",
+      tipo: "Tipo",
+      metodo: "Metodo",
+      importo: "Importo",
+      riferimento: "Riferimento",
+      nessunoTrovato: "Nessun pagamento trovato",
+      confermaEliminazione: "Conferma eliminazione",
+      confermaEliminazioneDesc: "Sei sicuro di voler eliminare questo pagamento? L'azione non può essere annullata.",
+      caricamento: "Caricamento pagamenti...",
+    },
+    paymentDetail: {
+      titolo: "Pagamento #",
+      registratoIl: "Registrato il",
+      dettagliPagemento: "Dettagli Pagamento",
+      tipoPagemento: "Tipo Pagamento",
+      importo: "Importo",
+      dataPagemento: "Data Pagamento",
+      metodo: "Metodo",
+      riferimento: "Riferimento",
+      idPagemento: "ID Pagamento",
+      ricevuta: "Ricevuta",
+      visualizza: "Visualizza",
+      scarica: "Scarica",
+      ordine: "Ordine #",
+      statoOrdine: "Stato Ordine",
+      importoTotale: "Importo Totale",
+      importoPagato: "Importo Pagato",
+      daPagare: "Da Pagare",
+      progressoPagemento: "Progresso Pagamento",
+      visualizzaOrdine: "Visualizza Ordine Completo",
+      nonTrovato: "Pagamento non trovato",
+      erroreCaricamento: "Errore nel caricamento del pagamento.",
+    },
+    analytics: {
+      titolo: "Dashboard Analytics Unificata",
+      desc: "Analisi complete di ordini, pagamenti e performance dealers",
+      ultimi3: "Ultimi 3 mesi",
+      ultimi6: "Ultimi 6 mesi",
+      ultimoAnno: "Ultimo anno",
+      periodo: "Periodo",
+      tuttiDealer: "Tutti i dealers",
+      resetFiltri: "Reset Filtri",
+      ordiniTotali: "Totale Ordini",
+      ricaviTotali: "Ricavi Totali",
+      pagamentiIncassati: "Pagamenti Incassati",
+      ticketMedio: "Ticket Medio",
+      exportCompletato: "Export completato",
+      exportDesc: "I dati analytics sono stati esportati con successo",
+      metrica: "Metrica",
+      valore: "Valore",
+      tassoConversione: "Tasso Conversione",
+      errore: "Impossibile caricare i dati analytics. Verifica la connessione e riprova.",
+    },
+    assistenza: {
+      titolo: "Assistenza",
+      desc: "Gestisci i ticket di assistenza dei rivenditori",
+      aperti: "Aperti",
+      inGestione: "In Gestione",
+      chiusi: "Chiusi",
+      urgenti: "Urgenti/Alta",
+      cercaOggetto: "Cerca per oggetto...",
+      tuttiStati: "Tutti gli stati",
+      tuttePriorita: "Tutte le priorità",
+      azzeraFiltri: "Azzera filtri",
+      oggetto: "Oggetto",
+      ordine: "Ordine",
+      rivenditore: "Rivenditore",
+      priorita: "Priorità",
+      stato: "Stato",
+      data: "Data",
+      nessunoTrovato: "Nessun ticket trovato.",
+      primiCento: "Mostrati i primi 100 ticket. Usa i filtri per affinare la ricerca.",
+    },
+    dealerAssistenza: {
+      titolo: "Assistenza",
+      aperti: "aperti",
+      desc: "Ticket di assistenza per i tuoi ordini",
+      tuttiStati: "Tutti gli stati",
+      azzeraFiltri: "Azzera filtri",
+      oggetto: "Oggetto",
+      ordine: "Ordine",
+      priorita: "Priorità",
+      stato: "Stato",
+      data: "Data",
+      nessunoTrovato: "Nessun ticket di assistenza trovato.",
+    },
+    impostazioni: {
+      titolo: "Impostazioni",
+      desc: "Configura il sistema, gestisci utenti e personalizza l'applicazione",
+      utentiRuoli: "Utenti e Ruoli",
+      utenti: "Utenti",
+      numerazione: "Numerazione",
+      num: "Num.",
+      templatePdf: "Template PDF",
+      pdf: "PDF",
+      integrazioni: "Integrazioni",
+      integ: "Integ.",
+      auditLog: "Audit Log",
+      audit: "Audit",
+    },
+    dealerAreaLayout: {
+      vistaRivenditore: "Vista Rivenditore",
+      staiVisualizzando: "Stai visualizzando come:",
+      esciArea: "Esci dall'Area",
+    },
+    smartDashboard: {
+      accessoNegato: "Accesso Negato",
+      noPermessi: "Non hai i permessi per accedere a questa sezione.",
+    },
+  },
 };
 
 // ===========================================================================
@@ -1496,6 +2250,383 @@ const ro: Translations = {
         "Triplu sticlă low-emissive cu gaz argon dublu",
         "Design minimalist cu profile la vedere reduse",
       ],
+    },
+  },
+  area: {
+    nav: {
+      dashboard: "Dashboard",
+      ordini: "Comenzi",
+      preventivi: "Oferte",
+      rivenditori: "Distribuitori",
+      pagamenti: "Plăți",
+      assistenza: "Asistență",
+      kpi: "KPI",
+      impostazioni: "Setări",
+      esci: "Ieșire",
+    },
+    roles: {
+      superAdmin: "Super Admin",
+      commerciale: "Comercial",
+      rivenditore: "Distribuitor",
+      utente: "Utilizator",
+    },
+    common: {
+      caricamento: "Se încarcă...",
+      erroreCaricamento: "Eroare la încărcare",
+      impossibileCaricareConnessione: "Verificați conexiunea și încercați din nou.",
+      riprova: "Încearcă din nou",
+      annulla: "Anulează",
+      elimina: "Șterge",
+      esportaCsv: "Exportă CSV",
+      indietro: "Înapoi",
+      dettagli: "Detalii",
+      selezionati: "selectate",
+      tutto: "Tot",
+      tre_mesi: "3 Luni",
+      sei_mesi: "6 Luni",
+      nessuDatoDisponibile: "Niciun date disponibil",
+      nessuRisultatoTrovato: "Niciun rezultat găsit",
+      nuovo: "Nou",
+      aggiornaStato: "Actualizează Status",
+      azzeraFiltri: "Resetează filtre",
+      tutti: "Toate",
+      esporta: "Exportă",
+      salva: "Salvează",
+      conferma: "Confirmă",
+      live: "Live",
+    },
+    auth: {
+      accedi: "Autentifică-te",
+      registrati: "Înregistrează-te",
+      accedendo: "Autentificare în curs...",
+      registrando: "Înregistrare în curs...",
+      nomeCompleto: "Nume Complet",
+      confermaPassword: "Confirmă Parola",
+      emailNonValida: "Email invalid",
+      passwordMinimo6: "Parola trebuie să aibă cel puțin 6 caractere",
+      passwordMinimo8: "Parola trebuie să aibă cel puțin 8 caractere",
+      passwordMaiuscola: "Parola trebuie să conțină cel puțin o literă mare",
+      passwordNumero: "Parola trebuie să conțină cel puțin o cifră",
+      passwordSpeciale: "Parola trebuie să conțină cel puțin un caracter special",
+      nomeMinimo2: "Numele trebuie să aibă cel puțin 2 caractere",
+      passwordNonCoincidono: "Parolele nu coincid",
+      emailPasswordNonCorretti: "Email sau parolă incorecte",
+      troppiTentativi: "Prea multe încercări. Încearcă din nou în câteva minute.",
+      emailGiaRegistrata: "Această adresă de email este deja înregistrată",
+      registrazioneCompletata: "Înregistrare finalizată. Verificați email-ul pentru a confirma contul înainte de autentificare.",
+      accettaTermini: "Autentificându-te, accepți termenii noștri de serviciu și politica de confidențialitate",
+      placeholder_email: "nume@exemplu.ro",
+      placeholder_nome: "Ion Popescu",
+      placeholder_password: "••••••••",
+    },
+    dashboard: {
+      titolo: "Dashboard",
+      descRivenditori: "Distribuitorii și comenzile tale",
+      descGenerale: "Vedere generală",
+      ricaviTotali: "Venituri Totale",
+      accontiTotali: "Total Avansuri",
+      totaleIncassato: "Total Încasat",
+      daSaldare: "De Achitat",
+      ordiniTotali_subtitle: "comenzi totale",
+      daOrdini: "Din comenzi",
+      pagamentiRicevuti: "Plăți primite",
+      percentualeTotale: "% din total",
+      top5Rivenditori: "Top 5 Distribuitori",
+      top5Desc: "Cei 5 distribuitori cu cea mai mare cifră de afaceri",
+      ordini: "comenzi",
+      erroreImpossibile: "Imposibil de încărcat datele. Verificați conexiunea și încercați din nou.",
+    },
+    dealerDashboard: {
+      benvenuto: "Bun venit",
+      desc: "Prezentare generală a comenzilor și plăților tale",
+      descAdmin: "Prezentare generală a comenzilor și plăților",
+      ordiniTotali: "Comenzi Totale",
+      tuttiGliOrdini: "Toate comenzile",
+      valoreTotale: "Valoare Totală",
+      importoComplessivo: "Valoarea totală a comenzilor",
+      pagato: "Plătit",
+      pagamentiEffettuati: "Plăți efectuate",
+      daPagare: "De Plătit",
+      importoRimanente: "Suma rămasă",
+      progressoPagamento: "Progres Plată Global",
+      distribuzionePerStato: "Distribuție Comenzi pe Status",
+      distribuzioneDesc: "Comenzile tale împărțite pe stadii de avansare",
+      attivitaRecente: "Activitate Recentă",
+      nuove: "noi",
+      attivitaDesc: "Actualizări ale comenzilor din ultimele 7 zile",
+      nessunNotifica: "Nicio notificare recentă",
+      promemoriaPagementi: "Memento Plăți",
+      promemoriaDesc: "Comenzi care necesită atenție pentru plăți",
+      ordine: "Comandă",
+      totale: "Total",
+      rimanente: "Rest",
+      progressoLabel: "Progres plată",
+      tuttoInRegola: "Totul în ordine!",
+      nessunPagamentoSospeso: "Nu există plăți în așteptare.",
+      linkRapidi: "Linkuri Rapide",
+      visualizzaOrdini: "Vezi Comenzile",
+      tuttiOrdini: "Toate comenzile tale",
+      storicoPagementi: "Istoricul Plăților",
+      consultaPagementi: "Consultați plățile",
+      apriTicket: "Deschide un tichet",
+    },
+    ordini: {
+      titolo: "Comenzi",
+      desc: "Gestionează toate comenzile distribuitorilor",
+      nuovoPreventivo: "Ofertă Nouă",
+      tuttiRivenditori: "Toți distribuitorii",
+      lista: "Listă",
+      pipeline: "Pipeline",
+      ordiniTotali: "Total Comenzi",
+      valoreTotale: "Valoare Totală",
+      daIncassare: "De Încasat",
+      ordiniConSaldo: "Comenzi cu Rest",
+      nessunOrdineFilti: "Nicio comandă nu corespunde filtrelor",
+      nessunOrdineTrovato: "Nicio comandă găsită",
+      creaOrdineSuggerimento: "Creați prima comandă pentru a începe",
+      creaOrdine: "Crează Comandă",
+      listaOrdini: "Listă Comenzi",
+      aggiornaStato: "Actualizează Status",
+      caricamento: "Se încarcă comenzile...",
+      errore: "Imposibil de încărcat comenzile. Verificați conexiunea și încercați din nou.",
+    },
+    orderDetail: {
+      preventivoDuplicato: "Ofertă duplicată",
+      erroreDuplicazione: "Eroare la duplicare",
+      preventivoConvertito: "Oferta convertită în comandă",
+      erroreConversione: "Eroare la conversia ofertei",
+      preventivo: "Ofertă",
+      ordine: "Comandă",
+      tornaPreventivi: "Înapoi la Oferte",
+      tornaOrdini: "Înapoi la Comenzi",
+      prodottiQuotati: "Produse Cotate",
+      righeOrdine: "Linii Comandă",
+      conversione: "Conversie...",
+      confermaConversione: "Confirmă Conversia",
+    },
+    dealers: {
+      titolo: "Distribuitori",
+      desc: "Gestionează distribuitorii și monitorizează performanțele lor",
+      rivenditore: "distribuitor",
+      rivenditori: "distribuitori",
+      nessunRivenditore: "Niciun distribuitor găsit",
+      nessunRivenditoreHint: "Încearcă să modifici filtrele sau adaugă un distribuitor nou.",
+      nuovoRivenditore: "Distribuitor Nou",
+      caricamento: "Se încarcă distribuitorii...",
+    },
+    dealerDetail: {
+      tornaRivenditori: "Înapoi la distribuitori",
+      piva: "C.I.F.:",
+      entraArea: "Intră în Zona Distribuitorului",
+      ordiniTotali: "Comenzi Totale",
+      fatturatoTotale: "Cifră de Afaceri Totală",
+      ticketMedio: "Valoare Medie",
+      daIncassare: "De Încasat",
+      informazioni: "Informații",
+      panoramica: "Prezentare",
+      datiAnagrafici: "Date de Identificare",
+      ragioneSociale: "Denumire Socială",
+      codiceFiscale: "Cod Fiscal",
+      email: "Email",
+      telefono: "Telefon",
+      indirizzo: "Adresă",
+      note: "Notițe",
+      riepilogoFinanziario: "Rezumat Financiar",
+      incassato: "Încasat",
+      percentualeIncassata: "Procent Încasat",
+      storicoOrdini: "Istoricul Comenzilor",
+      idOrdine: "ID Comandă",
+      data: "Dată",
+      stato: "Status",
+      importo: "Sumă",
+      pagato: "Plătit",
+      daPagare: "De Plătit",
+      vediTuttiOrdini: "Vezi toate comenzile",
+      nessunOrdine: "Nicio comandă găsită",
+      nonTrovato: "Distribuitor negăsit",
+      erroreCaricamento: "Eroare la încărcarea datelor.",
+      indietro: "Înapoi",
+    },
+    preventivi: {
+      titolo_super: "Oferte",
+      desc_super: "Gestionează ofertele și convertește-le în comenzi",
+      titolo_dealer: "Oferte",
+      desc_dealer: "Vizualizează ofertele tale",
+      cerca: "Caută după ID sau distribuitor...",
+      tuttiRivenditori: "Toți distribuitorii",
+      tutti: "Toate",
+      idPreventivo: "ID Ofertă",
+      rivenditore: "Distribuitor",
+      dataCreazione: "Data Creare",
+      importoTotale: "Sumă Totală",
+      scadenza: "Expirare",
+      stato: "Status",
+      nessunoCreato: "Ofertele vor apărea aici când vor fi create",
+      nessunoCreatoDealer: "Ofertele vor fi create de reprezentantul tău comercial",
+      confermaConversione: "Oferta va trece la statusul \"De Confirmat\" și va apărea în secțiunea Comenzi.",
+      conversione: "Conversie...",
+      confermaConversioneBtn: "Confirmă Conversia",
+      elimina: "Șterge Definitiv",
+      convertito: "Ofertă convertită în comandă",
+      erroreConversione: "Eroare la conversia ofertei",
+      valido: "Valid",
+      nonValido: "Invalid",
+      nuovoPreventivo: "Ofertă Nouă",
+      totaleKpi: "Total",
+      valoreKpi: "Valoare",
+      validiKpi: "Valide",
+      nonValidiKpi: "Invalide",
+      da: "De la",
+      a: "Până la",
+      azioni: "Acțiuni",
+      nessunRisultato: "Niciun rezultat",
+      provaModificareFiltri: "Încearcă să modifici filtrele de căutare",
+      impostaValido: "Setează Valid",
+      impostaNonValido: "Setează Invalid",
+      converti: "Convertește",
+      convertiInOrdine: "Convertește în Comandă",
+      duplica: "Duplică",
+      aggiornato: "ă actualizată",
+      aggiornatoPlur: "e actualizate",
+      erroreAggiornamentoStato: "Eroare la actualizarea statusului",
+      preventiviConvertiti: "convertit",
+      nonConvertitiPerErrore: "neconvertite din eroare",
+      erroreNessunoConvertito: "Eroare: nicio ofertă convertită",
+      eliminato: "ă ștearsă",
+      eliminati: "e șterse",
+      erroreEliminazione: "Eroare la ștergere",
+      erroreCaricamentoDuplicazione: "Eroare la încărcarea datelor pentru duplicare",
+      convertiTitolo: "Convertește în Comandă",
+      convertiDesc: "Ești sigur că vrei să convertești această ofertă într-o comandă? Oferta va trece la statusul \"De Confirmat\" și va apărea în secțiunea Comenzi.",
+      conversioneLoading: "Conversie...",
+      convertiBulkTitolo: "Convertește Ofert",
+      convertiBulkDesc: "Ești sigur că vrei să convertești ofertele selectate în comenzi? Vor trece la statusul \"De Confirmat\".",
+      eliminaBulkTitolo: "Șterge Ofert",
+      eliminaBulkDesc: "Această acțiune este ireversibilă. Vor fi șterse permanent ofertele selectate și toate liniile de comandă asociate.",
+    },
+    pagamenti: {
+      titolo: "Plăți",
+      nuovoPagamento: "Plată Nouă",
+      totaleIncassato: "Total Încasat",
+      pagamenti: "plăți",
+      mediaImporto: "Medie Sumă",
+      perPagemento: "per plată",
+      numPagementi: "Nr. Plăți",
+      totaliPeriodo: "totale în perioadă",
+      metodoUsato: "Metodă Cea Mai Utilizată",
+      piuPopolare: "mai populară",
+      tabella: "Tabel",
+      timeline: "Cronologie",
+      esporta: "Exportă",
+      data: "Dată",
+      dealer: "Distribuitor",
+      tipo: "Tip",
+      metodo: "Metodă",
+      importo: "Sumă",
+      riferimento: "Referință",
+      nessunoTrovato: "Nu s-au găsit plăți",
+      confermaEliminazione: "Confirmă ștergerea",
+      confermaEliminazioneDesc: "Ești sigur că vrei să ștergi această plată? Acțiunea nu poate fi anulată.",
+      caricamento: "Se încarcă plățile...",
+    },
+    paymentDetail: {
+      titolo: "Plată #",
+      registratoIl: "Înregistrată la",
+      dettagliPagemento: "Detalii Plată",
+      tipoPagemento: "Tip Plată",
+      importo: "Sumă",
+      dataPagemento: "Data Plății",
+      metodo: "Metodă",
+      riferimento: "Referință",
+      idPagemento: "ID Plată",
+      ricevuta: "Chitanță",
+      visualizza: "Vizualizează",
+      scarica: "Descarcă",
+      ordine: "Comandă #",
+      statoOrdine: "Status Comandă",
+      importoTotale: "Sumă Totală",
+      importoPagato: "Sumă Plătită",
+      daPagare: "De Plătit",
+      progressoPagemento: "Progres Plată",
+      visualizzaOrdine: "Vizualizează Comanda Completă",
+      nonTrovato: "Plată negăsită",
+      erroreCaricamento: "Eroare la încărcarea plății.",
+    },
+    analytics: {
+      titolo: "Dashboard Analitică Unificată",
+      desc: "Analiză completă a comenzilor, plăților și performanței distribuitorilor",
+      ultimi3: "Ultimele 3 luni",
+      ultimi6: "Ultimele 6 luni",
+      ultimoAnno: "Ultimul an",
+      periodo: "Perioadă",
+      tuttiDealer: "Toți distribuitorii",
+      resetFiltri: "Resetează Filtre",
+      ordiniTotali: "Total Comenzi",
+      ricaviTotali: "Venituri Totale",
+      pagamentiIncassati: "Plăți Încasate",
+      ticketMedio: "Valoare Medie",
+      exportCompletato: "Export finalizat",
+      exportDesc: "Datele analitice au fost exportate cu succes",
+      metrica: "Metrică",
+      valore: "Valoare",
+      tassoConversione: "Rata de Conversie",
+      errore: "Imposibil de încărcat datele analitice. Verificați conexiunea și încercați din nou.",
+    },
+    assistenza: {
+      titolo: "Asistență",
+      desc: "Gestionează tichetele de asistență ale distribuitorilor",
+      aperti: "Deschise",
+      inGestione: "În Gestionare",
+      chiusi: "Închise",
+      urgenti: "Urgente/Înalte",
+      cercaOggetto: "Caută după subiect...",
+      tuttiStati: "Toate stările",
+      tuttePriorita: "Toate prioritățile",
+      azzeraFiltri: "Resetează filtre",
+      oggetto: "Subiect",
+      ordine: "Comandă",
+      rivenditore: "Distribuitor",
+      priorita: "Prioritate",
+      stato: "Status",
+      data: "Dată",
+      nessunoTrovato: "Niciun tichet găsit.",
+      primiCento: "Afișate primele 100 tichete. Folosiți filtrele pentru a rafina căutarea.",
+    },
+    dealerAssistenza: {
+      titolo: "Asistență",
+      aperti: "deschise",
+      desc: "Tichete de asistență pentru comenzile tale",
+      tuttiStati: "Toate stările",
+      azzeraFiltri: "Resetează filtre",
+      oggetto: "Subiect",
+      ordine: "Comandă",
+      priorita: "Prioritate",
+      stato: "Status",
+      data: "Dată",
+      nessunoTrovato: "Nu s-au găsit tichete de asistență.",
+    },
+    impostazioni: {
+      titolo: "Setări",
+      desc: "Configurați sistemul, gestionați utilizatorii și personalizați aplicația",
+      utentiRuoli: "Utilizatori și Roluri",
+      utenti: "Utilizatori",
+      numerazione: "Numerotare",
+      num: "Nr.",
+      templatePdf: "Șablon PDF",
+      pdf: "PDF",
+      integrazioni: "Integrări",
+      integ: "Integ.",
+      auditLog: "Jurnal Audit",
+      audit: "Audit",
+    },
+    dealerAreaLayout: {
+      vistaRivenditore: "Vedere Distribuitor",
+      staiVisualizzando: "Vizualizezi ca:",
+      esciArea: "Ieși din Zonă",
+    },
+    smartDashboard: {
+      accessoNegato: "Acces Refuzat",
+      noPermessi: "Nu ai permisiunile necesare pentru a accesa această secțiune.",
     },
   },
 };

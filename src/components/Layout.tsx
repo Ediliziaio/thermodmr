@@ -20,57 +20,51 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useAuth } from "@/contexts/AuthContext";
 import { GlobalSearch } from "@/components/GlobalSearch";
+import { useLanguage } from "@/i18n/LanguageContext";
+import type { Translations } from "@/i18n/translations";
 
 interface LayoutProps {
   children: ReactNode;
 }
 
-const navigation = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard, roles: ["super_admin", "commerciale", "rivenditore"] },
-  { name: "Ordini", href: "/ordini", icon: ShoppingCart, roles: ["super_admin", "commerciale", "rivenditore"] },
-  { name: "Preventivi", href: "/preventivi", icon: FileText, roles: ["super_admin"] },
-  { name: "Rivenditori", href: "/rivenditori", icon: Users, roles: ["super_admin", "commerciale"] },
-  { name: "Pagamenti", href: "/pagamenti", icon: CreditCard, roles: ["super_admin", "commerciale"] },
-  { name: "Assistenza", href: "/assistenza", icon: Headphones, roles: ["super_admin"] },
-  { name: "KPI", href: "/kpi", icon: BarChart3, roles: ["super_admin"] },
-  
-  { name: "Impostazioni", href: "/impostazioni", icon: Settings, roles: ["super_admin"] },
+const getNavigation = (t: Translations) => [
+  { name: t.area.nav.dashboard, href: "/", icon: LayoutDashboard, roles: ["super_admin", "commerciale", "rivenditore"] },
+  { name: t.area.nav.ordini, href: "/ordini", icon: ShoppingCart, roles: ["super_admin", "commerciale", "rivenditore"] },
+  { name: t.area.nav.preventivi, href: "/preventivi", icon: FileText, roles: ["super_admin"] },
+  { name: t.area.nav.rivenditori, href: "/rivenditori", icon: Users, roles: ["super_admin", "commerciale"] },
+  { name: t.area.nav.pagamenti, href: "/pagamenti", icon: CreditCard, roles: ["super_admin", "commerciale"] },
+  { name: t.area.nav.assistenza, href: "/assistenza", icon: Headphones, roles: ["super_admin"] },
+  { name: t.area.nav.kpi, href: "/kpi", icon: BarChart3, roles: ["super_admin"] },
+  { name: t.area.nav.impostazioni, href: "/impostazioni", icon: Settings, roles: ["super_admin"] },
 ];
 
 export function Layout({ children }: LayoutProps) {
   const location = useLocation();
   const { user, userRole, signOut } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  // Only super_admin sees the Assistenza menu — skip the query entirely for other roles
+  const { t, lang, setLang } = useLanguage();
   const isSuperAdmin = userRole === "super_admin";
   const { data: openTicketsCount = 0 } = useOpenTicketsCount(isSuperAdmin);
   const showTicketsBadge = isSuperAdmin && openTicketsCount > 0;
 
+  const navigation = getNavigation(t);
+
   const getRoleLabel = (role: string | null) => {
     switch (role) {
-      case "super_admin":
-        return "Super Admin";
-      case "commerciale":
-        return "Commerciale";
-      case "rivenditore":
-        return "Rivenditore";
-      default:
-        return "Utente";
+      case "super_admin": return t.area.roles.superAdmin;
+      case "commerciale": return t.area.roles.commerciale;
+      case "rivenditore": return t.area.roles.rivenditore;
+      default: return t.area.roles.utente;
     }
   };
 
-  const getInitials = (email: string) => {
-    return email.substring(0, 2).toUpperCase();
-  };
+  const getInitials = (email: string) => email.substring(0, 2).toUpperCase();
 
   const SidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => (
     <div className="flex h-full flex-col">
-      {/* Logo */}
       <div className="flex h-16 items-center border-b px-6">
         <img src={logo} alt="ThermoDMR" className="h-9 object-contain" width={160} height={36} loading="eager" />
       </div>
-
-      {/* Navigation */}
       <nav className="flex-1 space-y-1 overflow-y-auto p-4">
         {navigation
           .filter((item) => !item.roles || item.roles.includes(userRole || ""))
@@ -78,7 +72,7 @@ export function Layout({ children }: LayoutProps) {
             const isActive = location.pathname === item.href;
             return (
               <Link
-                key={item.name}
+                key={item.href}
                 to={item.href}
                 onClick={onNavigate}
                 className={cn(
@@ -90,7 +84,7 @@ export function Layout({ children }: LayoutProps) {
               >
                 <item.icon className="h-5 w-5" />
                 {item.name}
-                {item.name === "Assistenza" && showTicketsBadge && (
+                {item.href === "/assistenza" && showTicketsBadge && (
                   <span className="ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-xs font-bold px-1.5">
                     {openTicketsCount}
                   </span>
@@ -99,8 +93,6 @@ export function Layout({ children }: LayoutProps) {
             );
           })}
       </nav>
-
-      {/* User Profile */}
       <div className="border-t p-4">
         <div className="flex items-center gap-3 mb-3">
           <Avatar>
@@ -111,21 +103,16 @@ export function Layout({ children }: LayoutProps) {
           </Avatar>
           <div className="flex-1 overflow-hidden">
             <p className="truncate text-sm font-medium">
-              {user?.user_metadata?.display_name || user?.email || "Utente"}
+              {user?.user_metadata?.display_name || user?.email || t.area.roles.utente}
             </p>
             <p className="truncate text-xs text-muted-foreground">
               {getRoleLabel(userRole)}
             </p>
           </div>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="w-full justify-start"
-          onClick={signOut}
-        >
+        <Button variant="ghost" size="sm" className="w-full justify-start" onClick={signOut}>
           <LogOut className="mr-2 h-4 w-4" />
-          Esci
+          {t.area.nav.esci}
         </Button>
       </div>
     </div>
@@ -133,40 +120,39 @@ export function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Desktop Sidebar */}
       <aside className="hidden md:flex fixed left-0 top-0 z-40 h-screen w-64 border-r bg-card">
         <SidebarContent />
       </aside>
-
-      {/* Mobile Sidebar Drawer */}
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
         <SheetContent side="left" className="w-64 p-0">
           <SidebarContent onNavigate={() => setIsMobileMenuOpen(false)} />
         </SheetContent>
       </Sheet>
-
-      {/* Main Content */}
       <div className="md:pl-64">
-        {/* Top Bar */}
         <div className="sticky top-0 z-10 bg-background border-b px-4 md:px-6 py-3">
           <div className="flex items-center justify-between gap-4">
-            {/* Hamburger Menu - solo mobile */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              onClick={() => setIsMobileMenuOpen(true)}
-            >
+            <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsMobileMenuOpen(true)}>
               <Menu className="h-5 w-5" />
             </Button>
-
             <div className="flex-1 max-w-2xl">
               <GlobalSearch />
             </div>
-            <div className="flex items-center gap-3" />
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setLang?.("it")}
+                className={cn("px-2 py-1 text-xs font-semibold rounded transition-colors", lang === "it" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-accent")}
+              >
+                IT
+              </button>
+              <button
+                onClick={() => setLang?.("ro")}
+                className={cn("px-2 py-1 text-xs font-semibold rounded transition-colors", lang === "ro" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-accent")}
+              >
+                RO
+              </button>
+            </div>
           </div>
         </div>
-        
         <main className="min-h-screen p-8">{children}</main>
       </div>
     </div>

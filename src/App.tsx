@@ -8,7 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { HomeRouter } from "./components/HomeRouter";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import ScrollToTop from "./components/ScrollToTop";
-import { LanguageProvider } from "./i18n/LanguageContext";
+import { LanguageProvider, DynamicLanguageProvider } from "./i18n/LanguageContext";
 import { Loader2 } from "lucide-react";
 
 // Import immediati per pagine critiche
@@ -58,6 +58,7 @@ const App = () => (
       <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ScrollToTop />
         <AuthProvider>
+          <DynamicLanguageProvider>
           <Suspense fallback={<PageLoader />}>
             <Routes>
             <Route path="/auth" element={<Auth />} />
@@ -216,6 +217,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
+          </DynamicLanguageProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

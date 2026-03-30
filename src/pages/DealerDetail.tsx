@@ -11,10 +11,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatCurrency, formatDate, getStatusColor, getStatusLabel } from "@/lib/utils";
 import { DealerRevenueChart } from "@/components/dealers/DealerRevenueChart";
 import { DealerOrdersDistribution } from "@/components/dealers/DealerOrdersDistribution";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function DealerDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const { data: dealer, isLoading: isLoadingDealer, error: dealerError, refetch: refetchDealer } = useQuery({
     queryKey: ["dealer-detail", id],
@@ -78,19 +80,19 @@ export default function DealerDetail() {
         <Link to="/rivenditori">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Torna ai rivenditori
+            {t.area.dealerDetail.tornaRivenditori}
           </Button>
         </Link>
         <Card className="max-w-md mx-auto">
           <CardContent className="flex flex-col items-center gap-4 pt-6">
             <AlertCircle className="h-12 w-12 text-destructive" />
             <div className="text-center">
-              <h3 className="font-semibold text-lg">Rivenditore non trovato</h3>
+              <h3 className="font-semibold text-lg">{t.area.dealerDetail.nonTrovato}</h3>
               <p className="text-muted-foreground text-sm mt-1">
-                {dealerError ? "Errore nel caricamento dei dati." : "Il rivenditore richiesto non esiste."}
+                {dealerError ? t.area.dealerDetail.erroreCaricamento : t.area.dealerDetail.nonTrovato}
               </p>
             </div>
-            <Button onClick={() => refetchDealer()}>Riprova</Button>
+            <Button onClick={() => refetchDealer()}>{t.area.common.riprova}</Button>
           </CardContent>
         </Card>
       </div>
@@ -106,16 +108,16 @@ export default function DealerDetail() {
             <Link to="/rivenditori">
               <Button variant="ghost" size="sm">
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Indietro
+                {t.area.dealerDetail.indietro}
               </Button>
             </Link>
             <h1 className="text-3xl font-bold tracking-tight">{dealer.ragione_sociale}</h1>
           </div>
-          <p className="text-muted-foreground">P.IVA: {dealer.p_iva}</p>
+          <p className="text-muted-foreground">{t.area.dealerDetail.piva}: {dealer.p_iva}</p>
         </div>
         <Button onClick={() => navigate(`/rivenditori/${dealer.id}/area`)} variant="default">
           <Eye className="h-4 w-4 mr-2" />
-          Entra nell'Area Rivenditore
+          {t.area.dealerDetail.entraArea}
         </Button>
       </div>
 
@@ -125,7 +127,7 @@ export default function DealerDetail() {
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <ShoppingCart className="h-4 w-4" />
-              Ordini Totali
+              {t.area.dealerDetail.ordiniTotali}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -137,7 +139,7 @@ export default function DealerDetail() {
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Euro className="h-4 w-4" />
-              Fatturato Totale
+              {t.area.dealerDetail.fatturatoTotale}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -149,7 +151,7 @@ export default function DealerDetail() {
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
-              Ticket Medio
+              {t.area.dealerDetail.ticketMedio}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -161,7 +163,7 @@ export default function DealerDetail() {
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Euro className="h-4 w-4" />
-              Da Incassare
+              {t.area.dealerDetail.daIncassare}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -173,9 +175,9 @@ export default function DealerDetail() {
       {/* Tabs — merged Analytics+Statistiche into single "Panoramica" */}
       <Tabs defaultValue="info" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="info">Informazioni</TabsTrigger>
-          <TabsTrigger value="panoramica">Panoramica</TabsTrigger>
-          <TabsTrigger value="orders">Ordini ({ordersCount})</TabsTrigger>
+          <TabsTrigger value="info">{t.area.dealerDetail.informazioni}</TabsTrigger>
+          <TabsTrigger value="panoramica">{t.area.dealerDetail.panoramica}</TabsTrigger>
+          <TabsTrigger value="orders">{t.area.dealerDetail.storicoOrdini} ({ordersCount})</TabsTrigger>
         </TabsList>
 
         {/* Tab: Informazioni */}
@@ -184,27 +186,27 @@ export default function DealerDetail() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Building2 className="h-5 w-5" />
-                Dati Anagrafici
+                {t.area.dealerDetail.datiAnagrafici}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Ragione Sociale</p>
+                  <p className="text-sm font-medium text-muted-foreground">{t.area.dealerDetail.ragioneSociale}</p>
                   <p className="text-base">{dealer.ragione_sociale}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">P.IVA</p>
+                  <p className="text-sm font-medium text-muted-foreground">{t.area.dealerDetail.piva}</p>
                   <p className="text-base">{dealer.p_iva}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Codice Fiscale</p>
+                  <p className="text-sm font-medium text-muted-foreground">{t.area.dealerDetail.codiceFiscale}</p>
                   <p className="text-base">{dealer.codice_fiscale}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Mail className="h-4 w-4 text-muted-foreground" />
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">Email</p>
+                    <p className="text-sm font-medium text-muted-foreground">{t.area.dealerDetail.email}</p>
                     <a href={`mailto:${dealer.email}`} className="text-base text-primary hover:underline">
                       {dealer.email}
                     </a>
@@ -213,7 +215,7 @@ export default function DealerDetail() {
                 <div className="flex items-center gap-2">
                   <Phone className="h-4 w-4 text-muted-foreground" />
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">Telefono</p>
+                    <p className="text-sm font-medium text-muted-foreground">{t.area.dealerDetail.telefono}</p>
                     <a href={`tel:${dealer.telefono}`} className="text-base text-primary hover:underline">
                       {dealer.telefono}
                     </a>
@@ -222,7 +224,7 @@ export default function DealerDetail() {
                 <div className="flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-muted-foreground" />
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">Indirizzo</p>
+                    <p className="text-sm font-medium text-muted-foreground">{t.area.dealerDetail.indirizzo}</p>
                     <p className="text-base">
                       {dealer.indirizzo}, {dealer.cap} {dealer.citta} ({dealer.provincia})
                     </p>
@@ -234,7 +236,7 @@ export default function DealerDetail() {
                 <div className="pt-4 border-t">
                   <p className="text-sm font-medium text-muted-foreground mb-2 flex items-center gap-2">
                     <FileText className="h-4 w-4" />
-                    Note
+                    {t.area.dealerDetail.note}
                   </p>
                   <p className="text-base whitespace-pre-wrap">{dealer.note}</p>
                 </div>
@@ -255,25 +257,25 @@ export default function DealerDetail() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Euro className="h-5 w-5" />
-                  Riepilogo Finanziario
+                  {t.area.dealerDetail.riepilogoFinanziario}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">Fatturato Totale</p>
+                    <p className="text-sm font-medium text-muted-foreground">{t.area.dealerDetail.fatturatoTotale}</p>
                     <p className="text-2xl font-bold">{formatCurrency(totalRevenue)}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">Incassato</p>
+                    <p className="text-sm font-medium text-muted-foreground">{t.area.dealerDetail.incassato}</p>
                     <p className="text-2xl font-bold text-green-600">{formatCurrency(totalPaid)}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">Da Incassare</p>
+                    <p className="text-sm font-medium text-muted-foreground">{t.area.dealerDetail.daIncassare}</p>
                     <p className="text-2xl font-bold text-amber-600">{formatCurrency(totalToPay)}</p>
                   </div>
                   <div className="pt-4 border-t">
-                    <p className="text-sm font-medium text-muted-foreground">Percentuale Incassata</p>
+                    <p className="text-sm font-medium text-muted-foreground">{t.area.dealerDetail.percentualeIncassata}</p>
                     <div className="flex items-center gap-3 mt-2">
                       <div className="flex-1 bg-muted rounded-full h-2">
                         <div
@@ -298,7 +300,7 @@ export default function DealerDetail() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <ShoppingCart className="h-5 w-5" />
-                Storico Ordini
+                {t.area.dealerDetail.storicoOrdini}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -314,12 +316,12 @@ export default function DealerDetail() {
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>ID Ordine</TableHead>
-                          <TableHead>Data</TableHead>
-                          <TableHead>Stato</TableHead>
-                          <TableHead className="text-right">Importo</TableHead>
-                          <TableHead className="text-right">Pagato</TableHead>
-                          <TableHead className="text-right">Da Pagare</TableHead>
+                          <TableHead>{t.area.dealerDetail.idOrdine}</TableHead>
+                          <TableHead>{t.area.dealerDetail.data}</TableHead>
+                          <TableHead>{t.area.dealerDetail.stato}</TableHead>
+                          <TableHead className="text-right">{t.area.dealerDetail.importo}</TableHead>
+                          <TableHead className="text-right">{t.area.dealerDetail.pagato}</TableHead>
+                          <TableHead className="text-right">{t.area.dealerDetail.daPagare}</TableHead>
                           <TableHead></TableHead>
                         </TableRow>
                       </TableHeader>
@@ -345,7 +347,7 @@ export default function DealerDetail() {
                                 onClick={() => navigate(`/ordini/${order.id}`)}
                               >
                                 <Eye className="h-4 w-4 mr-2" />
-                                Dettagli
+                                {t.area.common.dettagli}
                               </Button>
                             </TableCell>
                           </TableRow>
@@ -359,14 +361,14 @@ export default function DealerDetail() {
                         variant="outline"
                         onClick={() => navigate(`/rivenditori/${id}/area/ordini`)}
                       >
-                        Vedi tutti gli ordini ({ordersCount})
+                        {t.area.dealerDetail.vediTuttiOrdini} ({ordersCount})
                       </Button>
                     </div>
                   )}
                 </>
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-muted-foreground">Nessun ordine trovato</p>
+                  <p className="text-muted-foreground">{t.area.dealerDetail.nessunOrdine}</p>
                 </div>
               )}
             </CardContent>

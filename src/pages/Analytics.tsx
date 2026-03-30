@@ -13,9 +13,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function Analytics() {
   const { userRole } = useAuth();
+  const { t } = useLanguage();
   const [months, setMonths] = useState(6);
   const [selectedDealer, setSelectedDealer] = useState<string | undefined>();
 
@@ -42,12 +44,12 @@ export default function Analytics() {
     if (!analytics) return;
 
     const csvData = [
-      ["Metrica", "Valore"],
-      ["Totale Ordini", analytics.summary.totalOrders.toString()],
-      ["Ricavi Totali", analytics.summary.totalRevenue.toString()],
-      ["Pagamenti Totali", analytics.summary.totalPayments.toString()],
-      ["Ticket Medio", analytics.summary.averageTicket.toString()],
-      ["Tasso Conversione", `${analytics.summary.conversionRate.toFixed(2)}%`],
+      [t.area.analytics.metrica, t.area.analytics.valore],
+      [t.area.analytics.ordiniTotali, analytics.summary.totalOrders.toString()],
+      [t.area.analytics.ricaviTotali, analytics.summary.totalRevenue.toString()],
+      [t.area.analytics.pagamentiIncassati, analytics.summary.totalPayments.toString()],
+      [t.area.analytics.ticketMedio, analytics.summary.averageTicket.toString()],
+      [t.area.analytics.tassoConversione, `${analytics.summary.conversionRate.toFixed(2)}%`],
     ].map(row => row.join(",")).join("\n");
 
     const blob = new Blob([csvData], { type: "text/csv" });
@@ -61,8 +63,8 @@ export default function Analytics() {
     window.URL.revokeObjectURL(url);
 
     toast({
-      title: "Export completato",
-      description: "I dati analytics sono stati esportati con successo",
+      title: t.area.analytics.exportCompletato,
+      description: t.area.analytics.exportDesc,
     });
   };
 
@@ -81,13 +83,13 @@ export default function Analytics() {
           <CardContent className="flex flex-col items-center gap-4 pt-6">
             <AlertCircle className="h-12 w-12 text-destructive" />
             <div className="text-center">
-              <h3 className="font-semibold text-lg">Errore nel caricamento</h3>
+              <h3 className="font-semibold text-lg">{t.area.common.erroreCaricamento}</h3>
               <p className="text-muted-foreground text-sm mt-1">
-                Impossibile caricare i dati analytics. Verifica la connessione e riprova.
+                {t.area.analytics.errore}
               </p>
             </div>
             <Button onClick={() => refetch()}>
-              <RefreshCw className="h-4 w-4 mr-2" />Riprova
+              <RefreshCw className="h-4 w-4 mr-2" />{t.area.common.riprova}
             </Button>
           </CardContent>
         </Card>
@@ -100,15 +102,15 @@ export default function Analytics() {
       {/* Header with Filters */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard Analytics Unificata</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{t.area.analytics.titolo}</h1>
           <p className="text-muted-foreground mt-1">
-            Analisi complete di ordini, pagamenti e performance dealers
+            {t.area.analytics.desc}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={handleExportData}>
             <Download className="h-4 w-4 mr-2" />
-            Esporta CSV
+            {t.area.common.esportaCsv}
           </Button>
         </div>
       </div>
@@ -119,12 +121,12 @@ export default function Analytics() {
           <div className="flex flex-wrap gap-4">
             <Select value={months.toString()} onValueChange={(v) => setMonths(parseInt(v))}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Periodo" />
+                <SelectValue placeholder={t.area.analytics.periodo} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="3">Ultimi 3 mesi</SelectItem>
-                <SelectItem value="6">Ultimi 6 mesi</SelectItem>
-                <SelectItem value="12">Ultimo anno</SelectItem>
+                <SelectItem value="3">{t.area.analytics.ultimi3}</SelectItem>
+                <SelectItem value="6">{t.area.analytics.ultimi6}</SelectItem>
+                <SelectItem value="12">{t.area.analytics.ultimoAnno}</SelectItem>
               </SelectContent>
             </Select>
 
@@ -132,10 +134,10 @@ export default function Analytics() {
               <Select value={selectedDealer || "all"} onValueChange={(v) => setSelectedDealer(v === "all" ? undefined : v)}>
                 <SelectTrigger className="w-[200px]">
                   <Users className="h-4 w-4 mr-2" />
-                  <SelectValue placeholder="Tutti i dealers" />
+                  <SelectValue placeholder={t.area.analytics.tuttiDealer} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Tutti i dealers</SelectItem>
+                  <SelectItem value="all">{t.area.analytics.tuttiDealer}</SelectItem>
                   {dealers.map(d => (
                     <SelectItem key={d.id} value={d.id!}>{d.ragione_sociale}</SelectItem>
                   ))}
@@ -149,7 +151,7 @@ export default function Analytics() {
                 size="sm"
                 onClick={() => setSelectedDealer(undefined)}
               >
-                Reset Filtri
+                {t.area.analytics.resetFiltri}
               </Button>
             )}
           </div>
@@ -159,25 +161,25 @@ export default function Analytics() {
       {/* Summary Metrics */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <MetricCard
-          title="Totale Ordini"
+          title={t.area.analytics.ordiniTotali}
           value={analytics.summary.totalOrders}
           change={0}
           icon={<Package className="h-4 w-4 text-muted-foreground" />}
         />
         <MetricCard
-          title="Ricavi Totali"
+          title={t.area.analytics.ricaviTotali}
           value={formatCurrencyCompact(analytics.summary.totalRevenue)}
           change={0}
           icon={<Euro className="h-4 w-4 text-muted-foreground" />}
         />
         <MetricCard
-          title="Pagamenti Incassati"
+          title={t.area.analytics.pagamentiIncassati}
           value={formatCurrencyCompact(analytics.summary.totalPayments)}
           change={0}
           icon={<TrendingUp className="h-4 w-4 text-muted-foreground" />}
         />
         <MetricCard
-          title="Ticket Medio"
+          title={t.area.analytics.ticketMedio}
           value={formatCurrencyCompact(analytics.summary.averageTicket)}
           change={0}
           icon={<Target className="h-4 w-4 text-muted-foreground" />}

@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 interface DealerAreaLayoutProps {
   children: ReactNode;
@@ -24,15 +25,16 @@ interface DealerAreaLayoutProps {
 export function DealerAreaLayout({ children, dealerId, dealerName }: DealerAreaLayoutProps) {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { t, lang, setLang } = useLanguage();
 
   const basePath = `/rivenditori/${dealerId}/area`;
 
   const navigation = [
-    { name: "Dashboard", href: basePath, icon: LayoutDashboard },
-    { name: "Preventivi", href: `${basePath}/preventivi`, icon: FileText },
-    { name: "Ordini", href: `${basePath}/ordini`, icon: ShoppingCart },
-    { name: "Pagamenti", href: `${basePath}/pagamenti`, icon: CreditCard },
-    { name: "Assistenza", href: `${basePath}/assistenza`, icon: Headphones },
+    { name: t.area.nav.dashboard, href: basePath, icon: LayoutDashboard },
+    { name: t.area.nav.preventivi, href: `${basePath}/preventivi`, icon: FileText },
+    { name: t.area.nav.ordini, href: `${basePath}/ordini`, icon: ShoppingCart },
+    { name: t.area.nav.pagamenti, href: `${basePath}/pagamenti`, icon: CreditCard },
+    { name: t.area.nav.assistenza, href: `${basePath}/assistenza`, icon: Headphones },
   ];
 
   const isActive = (href: string) => {
@@ -48,10 +50,10 @@ export function DealerAreaLayout({ children, dealerId, dealerName }: DealerAreaL
       <div className="border-b px-6 py-4">
         <div className="flex items-center gap-2 mb-1">
           <Eye className="h-4 w-4 text-primary" />
-          <Badge variant="secondary" className="text-xs">Vista Rivenditore</Badge>
+          <Badge variant="secondary" className="text-xs">{t.area.dealerAreaLayout.vistaRivenditore}</Badge>
         </div>
         <h2 className="text-sm font-semibold truncate mt-2">
-          {dealerName || "Rivenditore"}
+          {dealerName || t.area.roles.rivenditore}
         </h2>
       </div>
 
@@ -61,7 +63,7 @@ export function DealerAreaLayout({ children, dealerId, dealerName }: DealerAreaL
           const active = isActive(item.href);
           return (
             <Link
-              key={item.name}
+              key={item.href}
               to={item.href}
               onClick={onNavigate}
               className={cn(
@@ -88,7 +90,7 @@ export function DealerAreaLayout({ children, dealerId, dealerName }: DealerAreaL
         >
           <Link to="/rivenditori">
             <LogOut className="mr-2 h-4 w-4" />
-            Esci dall'Area
+            {t.area.dealerAreaLayout.esciArea}
           </Link>
         </Button>
       </div>
@@ -125,12 +127,28 @@ export function DealerAreaLayout({ children, dealerId, dealerName }: DealerAreaL
             <div className="flex items-center gap-2">
               <Eye className="h-4 w-4 text-muted-foreground" />
               <span className="text-sm text-muted-foreground">
-                Stai visualizzando come: <strong>{dealerName || "Rivenditore"}</strong>
+                {t.area.dealerAreaLayout.staiVisualizzando} <strong>{dealerName || t.area.roles.rivenditore}</strong>
               </span>
             </div>
-            <Button variant="outline" size="sm" asChild>
-              <Link to="/rivenditori">Esci dall'Area</Link>
-            </Button>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setLang?.("it")}
+                  className={cn("px-2 py-1 text-xs font-semibold rounded transition-colors", lang === "it" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-accent")}
+                >
+                  IT
+                </button>
+                <button
+                  onClick={() => setLang?.("ro")}
+                  className={cn("px-2 py-1 text-xs font-semibold rounded transition-colors", lang === "ro" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-accent")}
+                >
+                  RO
+                </button>
+              </div>
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/rivenditori">{t.area.dealerAreaLayout.esciArea}</Link>
+              </Button>
+            </div>
           </div>
         </div>
 

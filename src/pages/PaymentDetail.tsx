@@ -8,10 +8,12 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { formatCurrency, formatDate, getStatusColor, getStatusLabel } from "@/lib/utils";
 import { getTipoBadgeColor, getPaymentTypeLabel, getMetodoIcon } from "@/lib/paymentConstants";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function PaymentDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   // Single consolidated query: payment + order + payment stats
   const { data, isLoading, error, refetch } = useQuery({
@@ -70,18 +72,18 @@ export default function PaymentDetail() {
           <CardContent className="flex flex-col items-center gap-4 pt-6">
             <AlertCircle className="h-12 w-12 text-destructive" />
             <div className="text-center">
-              <h3 className="font-semibold text-lg">Pagamento non trovato</h3>
+              <h3 className="font-semibold text-lg">{t.area.paymentDetail.nonTrovato}</h3>
               <p className="text-muted-foreground text-sm mt-1">
-                {error ? "Errore nel caricamento del pagamento." : "Il pagamento richiesto non esiste."}
+                {error ? t.area.paymentDetail.erroreCaricamento : t.area.paymentDetail.nonTrovato}
               </p>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => refetch()}>
-                <RefreshCw className="h-4 w-4 mr-2" />Riprova
+                <RefreshCw className="h-4 w-4 mr-2" />{t.area.common.riprova}
               </Button>
               <Link to="/pagamenti">
                 <Button variant="ghost">
-                  <ArrowLeft className="h-4 w-4 mr-2" />Torna ai pagamenti
+                  <ArrowLeft className="h-4 w-4 mr-2" />{t.area.common.indietro}
                 </Button>
               </Link>
             </div>
@@ -104,15 +106,15 @@ export default function PaymentDetail() {
           <div className="flex items-center gap-3">
             <Link to="/pagamenti">
               <Button variant="ghost" size="sm">
-                <ArrowLeft className="h-4 w-4 mr-2" />Indietro
+                <ArrowLeft className="h-4 w-4 mr-2" />{t.area.common.indietro}
               </Button>
             </Link>
-            <h1 className="text-3xl font-bold tracking-tight">Pagamento #{payment.id.slice(0, 8)}</h1>
+            <h1 className="text-3xl font-bold tracking-tight">{t.area.paymentDetail.titolo}{payment.id.slice(0, 8)}</h1>
             <Badge className={getTipoBadgeColor(payment.tipo)}>
               {getPaymentTypeLabel(payment.tipo)}
             </Badge>
           </div>
-          <p className="text-muted-foreground">Registrato il {formatDate(payment.created_at)}</p>
+          <p className="text-muted-foreground">{t.area.paymentDetail.registratoIl} {formatDate(payment.created_at)}</p>
         </div>
       </div>
 
@@ -120,53 +122,53 @@ export default function PaymentDetail() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Receipt className="h-5 w-5" />Dettagli Pagamento
+            <Receipt className="h-5 w-5" />{t.area.paymentDetail.dettagliPagemento}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Tipo Pagamento</p>
+              <p className="text-sm font-medium text-muted-foreground">{t.area.paymentDetail.tipoPagemento}</p>
               <Badge className={getTipoBadgeColor(payment.tipo)}>
                 {getPaymentTypeLabel(payment.tipo)}
               </Badge>
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Importo</p>
+              <p className="text-sm font-medium text-muted-foreground">{t.area.paymentDetail.importo}</p>
               <p className="text-2xl font-bold">{formatCurrency(payment.importo)}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Data Pagamento</p>
+              <p className="text-sm font-medium text-muted-foreground">{t.area.paymentDetail.dataPagemento}</p>
               <p className="text-base">{formatDate(payment.data_pagamento)}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Metodo</p>
+              <p className="text-sm font-medium text-muted-foreground">{t.area.paymentDetail.metodo}</p>
               <p className="text-base font-medium">{getMetodoIcon(payment.metodo)} {payment.metodo}</p>
             </div>
             {payment.riferimento && (
               <div className="md:col-span-2">
-                <p className="text-sm font-medium text-muted-foreground">Riferimento</p>
+                <p className="text-sm font-medium text-muted-foreground">{t.area.paymentDetail.riferimento}</p>
                 <p className="text-base font-mono">{payment.riferimento}</p>
               </div>
             )}
             <div className="md:col-span-2">
-              <p className="text-sm font-medium text-muted-foreground">ID Pagamento</p>
+              <p className="text-sm font-medium text-muted-foreground">{t.area.paymentDetail.idPagemento}</p>
               <p className="text-base font-mono text-xs">{payment.id}</p>
             </div>
           </div>
 
           {payment.ricevuta_url && (
             <div className="pt-4 border-t">
-              <p className="text-sm font-medium text-muted-foreground mb-2">Ricevuta</p>
+              <p className="text-sm font-medium text-muted-foreground mb-2">{t.area.paymentDetail.ricevuta}</p>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" asChild>
                   <a href={payment.ricevuta_url} target="_blank" rel="noopener noreferrer">
-                    <FileText className="h-4 w-4 mr-2" />Visualizza
+                    <FileText className="h-4 w-4 mr-2" />{t.area.paymentDetail.visualizza}
                   </a>
                 </Button>
                 <Button variant="outline" size="sm" asChild>
                   <a href={payment.ricevuta_url} download>
-                    <Receipt className="h-4 w-4 mr-2" />Scarica
+                    <Receipt className="h-4 w-4 mr-2" />{t.area.paymentDetail.scarica}
                   </a>
                 </Button>
               </div>
@@ -179,34 +181,34 @@ export default function PaymentDetail() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <ShoppingCart className="h-5 w-5" />Ordine #{order.id}
+            <ShoppingCart className="h-5 w-5" />{t.area.paymentDetail.ordine}{order.id}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Stato Ordine</p>
+              <p className="text-sm font-medium text-muted-foreground">{t.area.paymentDetail.statoOrdine}</p>
               <Badge className={getStatusColor(order.stato)}>
                 {getStatusLabel(order.stato)}
               </Badge>
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Importo Totale</p>
+              <p className="text-sm font-medium text-muted-foreground">{t.area.paymentDetail.importoTotale}</p>
               <p className="text-xl font-bold">{formatCurrency(order.importo_totale)}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Importo Pagato</p>
+              <p className="text-sm font-medium text-muted-foreground">{t.area.paymentDetail.importoPagato}</p>
               <p className="text-xl font-bold text-green-600">{formatCurrency(importoPagato)}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Da Pagare</p>
+              <p className="text-sm font-medium text-muted-foreground">{t.area.paymentDetail.daPagare}</p>
               <p className="text-xl font-bold text-orange-600">{formatCurrency(importoDaPagare)}</p>
             </div>
           </div>
 
           {/* Progress Bar */}
           <div className="pt-4 border-t">
-            <p className="text-sm font-medium text-muted-foreground mb-2">Progresso Pagamento</p>
+            <p className="text-sm font-medium text-muted-foreground mb-2">{t.area.paymentDetail.progressoPagemento}</p>
             <div className="flex items-center gap-3">
               <div className="flex-1 bg-muted rounded-full h-3">
                 <div
@@ -222,7 +224,7 @@ export default function PaymentDetail() {
 
           <div className="pt-4 flex gap-2">
             <Button variant="default" onClick={() => navigate(`/ordini/${order.id}`)}>
-              <Eye className="h-4 w-4 mr-2" />Visualizza Ordine Completo
+              <Eye className="h-4 w-4 mr-2" />{t.area.paymentDetail.visualizzaOrdine}
             </Button>
           </div>
         </CardContent>
