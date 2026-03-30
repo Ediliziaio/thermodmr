@@ -71,7 +71,7 @@ const Portoncini = () => {
         </div>
       </section>
 
-      <ProductGallery images={galleryImages} />
+      <ProductGallery images={galleryImages.map((img, i) => ({ ...img, caption: p.galleryCaptions[i] }))} />
 
       <section ref={specsRef} className="py-16 sm:py-24 bg-[hsl(0,0%,97%)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">

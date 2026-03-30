@@ -108,7 +108,7 @@ const DmrConfort = () => {
         </div>
       </section>
 
-      <ProductGallery images={galleryImages} />
+      <ProductGallery images={galleryImages.map((img, i) => ({ ...img, caption: p.galleryCaptions[i] }))} />
 
       {/* Specs */}
       <section ref={specsRef} className="py-16 sm:py-24 bg-[hsl(0,0%,97%)]">
@@ -174,7 +174,7 @@ const DmrConfort = () => {
               <p className="text-[hsl(0,0%,45%)] mt-3 max-w-2xl mx-auto text-sm sm:text-base">{p.coloriDesc}</p>
             </motion.div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto">
-              {availableColors.map((c) => (
+              {availableColors.map((c, i) => (
                 <motion.div key={c.name} variants={fadeUp} className="flex flex-col items-center gap-3">
                   <div
                     className="w-20 h-20 rounded-2xl shadow-md transition-transform hover:scale-110"
@@ -183,7 +183,7 @@ const DmrConfort = () => {
                       border: c.border ? "2px solid hsl(0, 0%, 85%)" : "none",
                     }}
                   />
-                  <span className="text-sm font-medium text-[hsl(0,0%,25%)]">{c.name}</span>
+                  <span className="text-sm font-medium text-[hsl(0,0%,25%)]">{t.products.colorNames[i]}</span>
                 </motion.div>
               ))}
             </div>

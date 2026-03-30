@@ -240,6 +240,7 @@ export interface Translations {
     coloriDisponibiliDesc: string;
     ctaContactDesc: string;
     galleria: string;
+    colorNames: string[];
 
     tapparelle: {
       category: string;
@@ -250,6 +251,7 @@ export interface Translations {
       specs: { label: string; value: string }[];
       benefits: { title: string; desc: string }[];
       ctaTitle: string;
+      galleryCaptions: string[];
     };
     portoncini: {
       category: string;
@@ -260,6 +262,7 @@ export interface Translations {
       specs: { label: string; value: string }[];
       benefits: { title: string; desc: string }[];
       ctaTitle: string;
+      galleryCaptions: string[];
     };
     cassonetti: {
       category: string;
@@ -270,6 +273,7 @@ export interface Translations {
       specs: { label: string; value: string }[];
       benefits: { title: string; desc: string }[];
       ctaTitle: string;
+      galleryCaptions: string[];
     };
     persiane: {
       category: string;
@@ -280,6 +284,7 @@ export interface Translations {
       specs: { label: string; value: string }[];
       benefits: { title: string; desc: string }[];
       ctaTitle: string;
+      galleryCaptions: string[];
     };
     dmrConfort: {
       category: string;
@@ -292,6 +297,7 @@ export interface Translations {
       coloriDesc: string;
       benefits: { title: string; desc: string }[];
       ctaTitle: string;
+      galleryCaptions: string[];
     };
     dmrDomus: {
       category: string;
@@ -304,6 +310,7 @@ export interface Translations {
       coloriDesc: string;
       benefits: { title: string; desc: string }[];
       ctaTitle: string;
+      galleryCaptions: string[];
     };
     dmrPassive: {
       category: string;
@@ -316,6 +323,7 @@ export interface Translations {
       coloriDesc: string;
       benefits: { title: string; desc: string }[];
       ctaTitle: string;
+      galleryCaptions: string[];
     };
   };
 }
@@ -615,6 +623,7 @@ const it: Translations = {
     coloriDisponibiliDesc: "Scegli tra un'ampia gamma di colori e finiture legno per personalizzare le tue finestre e armonizzarle con lo stile della tua abitazione.",
     ctaContactDesc: "Contattaci per un preventivo personalizzato e scopri le condizioni riservate ai rivenditori.",
     galleria: "Galleria",
+    colorNames: ["Bianco", "Rovere Dorato", "Noce", "Antracite", "Grigio Chiaro", "Verde Scuro", "Bianco Crema", "Jet Black"],
 
     tapparelle: {
       category: "I Nostri Prodotti",
@@ -646,6 +655,11 @@ const it: Translations = {
         { title: "Motorizzazione Smart", desc: "Motore tubolare nascosto nel rullo, gestione da remoto tramite domotica. Consumo inferiore a un piccolo elettrodomestico." },
       ],
       ctaTitle: "Interessato alle Tapparelle?",
+      galleryCaptions: [
+        "Tapparella in alluminio coibentato ad alta resistenza",
+        "Lamelle in alluminio coibentato ad alta resistenza",
+        "Integrazione estetica con facciate contemporanee",
+      ],
     },
 
     portoncini: {
@@ -679,6 +693,11 @@ const it: Translations = {
         { title: "Personalizzazione Totale", desc: "Pannelli ornamentali HPL, barre e maniglie in acciaio inox, sopraluce e luci laterali per ogni esigenza." },
       ],
       ctaTitle: "Interessato ai Portoncini in PVC?",
+      galleryCaptions: [
+        "Portoncino d'ingresso con pannello decorativo premium",
+        "Ampia gamma di colori e finiture",
+        "Eleganza e sicurezza per ogni ingresso",
+      ],
     },
 
     cassonetti: {
@@ -710,6 +729,12 @@ const it: Translations = {
         { title: "Manutenzione Facile", desc: "Accesso semplice per manutenzione e sostituzione della tapparella, senza interventi invasivi." },
       ],
       ctaTitle: "Interessato ai Cassonetti?",
+      galleryCaptions: [
+        "Cassonetto integrato nella muratura",
+        "Coibentazione in EPS ad alta densità",
+        "Ispezione frontale facilitata",
+        "Finitura a filo muro per estetica pulita",
+      ],
     },
 
     persiane: {
@@ -741,6 +766,12 @@ const it: Translations = {
         { title: "Design e Finiture", desc: "Superfici piane facili da pulire, verniciatura RAL a scelta o sublimazione in tinta legno per un aspetto elegante e naturale." },
       ],
       ctaTitle: "Interessato alle Persiane?",
+      galleryCaptions: [
+        "Persiane in alluminio con finitura classica",
+        "Lamelle in alluminio con sublimazione effetto legno",
+        "Ampia scelta di colori dalla gamma RAL",
+        "Eleganza senza tempo per ogni facciata",
+      ],
     },
 
     dmrConfort: {
@@ -781,6 +812,12 @@ const it: Translations = {
         { title: "Sicurezza", desc: "Ferramenta anti-effrazione di serie con possibilità di upgrade a classe RC2. Protezione e tranquillità per la tua famiglia." },
       ],
       ctaTitle: "Interessato al DMR CONFORT?",
+      galleryCaptions: [
+        "Finestra a due ante con profilo classico bianco",
+        "Massima luminosità negli ambienti interni",
+        "Profilo a 5 camere con rinforzo in acciaio",
+        "Integrazione perfetta con qualsiasi facciata",
+      ],
     },
 
     dmrDomus: {
@@ -821,6 +858,12 @@ const it: Translations = {
         { title: "Robustezza", desc: "Ferramenta ROTO NX antieffrazione fino a classe RC3 con rinforzi in acciaio zincato per massima sicurezza e durata." },
       ],
       ctaTitle: "Interessato al DMR DOMUS?",
+      galleryCaptions: [
+        "Vetrata a tutta altezza per massima luminosità",
+        "Linee squadrate dal design contemporaneo",
+        "Ferramenta Roto di alta qualità",
+        "Comfort abitativo superiore",
+      ],
     },
 
     dmrPassive: {
@@ -861,6 +904,12 @@ const it: Translations = {
         { title: "Design Premium", desc: "Linee minimali e moderne, con profili a vista ridotta per massima luminosità." },
       ],
       ctaTitle: "Interessato al DMR PASSIVE?",
+      galleryCaptions: [
+        "Integrazione perfetta in architetture moderne",
+        "Prestazioni certificate Passivhaus",
+        "Triplo vetro basso emissivo con doppio gas argon",
+        "Design minimale con profili a vista ridotta",
+      ],
     },
   },
 };
@@ -1160,6 +1209,7 @@ const ro: Translations = {
     coloriDisponibiliDesc: "Alege dintr-o gamă largă de culori și finisaje lemn pentru a personaliza ferestrele și a le armoniza cu stilul locuinței tale.",
     ctaContactDesc: "Contactează-ne pentru o ofertă personalizată și află condițiile rezervate distribuitorilor.",
     galleria: "Galerie",
+    colorNames: ["Alb", "Stejar Auriu", "Nuc", "Antracit", "Gri Deschis", "Verde Închis", "Alb Cremă", "Negru Intens"],
 
     tapparelle: {
       category: "Produsele Noastre",
@@ -1191,6 +1241,11 @@ const ro: Translations = {
         { title: "Motorizare Smart", desc: "Motor tubular ascuns în rolă, control de la distanță prin domotică. Consum mai mic decât un mic aparat electric." },
       ],
       ctaTitle: "Interesat de Jaluzelele Rulante?",
+      galleryCaptions: [
+        "Jaluzea din aluminiu coibentat de înaltă rezistență",
+        "Lamele din aluminiu coibentat de înaltă rezistență",
+        "Integrare estetică cu fațade contemporane",
+      ],
     },
 
     portoncini: {
@@ -1224,6 +1279,11 @@ const ro: Translations = {
         { title: "Personalizare Totală", desc: "Panouri ornamentale HPL, bare și mânere din inox, luminator și ferestre laterale pentru orice necesitate." },
       ],
       ctaTitle: "Interesat de Ușile de Intrare PVC?",
+      galleryCaptions: [
+        "Ușă de intrare cu panou decorativ premium",
+        "Gamă largă de culori și finisaje",
+        "Eleganță și securitate pentru fiecare intrare",
+      ],
     },
 
     cassonetti: {
@@ -1255,6 +1315,12 @@ const ro: Translations = {
         { title: "Întreținere Ușoară", desc: "Acces simplu pentru întreținere și înlocuirea jaluzelei, fără intervenții invazive." },
       ],
       ctaTitle: "Interesat de Casetele Rulou?",
+      galleryCaptions: [
+        "Casetă rulou integrată în zidărie",
+        "Coibentare EPS de înaltă densitate",
+        "Inspecție frontală facilitată",
+        "Finisaj la nivelul peretelui pentru estetică curată",
+      ],
     },
 
     persiane: {
@@ -1286,6 +1352,12 @@ const ro: Translations = {
         { title: "Design și Finisaje", desc: "Suprafețe plane ușor de curățat, vopsitorie RAL la alegere sau sublimare culoare lemn pentru un aspect elegant și natural." },
       ],
       ctaTitle: "Interesat de Obloanele din Aluminiu?",
+      galleryCaptions: [
+        "Obloane din aluminiu cu finisaj clasic",
+        "Lamele din aluminiu cu sublimare efect lemn",
+        "Gamă largă de culori RAL disponibile",
+        "Eleganță fără timp pentru orice fațadă",
+      ],
     },
 
     dmrConfort: {
@@ -1326,6 +1398,12 @@ const ro: Translations = {
         { title: "Securitate", desc: "Feronerie anti-efracție de serie cu posibilitate de upgrade la clasa RC2. Protecție și liniște pentru familia ta." },
       ],
       ctaTitle: "Interesat de DMR CONFORT?",
+      galleryCaptions: [
+        "Fereastră cu două foi și profil clasic alb",
+        "Luminozitate maximă în spații interioare",
+        "Profil cu 5 camere cu armare din oțel",
+        "Integrare perfectă cu orice fațadă",
+      ],
     },
 
     dmrDomus: {
@@ -1366,6 +1444,12 @@ const ro: Translations = {
         { title: "Robustețe", desc: "Feronerie ROTO NX anti-efracție până la clasa RC3 cu rinforted din oțel zincat pentru securitate maximă și durabilitate." },
       ],
       ctaTitle: "Interesat de DMR DOMUS?",
+      galleryCaptions: [
+        "Vitrare la înălțimea întreagă pentru luminozitate maximă",
+        "Linii geometrice cu design contemporan",
+        "Feronerie Roto de înaltă calitate",
+        "Confort superior în locuință",
+      ],
     },
 
     dmrPassive: {
@@ -1406,6 +1490,12 @@ const ro: Translations = {
         { title: "Design Premium", desc: "Linii minimale și moderne, cu profile la vedere reduse pentru luminozitate maximă." },
       ],
       ctaTitle: "Interesat de DMR PASSIVE?",
+      galleryCaptions: [
+        "Integrare perfectă în arhitecturi moderne",
+        "Performanțe certificate Passivhaus",
+        "Triplu sticlă low-emissive cu gaz argon dublu",
+        "Design minimalist cu profile la vedere reduse",
+      ],
     },
   },
 };
