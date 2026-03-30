@@ -19,48 +19,24 @@ const galleryImages = [
 
 import { fadeUp, stagger, inViewOptions as inViewOpts } from "@/lib/animations";
 
-const features = [
-  "Alluminio leggero e resistente, non teme intemperie né usura",
-  "Isolamento termico superiore: calore in inverno, fresco in estate",
-  "Barriera efficace contro tentativi di intrusione",
-  "Disponibili in versione coibentata con schiuma poliuretanica",
-  "Motorizzazione elettrica con motore tubolare integrato nel rullo",
-  "Predisposizione per domotica e Smart Home",
-  "Abbattimento acustico dei rumori esterni",
-  "Alluminio riciclabile al 100%, scelta sostenibile",
-  "Disponibili senza cassonetto (sistema monoblocco)",
-];
-
-const specs = [
-  { label: "Materiale", value: "Alluminio" },
-  { label: "Coibentazione", value: "Schiuma poliuretanica" },
-  { label: "Motorizzazione", value: "Motore tubolare" },
-  { label: "Domotica", value: "Smart Home ready" },
-  { label: "Sostenibilità", value: "100% riciclabile" },
-  { label: "Versioni", value: "Coibentate / Estruse" },
-];
-
-const benefits = [
-  { icon: Zap, title: "Risparmio Energetico", desc: "L'alluminio coibentato con schiuma poliuretanica trattiene il calore in inverno e respinge il caldo estivo, riducendo i costi in bolletta." },
-  { icon: Shield, title: "Sicurezza Anti-intrusione", desc: "La robustezza dell'alluminio, unita alla struttura coibentata, crea una protezione ulteriore contro tentativi di intrusione." },
-  { icon: Smartphone, title: "Motorizzazione Smart", desc: "Motore tubolare nascosto nel rullo, gestione da remoto tramite domotica. Consumo inferiore a un piccolo elettrodomestico." },
-];
+const benefitIcons = [Zap, Shield, Smartphone];
 
 const Tapparelle = () => {
-  const { lang } = useLanguage();
+  const { t, lang } = useLanguage();
   const contattiLink = lang === "ro" ? "/ro/contact" : "/contatti";
   const [specsRef, specsInView] = useInView(inViewOpts);
   const [benefitsRef, benefitsInView] = useInView(inViewOpts);
+  const p = t.products.tapparelle;
 
   return (
     <div className="min-h-screen bg-white">
       <PublicNavbar />
 
       <ProductHero
-        category="I Nostri Prodotti"
-        title=""
-        titleAccent="Tapparelle"
-        description="Tapparelle avvolgibili in alluminio: leggerezza, resistenza e isolamento termico superiore. Protezione contro intrusioni, risparmio energetico. Disponibili coibentate, estruse e motorizzate."
+        category={p.category}
+        title={p.title}
+        titleAccent={p.titleAccent}
+        description={p.description}
         heroImage={imgTapparella}
       />
 
@@ -74,9 +50,9 @@ const Tapparelle = () => {
               </div>
             </div>
             <div className="space-y-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)]">Caratteristiche Principali</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)]">{t.products.caratteristichePrincipali}</h2>
               <ul className="space-y-3">
-                {features.map((f) => (
+                {p.features.map((f) => (
                   <li key={f} className="flex items-center gap-3 text-[hsl(0,0%,35%)]">
                     <CheckCircle2 className="h-5 w-5 text-[hsl(195,85%,45%)] shrink-0" />
                     <span className="text-sm font-medium">{f}</span>
@@ -85,7 +61,7 @@ const Tapparelle = () => {
               </ul>
               <Link to={contattiLink}>
                 <Button className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-8 mt-2 shadow-[0_4px_20px_hsl(195,85%,45%,0.25)]">
-                  Richiedi Preventivo <ArrowRight className="ml-2 h-5 w-5" />
+                  {t.cta.richiediPreventivo} <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
             </div>
@@ -98,9 +74,9 @@ const Tapparelle = () => {
       <section ref={specsRef} className="py-16 sm:py-24 bg-[hsl(0,0%,97%)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div initial="hidden" animate={specsInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-8 sm:mb-12 text-center">Specifiche Tecniche</motion.h2>
+            <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-8 sm:mb-12 text-center">{t.products.specificheTecniche}</motion.h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {specs.map((s) => (
+              {p.specs.map((s) => (
                 <motion.div key={s.label} variants={fadeUp} className="bg-white rounded-2xl p-6 shadow-sm border border-[hsl(0,0%,92%)]">
                   <p className="text-xs font-bold tracking-wider text-[hsl(195,85%,45%)] uppercase mb-1">{s.label}</p>
                   <p className="text-2xl font-bold text-[hsl(0,0%,10%)]">{s.value}</p>
@@ -114,17 +90,20 @@ const Tapparelle = () => {
       <section ref={benefitsRef} className="py-16 sm:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div initial="hidden" animate={benefitsInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-8 sm:mb-12 text-center">Vantaggi Chiave</motion.h2>
+            <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-8 sm:mb-12 text-center">{t.products.vantaggiChiave}</motion.h2>
             <div className="grid md:grid-cols-3 gap-8">
-              {benefits.map((b) => (
-                <motion.div key={b.title} variants={fadeUp} className="text-center space-y-4">
-                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[hsl(195,85%,45%,0.1)]">
-                    <b.icon className="h-7 w-7 text-[hsl(195,85%,45%)]" />
-                  </div>
-                  <h3 className="text-xl font-bold text-[hsl(0,0%,10%)]">{b.title}</h3>
-                  <p className="text-sm text-[hsl(0,0%,40%)] leading-relaxed">{b.desc}</p>
-                </motion.div>
-              ))}
+              {p.benefits.map((b, i) => {
+                const Icon = benefitIcons[i];
+                return (
+                  <motion.div key={b.title} variants={fadeUp} className="text-center space-y-4">
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[hsl(195,85%,45%,0.1)]">
+                      <Icon className="h-7 w-7 text-[hsl(195,85%,45%)]" />
+                    </div>
+                    <h3 className="text-xl font-bold text-[hsl(0,0%,10%)]">{b.title}</h3>
+                    <p className="text-sm text-[hsl(0,0%,40%)] leading-relaxed">{b.desc}</p>
+                  </motion.div>
+                );
+              })}
             </div>
           </motion.div>
         </div>
@@ -134,11 +113,11 @@ const Tapparelle = () => {
 
       <section className="py-16 sm:py-20 bg-[hsl(195,85%,45%)]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Interessato alle Tapparelle?</h2>
-          <p className="text-white/80 mb-6 sm:mb-8 text-sm sm:text-base">Contattaci per un preventivo personalizzato e scopri le condizioni riservate ai rivenditori.</p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">{p.ctaTitle}</h2>
+          <p className="text-white/80 mb-6 sm:mb-8 text-sm sm:text-base">{t.products.ctaContactDesc}</p>
           <Link to={contattiLink}>
             <Button className="w-full sm:w-auto bg-white text-[hsl(195,85%,45%)] hover:bg-white/90 font-semibold rounded-full px-10 py-3 text-base sm:text-lg shadow-xl min-h-[48px]">
-              Richiedi Preventivo <ArrowRight className="ml-2 h-5 w-5" />
+              {t.cta.richiediPreventivo} <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
         </div>

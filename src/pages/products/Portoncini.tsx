@@ -21,49 +21,24 @@ const galleryImages = [
 
 import { fadeUp, stagger, inViewOptions as inViewOpts } from "@/lib/animations";
 
-const features = [
-  "Profondità costruttiva disponibile in 76, 82 e 92 mm",
-  "6 camere di isolamento per massima efficienza termica",
-  "3 guarnizioni con guarnizione mediana per tenuta superiore",
-  "Coefficiente termico Uw fino a 0,72 W/m²K",
-  "Prestazioni acustiche fino a 47 dB (classe 5)",
-  "Resistenza all'effrazione fino a classe RC3",
-  "Serratura multipunto meccanico-automatica con bloccaggio automatico",
-  "Soglia standard in alluminio 20 mm o soluzione senza soglia",
-  "Pannelli ornamentali HPL, vetro termoisolante e applicazioni in acciaio inox",
-  "Ampia gamma di colori e pellicole decorative",
-];
-
-const specs = [
-  { label: "Profondità", value: "76 / 82 / 92 mm" },
-  { label: "Camere", value: "6" },
-  { label: "Uw", value: "fino a 0,72 W/m²K" },
-  { label: "Acustica", value: "47 dB (classe 5)" },
-  { label: "Sicurezza", value: "Fino a RC3" },
-  { label: "Serratura", value: "Multipunto automatica" },
-];
-
-const benefits = [
-  { icon: Lock, title: "Massima Sicurezza", desc: "Serratura multipunto meccanico-automatica con 3 punti di chiusura a fuoriuscita automatica, resistenza fino a classe RC3." },
-  { icon: ThermometerSun, title: "Isolamento Perfetto", desc: "Uw fino a 0,72 W/m²K grazie a 6 camere di isolamento e 3 guarnizioni con guarnizione mediana." },
-  { icon: Shield, title: "Personalizzazione Totale", desc: "Pannelli ornamentali HPL, barre e maniglie in acciaio inox, sopraluce e luci laterali per ogni esigenza." },
-];
+const benefitIcons = [Lock, ThermometerSun, Shield];
 
 const Portoncini = () => {
-  const { lang } = useLanguage();
+  const { t, lang } = useLanguage();
   const contattiLink = lang === "ro" ? "/ro/contact" : "/contatti";
   const [specsRef, specsInView] = useInView(inViewOpts);
   const [benefitsRef, benefitsInView] = useInView(inViewOpts);
+  const p = t.products.portoncini;
 
   return (
     <div className="min-h-screen bg-white">
       <PublicNavbar />
 
       <ProductHero
-        category="I Nostri Prodotti"
-        title="Portoncini in"
-        titleAccent="PVC"
-        description="Portoncini d'ingresso in PVC con profondità costruttiva 76-82-92 mm, 6 camere di isolamento e 3 guarnizioni. Uw fino a 0,72 W/m²K, acustica fino a 47 dB, sicurezza fino a RC3."
+        category={p.category}
+        title={p.title}
+        titleAccent={p.titleAccent}
+        description={p.description}
         heroImage={imgPortoncinoIngresso}
       />
 
@@ -77,9 +52,9 @@ const Portoncini = () => {
               </div>
             </div>
             <div className="space-y-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)]">Caratteristiche Principali</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)]">{t.products.caratteristichePrincipali}</h2>
               <ul className="space-y-3">
-                {features.map((f) => (
+                {p.features.map((f) => (
                   <li key={f} className="flex items-center gap-3 text-[hsl(0,0%,35%)]">
                     <CheckCircle2 className="h-5 w-5 text-[hsl(195,85%,45%)] shrink-0" />
                     <span className="text-sm font-medium">{f}</span>
@@ -88,7 +63,7 @@ const Portoncini = () => {
               </ul>
               <Link to={contattiLink}>
                 <Button className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-8 mt-2 shadow-[0_4px_20px_hsl(195,85%,45%,0.25)]">
-                  Richiedi Preventivo <ArrowRight className="ml-2 h-5 w-5" />
+                  {t.cta.richiediPreventivo} <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
             </div>
@@ -101,9 +76,9 @@ const Portoncini = () => {
       <section ref={specsRef} className="py-16 sm:py-24 bg-[hsl(0,0%,97%)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div initial="hidden" animate={specsInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-8 sm:mb-12 text-center">Specifiche Tecniche</motion.h2>
+            <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-8 sm:mb-12 text-center">{t.products.specificheTecniche}</motion.h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {specs.map((s) => (
+              {p.specs.map((s) => (
                 <motion.div key={s.label} variants={fadeUp} className="bg-white rounded-2xl p-6 shadow-sm border border-[hsl(0,0%,92%)]">
                   <p className="text-xs font-bold tracking-wider text-[hsl(195,85%,45%)] uppercase mb-1">{s.label}</p>
                   <p className="text-2xl font-bold text-[hsl(0,0%,10%)]">{s.value}</p>
@@ -117,17 +92,20 @@ const Portoncini = () => {
       <section ref={benefitsRef} className="py-16 sm:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div initial="hidden" animate={benefitsInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-8 sm:mb-12 text-center">Vantaggi Chiave</motion.h2>
+            <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-8 sm:mb-12 text-center">{t.products.vantaggiChiave}</motion.h2>
             <div className="grid md:grid-cols-3 gap-8">
-              {benefits.map((b) => (
-                <motion.div key={b.title} variants={fadeUp} className="text-center space-y-4">
-                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[hsl(195,85%,45%,0.1)]">
-                    <b.icon className="h-7 w-7 text-[hsl(195,85%,45%)]" />
-                  </div>
-                  <h3 className="text-xl font-bold text-[hsl(0,0%,10%)]">{b.title}</h3>
-                  <p className="text-sm text-[hsl(0,0%,40%)] leading-relaxed">{b.desc}</p>
-                </motion.div>
-              ))}
+              {p.benefits.map((b, i) => {
+                const Icon = benefitIcons[i];
+                return (
+                  <motion.div key={b.title} variants={fadeUp} className="text-center space-y-4">
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[hsl(195,85%,45%,0.1)]">
+                      <Icon className="h-7 w-7 text-[hsl(195,85%,45%)]" />
+                    </div>
+                    <h3 className="text-xl font-bold text-[hsl(0,0%,10%)]">{b.title}</h3>
+                    <p className="text-sm text-[hsl(0,0%,40%)] leading-relaxed">{b.desc}</p>
+                  </motion.div>
+                );
+              })}
             </div>
           </motion.div>
         </div>
@@ -137,11 +115,11 @@ const Portoncini = () => {
 
       <section className="py-16 sm:py-20 bg-[hsl(195,85%,45%)]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Interessato ai Portoncini in PVC?</h2>
-          <p className="text-white/80 mb-6 sm:mb-8 text-sm sm:text-base">Contattaci per un preventivo personalizzato e scopri le condizioni riservate ai rivenditori.</p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">{p.ctaTitle}</h2>
+          <p className="text-white/80 mb-6 sm:mb-8 text-sm sm:text-base">{t.products.ctaContactDesc}</p>
           <Link to={contattiLink}>
             <Button className="w-full sm:w-auto bg-white text-[hsl(195,85%,45%)] hover:bg-white/90 font-semibold rounded-full px-10 py-3 text-base sm:text-lg shadow-xl min-h-[48px]">
-              Richiedi Preventivo <ArrowRight className="ml-2 h-5 w-5" />
+              {t.cta.richiediPreventivo} <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
         </div>

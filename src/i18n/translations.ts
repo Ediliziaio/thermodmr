@@ -227,6 +227,97 @@ export interface Translations {
     ctaDesc: string;
     ctaPerks: string[];
   };
+
+  // ---- Products detail pages ----
+  products: {
+    // Shared UI labels
+    caratteristichePrincipali: string;
+    specificheTecniche: string;
+    vantaggiChiave: string;
+    dettagliTecnici: string;
+    vantaggiFinestra: string;
+    coloriDisponibili: string;
+    coloriDisponibiliDesc: string;
+    ctaContactDesc: string;
+    galleria: string;
+
+    tapparelle: {
+      category: string;
+      title: string;
+      titleAccent: string;
+      description: string;
+      features: string[];
+      specs: { label: string; value: string }[];
+      benefits: { title: string; desc: string }[];
+      ctaTitle: string;
+    };
+    portoncini: {
+      category: string;
+      title: string;
+      titleAccent: string;
+      description: string;
+      features: string[];
+      specs: { label: string; value: string }[];
+      benefits: { title: string; desc: string }[];
+      ctaTitle: string;
+    };
+    cassonetti: {
+      category: string;
+      title: string;
+      titleAccent: string;
+      description: string;
+      features: string[];
+      specs: { label: string; value: string }[];
+      benefits: { title: string; desc: string }[];
+      ctaTitle: string;
+    };
+    persiane: {
+      category: string;
+      title: string;
+      titleAccent: string;
+      description: string;
+      features: string[];
+      specs: { label: string; value: string }[];
+      benefits: { title: string; desc: string }[];
+      ctaTitle: string;
+    };
+    dmrConfort: {
+      category: string;
+      description: string;
+      features: string[];
+      mainTitle: string;
+      mainDesc: string;
+      specs: { label: string; value: string }[];
+      windowAdvantages: { title: string; desc: string }[];
+      coloriDesc: string;
+      benefits: { title: string; desc: string }[];
+      ctaTitle: string;
+    };
+    dmrDomus: {
+      category: string;
+      description: string;
+      features: string[];
+      mainTitle: string;
+      mainDesc: string;
+      specs: { label: string; value: string }[];
+      windowAdvantages: { title: string; desc: string }[];
+      coloriDesc: string;
+      benefits: { title: string; desc: string }[];
+      ctaTitle: string;
+    };
+    dmrPassive: {
+      category: string;
+      description: string;
+      features: string[];
+      mainTitle: string;
+      mainDesc: string;
+      specs: { label: string; value: string }[];
+      windowAdvantages: { title: string; desc: string }[];
+      coloriDesc: string;
+      benefits: { title: string; desc: string }[];
+      ctaTitle: string;
+    };
+  };
 }
 
 // ===========================================================================
@@ -513,6 +604,265 @@ const it: Translations = {
     ctaDesc: "Compila il modulo di contatto e il nostro team commerciale ti ricontatterà entro 24 ore per discutere della tua candidatura.",
     ctaPerks: ["Prezzi di fabbrica", "Zona esclusiva", "Supporto marketing", "Formazione tecnica", "Piattaforma online dedicata"],
   },
+
+  products: {
+    caratteristichePrincipali: "Caratteristiche Principali",
+    specificheTecniche: "Specifiche Tecniche",
+    vantaggiChiave: "Vantaggi Chiave",
+    dettagliTecnici: "Dettagli Tecnici",
+    vantaggiFinestra: "Vantaggi della Finestra",
+    coloriDisponibili: "Colori Disponibili",
+    coloriDisponibiliDesc: "Scegli tra un'ampia gamma di colori e finiture legno per personalizzare le tue finestre e armonizzarle con lo stile della tua abitazione.",
+    ctaContactDesc: "Contattaci per un preventivo personalizzato e scopri le condizioni riservate ai rivenditori.",
+    galleria: "Galleria",
+
+    tapparelle: {
+      category: "I Nostri Prodotti",
+      title: "",
+      titleAccent: "Tapparelle",
+      description: "Tapparelle avvolgibili in alluminio: leggerezza, resistenza e isolamento termico superiore. Protezione contro intrusioni, risparmio energetico. Disponibili coibentate, estruse e motorizzate.",
+      features: [
+        "Alluminio leggero e resistente, non teme intemperie né usura",
+        "Isolamento termico superiore: calore in inverno, fresco in estate",
+        "Barriera efficace contro tentativi di intrusione",
+        "Disponibili in versione coibentata con schiuma poliuretanica",
+        "Motorizzazione elettrica con motore tubolare integrato nel rullo",
+        "Predisposizione per domotica e Smart Home",
+        "Abbattimento acustico dei rumori esterni",
+        "Alluminio riciclabile al 100%, scelta sostenibile",
+        "Disponibili senza cassonetto (sistema monoblocco)",
+      ],
+      specs: [
+        { label: "Materiale", value: "Alluminio" },
+        { label: "Coibentazione", value: "Schiuma poliuretanica" },
+        { label: "Motorizzazione", value: "Motore tubolare" },
+        { label: "Domotica", value: "Smart Home ready" },
+        { label: "Sostenibilità", value: "100% riciclabile" },
+        { label: "Versioni", value: "Coibentate / Estruse" },
+      ],
+      benefits: [
+        { title: "Risparmio Energetico", desc: "L'alluminio coibentato con schiuma poliuretanica trattiene il calore in inverno e respinge il caldo estivo, riducendo i costi in bolletta." },
+        { title: "Sicurezza Anti-intrusione", desc: "La robustezza dell'alluminio, unita alla struttura coibentata, crea una protezione ulteriore contro tentativi di intrusione." },
+        { title: "Motorizzazione Smart", desc: "Motore tubolare nascosto nel rullo, gestione da remoto tramite domotica. Consumo inferiore a un piccolo elettrodomestico." },
+      ],
+      ctaTitle: "Interessato alle Tapparelle?",
+    },
+
+    portoncini: {
+      category: "I Nostri Prodotti",
+      title: "Portoncini in",
+      titleAccent: "PVC",
+      description: "Portoncini d'ingresso in PVC con profondità costruttiva 76-82-92 mm, 6 camere di isolamento e 3 guarnizioni. Uw fino a 0,72 W/m²K, acustica fino a 47 dB, sicurezza fino a RC3.",
+      features: [
+        "Profondità costruttiva disponibile in 76, 82 e 92 mm",
+        "6 camere di isolamento per massima efficienza termica",
+        "3 guarnizioni con guarnizione mediana per tenuta superiore",
+        "Coefficiente termico Uw fino a 0,72 W/m²K",
+        "Prestazioni acustiche fino a 47 dB (classe 5)",
+        "Resistenza all'effrazione fino a classe RC3",
+        "Serratura multipunto meccanico-automatica con bloccaggio automatico",
+        "Soglia standard in alluminio 20 mm o soluzione senza soglia",
+        "Pannelli ornamentali HPL, vetro termoisolante e applicazioni in acciaio inox",
+        "Ampia gamma di colori e pellicole decorative",
+      ],
+      specs: [
+        { label: "Profondità", value: "76 / 82 / 92 mm" },
+        { label: "Camere", value: "6" },
+        { label: "Uw", value: "fino a 0,72 W/m²K" },
+        { label: "Acustica", value: "47 dB (classe 5)" },
+        { label: "Sicurezza", value: "Fino a RC3" },
+        { label: "Serratura", value: "Multipunto automatica" },
+      ],
+      benefits: [
+        { title: "Massima Sicurezza", desc: "Serratura multipunto meccanico-automatica con 3 punti di chiusura a fuoriuscita automatica, resistenza fino a classe RC3." },
+        { title: "Isolamento Perfetto", desc: "Uw fino a 0,72 W/m²K grazie a 6 camere di isolamento e 3 guarnizioni con guarnizione mediana." },
+        { title: "Personalizzazione Totale", desc: "Pannelli ornamentali HPL, barre e maniglie in acciaio inox, sopraluce e luci laterali per ogni esigenza." },
+      ],
+      ctaTitle: "Interessato ai Portoncini in PVC?",
+    },
+
+    cassonetti: {
+      category: "I Nostri Prodotti",
+      title: "Cassonetti",
+      titleAccent: "Coibentati",
+      description: "Il cassonetto è il contenitore che ospita l'avvolgibile, posizionato nella parte superiore della finestra. Ruolo fondamentale nell'isolamento termico e acustico: cassonetti non isolati causano dispersioni, ponti termici, condensa e muffa.",
+      features: [
+        "Contenitore per avvolgibile incassato nel muro o a vista",
+        "Coibentazione per eliminare ponti termici e dispersioni",
+        "Prevenzione di condensa e muffa nella zona cassonetto",
+        "Ispezione frontale facilitata per manutenzione e sostituzione tapparella",
+        "Compatibile con tapparelle motorizzate",
+        "Dimensioni su misura per ogni vano murario",
+        "Linee pulite ed essenziali, soluzioni a scomparsa disponibili",
+        "Predisposizione per zanzariere",
+      ],
+      specs: [
+        { label: "Materiale", value: "PVC / Alluminio / Composito" },
+        { label: "Coibentazione", value: "EPS alta densità" },
+        { label: "Ispezione", value: "Frontale" },
+        { label: "Motorizzazione", value: "Predisposto" },
+        { label: "Design", value: "A scomparsa disponibile" },
+        { label: "Dimensioni", value: "Su misura" },
+      ],
+      benefits: [
+        { title: "Zero Ponti Termici", desc: "Un cassonetto non isolato causa dispersioni termiche in inverno e surriscaldamento in estate. La coibentazione elimina completamente questo problema." },
+        { title: "Prevenzione Condensa", desc: "Elimina la formazione di ponti termici con conseguente condensa e muffa, migliorando la salubrità dell'ambiente." },
+        { title: "Manutenzione Facile", desc: "Accesso semplice per manutenzione e sostituzione della tapparella, senza interventi invasivi." },
+      ],
+      ctaTitle: "Interessato ai Cassonetti?",
+    },
+
+    persiane: {
+      category: "I Nostri Prodotti",
+      title: "Persiane in",
+      titleAccent: "Alluminio",
+      description: "Persiane esterne in alluminio con lamelle fisse o orientabili. Sezione profili 56 mm telai e 46 mm anta. Verniciatura RAL a scelta o sublimazione effetto legno.",
+      features: [
+        "Sezione profili: 56 mm telai e 46 mm anta",
+        "Lamelle fisse (83x25 mm planari o 40x25 mm simmetriche) o orientabili (72x12 mm, da 0° a 180°)",
+        "Zoccolatura di base regolabile H 75-113 mm",
+        "Guarnizione su telai e anta",
+        "Telai tipo Z o L, oppure senza telai con anta a muro",
+        "Verniciatura RAL a scelta o sublimazione effetto legno",
+        "Tipologie: a battente, a libro, scorrevole interno o esterno muro",
+        "Superfici piane, facili da pulire",
+      ],
+      specs: [
+        { label: "Telai", value: "56 mm" },
+        { label: "Anta", value: "46 mm" },
+        { label: "Lamelle", value: "Fisse o orientabili" },
+        { label: "Orientamento", value: "0 - 180 gradi" },
+        { label: "Zoccolatura", value: "H 75-113 mm" },
+        { label: "Finiture", value: "RAL / Effetto legno" },
+      ],
+      benefits: [
+        { title: "Controllo Luce", desc: "Lamelle orientabili da 0° a 180° a comando manuale per regolare luminosità e ventilazione in modo preciso." },
+        { title: "Versatilità", desc: "Realizzabili a battente, a libro o scorrevole, per integrarsi con ogni soluzione costruttiva in nuova costruzione o ristrutturazione." },
+        { title: "Design e Finiture", desc: "Superfici piane facili da pulire, verniciatura RAL a scelta o sublimazione in tinta legno per un aspetto elegante e naturale." },
+      ],
+      ctaTitle: "Interessato alle Persiane?",
+    },
+
+    dmrConfort: {
+      category: "Finestre in PVC",
+      description: "Finestre che combinano design moderno, profili sottili e prestazioni eccellenti. Progettate per fornire la massima luce naturale con elevati livelli di isolamento termico e acustico. Si adattano a progetti architettonici sia classici che moderni: la scelta per chi cerca forma leggera, efficienza energetica e prestazioni affidabili per anni.",
+      features: [
+        "Profili alti solo 113 mm per massimizzare la luce naturale negli ambienti",
+        "Pacchetto vetro fino a 49 mm per eccellente isolamento termico",
+        "5 camere nel telaio e nell'anta, 4 camere nel montante",
+        "Protezione acustica fino a 46 dB per ambienti silenziosi anche in centro città",
+        "Durevole e resistente agli agenti esterni per molti anni di utilizzo",
+        "Sistema ecologico sviluppato pensando al riciclaggio",
+        "Forma versatile per progetti architettonici sia moderni che classici",
+        "Guarnizioni a doppia battuta per tenuta all'aria e all'acqua",
+      ],
+      mainTitle: "Caratteristiche Principali",
+      mainDesc: "Il DMR CONFORT presenta profili alti solo 113 mm e un pacchetto vetro accuratamente selezionato per far entrare molta più luce naturale negli ambienti. Garantisce un efficace isolamento del calore con bollette più basse e temperature confortevoli tutto l'anno, oltre a una riduzione del rumore esterno fino a 46 dB. I profili sono realizzati per molti anni di utilizzo, resistenti agli agenti esterni e di facile manutenzione. Sistema sviluppato pensando al riciclaggio, con una forma versatile per progetti sia moderni che classici.",
+      specs: [
+        { label: "Profilo", value: "5 camere (telaio/anta)" },
+        { label: "Classe", value: "B" },
+        { label: "Profondità installazione", value: "72 mm" },
+        { label: "Pacchetto vetri", value: "fino a 49 mm" },
+        { label: "Uw (finestra)", value: "1.3 W/m²K" },
+        { label: "Abbattimento acustico", value: "46 dB" },
+      ],
+      windowAdvantages: [
+        { title: "Microventilazione", desc: "Funzione di montaggio che consente di ventilare l'ambiente senza aprire l'anta, garantendo un ricambio d'aria costante anche in assenza." },
+        { title: "Maniglia di Sicurezza", desc: "Maniglia in alluminio con funzione di sicurezza, pulsante o chiave. Disponibile in diverse finiture per adattarsi a ogni stile." },
+        { title: "Cerniere 3D Regolabili", desc: "Disponibile anche nella versione a scomparsa - Designo. Cerniere 3D regolabili su tre livelli con portata fino a 130 kg." },
+        { title: "Canalina Calda", desc: "Disponibile in acciaio o in plastica - prodotto con tecnologia polimerica o composita, in un'ampia gamma di colori." },
+        { title: "Blocco Rotazione Maniglia", desc: "Funzione che impedisce la rotazione incontrollata della maniglia in posizione di ribalta, responsabile del corretto posizionamento dell'anta in posizione di chiusura." },
+        { title: "Braccio Oscillo-Battente", desc: "Apparecchio per una ventilazione confortevole con funzione aggiuntiva di microventilazione e inclinazione dell'anta regolabile in modalità inverno-estate." },
+      ],
+      coloriDesc: "Scegli tra un'ampia gamma di colori e finiture legno per personalizzare le tue finestre e armonizzarle con lo stile della tua abitazione.",
+      benefits: [
+        { title: "Isolamento Termico", desc: "Efficace isolamento del calore con bollette più basse e temperature confortevoli tutto l'anno grazie al profilo a 5 camere e al pacchetto vetro fino a 49 mm." },
+        { title: "Comfort Acustico", desc: "Riduzione del rumore esterno fino a 46 dB per ambienti silenziosi e confortevoli, ideale per abitazioni in zone trafficate." },
+        { title: "Sicurezza", desc: "Ferramenta anti-effrazione di serie con possibilità di upgrade a classe RC2. Protezione e tranquillità per la tua famiglia." },
+      ],
+      ctaTitle: "Interessato al DMR CONFORT?",
+    },
+
+    dmrDomus: {
+      category: "Finestre in PVC",
+      description: "Il best-seller della gamma. Profilo a 6 camere con profondità costruttiva di 76 mm e 3 livelli di guarnizione. Comfort superiore con protezione termica e acustica ottimale fino a 47 dB, massimo grado di sicurezza fino a RC3 e aspetto classico ed elegante con saldatura invisibile.",
+      features: [
+        "Profilo a 6 camere isolanti per massimo isolamento termico e acustico",
+        "Profondità costruttiva 76 mm con 3 livelli di guarnizione e guarnizione mediana",
+        "Protezione acustica fino a 47 dB (classe 5) per ambienti silenziosi",
+        "Resistenza all'effrazione fino alla classe RC3",
+        "Saldatura invisibile per superficie perfettamente piana e aspetto estetico superiore",
+        "Vetrocamera doppio vetro 3.3.1 Lowe Laminato con gas argon e canalina calda",
+        "Rinforzi in acciaio zincato 1,5–2,5 mm per alta stabilità e lunga durata",
+        "Pellicole di alta qualità in vasta gamma di colori",
+      ],
+      mainTitle: "Caratteristiche Principali",
+      mainDesc: "Il DMR DOMUS è dotato di un profilo a 6 camere isolanti con profondità costruttiva di 76 mm e 3 livelli di guarnizione con guarnizione mediana per una protezione termica e acustica ottimale fino a 47 dB. La saldatura invisibile garantisce una superficie perfettamente piana e un aspetto estetico superiore. La ferramenta ROTO NX antieffrazione consente di raggiungere fino alla classe RC3, mentre i rinforzi in acciaio zincato assicurano alta stabilità e lunga durata.",
+      specs: [
+        { label: "Profilo", value: "6 camere" },
+        { label: "Classe", value: "A" },
+        { label: "Profondità", value: "76 mm" },
+        { label: "Vetrocamera", value: "Doppio vetro Lowe con gas argon" },
+        { label: "Uw (finestra)", value: "1.1 W/m²K" },
+        { label: "Abbattimento acustico", value: "47 dB" },
+      ],
+      windowAdvantages: [
+        { title: "Microventilazione", desc: "Funzione di montaggio che consente di ventilare l'ambiente senza aprire l'anta, garantendo un ricambio d'aria costante anche in assenza." },
+        { title: "Maniglia di Sicurezza", desc: "Maniglia in alluminio con funzione di sicurezza, pulsante o chiave. Disponibile in diverse finiture per adattarsi a ogni stile." },
+        { title: "Cerniere 3D Regolabili", desc: "Disponibile anche nella versione a scomparsa - Designo. Cerniere 3D regolabili su tre livelli con portata fino a 130 kg." },
+        { title: "Canalina Calda", desc: "Disponibile in acciaio o in plastica - prodotto con tecnologia polimerica o composita, in un'ampia gamma di colori." },
+        { title: "Blocco Rotazione Maniglia", desc: "Funzione che impedisce la rotazione incontrollata della maniglia in posizione di ribalta, responsabile del corretto posizionamento dell'anta in posizione di chiusura." },
+        { title: "Braccio Oscillo-Battente", desc: "Apparecchio per una ventilazione confortevole con funzione aggiuntiva di microventilazione e inclinazione dell'anta regolabile in modalità inverno-estate." },
+      ],
+      coloriDesc: "Scegli tra un'ampia gamma di colori e finiture legno per personalizzare le tue finestre e armonizzarle con lo stile della tua abitazione.",
+      benefits: [
+        { title: "Efficienza Energetica", desc: "Il profilo a 6 camere isolanti con 3 livelli di guarnizione garantisce un isolamento termico eccellente, riducendo i costi energetici." },
+        { title: "Silenziosità", desc: "Abbattimento acustico fino a 47 dB (classe 5) grazie alla vetrocamera con gas argon e al triplo livello di guarnizione." },
+        { title: "Robustezza", desc: "Ferramenta ROTO NX antieffrazione fino a classe RC3 con rinforzi in acciaio zincato per massima sicurezza e durata." },
+      ],
+      ctaTitle: "Interessato al DMR DOMUS?",
+    },
+
+    dmrPassive: {
+      category: "Finestre in PVC",
+      description: "Il top di gamma per progetti di alto livello. Struttura a 6 camere in PVC con profondità di installazione 82 mm, tripla guarnizione in gomma siliconica e prestazioni certificate Passivhaus per edifici a consumo quasi zero.",
+      features: [
+        "Struttura a 6 camere in PVC di altissima qualità per eccellente isolamento termico e acustico",
+        "Profondità di installazione 82 mm con pacchetti di 3 vetri fino a 52 mm",
+        "Rinforzo anta in acciaio zincato per resistenza statica e massima sicurezza",
+        "Tripla guarnizione in gomma siliconica con forma innovativa per ridurre le forze di apertura e chiusura",
+        "Battuta ferramenta nell'asse di 13 mm per elementi ROTO più resistenti",
+        "Ampia superficie delle camere per ventilazione e raffreddamento efficace",
+        "Resistente a radiazioni solari e sollecitazioni meccaniche",
+        "Uw fino a 0.8 W/m²K per edifici NZEB e certificazione Passivhaus",
+      ],
+      mainTitle: "Caratteristiche Principali",
+      mainDesc: "Il DMR PASSIVE è realizzato con una struttura a 6 camere in PVC di altissima qualità e una profondità di installazione di 82 mm che accoglie pacchetti di 3 vetri fino a 52 mm. Il rinforzo anta in acciaio zincato garantisce resistenza statica e sicurezza, mentre la tripla guarnizione in gomma siliconica con forma innovativa riduce le forze di apertura e chiusura. Resistente a radiazioni solari e sollecitazioni meccaniche.",
+      specs: [
+        { label: "Profilo", value: "7 camere" },
+        { label: "Classe", value: "A+" },
+        { label: "Vetrocamera", value: "Triplo vetro basso emissivo" },
+        { label: "Uf (telaio)", value: "0.85 W/m²K" },
+        { label: "Uw (finestra)", value: "0.8 W/m²K" },
+        { label: "Abbattimento acustico", value: "45 dB" },
+      ],
+      windowAdvantages: [
+        { title: "Microventilazione", desc: "Funzione di montaggio che consente di ventilare l'ambiente senza aprire l'anta, garantendo un ricambio d'aria costante anche in assenza." },
+        { title: "Maniglia di Sicurezza", desc: "Maniglia in alluminio con funzione di sicurezza, pulsante o chiave. Disponibile in diverse finiture per adattarsi a ogni stile." },
+        { title: "Cerniere 3D Regolabili", desc: "Disponibile anche nella versione a scomparsa - Designo. Cerniere 3D regolabili su tre livelli con portata fino a 130 kg." },
+        { title: "Canalina Calda", desc: "Disponibile in acciaio o in plastica - prodotto con tecnologia polimerica o composita, in un'ampia gamma di colori." },
+        { title: "Blocco Rotazione Maniglia", desc: "Funzione che impedisce la rotazione incontrollata della maniglia in posizione di ribalta, responsabile del corretto posizionamento dell'anta in posizione di chiusura." },
+        { title: "Braccio Oscillo-Battente", desc: "Apparecchio per una ventilazione confortevole con funzione aggiuntiva di microventilazione e inclinazione dell'anta regolabile in modalità inverno-estate." },
+      ],
+      coloriDesc: "Scegli tra un'ampia gamma di colori e finiture legno per personalizzare le tue finestre e armonizzarle con lo stile della tua abitazione.",
+      benefits: [
+        { title: "Passivhaus Ready", desc: "Prestazioni certificate per edifici passivi e NZEB, con valori Uw fino a 0.8 W/m²K." },
+        { title: "Sostenibilità", desc: "Riduzione drastica dei consumi energetici e materiali riciclabili al 100% a fine vita." },
+        { title: "Design Premium", desc: "Linee minimali e moderne, con profili a vista ridotta per massima luminosità." },
+      ],
+      ctaTitle: "Interessato al DMR PASSIVE?",
+    },
+  },
 };
 
 // ===========================================================================
@@ -798,6 +1148,265 @@ const ro: Translations = {
     ctaTitle: "Pregătit să Crești cu Noi?",
     ctaDesc: "Completează formularul de contact și echipa noastră comercială te va contacta în 24 de ore pentru a discuta aplicația ta.",
     ctaPerks: ["Prețuri de fabrică", "Zonă exclusivă", "Suport marketing", "Formare tehnică", "Platformă online dedicată"],
+  },
+
+  products: {
+    caratteristichePrincipali: "Caracteristici Principale",
+    specificheTecniche: "Specificații Tehnice",
+    vantaggiChiave: "Avantaje Cheie",
+    dettagliTecnici: "Detalii Tehnice",
+    vantaggiFinestra: "Avantajele Ferestrei",
+    coloriDisponibili: "Culori Disponibile",
+    coloriDisponibiliDesc: "Alege dintr-o gamă largă de culori și finisaje lemn pentru a personaliza ferestrele și a le armoniza cu stilul locuinței tale.",
+    ctaContactDesc: "Contactează-ne pentru o ofertă personalizată și află condițiile rezervate distribuitorilor.",
+    galleria: "Galerie",
+
+    tapparelle: {
+      category: "Produsele Noastre",
+      title: "",
+      titleAccent: "Jaluzele Rulante",
+      description: "Jaluzele rulante din aluminiu: ușurință, rezistență și izolare termică superioară. Protecție împotriva efracției, economie de energie. Disponibile coibentate, extrudate și motorizate.",
+      features: [
+        "Aluminiu ușor și rezistent, rezistă la intemperii și uzură",
+        "Izolare termică superioară: căldură iarna, răcoare vara",
+        "Barieră eficientă împotriva tentativelor de efracție",
+        "Disponibile cu spumă poliuretanică coibentată",
+        "Motorizare electrică cu motor tubular integrat în rolă",
+        "Pregătite pentru domotică și Smart Home",
+        "Reducerea zgomotelor exterioare",
+        "Aluminiu 100% reciclabil, alegere sustenabilă",
+        "Disponibile fără casetă (sistem monobloc)",
+      ],
+      specs: [
+        { label: "Material", value: "Aluminiu" },
+        { label: "Coibentare", value: "Spumă poliuretanică" },
+        { label: "Motorizare", value: "Motor tubular" },
+        { label: "Domotică", value: "Smart Home ready" },
+        { label: "Sustenabilitate", value: "100% reciclabil" },
+        { label: "Versiuni", value: "Coibentate / Extrudate" },
+      ],
+      benefits: [
+        { title: "Economie de Energie", desc: "Aluminiul coibentat cu spumă poliuretanică reține căldura iarna și respinge căldura estivală, reducând costurile la factură." },
+        { title: "Securitate Anti-efracție", desc: "Robustețea aluminiului, combinată cu structura coibentată, creează o protecție suplimentară împotriva tentativelor de efracție." },
+        { title: "Motorizare Smart", desc: "Motor tubular ascuns în rolă, control de la distanță prin domotică. Consum mai mic decât un mic aparat electric." },
+      ],
+      ctaTitle: "Interesat de Jaluzelele Rulante?",
+    },
+
+    portoncini: {
+      category: "Produsele Noastre",
+      title: "Uși de Intrare în",
+      titleAccent: "PVC",
+      description: "Uși de intrare din PVC cu adâncime constructivă 76-82-92 mm, 6 camere de izolare și 3 garnituri. Uw până la 0,72 W/m²K, acustică până la 47 dB, securitate până la RC3.",
+      features: [
+        "Adâncime constructivă disponibilă în 76, 82 și 92 mm",
+        "6 camere de izolare pentru eficiență termică maximă",
+        "3 garnituri cu garnituă mediană pentru etanșare superioară",
+        "Coeficient termic Uw până la 0,72 W/m²K",
+        "Performanțe acustice până la 47 dB (clasa 5)",
+        "Rezistență la efracție până la clasa RC3",
+        "Broască multipunct mecanic-automată cu blocare automată",
+        "Prag standard din aluminiu 20 mm sau soluție fără prag",
+        "Panouri ornamentale HPL, sticlă termoizolantă și aplicații din inox",
+        "Gamă largă de culori și folii decorative",
+      ],
+      specs: [
+        { label: "Adâncime", value: "76 / 82 / 92 mm" },
+        { label: "Camere", value: "6" },
+        { label: "Uw", value: "până la 0,72 W/m²K" },
+        { label: "Acustică", value: "47 dB (clasa 5)" },
+        { label: "Securitate", value: "Până la RC3" },
+        { label: "Broască", value: "Multipunct automată" },
+      ],
+      benefits: [
+        { title: "Securitate Maximă", desc: "Broască multipunct mecanic-automată cu 3 puncte de închidere cu ieșire automată, rezistență până la clasa RC3." },
+        { title: "Izolare Perfectă", desc: "Uw până la 0,72 W/m²K datorită celor 6 camere de izolare și 3 garnituri cu garnituă mediană." },
+        { title: "Personalizare Totală", desc: "Panouri ornamentale HPL, bare și mânere din inox, luminator și ferestre laterale pentru orice necesitate." },
+      ],
+      ctaTitle: "Interesat de Ușile de Intrare PVC?",
+    },
+
+    cassonetti: {
+      category: "Produsele Noastre",
+      title: "Casete Rulou",
+      titleAccent: "Coibentate",
+      description: "Caseta rulou este recipientul care adăpostește ruloul, pozitionat în partea superioară a ferestrei. Rol fundamental în izolarea termică și acustică: casetele neizolate provoacă dispersii, punți termice, condens și mucegai.",
+      features: [
+        "Recipient pentru rulou îngropat în zid sau aparent",
+        "Coibentare pentru eliminarea punților termice și dispersiilor",
+        "Prevenirea condensului și mucegaiului în zona casetei",
+        "Inspecție frontală facilitată pentru întreținere și înlocuire jaluzelă",
+        "Compatibil cu jaluzele motorizate",
+        "Dimensiuni la comandă pentru orice deschidere murală",
+        "Linii curate și esențiale, soluții încastrate disponibile",
+        "Pregătit pentru plasă de țânțari",
+      ],
+      specs: [
+        { label: "Material", value: "PVC / Aluminiu / Compozit" },
+        { label: "Coibentare", value: "EPS densitate înaltă" },
+        { label: "Inspecție", value: "Frontală" },
+        { label: "Motorizare", value: "Pregătit" },
+        { label: "Design", value: "Încastrat disponibil" },
+        { label: "Dimensiuni", value: "La comandă" },
+      ],
+      benefits: [
+        { title: "Zero Punți Termice", desc: "O casetă neizolată provoacă dispersii termice iarna și supraîncălzire vara. Coibentarea elimină complet această problemă." },
+        { title: "Prevenirea Condensului", desc: "Elimină formarea punților termice cu condens și mucegai, îmbunătățind salubritatea mediului." },
+        { title: "Întreținere Ușoară", desc: "Acces simplu pentru întreținere și înlocuirea jaluzelei, fără intervenții invazive." },
+      ],
+      ctaTitle: "Interesat de Casetele Rulou?",
+    },
+
+    persiane: {
+      category: "Produsele Noastre",
+      title: "Obloane din",
+      titleAccent: "Aluminiu",
+      description: "Obloane exterioare din aluminiu cu lamele fixe sau orientabile. Secțiunea profilelor 56 mm rame și 46 mm canate. Vopsitorie RAL la alegere sau sublimare efect lemn.",
+      features: [
+        "Secțiunea profilelor: 56 mm rame și 46 mm canate",
+        "Lamele fixe (83x25 mm plane sau 40x25 mm simetrice) sau orientabile (72x12 mm, de la 0° la 180°)",
+        "Soclu de bază reglabil H 75-113 mm",
+        "Garnituă pe rame și canate",
+        "Rame tip Z sau L, sau fără rame cu canat la perete",
+        "Vopsitorie RAL la alegere sau sublimare efect lemn",
+        "Tipuri: cu deschidere, pliante, glisante interior sau exterior perete",
+        "Suprafețe plane, ușor de curățat",
+      ],
+      specs: [
+        { label: "Rame", value: "56 mm" },
+        { label: "Canat", value: "46 mm" },
+        { label: "Lamele", value: "Fixe sau orientabile" },
+        { label: "Orientare", value: "0 - 180 grade" },
+        { label: "Soclu", value: "H 75-113 mm" },
+        { label: "Finisaje", value: "RAL / Efect lemn" },
+      ],
+      benefits: [
+        { title: "Control Lumină", desc: "Lamele orientabile de la 0° la 180° cu comandă manuală pentru reglarea precisă a luminozității și ventilației." },
+        { title: "Versatilitate", desc: "Realizabile cu deschidere, pliante sau glisante, pentru integrare cu orice soluție constructivă în construcție nouă sau renovare." },
+        { title: "Design și Finisaje", desc: "Suprafețe plane ușor de curățat, vopsitorie RAL la alegere sau sublimare culoare lemn pentru un aspect elegant și natural." },
+      ],
+      ctaTitle: "Interesat de Obloanele din Aluminiu?",
+    },
+
+    dmrConfort: {
+      category: "Ferestre PVC",
+      description: "Ferestre care combină design modern, profile subțiri și performanțe excelente. Proiectate pentru a aduce lumină naturală maximă cu niveluri ridicate de izolare termică și acustică. Se adaptează proiectelor arhitecturale clasice și moderne: alegerea pentru cei care caută formă ușoară, eficiență energetică și performanțe fiabile.",
+      features: [
+        "Profile înalte de doar 113 mm pentru lumină naturală maximă",
+        "Pachet sticlă până la 49 mm pentru izolare termică excelentă",
+        "5 camere în ramă și canat, 4 camere în montant",
+        "Protecție acustică până la 46 dB pentru medii liniștite",
+        "Durabil și rezistent la intemperii pentru mulți ani de utilizare",
+        "Sistem ecologic conceput gândindu-se la reciclare",
+        "Formă versatilă pentru proiecte arhitecturale moderne și clasice",
+        "Garnituri cu dublă bătaie pentru etanșare la aer și apă",
+      ],
+      mainTitle: "Caracteristici Principale",
+      mainDesc: "DMR CONFORT prezintă profile înalte de doar 113 mm și un pachet de sticlă atent selectat pentru a aduce mai multă lumină naturală. Garantează o izolare eficientă a căldurii cu facturi mai mici și temperaturi confortabile tot anul, plus reducerea zgomotului extern până la 46 dB. Profile concepute pentru mulți ani de utilizare, rezistente la intemperii și ușor de întreținut. Sistem dezvoltat gândindu-se la reciclare, cu o formă versatilă pentru proiecte atât moderne cât și clasice.",
+      specs: [
+        { label: "Profil", value: "5 camere (ramă/canat)" },
+        { label: "Clasă", value: "B" },
+        { label: "Adâncime instalare", value: "72 mm" },
+        { label: "Pachet sticlă", value: "până la 49 mm" },
+        { label: "Uw (fereastră)", value: "1.3 W/m²K" },
+        { label: "Reducere acustică", value: "46 dB" },
+      ],
+      windowAdvantages: [
+        { title: "Microventilare", desc: "Funcție de montaj care permite ventilarea spațiului fără a deschide canatul, asigurând un schimb constant de aer." },
+        { title: "Mâner de Securitate", desc: "Mâner din aluminiu cu funcție de securitate, buton sau cheie. Disponibil în diverse finisaje." },
+        { title: "Balamale 3D Reglabile", desc: "Disponibil și în versiunea încastrată - Designo. Balamale 3D reglabile pe trei niveluri cu capacitate până la 130 kg." },
+        { title: "Profil Cald", desc: "Disponibil în oțel sau plastic - produs cu tehnologie polimerică sau compozită, într-o gamă largă de culori." },
+        { title: "Blocare Rotire Mâner", desc: "Funcție care împiedică rotirea necontrolată a mânerului în poziția de basculare, responsabilă de poziționarea corectă a canatului." },
+        { title: "Braț Oscilant-Batant", desc: "Dispozitiv pentru ventilare confortabilă cu funcție suplimentară de microventilare și înclinare reglabilă iarnă-vară." },
+      ],
+      coloriDesc: "Alege dintr-o gamă largă de culori și finisaje lemn pentru a personaliza ferestrele și a le armoniza cu stilul locuinței tale.",
+      benefits: [
+        { title: "Izolare Termică", desc: "Izolare eficientă a căldurii cu facturi mai mici și temperaturi confortabile tot anul datorită profilului cu 5 camere și pachetului de sticlă până la 49 mm." },
+        { title: "Confort Acustic", desc: "Reducerea zgomotului extern până la 46 dB pentru medii liniștite și confortabile, ideal pentru locuințe în zone aglomerate." },
+        { title: "Securitate", desc: "Feronerie anti-efracție de serie cu posibilitate de upgrade la clasa RC2. Protecție și liniște pentru familia ta." },
+      ],
+      ctaTitle: "Interesat de DMR CONFORT?",
+    },
+
+    dmrDomus: {
+      category: "Ferestre PVC",
+      description: "Best-seller al gamei. Profile cu 6 camere izolante, 3 niveluri de garnitură și sticlă dublă Low-E cu gaz argon. Clasa A de izolare termică, acustică până la 47 dB, feronerie ROTO NX anti-efracție. Alegerea perfectă pentru renovări și construcții noi de înaltă calitate.",
+      features: [
+        "Profil cu 6 camere izolante pentru izolare termică și acustică maximă",
+        "Adâncime constructivă 76 mm cu 3 niveluri de garnitură și garnituă mediană",
+        "Protecție acustică până la 47 dB (clasa 5) pentru medii liniștite",
+        "Rezistență la efracție până la clasa RC3",
+        "Sudură invizibilă pentru suprafață perfect plană și aspect estetic superior",
+        "Vitrocameră sticlă dublă 3.3.1 Low-E Laminat cu gaz argon și profil cald",
+        "Rinforted din oțel zincat 1,5-2,5 mm pentru stabilitate înaltă și durabilitate",
+        "Folii de înaltă calitate în gamă largă de culori",
+      ],
+      mainTitle: "Caracteristici Principale",
+      mainDesc: "DMR DOMUS reprezintă best-seller-ul gamei noastre de ferestre PVC. Profilul cu 6 camere izolante și 3 niveluri de garnitură garantează o izolare termică și acustică excelentă. Vitrocamera cu sticlă dublă 3.3.1 Low-E Laminat cu gaz argon și profil cald asigură performanțe energetice de clasa A. Rinforțurile din oțel zincat 1,5-2,5 mm oferă stabilitate înaltă și durabilitate pe termen lung.",
+      specs: [
+        { label: "Profil", value: "6 camere" },
+        { label: "Clasă", value: "A" },
+        { label: "Adâncime", value: "76 mm" },
+        { label: "Vitrocameră", value: "Sticlă dublă Low-E cu gaz argon" },
+        { label: "Uw (fereastră)", value: "1.1 W/m²K" },
+        { label: "Reducere acustică", value: "47 dB" },
+      ],
+      windowAdvantages: [
+        { title: "Microventilare", desc: "Funcție de montaj care permite ventilarea spațiului fără a deschide canatul, asigurând un schimb constant de aer." },
+        { title: "Mâner de Securitate", desc: "Mâner din aluminiu cu funcție de securitate, buton sau cheie. Disponibil în diverse finisaje." },
+        { title: "Balamale 3D Reglabile", desc: "Disponibil și în versiunea încastrată - Designo. Balamale 3D reglabile pe trei niveluri cu capacitate până la 130 kg." },
+        { title: "Profil Cald", desc: "Disponibil în oțel sau plastic - produs cu tehnologie polimerică sau compozită, într-o gamă largă de culori." },
+        { title: "Blocare Rotire Mâner", desc: "Funcție care împiedică rotirea necontrolată a mânerului în poziția de basculare, responsabilă de poziționarea corectă a canatului." },
+        { title: "Braț Oscilant-Batant", desc: "Dispozitiv pentru ventilare confortabilă cu funcție suplimentară de microventilare și înclinare reglabilă iarnă-vară." },
+      ],
+      coloriDesc: "Alege dintr-o gamă largă de culori și finisaje lemn pentru a personaliza ferestrele și a le armoniza cu stilul locuinței tale.",
+      benefits: [
+        { title: "Eficiență Energetică", desc: "Profilul cu 6 camere izolante cu 3 niveluri de garnitură garantează o izolare termică excelentă, reducând costurile energetice." },
+        { title: "Silențiozitate", desc: "Reducere acustică până la 47 dB (clasa 5) datorită vitrocamerei cu gaz argon și triplului nivel de garnitură." },
+        { title: "Robustețe", desc: "Feronerie ROTO NX anti-efracție până la clasa RC3 cu rinforted din oțel zincat pentru securitate maximă și durabilitate." },
+      ],
+      ctaTitle: "Interesat de DMR DOMUS?",
+    },
+
+    dmrPassive: {
+      category: "Ferestre PVC",
+      description: "Topul gamei pentru proiecte de înaltă clasă. Profil cu 7 camere cu performanțe certificate Passivhaus. Triplu sticlă low-emissive, design minimalist, Uw până la 0.8 W/m²K. Soluția ideală pentru clădiri NZEB și proiecte premium.",
+      features: [
+        "Structură cu 6 camere din PVC de înaltă calitate pentru izolare termică și acustică excelentă",
+        "Adâncime de instalare 82 mm cu pachete de 3 sticle până la 52 mm",
+        "Rinforcement canat din oțel zincat pentru rezistență statică și securitate maximă",
+        "Triplă garnitură din cauciuc siliconic cu formă inovatoare",
+        "Bătaie feronerie la 13 mm pentru elemente ROTO mai rezistente",
+        "Suprafață amplă a camerelor pentru ventilare și răcire eficientă",
+        "Rezistent la radiații solare și solicitări mecanice",
+        "Uw până la 0.8 W/m²K pentru clădiri NZEB și certificare Passivhaus",
+      ],
+      mainTitle: "Caracteristici Principale",
+      mainDesc: "DMR PASSIVE reprezintă vârful gamei noastre. Structura cu 6 camere din PVC de înaltă calitate cu adâncime de instalare 82 mm și pachete de 3 sticle până la 52 mm garantează performanțe excepționale. Tripla garnitură din cauciuc siliconic cu formă inovatoare reduce forțele de deschidere și închidere. Uw până la 0.8 W/m²K pentru clădiri NZEB și certificarea Passivhaus.",
+      specs: [
+        { label: "Profil", value: "7 camere" },
+        { label: "Clasă", value: "A+" },
+        { label: "Vitrocameră", value: "Triplu sticlă low-emissive" },
+        { label: "Uf (ramă)", value: "0.85 W/m²K" },
+        { label: "Uw (fereastră)", value: "0.8 W/m²K" },
+        { label: "Reducere acustică", value: "45 dB" },
+      ],
+      windowAdvantages: [
+        { title: "Microventilare", desc: "Funcție de montaj care permite ventilarea spațiului fără a deschide canatul, asigurând un schimb constant de aer." },
+        { title: "Mâner de Securitate", desc: "Mâner din aluminiu cu funcție de securitate, buton sau cheie. Disponibil în diverse finisaje." },
+        { title: "Balamale 3D Reglabile", desc: "Disponibil și în versiunea încastrată - Designo. Balamale 3D reglabile pe trei niveluri cu capacitate până la 130 kg." },
+        { title: "Profil Cald", desc: "Disponibil în oțel sau plastic - produs cu tehnologie polimerică sau compozită, într-o gamă largă de culori." },
+        { title: "Blocare Rotire Mâner", desc: "Funcție care împiedică rotirea necontrolată a mânerului în poziția de basculare, responsabilă de poziționarea corectă a canatului." },
+        { title: "Braț Oscilant-Batant", desc: "Dispozitiv pentru ventilare confortabilă cu funcție suplimentară de microventilare și înclinare reglabilă iarnă-vară." },
+      ],
+      coloriDesc: "Alege dintr-o gamă largă de culori și finisaje lemn pentru a personaliza ferestrele și a le armoniza cu stilul locuinței tale.",
+      benefits: [
+        { title: "Passivhaus Ready", desc: "Performanțe certificate pentru clădiri pasive și NZEB, cu valori Uw până la 0.8 W/m²K." },
+        { title: "Sustenabilitate", desc: "Reducere drastică a consumului energetic și materiale 100% reciclabile la sfârșitul ciclului de viață." },
+        { title: "Design Premium", desc: "Linii minimale și moderne, cu profile la vedere reduse pentru luminozitate maximă." },
+      ],
+      ctaTitle: "Interesat de DMR PASSIVE?",
+    },
   },
 };
 

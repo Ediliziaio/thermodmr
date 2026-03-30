@@ -21,47 +21,24 @@ const galleryImages = [
 
 import { fadeUp, stagger, inViewOptions as inViewOpts } from "@/lib/animations";
 
-const features = [
-  "Contenitore per avvolgibile incassato nel muro o a vista",
-  "Coibentazione per eliminare ponti termici e dispersioni",
-  "Prevenzione di condensa e muffa nella zona cassonetto",
-  "Ispezione frontale facilitata per manutenzione e sostituzione tapparella",
-  "Compatibile con tapparelle motorizzate",
-  "Dimensioni su misura per ogni vano murario",
-  "Linee pulite ed essenziali, soluzioni a scomparsa disponibili",
-  "Predisposizione per zanzariere",
-];
-
-const specs = [
-  { label: "Materiale", value: "PVC / Alluminio / Composito" },
-  { label: "Coibentazione", value: "EPS alta densità" },
-  { label: "Ispezione", value: "Frontale" },
-  { label: "Motorizzazione", value: "Predisposto" },
-  { label: "Design", value: "A scomparsa disponibile" },
-  { label: "Dimensioni", value: "Su misura" },
-];
-
-const benefits = [
-  { icon: ThermometerSun, title: "Zero Ponti Termici", desc: "Un cassonetto non isolato causa dispersioni termiche in inverno e surriscaldamento in estate. La coibentazione elimina completamente questo problema." },
-  { icon: Wrench, title: "Prevenzione Condensa", desc: "Elimina la formazione di ponti termici con conseguente condensa e muffa, migliorando la salubrità dell'ambiente." },
-  { icon: Ruler, title: "Manutenzione Facile", desc: "Accesso semplice per manutenzione e sostituzione della tapparella, senza interventi invasivi." },
-];
+const benefitIcons = [ThermometerSun, Wrench, Ruler];
 
 const Cassonetti = () => {
-  const { lang } = useLanguage();
+  const { t, lang } = useLanguage();
   const contattiLink = lang === "ro" ? "/ro/contact" : "/contatti";
   const [specsRef, specsInView] = useInView(inViewOpts);
   const [benefitsRef, benefitsInView] = useInView(inViewOpts);
+  const p = t.products.cassonetti;
 
   return (
     <div className="min-h-screen bg-white">
       <PublicNavbar />
 
       <ProductHero
-        category="I Nostri Prodotti"
-        title="Cassonetti"
-        titleAccent="Coibentati"
-        description="Il cassonetto è il contenitore che ospita l'avvolgibile, posizionato nella parte superiore della finestra. Ruolo fondamentale nell'isolamento termico e acustico: cassonetti non isolati causano dispersioni, ponti termici, condensa e muffa."
+        category={p.category}
+        title={p.title}
+        titleAccent={p.titleAccent}
+        description={p.description}
         heroImage={imgCassonettoSezione}
       />
 
@@ -75,9 +52,9 @@ const Cassonetti = () => {
               </div>
             </div>
             <div className="space-y-6">
-              <h2 className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)]">Caratteristiche Principali</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)]">{t.products.caratteristichePrincipali}</h2>
               <ul className="space-y-3">
-                {features.map((f) => (
+                {p.features.map((f) => (
                   <li key={f} className="flex items-center gap-3 text-[hsl(0,0%,35%)]">
                     <CheckCircle2 className="h-5 w-5 text-[hsl(195,85%,45%)] shrink-0" />
                     <span className="text-sm font-medium">{f}</span>
@@ -86,7 +63,7 @@ const Cassonetti = () => {
               </ul>
               <Link to={contattiLink}>
                 <Button className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-8 mt-2 shadow-[0_4px_20px_hsl(195,85%,45%,0.25)]">
-                  Richiedi Preventivo <ArrowRight className="ml-2 h-5 w-5" />
+                  {t.cta.richiediPreventivo} <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
             </div>
@@ -99,9 +76,9 @@ const Cassonetti = () => {
       <section ref={specsRef} className="py-16 sm:py-24 bg-[hsl(0,0%,97%)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div initial="hidden" animate={specsInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-8 sm:mb-12 text-center">Specifiche Tecniche</motion.h2>
+            <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-8 sm:mb-12 text-center">{t.products.specificheTecniche}</motion.h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {specs.map((s) => (
+              {p.specs.map((s) => (
                 <motion.div key={s.label} variants={fadeUp} className="bg-white rounded-2xl p-6 shadow-sm border border-[hsl(0,0%,92%)]">
                   <p className="text-xs font-bold tracking-wider text-[hsl(195,85%,45%)] uppercase mb-1">{s.label}</p>
                   <p className="text-2xl font-bold text-[hsl(0,0%,10%)]">{s.value}</p>
@@ -115,17 +92,20 @@ const Cassonetti = () => {
       <section ref={benefitsRef} className="py-16 sm:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <motion.div initial="hidden" animate={benefitsInView ? "visible" : "hidden"} variants={stagger}>
-            <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-8 sm:mb-12 text-center">Vantaggi Chiave</motion.h2>
+            <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-8 sm:mb-12 text-center">{t.products.vantaggiChiave}</motion.h2>
             <div className="grid md:grid-cols-3 gap-8">
-              {benefits.map((b) => (
-                <motion.div key={b.title} variants={fadeUp} className="text-center space-y-4">
-                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[hsl(195,85%,45%,0.1)]">
-                    <b.icon className="h-7 w-7 text-[hsl(195,85%,45%)]" />
-                  </div>
-                  <h3 className="text-xl font-bold text-[hsl(0,0%,10%)]">{b.title}</h3>
-                  <p className="text-sm text-[hsl(0,0%,40%)] leading-relaxed">{b.desc}</p>
-                </motion.div>
-              ))}
+              {p.benefits.map((b, i) => {
+                const Icon = benefitIcons[i];
+                return (
+                  <motion.div key={b.title} variants={fadeUp} className="text-center space-y-4">
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[hsl(195,85%,45%,0.1)]">
+                      <Icon className="h-7 w-7 text-[hsl(195,85%,45%)]" />
+                    </div>
+                    <h3 className="text-xl font-bold text-[hsl(0,0%,10%)]">{b.title}</h3>
+                    <p className="text-sm text-[hsl(0,0%,40%)] leading-relaxed">{b.desc}</p>
+                  </motion.div>
+                );
+              })}
             </div>
           </motion.div>
         </div>
@@ -135,11 +115,11 @@ const Cassonetti = () => {
 
       <section className="py-16 sm:py-20 bg-[hsl(195,85%,45%)]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Interessato ai Cassonetti?</h2>
-          <p className="text-white/80 mb-6 sm:mb-8 text-sm sm:text-base">Contattaci per un preventivo personalizzato e scopri le condizioni riservate ai rivenditori.</p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">{p.ctaTitle}</h2>
+          <p className="text-white/80 mb-6 sm:mb-8 text-sm sm:text-base">{t.products.ctaContactDesc}</p>
           <Link to={contattiLink}>
             <Button className="w-full sm:w-auto bg-white text-[hsl(195,85%,45%)] hover:bg-white/90 font-semibold rounded-full px-10 py-3 text-base sm:text-lg shadow-xl min-h-[48px]">
-              Richiedi Preventivo <ArrowRight className="ml-2 h-5 w-5" />
+              {t.cta.richiediPreventivo} <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
         </div>

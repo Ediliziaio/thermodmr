@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/carousel";
 
 import { fadeUp, stagger } from "@/lib/animations";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 interface GalleryImage {
   src: string;
@@ -23,6 +24,7 @@ interface ProductGalleryProps {
 }
 
 const ProductGallery = ({ images }: ProductGalleryProps) => {
+  const { t } = useLanguage();
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
@@ -40,7 +42,7 @@ const ProductGallery = ({ images }: ProductGalleryProps) => {
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <motion.div initial="hidden" animate={inView ? "visible" : "hidden"} variants={stagger}>
           <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-8 sm:mb-12 text-center">
-            Galleria
+            {t.products.galleria}
           </motion.h2>
           <motion.div variants={fadeUp}>
             <Carousel setApi={setApi} opts={{ loop: true }} className="w-full">
