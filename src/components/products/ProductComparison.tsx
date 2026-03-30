@@ -3,12 +3,14 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { CheckCircle2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 import { fadeUp, stagger } from "@/lib/animations";
 
 interface ModelData {
   name: string;
-  slug: string;
+  slugIt: string;
+  slugRo: string;
   badge?: string;
   badgeColor?: string;
   specs: Record<string, string>;
@@ -17,7 +19,8 @@ interface ModelData {
 const models: ModelData[] = [
   {
     name: "DMR CONFORT",
-    slug: "/prodotti/dmr-confort",
+    slugIt: "/prodotti/dmr-confort",
+    slugRo: "/ro/produse/dmr-confort",
     badge: "Miglior Prezzo",
     badgeColor: "hsl(145, 60%, 40%)",
     specs: {
@@ -31,7 +34,8 @@ const models: ModelData[] = [
   },
   {
     name: "DMR DOMUS",
-    slug: "/prodotti/dmr-domus",
+    slugIt: "/prodotti/dmr-domus",
+    slugRo: "/ro/produse/dmr-domus",
     badge: "Best Seller",
     badgeColor: "hsl(195, 85%, 45%)",
     specs: {
@@ -45,7 +49,8 @@ const models: ModelData[] = [
   },
   {
     name: "DMR PASSIVE",
-    slug: "/prodotti/dmr-passive",
+    slugIt: "/prodotti/dmr-passive",
+    slugRo: "/ro/produse/dmr-passive",
     badge: "Top di Gamma",
     badgeColor: "hsl(40, 70%, 45%)",
     specs: {
@@ -66,17 +71,23 @@ interface ProductComparisonProps {
 }
 
 const ProductComparison = ({ currentSlug }: ProductComparisonProps) => {
+  const { lang, t } = useLanguage();
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.05, rootMargin: "0px 0px -50px 0px" });
+
+  const getSlug = (m: ModelData) => lang === "ro" ? m.slugRo : m.slugIt;
+  const isCurrent = (m: ModelData) => m.slugIt === currentSlug || m.slugRo === currentSlug;
 
   return (
     <section ref={ref} className="py-16 sm:py-24 bg-[hsl(0,0%,97%)]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <motion.div initial="hidden" animate={inView ? "visible" : "hidden"} variants={stagger}>
           <motion.h2 variants={fadeUp} className="text-2xl sm:text-3xl font-bold text-[hsl(0,0%,10%)] mb-4 text-center">
-            Confronta i Modelli
+            {lang === "ro" ? "Compară Modelele" : "Confronta i Modelli"}
           </motion.h2>
           <motion.p variants={fadeUp} className="text-sm text-[hsl(0,0%,45%)] text-center mb-8 sm:mb-12">
-            Scopri le differenze tra le nostre finestre in PVC e scegli quella giusta per te.
+            {lang === "ro"
+              ? "Descoperă diferențele dintre ferestrele noastre PVC și alege modelul potrivit pentru tine."
+              : "Scopri le differenze tra le nostre finestre in PVC e scegli quella giusta per te."}
           </motion.p>
 
           {/* Desktop table */}
@@ -88,7 +99,7 @@ const ProductComparison = ({ currentSlug }: ProductComparisonProps) => {
                   {models.map((m) => (
                     <th
                       key={m.name}
-                      className={`text-center p-4 ${m.slug === currentSlug ? "bg-[hsl(195,85%,45%,0.06)]" : ""}`}
+                      className={`text-center p-4 ${isCurrent(m) ? "bg-[hsl(195,85%,45%,0.06)]" : ""}`}
                     >
                       <p className="text-sm font-bold text-[hsl(0,0%,10%)]">{m.name}</p>
                       {m.badge && (
@@ -105,7 +116,7 @@ const ProductComparison = ({ currentSlug }: ProductComparisonProps) => {
                     {models.map((m) => (
                       <td
                         key={m.name}
-                        className={`text-center p-4 text-sm font-medium text-[hsl(0,0%,20%)] ${m.slug === currentSlug ? "bg-[hsl(195,85%,45%,0.06)]" : ""}`}
+                        className={`text-center p-4 text-sm font-medium text-[hsl(0,0%,20%)] ${isCurrent(m) ? "bg-[hsl(195,85%,45%,0.06)]" : ""}`}
                       >
                         {m.specs[key]}
                       </td>
@@ -115,15 +126,15 @@ const ProductComparison = ({ currentSlug }: ProductComparisonProps) => {
                 <tr className="border-t border-[hsl(0,0%,90%)]">
                   <td />
                   {models.map((m) => (
-                    <td key={m.name} className={`text-center p-4 ${m.slug === currentSlug ? "bg-[hsl(195,85%,45%,0.06)]" : ""}`}>
-                      {m.slug === currentSlug ? (
+                    <td key={m.name} className={`text-center p-4 ${isCurrent(m) ? "bg-[hsl(195,85%,45%,0.06)]" : ""}`}>
+                      {isCurrent(m) ? (
                         <span className="inline-flex items-center gap-1 text-xs font-bold text-[hsl(195,85%,45%)]">
-                          <CheckCircle2 className="h-4 w-4" /> Stai visualizzando
+                          <CheckCircle2 className="h-4 w-4" /> {lang === "ro" ? "Vizualizezi" : "Stai visualizzando"}
                         </span>
                       ) : (
-                        <Link to={m.slug}>
+                        <Link to={getSlug(m)}>
                           <Button variant="outline" size="sm" className="rounded-full text-xs border-[hsl(195,85%,45%)] text-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,45%,0.08)]">
-                            Scopri <ArrowRight className="ml-1 h-3 w-3" />
+                            {t.cta.scopriDiPiu} <ArrowRight className="ml-1 h-3 w-3" />
                           </Button>
                         </Link>
                       )}
@@ -136,7 +147,7 @@ const ProductComparison = ({ currentSlug }: ProductComparisonProps) => {
 
           {/* Mobile cards */}
           <div className="md:hidden space-y-4">
-            {models.filter((m) => m.slug !== currentSlug).map((m) => (
+            {models.filter((m) => !isCurrent(m)).map((m) => (
               <motion.div key={m.name} variants={fadeUp} className="bg-white rounded-2xl p-5 border border-[hsl(0,0%,92%)] shadow-sm">
                 <div className="flex items-center justify-between mb-3">
                   <p className="font-bold text-[hsl(0,0%,10%)]">{m.name}</p>
@@ -150,9 +161,9 @@ const ProductComparison = ({ currentSlug }: ProductComparisonProps) => {
                     </div>
                   ))}
                 </div>
-                <Link to={m.slug}>
+                <Link to={getSlug(m)}>
                   <Button variant="outline" size="sm" className="w-full rounded-full text-xs border-[hsl(195,85%,45%)] text-[hsl(195,85%,45%)]">
-                    Scopri {m.name} <ArrowRight className="ml-1 h-3 w-3" />
+                    {t.cta.scopriDiPiu} {m.name} <ArrowRight className="ml-1 h-3 w-3" />
                   </Button>
                 </Link>
               </motion.div>

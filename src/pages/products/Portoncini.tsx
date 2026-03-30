@@ -7,6 +7,7 @@ import imgPortoncinoModerno from "@/assets/thermodmr-portoncino-moderno.jpeg";
 import imgPortonciniColori from "@/assets/thermodmr-portoncini-colori.jpg";
 import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
+import { useLanguage } from "@/i18n/LanguageContext";
 import PublicFooter from "@/components/PublicFooter";
 import ProductHero from "@/components/products/ProductHero";
 import ProductGallery from "@/components/products/ProductGallery";
@@ -49,6 +50,8 @@ const benefits = [
 ];
 
 const Portoncini = () => {
+  const { lang } = useLanguage();
+  const contattiLink = lang === "ro" ? "/ro/contact" : "/contatti";
   const [specsRef, specsInView] = useInView(inViewOpts);
   const [benefitsRef, benefitsInView] = useInView(inViewOpts);
 
@@ -83,7 +86,7 @@ const Portoncini = () => {
                   </li>
                 ))}
               </ul>
-              <Link to="/contatti">
+              <Link to={contattiLink}>
                 <Button className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-8 mt-2 shadow-[0_4px_20px_hsl(195,85%,45%,0.25)]">
                   Richiedi Preventivo <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
@@ -136,7 +139,7 @@ const Portoncini = () => {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">Interessato ai Portoncini in PVC?</h2>
           <p className="text-white/80 mb-6 sm:mb-8 text-sm sm:text-base">Contattaci per un preventivo personalizzato e scopri le condizioni riservate ai rivenditori.</p>
-          <Link to="/contatti">
+          <Link to={contattiLink}>
             <Button className="w-full sm:w-auto bg-white text-[hsl(195,85%,45%)] hover:bg-white/90 font-semibold rounded-full px-10 py-3 text-base sm:text-lg shadow-xl min-h-[48px]">
               Richiedi Preventivo <ArrowRight className="ml-2 h-5 w-5" />
             </Button>

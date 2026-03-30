@@ -10,6 +10,7 @@ import {
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 import { fadeUp, stagger } from "@/lib/animations";
 
@@ -34,7 +35,10 @@ const badgeColors = {
 };
 
 const ProductHero = ({ category, title, titleAccent, description, heroImage, badge }: ProductHeroProps) => {
+  const { lang, t } = useLanguage();
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.05 });
+  const homeLink = lang === "ro" ? "/ro" : "/";
+  const prodottiLink = lang === "ro" ? "/ro/produse" : "/prodotti-pubblico";
 
   return (
     <section ref={ref} className="relative pt-20 min-h-[360px] sm:min-h-[480px] flex items-end overflow-hidden">
@@ -51,13 +55,13 @@ const ProductHero = ({ category, title, titleAccent, description, heroImage, bad
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to="/" className="text-white/60 hover:text-white text-xs">Home</Link>
+                <Link to={homeLink} className="text-white/60 hover:text-white text-xs">{t.prodottiPubblico.breadcrumbHome}</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator className="text-white/40" />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to="/prodotti-pubblico" className="text-white/60 hover:text-white text-xs">Prodotti</Link>
+                <Link to={prodottiLink} className="text-white/60 hover:text-white text-xs">{t.prodottiPubblico.breadcrumbProdotti}</Link>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator className="text-white/40" />

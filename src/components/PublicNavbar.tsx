@@ -5,28 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo_Thermodmr.png";
 import WhatsAppFloating from "@/components/WhatsAppFloating";
-
-const productLinks = [
-  { label: "Finestre in PVC", to: "/prodotti-pubblico" },
-  { label: "DMR Confort", to: "/prodotti/dmr-confort" },
-  { label: "DMR Domus", to: "/prodotti/dmr-domus" },
-  { label: "DMR Passive", to: "/prodotti/dmr-passive" },
-  { label: "Portoncini", to: "/prodotti/portoncini" },
-  { label: "Cassonetti", to: "/prodotti/cassonetti" },
-  { label: "Tapparelle", to: "/prodotti/tapparelle" },
-  { label: "Persiane", to: "/prodotti/persiane" },
-];
-
-const navLinks = [
-  { label: "Chi Siamo", to: "/chi-siamo" },
-  { label: "Prodotti", to: "/prodotti-pubblico", hasDropdown: true },
-  { label: "Vantaggi", to: "/vantaggi" },
-  { label: "Garanzie", to: "/garanzie" },
-  { label: "Diventa Rivenditore", to: "/diventa-rivenditore" },
-  { label: "Contatti", to: "/contatti" },
-];
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const PublicNavbar = () => {
+  const { t, lang } = useLanguage();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
   const [desktopDropdownOpen, setDesktopDropdownOpen] = useState(false);
@@ -34,8 +16,10 @@ const PublicNavbar = () => {
   const dropdownTimeout = useRef<ReturnType<typeof setTimeout>>();
   const location = useLocation();
 
-
-  const isProductPage = location.pathname.startsWith("/prodotti");
+  const homeHref = lang === "ro" ? "/ro" : "/";
+  const isProductPage = lang === "ro"
+    ? location.pathname.startsWith("/ro/produse")
+    : location.pathname.startsWith("/prodotti");
 
   // Close desktop dropdown on click outside
   useEffect(() => {
@@ -67,17 +51,61 @@ const PublicNavbar = () => {
     dropdownTimeout.current = setTimeout(() => setDesktopDropdownOpen(false), 150);
   };
 
+  // Language switcher: map current IT path to RO and vice versa
+  const getAltLangHref = () => {
+    const path = location.pathname;
+    if (lang === "it") {
+      // Map IT paths to RO equivalents
+      const map: Record<string, string> = {
+        "/": "/ro",
+        "/chi-siamo": "/ro/despre-noi",
+        "/prodotti-pubblico": "/ro/produse",
+        "/prodotti/dmr-confort": "/ro/produse/dmr-confort",
+        "/prodotti/dmr-domus": "/ro/produse/dmr-domus",
+        "/prodotti/dmr-passive": "/ro/produse/dmr-passive",
+        "/prodotti/portoncini": "/ro/produse/usi-intrare",
+        "/prodotti/cassonetti": "/ro/produse/casete-rulou",
+        "/prodotti/tapparelle": "/ro/produse/jaluzele",
+        "/prodotti/persiane": "/ro/produse/obloane",
+        "/vantaggi": "/ro/avantaje",
+        "/garanzie": "/ro/garantii",
+        "/contatti": "/ro/contact",
+        "/diventa-rivenditore": "/ro/devino-distribuitor",
+      };
+      return map[path] || "/ro";
+    } else {
+      // Map RO paths back to IT
+      const map: Record<string, string> = {
+        "/ro": "/",
+        "/ro/despre-noi": "/chi-siamo",
+        "/ro/produse": "/prodotti-pubblico",
+        "/ro/produse/dmr-confort": "/prodotti/dmr-confort",
+        "/ro/produse/dmr-domus": "/prodotti/dmr-domus",
+        "/ro/produse/dmr-passive": "/prodotti/dmr-passive",
+        "/ro/produse/usi-intrare": "/prodotti/portoncini",
+        "/ro/produse/casete-rulou": "/prodotti/cassonetti",
+        "/ro/produse/jaluzele": "/prodotti/tapparelle",
+        "/ro/produse/obloane": "/prodotti/persiane",
+        "/ro/avantaje": "/vantaggi",
+        "/ro/garantii": "/garanzie",
+        "/ro/contact": "/contatti",
+        "/ro/devino-distribuitor": "/diventa-rivenditore",
+      };
+      return map[path] || "/";
+    }
+  };
+
   return (
     <>
     <nav className="fixed top-0 inset-x-0 z-50 bg-white border-b border-[hsl(0,0%,90%)] shadow-sm" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
-        <Link to="/">
+        <Link to={homeHref}>
           <img src={logo} alt="ThermoDMR" className="h-9 sm:h-10 object-contain" />
         </Link>
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-6">
-          {navLinks.map((item) => {
+          {t.nav.navLinks.map((item) => {
             const isActive = item.hasDropdown
               ? isProductPage
               : location.pathname === item.to;
@@ -109,7 +137,7 @@ const PublicNavbar = () => {
                   {desktopDropdownOpen && (
                     <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-56">
                       <div className="bg-white rounded-xl border border-[hsl(0,0%,90%)] shadow-xl py-2 z-50">
-                        {productLinks.map((pl) => (
+                        {t.nav.productLinks.map((pl) => (
                           <Link
                             key={pl.to}
                             to={pl.to}
@@ -149,14 +177,23 @@ const PublicNavbar = () => {
           })}
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          {/* Language switcher */}
+          <Link
+            to={getAltLangHref()}
+            className="hidden md:inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-full border border-[hsl(0,0%,85%)] text-[hsl(0,0%,40%)] hover:border-[hsl(195,85%,45%)] hover:text-[hsl(195,85%,45%)] transition-all"
+            title={lang === "it" ? "Versione română" : "Versione italiana"}
+          >
+            {lang === "it" ? "🇷🇴 RO" : "🇮🇹 IT"}
+          </Link>
+
           <Link to="/auth">
             <Button
               size="sm"
               className="bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full px-4 md:px-6 shadow-[0_4px_20px_hsl(195,85%,45%,0.3)] min-h-[44px]"
             >
-              <span className="md:hidden">Accedi</span>
-              <span className="hidden md:inline">Area Riservata</span>
+              <span className="md:hidden">{t.nav.accedi}</span>
+              <span className="hidden md:inline">{t.nav.areaRiservata}</span>
             </Button>
           </Link>
           <button
@@ -196,8 +233,7 @@ const PublicNavbar = () => {
               className="md:hidden fixed top-[57px] inset-x-0 bg-white border-t border-[hsl(0,0%,90%)] shadow-xl z-50 max-h-[calc(100vh-57px)] overflow-y-auto"
             >
               <div className="px-5 py-4 space-y-0.5">
-                {navLinks.map((item, idx) => {
-
+                {t.nav.navLinks.map((item, idx) => {
                   const isActive = item.hasDropdown
                     ? isProductPage
                     : location.pathname === item.to;
@@ -226,7 +262,7 @@ const PublicNavbar = () => {
                               className="overflow-hidden"
                             >
                               <div className="pl-4 pb-2 space-y-0.5 border-l-2 border-[hsl(195,85%,45%)]/20 ml-4 mt-1">
-                                {productLinks.map((pl) => (
+                                {t.nav.productLinks.map((pl) => (
                                   <Link
                                     key={pl.to}
                                     to={pl.to}
@@ -244,7 +280,7 @@ const PublicNavbar = () => {
                             </motion.div>
                           )}
                         </AnimatePresence>
-                        {idx < navLinks.length - 1 && (
+                        {idx < t.nav.navLinks.length - 1 && (
                           <div className="h-px bg-[hsl(0,0%,92%)] mx-2" />
                         )}
                       </div>
@@ -264,23 +300,34 @@ const PublicNavbar = () => {
                       >
                         {item.label}
                       </Link>
-                      {idx < navLinks.length - 1 && (
+                      {idx < t.nav.navLinks.length - 1 && (
                         <div className="h-px bg-[hsl(0,0%,92%)] mx-2" />
                       )}
                     </div>
                   );
                 })}
 
+                {/* Language switcher mobile */}
+                <div className="pt-2">
+                  <Link
+                    to={getAltLangHref()}
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-2 w-full text-left text-sm font-medium min-h-[48px] px-2 rounded-xl text-[hsl(0,0%,40%)] active:bg-[hsl(0,0%,95%)]"
+                  >
+                    {lang === "it" ? "🇷🇴 Versiune română" : "🇮🇹 Versione italiana"}
+                  </Link>
+                </div>
+
                 {/* Mobile CTA */}
                 <div className="pt-3 mt-2 border-t border-[hsl(0,0%,92%)]">
-                  <a href="/#contatti" onClick={() => setMobileOpen(false)}>
+                  <Link to={lang === "ro" ? "/ro/contact" : "/#contatti"} onClick={() => setMobileOpen(false)}>
                     <Button
                       className="w-full bg-[hsl(195,85%,45%)] hover:bg-[hsl(195,85%,38%)] text-white font-semibold rounded-full min-h-[48px] shadow-[0_4px_20px_hsl(195,85%,45%,0.3)]"
                     >
-                      Richiedi Preventivo
+                      {t.nav.richiediPreventivo}
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </motion.div>

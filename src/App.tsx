@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { HomeRouter } from "./components/HomeRouter";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import ScrollToTop from "./components/ScrollToTop";
+import { LanguageProvider } from "./i18n/LanguageContext";
 import { Loader2 } from "lucide-react";
 
 // Import immediati per pagine critiche
@@ -181,19 +182,37 @@ const App = () => (
                 }
               />
             )}
-            <Route path="/chi-siamo" element={<ChiSiamoPage />} />
-            <Route path="/prodotti-pubblico" element={<ProdottiPubblico />} />
-            <Route path="/prodotti/dmr-confort" element={<DmrConfort />} />
-            <Route path="/prodotti/dmr-domus" element={<DmrDomus />} />
-            <Route path="/prodotti/dmr-passive" element={<DmrPassive />} />
-            <Route path="/prodotti/portoncini" element={<ProdPortoncini />} />
-            <Route path="/prodotti/cassonetti" element={<ProdCassonetti />} />
-            <Route path="/prodotti/tapparelle" element={<ProdTapparelle />} />
-            <Route path="/prodotti/persiane" element={<ProdPersiane />} />
-            <Route path="/vantaggi" element={<VantaggiPage />} />
-            <Route path="/garanzie" element={<GaranziePage />} />
-            <Route path="/contatti" element={<ContattiPage />} />
-            <Route path="/diventa-rivenditore" element={<DiventaRivenditore />} />
+            {/* ---- Italiano ---- */}
+            <Route path="/chi-siamo" element={<LanguageProvider lang="it"><ChiSiamoPage /></LanguageProvider>} />
+            <Route path="/prodotti-pubblico" element={<LanguageProvider lang="it"><ProdottiPubblico /></LanguageProvider>} />
+            <Route path="/prodotti/dmr-confort" element={<LanguageProvider lang="it"><DmrConfort /></LanguageProvider>} />
+            <Route path="/prodotti/dmr-domus" element={<LanguageProvider lang="it"><DmrDomus /></LanguageProvider>} />
+            <Route path="/prodotti/dmr-passive" element={<LanguageProvider lang="it"><DmrPassive /></LanguageProvider>} />
+            <Route path="/prodotti/portoncini" element={<LanguageProvider lang="it"><ProdPortoncini /></LanguageProvider>} />
+            <Route path="/prodotti/cassonetti" element={<LanguageProvider lang="it"><ProdCassonetti /></LanguageProvider>} />
+            <Route path="/prodotti/tapparelle" element={<LanguageProvider lang="it"><ProdTapparelle /></LanguageProvider>} />
+            <Route path="/prodotti/persiane" element={<LanguageProvider lang="it"><ProdPersiane /></LanguageProvider>} />
+            <Route path="/vantaggi" element={<LanguageProvider lang="it"><VantaggiPage /></LanguageProvider>} />
+            <Route path="/garanzie" element={<LanguageProvider lang="it"><GaranziePage /></LanguageProvider>} />
+            <Route path="/contatti" element={<LanguageProvider lang="it"><ContattiPage /></LanguageProvider>} />
+            <Route path="/diventa-rivenditore" element={<LanguageProvider lang="it"><DiventaRivenditore /></LanguageProvider>} />
+
+            {/* ---- Română /ro/* ---- */}
+            <Route path="/ro" element={<LanguageProvider lang="ro"><HomeRouter /></LanguageProvider>} />
+            <Route path="/ro/despre-noi" element={<LanguageProvider lang="ro"><ChiSiamoPage /></LanguageProvider>} />
+            <Route path="/ro/produse" element={<LanguageProvider lang="ro"><ProdottiPubblico /></LanguageProvider>} />
+            <Route path="/ro/produse/dmr-confort" element={<LanguageProvider lang="ro"><DmrConfort /></LanguageProvider>} />
+            <Route path="/ro/produse/dmr-domus" element={<LanguageProvider lang="ro"><DmrDomus /></LanguageProvider>} />
+            <Route path="/ro/produse/dmr-passive" element={<LanguageProvider lang="ro"><DmrPassive /></LanguageProvider>} />
+            <Route path="/ro/produse/usi-intrare" element={<LanguageProvider lang="ro"><ProdPortoncini /></LanguageProvider>} />
+            <Route path="/ro/produse/casete-rulou" element={<LanguageProvider lang="ro"><ProdCassonetti /></LanguageProvider>} />
+            <Route path="/ro/produse/jaluzele" element={<LanguageProvider lang="ro"><ProdTapparelle /></LanguageProvider>} />
+            <Route path="/ro/produse/obloane" element={<LanguageProvider lang="ro"><ProdPersiane /></LanguageProvider>} />
+            <Route path="/ro/avantaje" element={<LanguageProvider lang="ro"><VantaggiPage /></LanguageProvider>} />
+            <Route path="/ro/garantii" element={<LanguageProvider lang="ro"><GaranziePage /></LanguageProvider>} />
+            <Route path="/ro/contact" element={<LanguageProvider lang="ro"><ContattiPage /></LanguageProvider>} />
+            <Route path="/ro/devino-distribuitor" element={<LanguageProvider lang="ro"><DiventaRivenditore /></LanguageProvider>} />
+
             <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
