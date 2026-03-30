@@ -11,7 +11,6 @@ interface AuthContextType {
   userRole: UserRole | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signUp: (email: string, password: string, displayName: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   hasRole: (role: UserRole) => boolean;
 }
@@ -118,24 +117,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return { error };
   };
 
-  const signUp = async (email: string, password: string, displayName: string) => {
-    const redirectUrl = `${window.location.origin}/`;
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: redirectUrl,
-        data: {
-          display_name: displayName,
-        },
-      },
-    });
-
-    // Do NOT navigate here — caller (Auth.tsx) handles confirmation flow
-    return { error };
-  };
-
   const signOut = async () => {
     roleFetchedForUserId.current = null;
     await supabase.auth.signOut();
@@ -155,7 +136,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         userRole,
         loading,
         signIn,
-        signUp,
         signOut,
         hasRole,
       }}
