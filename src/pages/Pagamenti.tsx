@@ -24,7 +24,8 @@ import { PaymentTrendsChart } from "@/components/payments/PaymentTrendsChart";
 import { usePaymentsInfinite } from "@/hooks/usePaymentsInfinite";
 import { DateRange } from "react-day-picker";
 import { useNavigate } from "react-router-dom";
-import { Euro, TrendingUp, Clock, CreditCard, Download, Trash2, X, List, Calendar as CalendarIcon, Loader2, RefreshCw, Plus, AlertCircle, ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
+import { Euro, TrendingUp, Clock, CreditCard, Download, Trash2, X, List, Calendar as CalendarIcon, Loader2, RefreshCw, Plus, AlertCircle, ArrowUp, ArrowDown, ArrowUpDown, BellRing } from "lucide-react";
+import { SendEmailDialog } from "@/components/email/SendEmailDialog";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useDeletePayment, useBulkDeletePayments } from "@/hooks/usePayments";
 import { useRealtimeSync } from "@/hooks/useRealtimeSync";
@@ -374,11 +375,12 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
                     </TableHead>
                     <TableHead>{t.area.pagamenti.riferimento}</TableHead>
                     {userRole === 'super_admin' && !isDealerArea && <TableHead className="w-12"></TableHead>}
+                    {userRole === 'super_admin' && !isDealerArea && <TableHead className="w-12"></TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {sortedPayments.length === 0 ? (
-                    <TableRow><TableCell colSpan={isDealerArea ? 7 : (userRole === 'super_admin' ? 9 : 8)} className="text-center py-8 text-muted-foreground">{t.area.pagamenti.nessunoTrovato}</TableCell></TableRow>
+                    <TableRow><TableCell colSpan={isDealerArea ? 7 : (userRole === 'super_admin' ? 10 : 8)} className="text-center py-8 text-muted-foreground">{t.area.pagamenti.nessunoTrovato}</TableCell></TableRow>
                   ) : (
                     sortedPayments.map((payment) => (
                       <TableRow key={payment.id} className={selectedPaymentIds.has(payment.id) ? 'bg-muted/50' : ''}>
@@ -392,6 +394,25 @@ const Pagamenti = ({ dealerId }: PagamentiProps = {}) => {
                         <TableCell className="text-muted-foreground">{payment.riferimento || "-"}</TableCell>
                         {userRole === 'super_admin' && !isDealerArea && (
                           <TableCell><Button variant="ghost" size="sm" onClick={() => handleDeletePayment(payment.id)} className="text-destructive hover:bg-destructive/10"><Trash2 className="h-4 w-4" /></Button></TableCell>
+                        )}
+                        {userRole === 'super_admin' && !isDealerArea && (
+                          <TableCell>
+                            <SendEmailDialog
+                              trigger={
+                                <Button variant="ghost" size="sm" title="Invia sollecito pagamento">
+                                  <BellRing className="h-4 w-4 text-orange-500" />
+                                </Button>
+                              }
+                              template="sollecito_pagamento"
+                              defaultTo={payment.orders?.dealers?.email || ""}
+                              data={{
+                                orderNumber: payment.ordine_id,
+                                clientName: payment.orders?.dealers?.ragione_sociale || "",
+                                amount: payment.importo,
+                                dueDate: payment.data_pagamento ? formatDate(payment.data_pagamento) : undefined,
+                              }}
+                            />
+                          </TableCell>
                         )}
                       </TableRow>
                     ))

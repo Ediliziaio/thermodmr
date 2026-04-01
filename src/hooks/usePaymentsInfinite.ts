@@ -22,6 +22,7 @@ export interface PaymentWithDetails {
     dealer_id: string;
     dealers: {
       ragione_sociale: string;
+      email: string | null;
     };
   };
 }
@@ -100,7 +101,8 @@ export const usePaymentsInfinite = ({
             importo_totale,
             dealer_id,
             dealers!inner(
-              ragione_sociale
+              ragione_sociale,
+              email
             )
           )
         `,

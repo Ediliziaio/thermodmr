@@ -22,7 +22,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, Loader2, Edit2, Check, X, Clock, AlertTriangle, ArrowRightCircle, Copy, Save } from "lucide-react";
+import { ArrowLeft, Loader2, Edit2, Check, X, Clock, AlertTriangle, ArrowRightCircle, Copy, Save, Mail } from "lucide-react";
+import { SendEmailDialog } from "@/components/email/SendEmailDialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatusStepper } from "@/components/orders/StatusStepper";
 import { OrderSchedulingCard } from "@/components/orders/OrderSchedulingCard";
@@ -465,6 +474,62 @@ export default function OrderDetail() {
                 )}
               </>
             ) : null}
+
+            {/* Email notifications — superadmin only, non-preventivo */}
+            {isSuperAdmin && !isPreventivo && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Mail className="mr-2 h-4 w-4" />
+                    Invia Email
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-52">
+                  <DropdownMenuLabel className="text-xs text-muted-foreground">Notifiche al rivenditore</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild onSelect={(e) => e.preventDefault()}>
+                    <span>
+                      <SendEmailDialog
+                        trigger={
+                          <button className="w-full text-left flex items-center gap-2 px-1 py-0.5 text-sm">
+                            <Check className="h-4 w-4 text-green-600" />
+                            Ordine Confermato
+                          </button>
+                        }
+                        template="ordine_confermato"
+                        defaultTo={order.dealers?.email || ""}
+                        data={{
+                          orderNumber: order.id,
+                          clientName: order.dealers?.ragione_sociale || "",
+                          estimatedDelivery: order.data_consegna_prevista
+                            ? formatDate(order.data_consegna_prevista)
+                            : undefined,
+                        }}
+                      />
+                    </span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild onSelect={(e) => e.preventDefault()}>
+                    <span>
+                      <SendEmailDialog
+                        trigger={
+                          <button className="w-full text-left flex items-center gap-2 px-1 py-0.5 text-sm">
+                            <ArrowRightCircle className="h-4 w-4 text-primary" />
+                            Ordine Pronto
+                          </button>
+                        }
+                        template="ordine_pronto"
+                        defaultTo={order.dealers?.email || ""}
+                        data={{
+                          orderNumber: order.id,
+                          clientName: order.dealers?.ragione_sociale || "",
+                          details: order.note_rivenditore || undefined,
+                        }}
+                      />
+                    </span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
           </div>
         )}
       </div>

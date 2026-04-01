@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, AlertCircle, Building2, MapPin, Phone, Mail, FileText, ShoppingCart, Euro, TrendingUp, Eye } from "lucide-react";
+import { SendEmailDialog } from "@/components/email/SendEmailDialog";
+import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { formatCurrency, formatDate, getStatusColor, getStatusLabel } from "@/lib/utils";
 import { DealerRevenueChart } from "@/components/dealers/DealerRevenueChart";
@@ -17,6 +19,8 @@ export default function DealerDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { t } = useLanguage();
+
+  const { userRole } = useAuth();
 
   const { data: dealer, isLoading: isLoadingDealer, error: dealerError, refetch: refetchDealer } = useQuery({
     queryKey: ["dealer-detail", id],
@@ -115,10 +119,29 @@ export default function DealerDetail() {
           </div>
           <p className="text-muted-foreground">{t.area.dealerDetail.piva}: {dealer.p_iva}</p>
         </div>
-        <Button onClick={() => navigate(`/rivenditori/${dealer.id}/area`)} variant="default">
-          <Eye className="h-4 w-4 mr-2" />
-          {t.area.dealerDetail.entraArea}
-        </Button>
+        <div className="flex items-center gap-2">
+          {userRole === "super_admin" && (
+            <SendEmailDialog
+              trigger={
+                <Button variant="outline" size="sm">
+                  <Mail className="h-4 w-4 mr-2" />
+                  Invia Benvenuto
+                </Button>
+              }
+              template="benvenuto_rivenditore"
+              defaultTo={dealer.email || ""}
+              data={{
+                name: dealer.ragione_sociale,
+                email: dealer.email || "",
+                tempPassword: "",
+              }}
+            />
+          )}
+          <Button onClick={() => navigate(`/rivenditori/${dealer.id}/area`)} variant="default">
+            <Eye className="h-4 w-4 mr-2" />
+            {t.area.dealerDetail.entraArea}
+          </Button>
+        </div>
       </div>
 
       {/* KPI Cards */}
