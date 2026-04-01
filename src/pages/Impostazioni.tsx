@@ -4,7 +4,8 @@ import OrderNumberingSection from "@/components/settings/OrderNumberingSection";
 import PDFTemplateSection from "@/components/settings/PDFTemplateSection";
 import IntegrationSection from "@/components/settings/IntegrationSection";
 import AuditLogSection from "@/components/settings/AuditLogSection";
-import { Settings, Users, Hash, FileText, Plug, ClipboardList } from "lucide-react";
+import EmailSection from "@/components/settings/EmailSection";
+import { Settings, Users, Hash, FileText, Plug, ClipboardList, Mail } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const Impostazioni = () => {
@@ -48,6 +49,11 @@ const Impostazioni = () => {
             <span className="hidden sm:inline">{t.area.impostazioni.auditLog}</span>
             <span className="sm:hidden">{t.area.impostazioni.audit}</span>
           </TabsTrigger>
+          <TabsTrigger value="email" className="flex items-center gap-1.5 min-w-fit">
+            <Mail className="h-4 w-4" />
+            <span className="hidden sm:inline">Email & Notifiche</span>
+            <span className="sm:hidden">Email</span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="users" className="space-y-4">
@@ -68,6 +74,10 @@ const Impostazioni = () => {
 
         <TabsContent value="audit" className="space-y-4">
           <AuditLogSection />
+        </TabsContent>
+
+        <TabsContent value="email" className="space-y-4">
+          <EmailSection />
         </TabsContent>
       </Tabs>
     </div>
