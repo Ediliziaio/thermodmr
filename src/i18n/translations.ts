@@ -392,6 +392,18 @@ export interface Translations {
       placeholder_email: string;
       placeholder_nome: string;
       placeholder_password: string;
+      haiDimenticato: string;
+      recuperaPassword: string;
+      descRecupera: string;
+      inviaLink: string;
+      inviandoLink: string;
+      linkInviato: string;
+      tornaAlLogin: string;
+      nuovaPassword: string;
+      salvaPassword: string;
+      salvandoPassword: string;
+      passwordAggiornata: string;
+      erroreGenerico: string;
     };
     dashboard: {
       titolo: string;
@@ -1355,6 +1367,18 @@ const it: Translations = {
       placeholder_email: "nome@esempio.it",
       placeholder_nome: "Mario Rossi",
       placeholder_password: "••••••••",
+      haiDimenticato: "Hai dimenticato la password?",
+      recuperaPassword: "Recupera Password",
+      descRecupera: "Inserisci la tua email e ti invieremo un link per reimpostare la password.",
+      inviaLink: "Invia Link di Recupero",
+      inviandoLink: "Invio in corso...",
+      linkInviato: "Link inviato! Controlla la tua email.",
+      tornaAlLogin: "Torna al login",
+      nuovaPassword: "Nuova Password",
+      salvaPassword: "Salva Password",
+      salvandoPassword: "Salvataggio...",
+      passwordAggiornata: "Password aggiornata con successo!",
+      erroreGenerico: "Si è verificato un errore. Riprova.",
     },
     dashboard: {
       titolo: "Dashboard",
@@ -2318,6 +2342,18 @@ const ro: Translations = {
       placeholder_email: "nume@exemplu.ro",
       placeholder_nome: "Ion Popescu",
       placeholder_password: "••••••••",
+      haiDimenticato: "Ai uitat parola?",
+      recuperaPassword: "Recuperare Parolă",
+      descRecupera: "Introdu email-ul tău și îți vom trimite un link pentru a reseta parola.",
+      inviaLink: "Trimite Link de Recuperare",
+      inviandoLink: "Trimitere în curs...",
+      linkInviato: "Link trimis! Verifică email-ul tău.",
+      tornaAlLogin: "Înapoi la autentificare",
+      nuovaPassword: "Parolă Nouă",
+      salvaPassword: "Salvează Parola",
+      salvandoPassword: "Salvare...",
+      passwordAggiornata: "Parola a fost actualizată cu succes!",
+      erroreGenerico: "A apărut o eroare. Încearcă din nou.",
     },
     dashboard: {
       titolo: "Dashboard",
