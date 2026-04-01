@@ -137,8 +137,8 @@ const Auth = () => {
             Area Riservata
           </div>
           <h1 className="text-4xl font-bold leading-snug">
-            Gestisci la tua<br />
-            <span className="text-[hsl(195,85%,55%)]">rete di rivenditori</span>
+            Gestisci<br />
+            <span className="text-[hsl(195,85%,55%)]">i tuoi ordini</span>
           </h1>
           <p className="text-white/60 text-base leading-relaxed max-w-sm">
             Ordini, preventivi, pagamenti e statistiche — tutto in un unico pannello sicuro.
