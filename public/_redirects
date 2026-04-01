@@ -1,1 +1,5 @@
+# www → apex redirect (301 permanente)
+https://www.thermodmr.com/* https://thermodmr.com/:splat 301
+
+# SPA fallback — tutte le route vanno a index.html
 /* /index.html 200
