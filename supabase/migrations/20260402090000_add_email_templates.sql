@@ -31,9 +31,9 @@ CREATE POLICY "authenticated_read_email_templates"
   ON public.email_templates FOR SELECT
   TO authenticated USING (true);
 
--- Usa has_role() già definita nel progetto (tabella user_roles)
+-- Usa public.has_role() con cast esplicito a app_role (enum del progetto)
 CREATE POLICY "super_admin_write_email_templates"
   ON public.email_templates FOR ALL
   TO authenticated
-  USING (has_role(auth.uid(), 'super_admin'))
-  WITH CHECK (has_role(auth.uid(), 'super_admin'));
+  USING (public.has_role(auth.uid(), 'super_admin'::app_role))
+  WITH CHECK (public.has_role(auth.uid(), 'super_admin'::app_role));
