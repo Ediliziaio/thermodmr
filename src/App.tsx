@@ -44,6 +44,7 @@ const Impostazioni = lazy(() => import("./pages/Impostazioni"));
 const Assistenza = lazy(() => import("./pages/Assistenza"));
 const DealerArea = lazy(() => import("./pages/DealerArea"));
 const DealerPreventivi = lazy(() => import("./pages/DealerPreventivi"));
+const EmailTemplateEditor = lazy(() => import("./pages/EmailTemplateEditor"));
 
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -78,6 +79,7 @@ const PublicRoutes = () => (
     <Route path="/kpi" element={<ExternalRedirect to={APP_URL} />} />
     <Route path="/assistenza" element={<ExternalRedirect to={APP_URL} />} />
     <Route path="/impostazioni" element={<ExternalRedirect to={APP_URL} />} />
+    <Route path="/email-template-editor/*" element={<ExternalRedirect to={APP_URL} />} />
 
     {/* ---- Italiano ---- */}
     <Route path="/chi-siamo" element={<LanguageProvider lang="it"><ChiSiamoPage /></LanguageProvider>} />
@@ -146,6 +148,8 @@ const AppRoutes = () => (
     <Route path="/kpi" element={<ProtectedRoute requiredRole="super_admin"><Layout><Analytics /></Layout></ProtectedRoute>} />
     <Route path="/assistenza" element={<ProtectedRoute requiredRole="super_admin"><Layout><Assistenza /></Layout></ProtectedRoute>} />
     <Route path="/impostazioni" element={<ProtectedRoute requiredRole="super_admin"><Layout><Impostazioni /></Layout></ProtectedRoute>} />
+    {/* Email template builder — full-screen, no sidebar */}
+    <Route path="/email-template-editor/:key" element={<ProtectedRoute requiredRole="super_admin"><EmailTemplateEditor /></ProtectedRoute>} />
     {import.meta.env.DEV && (
       <Route path="/seed-test-data" element={<ProtectedRoute requiredRole="super_admin"><Layout><TestDataSeeder /></Layout></ProtectedRoute>} />
     )}
@@ -175,6 +179,8 @@ const DevRoutes = () => (
     <Route path="/assistenza" element={<ProtectedRoute requiredRole="super_admin"><Layout><Assistenza /></Layout></ProtectedRoute>} />
     <Route path="/impostazioni" element={<ProtectedRoute requiredRole="super_admin"><Layout><Impostazioni /></Layout></ProtectedRoute>} />
     <Route path="/seed-test-data" element={<ProtectedRoute requiredRole="super_admin"><Layout><TestDataSeeder /></Layout></ProtectedRoute>} />
+    {/* Email template builder — full-screen, no sidebar */}
+    <Route path="/email-template-editor/:key" element={<ProtectedRoute requiredRole="super_admin"><EmailTemplateEditor /></ProtectedRoute>} />
 
     {/* ---- Italiano ---- */}
     <Route path="/chi-siamo" element={<LanguageProvider lang="it"><ChiSiamoPage /></LanguageProvider>} />
