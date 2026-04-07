@@ -73,7 +73,8 @@ const BlogList = () => {
             <motion.div
               variants={stagger}
               initial="hidden"
-              animate="show"
+              whileInView="visible"
+              viewport={{ once: true }}
               className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
             >
               {posts.map((post) => (
