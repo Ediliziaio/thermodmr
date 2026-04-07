@@ -86,15 +86,37 @@ const PublicFooter = () => {
                 {t.footer.diventaRivenditore}
               </Link>
             </div>
-            <div className="pt-4">
-              <p className="text-xs text-white/25">P.IVA: 00000000000</p>
+          </div>
+        </div>
+
+        {/* Dati aziendali MARYSORYNA SRL */}
+        <div className="border-t border-white/10 pt-8 pb-6">
+          <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-10">
+            <div className="shrink-0">
+              <p className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-1">Ragione Sociale</p>
+              <p className="text-sm text-white/70 font-medium">MARYSORYNA SRL</p>
+              <p className="text-xs text-white/35 mt-0.5">ThermoDMR è un brand di MARYSORYNA SRL</p>
+            </div>
+            <div className="flex flex-wrap gap-x-10 gap-y-3 text-xs text-white/40">
+              <div>
+                <span className="text-white/25 uppercase tracking-wide block mb-0.5">Reg. Imprese</span>
+                <span className="text-white/55">J33/334/2010</span>
+              </div>
+              <div>
+                <span className="text-white/25 uppercase tracking-wide block mb-0.5">IVA (CIF)</span>
+                <span className="text-white/55">RO26969660</span>
+              </div>
+              <div>
+                <span className="text-white/25 uppercase tracking-wide block mb-0.5">Sede Legale</span>
+                <span className="text-white/55">Sat Bilca Com. Bilca, Nr. 45<br />Bilca, Jud. Suceava — Romania</span>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-8 text-center">
+        <div className="border-t border-white/10 pt-6 text-center">
           <p className="text-sm text-white/30">
-            © {new Date().getFullYear()} ThermoDMR. {t.footer.allRights}
+            © {new Date().getFullYear()} ThermoDMR — MARYSORYNA SRL. {t.footer.allRights}
           </p>
         </div>
       </div>
