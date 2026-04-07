@@ -69,7 +69,7 @@ const PublicFooter = () => {
               </a>
               <div className="flex items-start gap-2 text-sm text-white/40">
                 <MapPin className="h-4 w-4 shrink-0 mt-0.5" />
-                <span>Via dell'Industria, 00<br />00000 Città (PR)</span>
+                <span>Sat Bilca Com. Bilca, Nr. 45<br />Bilca, Jud. Suceava — Romania</span>
               </div>
             </div>
           </div>
