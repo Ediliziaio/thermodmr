@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import { useLanguage } from "@/i18n/LanguageContext";
 import PublicFooter from "@/components/PublicFooter";
+import SeoHead from "@/components/SeoHead";
 import ProductHero from "@/components/products/ProductHero";
 import ProductGallery from "@/components/products/ProductGallery";
 import RelatedProducts from "@/components/products/RelatedProducts";
@@ -23,6 +24,7 @@ const benefitIcons = [Zap, Shield, Smartphone];
 
 const Tapparelle = () => {
   const { t, lang } = useLanguage();
+  const isRo = lang === "ro";
   const contattiLink = lang === "ro" ? "/ro/contact" : "/contatti";
   const [specsRef, specsInView] = useInView(inViewOpts);
   const [benefitsRef, benefitsInView] = useInView(inViewOpts);
@@ -30,6 +32,14 @@ const Tapparelle = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <SeoHead
+        title={isRo ? "Jaluzele Termoizolante ThermoDMR — Economie de Energie" : "Tapparelle Coibentate ThermoDMR — Risparmio Energetico"}
+        description={isRo ? "Jaluzele termoizolante ThermoDMR: economie de energie până la 30%, oscurare totală, anti-efracție. Disponibile în aluminiu și PVC." : "Tapparelle coibentate ThermoDMR: risparmio energetico fino al 30%, oscuramento totale, anti-intrusione. Disponibili in alluminio e PVC."}
+        canonical={isRo ? "/ro/produse/jaluzele" : "/prodotti/tapparelle"}
+        lang={lang}
+        hreflangIt="/prodotti/tapparelle"
+        hreflangRo="/ro/produse/jaluzele"
+      />
       <PublicNavbar />
 
       <ProductHero

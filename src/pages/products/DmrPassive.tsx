@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import { useLanguage } from "@/i18n/LanguageContext";
 import PublicFooter from "@/components/PublicFooter";
+import SeoHead from "@/components/SeoHead";
 import ProductHero from "@/components/products/ProductHero";
 import ProductGallery from "@/components/products/ProductGallery";
 import ProductComparison from "@/components/products/ProductComparison";
@@ -51,6 +52,7 @@ const benefitIcons = [ThermometerSun, Leaf, Shield];
 
 const DmrPassive = () => {
   const { t, lang } = useLanguage();
+  const isRo = lang === "ro";
   const contattiLink = lang === "ro" ? "/ro/contact" : "/contatti";
   const [specsRef, specsInView] = useInView(inViewOpts);
   const [benefitsRef, benefitsInView] = useInView(inViewOpts);
@@ -60,6 +62,14 @@ const DmrPassive = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <SeoHead
+        title={isRo ? "DMR Passive — Fereastră PVC pentru Case Pasive Clasa A+" : "DMR Passive — Finestra PVC per Case Passive e Classe A+"}
+        description={isRo ? "Fereastra DMR Passive de la ThermoDMR: izolare termică maximă, certificată pentru case pasive și clasa energetică A+. Vârful gamei ThermoDMR." : "La finestra DMR Passive di ThermoDMR: massimo isolamento termico, certificata per case passive e classe energetica A+. Il top della gamma ThermoDMR."}
+        canonical={isRo ? "/ro/produse/dmr-passive" : "/prodotti/dmr-passive"}
+        lang={lang}
+        hreflangIt="/prodotti/dmr-passive"
+        hreflangRo="/ro/produse/dmr-passive"
+      />
       <PublicNavbar />
 
       <ProductHero

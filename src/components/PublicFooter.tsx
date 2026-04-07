@@ -6,6 +6,7 @@ import { useLanguage } from "@/i18n/LanguageContext";
 const PublicFooter = () => {
   const { t, lang } = useLanguage();
   const isRo = lang === "ro";
+  const blogLink = isRo ? "/ro/blog" : "/blog";
   const prodLink = isRo ? "/ro/produse" : "/prodotti-pubblico";
   const portonciniLink = isRo ? "/ro/produse/usi-intrare" : "/prodotti/portoncini";
   const cassonettiLink = isRo ? "/ro/produse/casete-rulou" : "/prodotti/cassonetti";
@@ -88,6 +89,9 @@ const PublicFooter = () => {
               </Link>
               <Link to={diventaLink} className="block text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors">
                 {t.footer.diventaRivenditore}
+              </Link>
+              <Link to={blogLink} className="block text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors">
+                {isRo ? "Blog & Ghiduri" : "Blog & Guide"}
               </Link>
             </div>
           </div>

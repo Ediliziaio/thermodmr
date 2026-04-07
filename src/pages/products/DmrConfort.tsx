@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import { useLanguage } from "@/i18n/LanguageContext";
 import PublicFooter from "@/components/PublicFooter";
+import SeoHead from "@/components/SeoHead";
 import ProductHero from "@/components/products/ProductHero";
 import ProductGallery from "@/components/products/ProductGallery";
 import ProductComparison from "@/components/products/ProductComparison";
@@ -52,6 +53,7 @@ const benefitIcons = [ThermometerSun, Volume2, Shield];
 
 const DmrConfort = () => {
   const { t, lang } = useLanguage();
+  const isRo = lang === "ro";
   const contattiLink = lang === "ro" ? "/ro/contact" : "/contatti";
   const [specsRef, specsInView] = useInView(inViewOpts);
   const [benefitsRef, benefitsInView] = useInView(inViewOpts);
@@ -61,6 +63,14 @@ const DmrConfort = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <SeoHead
+        title={isRo ? "DMR Confort — Fereastră PVC 5 Camere Profil Tecnolegno" : "DMR Confort — Finestra PVC 5 Camere con Profilo Tecnolegno"}
+        description={isRo ? "Fereastra DMR Confort de la ThermoDMR: profil PVC 5 camere Tecnolegno, efect lemn, izolare termică și acustică superioară. Descoperă caracteristicile." : "La finestra DMR Confort di ThermoDMR: profilo PVC 5 camere Tecnolegno, effetto legno, isolamento termico e acustico superiore. Scopri caratteristiche e richiedi preventivo."}
+        canonical={isRo ? "/ro/produse/dmr-confort" : "/prodotti/dmr-confort"}
+        lang={lang}
+        hreflangIt="/prodotti/dmr-confort"
+        hreflangRo="/ro/produse/dmr-confort"
+      />
       <PublicNavbar />
 
       <ProductHero

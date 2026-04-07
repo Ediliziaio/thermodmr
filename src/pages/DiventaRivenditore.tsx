@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
 import { useLanguage } from "@/i18n/LanguageContext";
+import SeoHead from "@/components/SeoHead";
 
 import { fadeUp, stagger, inViewOptions } from "@/lib/animations";
 
@@ -33,10 +34,19 @@ const DiventaRivenditore = () => {
   const [stepsRef, stepsInView] = useInView(inViewOptions);
   const [ctaRef, ctaInView] = useInView(inViewOptions);
 
+  const isRo = lang === "ro";
   const contattiLink = lang === "ro" ? "/ro/contact" : "/contatti";
 
   return (
     <div className="min-h-screen bg-white">
+      <SeoHead
+        title={isRo ? "Devino Distribuitor ThermoDMR — Maximizează Profiturile" : "Diventa Rivenditore ThermoDMR — Massimizza i Tuoi Margini"}
+        description={isRo ? "Alătură-te rețelei de distribuitori ThermoDMR. Prețuri de fabrică, suport marketing, formare tehnică și marje competitive. Candidatură gratuită." : "Unisciti alla rete di rivenditori ThermoDMR. Prezzi di fabbrica, supporto marketing, formazione tecnica e margini competitivi. Candidatura gratuita."}
+        canonical={isRo ? "/ro/devino-distribuitor" : "/diventa-rivenditore"}
+        lang={lang}
+        hreflangIt="/diventa-rivenditore"
+        hreflangRo="/ro/devino-distribuitor"
+      />
       <PublicNavbar />
 
       {/* Hero */}

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
 import { useLanguage } from "@/i18n/LanguageContext";
+import SeoHead from "@/components/SeoHead";
 
 import { fadeUp, stagger, inViewOptions } from "@/lib/animations";
 
@@ -15,10 +16,19 @@ const GaranziePage = () => {
   const { t, lang } = useLanguage();
   const [ref, inView] = useInView(inViewOptions);
 
+  const isRo = lang === "ro";
   const contattiLink = lang === "ro" ? "/ro/contact" : "/contatti";
 
   return (
     <div className="min-h-screen bg-white">
+      <SeoHead
+        title={isRo ? "Garanții ThermoDMR — 15 Ani pe Ferestre PVC" : "Garanzie ThermoDMR — 15 Anni su Finestre PVC"}
+        description={isRo ? "ThermoDMR oferă 15 ani garanție pe ferestre și tâmplărie PVC. Profil german certificat, asistență post-vânzare, livrare în România și Italia." : "ThermoDMR offre 15 anni di garanzia su finestre e serramenti in PVC. Profilo tedesco certificato, assistenza post-vendita, consegna in tutta Italia."}
+        canonical={isRo ? "/ro/garantii" : "/garanzie"}
+        lang={lang}
+        hreflangIt="/garanzie"
+        hreflangRo="/ro/garantii"
+      />
       <PublicNavbar />
 
       {/* Hero */}

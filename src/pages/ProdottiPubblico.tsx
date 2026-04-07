@@ -39,6 +39,7 @@ import imgTapparelle from "@/assets/thermodmr-tapparella-coibentata.webp";
 import imgPersiane from "@/assets/thermodmr-persiana-verde.webp";
 import imgHero from "@/assets/thermodmr-finestre-pvc-interni.webp";
 import { useLanguage } from "@/i18n/LanguageContext";
+import SeoHead from "@/components/SeoHead";
 
 import { fadeUp, stagger, inViewOptions } from "@/lib/animations";
 
@@ -71,6 +72,7 @@ const ProdottiPubblico = () => {
   const [otherRef, otherInView] = useInView(inViewOptions);
   const [ctaRef, ctaInView] = useInView(inViewOptions);
 
+  const isRo = lang === "ro";
   const homeLink = lang === "ro" ? "/ro" : "/";
   const contattiLink = lang === "ro" ? "/ro/contact" : "/contatti";
   const diventaLink = lang === "ro" ? "/ro/devino-distribuitor" : "/diventa-rivenditore";
@@ -86,6 +88,14 @@ const ProdottiPubblico = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <SeoHead
+        title={isRo ? "Catalog Ferestre și Tâmplărie PVC — Toate Produsele" : "Catalogo Finestre e Serramenti PVC — Tutti i Prodotti"}
+        description={isRo ? "Descoperă catalogul complet ThermoDMR: ferestre PVC DMR Confort, DMR Domus, DMR Passive, uși de intrare, jaluzele termoizolante, casete rulou și obloane." : "Scopri il catalogo completo ThermoDMR: finestre PVC DMR Confort, DMR Domus, DMR Passive, portoncini blindati, tapparelle coibentate, cassonetti e persiane."}
+        canonical={isRo ? "/ro/produse" : "/prodotti-pubblico"}
+        lang={lang}
+        hreflangIt="/prodotti-pubblico"
+        hreflangRo="/ro/produse"
+      />
       <PublicNavbar />
 
       {/* Hero full-width cu imagine și overlay */}

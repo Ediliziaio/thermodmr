@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
 import { useLanguage } from "@/i18n/LanguageContext";
+import SeoHead from "@/components/SeoHead";
 
 import { fadeUp, stagger, inViewOptions } from "@/lib/animations";
 
@@ -17,10 +18,19 @@ const VantaggiPage = () => {
   const [ref1, inView1] = useInView(inViewOptions);
   const [ref2, inView2] = useInView(inViewOptions);
 
+  const isRo = lang === "ro";
   const contattiLink = lang === "ro" ? "/ro/contact" : "/contatti";
 
   return (
     <div className="min-h-screen bg-white">
+      <SeoHead
+        title={isRo ? "Avantajele Ferestrelor PVC ThermoDMR" : "Vantaggi di Scegliere Finestre PVC ThermoDMR"}
+        description={isRo ? "De ce să alegi ThermoDMR? Producție directă fără intermediari, economie de energie certificată, asistență dedicată și prețuri de fabrică. Descoperă toate avantajele." : "Perché scegliere ThermoDMR? Produzione diretta senza intermediari, risparmio energetico certificato, assistenza dedicata e prezzi di fabbrica. Scopri tutti i vantaggi."}
+        canonical={isRo ? "/ro/avantaje" : "/vantaggi"}
+        lang={lang}
+        hreflangIt="/vantaggi"
+        hreflangRo="/ro/avantaje"
+      />
       <PublicNavbar />
 
       {/* Hero */}

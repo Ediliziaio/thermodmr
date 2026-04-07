@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import { useLanguage } from "@/i18n/LanguageContext";
 import PublicFooter from "@/components/PublicFooter";
+import SeoHead from "@/components/SeoHead";
 import ProductHero from "@/components/products/ProductHero";
 import ProductGallery from "@/components/products/ProductGallery";
 import RelatedProducts from "@/components/products/RelatedProducts";
@@ -25,6 +26,7 @@ const benefitIcons = [ThermometerSun, Wrench, Ruler];
 
 const Cassonetti = () => {
   const { t, lang } = useLanguage();
+  const isRo = lang === "ro";
   const contattiLink = lang === "ro" ? "/ro/contact" : "/contatti";
   const [specsRef, specsInView] = useInView(inViewOpts);
   const [benefitsRef, benefitsInView] = useInView(inViewOpts);
@@ -32,6 +34,14 @@ const Cassonetti = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <SeoHead
+        title={isRo ? "Casete Rulou Termoizolate ThermoDMR — Izolare Superioară" : "Cassonetti Coibentati ThermoDMR — Isolamento Superiore"}
+        description={isRo ? "Casete rulou termoizolate ThermoDMR: elimină punții termice, îmbunătățește izolarea și reduce consumul energetic. Calitate garantată." : "Cassonetti coibentati ThermoDMR per avvolgibili e tapparelle: elimina i ponti termici, migliora l'isolamento e riduce i consumi energetici."}
+        canonical={isRo ? "/ro/produse/casete-rulou" : "/prodotti/cassonetti"}
+        lang={lang}
+        hreflangIt="/prodotti/cassonetti"
+        hreflangRo="/ro/produse/casete-rulou"
+      />
       <PublicNavbar />
 
       <ProductHero

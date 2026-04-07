@@ -66,6 +66,7 @@ const useCounter = (end: number, duration = 2000, start = false) => {
 
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
+import SeoHead from "@/components/SeoHead";
 
 /* ═══════════════════════════════════════════
    2. HERO
@@ -792,8 +793,20 @@ const ContactForm = () => {
 /* ═══════════════════════════════════════════
    PAGE
    ═══════════════════════════════════════════ */
-const Home = () => (
+const Home = () => {
+  const { lang } = useLanguage();
+  const isRo = lang === "ro";
+  return (
   <div className="min-h-screen bg-white">
+    <SeoHead
+      title={isRo ? "Ferestre PVC cu Profil German | Producție Proprie" : "Finestre in PVC con Profilo Tedesco | Produzione Diretta"}
+      description={isRo ? "Ferestre PVC cu profil german 5 camere. Producție directă, fără intermediari. Izolare Clasa A, garanție 15 ani. Descoperă tâmplăria ThermoDMR." : "Finestre PVC con profilo tedesco a5 camere. Produzione diretta, nessun intermediario. Isolamento Classe A, garanzia 15 anni. Scopri i serramenti ThermoDMR."}
+      canonical={isRo ? "/ro" : "/"}
+      lang={lang}
+      hreflangIt="/"
+      hreflangRo="/ro"
+      jsonLd={!isRo ? {"@context":"https://schema.org","@type":"WebSite","name":"ThermoDMR","url":"https://thermodmr.com","potentialAction":{"@type":"SearchAction","target":"https://thermodmr.com/prodotti-pubblico?q={search_term_string}","query-input":"required name=search_term_string"}} : undefined}
+    />
     <PublicNavbar />
     <Hero />
     <ChiSiamoSection />
@@ -806,6 +819,7 @@ const Home = () => (
     <ContactForm />
     <PublicFooter />
   </div>
-);
+  );
+};
 
 export default Home;

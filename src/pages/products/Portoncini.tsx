@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import { useLanguage } from "@/i18n/LanguageContext";
 import PublicFooter from "@/components/PublicFooter";
+import SeoHead from "@/components/SeoHead";
 import ProductHero from "@/components/products/ProductHero";
 import ProductGallery from "@/components/products/ProductGallery";
 import RelatedProducts from "@/components/products/RelatedProducts";
@@ -25,6 +26,7 @@ const benefitIcons = [Lock, ThermometerSun, Shield];
 
 const Portoncini = () => {
   const { t, lang } = useLanguage();
+  const isRo = lang === "ro";
   const contattiLink = lang === "ro" ? "/ro/contact" : "/contatti";
   const [specsRef, specsInView] = useInView(inViewOpts);
   const [benefitsRef, benefitsInView] = useInView(inViewOpts);
@@ -32,6 +34,14 @@ const Portoncini = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <SeoHead
+        title={isRo ? "Uși de Intrare PVC ThermoDMR — Securitate și Design" : "Portoncini Blindati PVC ThermoDMR — Sicurezza e Design"}
+        description={isRo ? "Uși de intrare PVC ThermoDMR: securitate maximă, izolare termoacustică, personalizabile. Garanție 15 ani. Solicită ofertă gratuită." : "Portoncini blindati in PVC ThermoDMR: massima sicurezza, isolamento termoacustico, personalizzabili. Garanzia 15 anni. Richiedi preventivo gratuito."}
+        canonical={isRo ? "/ro/produse/usi-intrare" : "/prodotti/portoncini"}
+        lang={lang}
+        hreflangIt="/prodotti/portoncini"
+        hreflangRo="/ro/produse/usi-intrare"
+      />
       <PublicNavbar />
 
       <ProductHero

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
 import { useLanguage } from "@/i18n/LanguageContext";
+import SeoHead from "@/components/SeoHead";
 
 import { fadeUp, stagger, inViewOptions } from "@/lib/animations";
 
@@ -23,9 +24,18 @@ const ChiSiamo = () => {
 
   const contattiLink = lang === "ro" ? "/ro/contact" : "/contatti";
   const diventaLink = lang === "ro" ? "/ro/devino-distribuitor" : "/diventa-rivenditore";
+  const isRo = lang === "ro";
 
   return (
     <div className="min-h-screen bg-white">
+      <SeoHead
+        title={isRo ? "Despre Noi — ThermoDMR, Producător Tâmplărie PVC" : "Chi Siamo — ThermoDMR, Produttore Serramenti PVC"}
+        description={isRo ? "ThermoDMR este un brand al MARYSORYNA SRL, producător de tâmplărie PVC cu profil german. Descoperă povestea, valorile și echipa noastră." : "ThermoDMR è un marchio di MARYSORYNA SRL, produttore di serramenti PVC con profilo tedesco. Scopri la nostra storia, valori e perché siamo diversi."}
+        canonical={isRo ? "/ro/despre-noi" : "/chi-siamo"}
+        lang={lang}
+        hreflangIt="/chi-siamo"
+        hreflangRo="/ro/despre-noi"
+      />
       <PublicNavbar />
 
       {/* Hero */}

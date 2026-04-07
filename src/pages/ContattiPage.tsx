@@ -9,11 +9,13 @@ import { supabase } from "@/integrations/supabase/client";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
 import { useLanguage } from "@/i18n/LanguageContext";
+import SeoHead from "@/components/SeoHead";
 
 import { fadeUp, stagger } from "@/lib/animations";
 
 const ContattiPage = () => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const isRo = lang === "ro";
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -55,6 +57,14 @@ const ContattiPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <SeoHead
+        title={isRo ? "Contact — Solicită Ofertă Ferestre PVC" : "Contatti — Richiedi Preventivo Finestre PVC"}
+        description={isRo ? "Contactează ThermoDMR pentru o ofertă gratuită pe ferestre, uși și tâmplărie PVC. Răspundem în 24 de ore. Tel: +40 744 139 565." : "Contatta ThermoDMR per un preventivo gratuito su finestre, portoncini e serramenti PVC. Rispondiamo in 24 ore. Tel: +39 348 346 7567."}
+        canonical={isRo ? "/ro/contact" : "/contatti"}
+        lang={lang}
+        hreflangIt="/contatti"
+        hreflangRo="/ro/contact"
+      />
       <PublicNavbar />
 
       {/* Hero */}

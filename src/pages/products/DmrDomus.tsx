@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import { useLanguage } from "@/i18n/LanguageContext";
 import PublicFooter from "@/components/PublicFooter";
+import SeoHead from "@/components/SeoHead";
 import ProductHero from "@/components/products/ProductHero";
 import ProductGallery from "@/components/products/ProductGallery";
 import ProductComparison from "@/components/products/ProductComparison";
@@ -51,6 +52,7 @@ const benefitIcons = [ThermometerSun, Volume2, Shield];
 
 const DmrDomus = () => {
   const { t, lang } = useLanguage();
+  const isRo = lang === "ro";
   const contattiLink = lang === "ro" ? "/ro/contact" : "/contatti";
   const [specsRef, specsInView] = useInView(inViewOpts);
   const [benefitsRef, benefitsInView] = useInView(inViewOpts);
@@ -60,6 +62,14 @@ const DmrDomus = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <SeoHead
+        title={isRo ? "DMR Domus — Fereastră PVC Clasică cu Izolare Superioară" : "DMR Domus — Finestra PVC Classica ad Alto Isolamento"}
+        description={isRo ? "Fereastra DMR Domus de la ThermoDMR: design clasic, profil PVC eficiență energetică ridicată, sticlă dublă și triplă disponibilă. Garanție 15 ani." : "La finestra DMR Domus di ThermoDMR: design classico, profilo PVC ad alta efficienza energetica, doppio e triplo vetro disponibile. Garanzia 15 anni."}
+        canonical={isRo ? "/ro/produse/dmr-domus" : "/prodotti/dmr-domus"}
+        lang={lang}
+        hreflangIt="/prodotti/dmr-domus"
+        hreflangRo="/ro/produse/dmr-domus"
+      />
       <PublicNavbar />
 
       <ProductHero

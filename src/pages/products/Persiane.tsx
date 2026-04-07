@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import PublicNavbar from "@/components/PublicNavbar";
 import { useLanguage } from "@/i18n/LanguageContext";
 import PublicFooter from "@/components/PublicFooter";
+import SeoHead from "@/components/SeoHead";
 import ProductHero from "@/components/products/ProductHero";
 import ProductGallery from "@/components/products/ProductGallery";
 import RelatedProducts from "@/components/products/RelatedProducts";
@@ -25,6 +26,7 @@ const benefitIcons = [Eye, Paintbrush, Wind];
 
 const Persiane = () => {
   const { t, lang } = useLanguage();
+  const isRo = lang === "ro";
   const contattiLink = lang === "ro" ? "/ro/contact" : "/contatti";
   const [specsRef, specsInView] = useInView(inViewOpts);
   const [benefitsRef, benefitsInView] = useInView(inViewOpts);
@@ -32,6 +34,14 @@ const Persiane = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <SeoHead
+        title={isRo ? "Obloane PVC și Aluminiu ThermoDMR — Calitate Premium" : "Persiane in PVC e Alluminio ThermoDMR — Qualità Italiana"}
+        description={isRo ? "Obloane ThermoDMR din PVC și aluminiu: design tradițional și modern, rezistente la intemperii, ușor de întreținut. Garanție 15 ani." : "Persiane ThermoDMR in PVC e alluminio: design tradizionale e moderno, resistenti agli agenti atmosferici, facili da pulire. Garanzia 15 anni."}
+        canonical={isRo ? "/ro/produse/obloane" : "/prodotti/persiane"}
+        lang={lang}
+        hreflangIt="/prodotti/persiane"
+        hreflangRo="/ro/produse/obloane"
+      />
       <PublicNavbar />
 
       <ProductHero

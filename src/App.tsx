@@ -30,6 +30,8 @@ const VantaggiPage = lazy(() => import("./pages/VantaggiPage"));
 const GaranziePage = lazy(() => import("./pages/GaranziePage"));
 const ContattiPage = lazy(() => import("./pages/ContattiPage"));
 const DiventaRivenditore = lazy(() => import("./pages/DiventaRivenditore"));
+const BlogList = lazy(() => import("./pages/BlogList"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
 
 // Lazy loading — area riservata
 const Analytics = lazy(() => import("./pages/Analytics"));
@@ -95,6 +97,8 @@ const PublicRoutes = () => (
     <Route path="/garanzie" element={<LanguageProvider lang="it"><GaranziePage /></LanguageProvider>} />
     <Route path="/contatti" element={<LanguageProvider lang="it"><ContattiPage /></LanguageProvider>} />
     <Route path="/diventa-rivenditore" element={<LanguageProvider lang="it"><DiventaRivenditore /></LanguageProvider>} />
+    <Route path="/blog" element={<LanguageProvider lang="it"><BlogList /></LanguageProvider>} />
+    <Route path="/blog/:slug" element={<LanguageProvider lang="it"><BlogPost /></LanguageProvider>} />
 
     {/* ---- Română /ro/* ---- */}
     <Route path="/ro" element={<LanguageProvider lang="ro"><HomeRouter publicOnly /></LanguageProvider>} />
@@ -111,6 +115,8 @@ const PublicRoutes = () => (
     <Route path="/ro/garantii" element={<LanguageProvider lang="ro"><GaranziePage /></LanguageProvider>} />
     <Route path="/ro/contact" element={<LanguageProvider lang="ro"><ContattiPage /></LanguageProvider>} />
     <Route path="/ro/devino-distribuitor" element={<LanguageProvider lang="ro"><DiventaRivenditore /></LanguageProvider>} />
+    <Route path="/ro/blog" element={<LanguageProvider lang="ro"><BlogList /></LanguageProvider>} />
+    <Route path="/ro/blog/:slug" element={<LanguageProvider lang="ro"><BlogPost /></LanguageProvider>} />
 
     <Route path="*" element={<NotFound />} />
   </Routes>
@@ -135,6 +141,8 @@ const AppRoutes = () => (
     <Route path="/garanzie" element={<ExternalRedirect to={`${WWW_URL}/garanzie`} />} />
     <Route path="/contatti" element={<ExternalRedirect to={`${WWW_URL}/contatti`} />} />
     <Route path="/diventa-rivenditore" element={<ExternalRedirect to={`${WWW_URL}/diventa-rivenditore`} />} />
+    <Route path="/blog/*" element={<ExternalRedirect to={`${WWW_URL}/blog`} />} />
+    <Route path="/ro/blog/*" element={<ExternalRedirect to={`${WWW_URL}/ro/blog`} />} />
 
     {/* Area riservata */}
     <Route path="/ordini" element={<ProtectedRoute><Layout><Orders /></Layout></ProtectedRoute>} />
@@ -212,6 +220,10 @@ const DevRoutes = () => (
     <Route path="/ro/garantii" element={<LanguageProvider lang="ro"><GaranziePage /></LanguageProvider>} />
     <Route path="/ro/contact" element={<LanguageProvider lang="ro"><ContattiPage /></LanguageProvider>} />
     <Route path="/ro/devino-distribuitor" element={<LanguageProvider lang="ro"><DiventaRivenditore /></LanguageProvider>} />
+    <Route path="/blog" element={<LanguageProvider lang="it"><BlogList /></LanguageProvider>} />
+    <Route path="/blog/:slug" element={<LanguageProvider lang="it"><BlogPost /></LanguageProvider>} />
+    <Route path="/ro/blog" element={<LanguageProvider lang="ro"><BlogList /></LanguageProvider>} />
+    <Route path="/ro/blog/:slug" element={<LanguageProvider lang="ro"><BlogPost /></LanguageProvider>} />
 
     <Route path="*" element={<NotFound />} />
   </Routes>

@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Homepage IT -->
+  <url>
+    <loc>https://thermodmr.com/</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro"/>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Homepage RO -->
+  <url>
+    <loc>https://thermodmr.com/ro</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro"/>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Chi Siamo IT -->
+  <url>
+    <loc>https://thermodmr.com/chi-siamo</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/chi-siamo"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/despre-noi"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/despre-noi</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/chi-siamo"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/despre-noi"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Prodotti IT -->
+  <url>
+    <loc>https://thermodmr.com/prodotti-pubblico</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti-pubblico"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/produse</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti-pubblico"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- DMR Confort -->
+  <url>
+    <loc>https://thermodmr.com/prodotti/dmr-confort</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/dmr-confort"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/dmr-confort"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/produse/dmr-confort</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/dmr-confort"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/dmr-confort"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- DMR Domus -->
+  <url>
+    <loc>https://thermodmr.com/prodotti/dmr-domus</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/dmr-domus"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/dmr-domus"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/produse/dmr-domus</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/dmr-domus"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/dmr-domus"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- DMR Passive -->
+  <url>
+    <loc>https://thermodmr.com/prodotti/dmr-passive</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/dmr-passive"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/dmr-passive"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/produse/dmr-passive</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/dmr-passive"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/dmr-passive"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Portoncini -->
+  <url>
+    <loc>https://thermodmr.com/prodotti/portoncini</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/portoncini"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/usi-intrare"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/produse/usi-intrare</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/portoncini"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/usi-intrare"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Cassonetti -->
+  <url>
+    <loc>https://thermodmr.com/prodotti/cassonetti</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/cassonetti"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/casete-rulou"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/produse/casete-rulou</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/cassonetti"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/casete-rulou"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Tapparelle -->
+  <url>
+    <loc>https://thermodmr.com/prodotti/tapparelle</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/tapparelle"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/jaluzele"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/produse/jaluzele</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/tapparelle"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/jaluzele"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Persiane -->
+  <url>
+    <loc>https://thermodmr.com/prodotti/persiane</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/persiane"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/obloane"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/produse/obloane</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/persiane"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/obloane"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Vantaggi -->
+  <url>
+    <loc>https://thermodmr.com/vantaggi</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/vantaggi"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/avantaje"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/avantaje</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/vantaggi"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/avantaje"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Garanzie -->
+  <url>
+    <loc>https://thermodmr.com/garanzie</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/garanzie"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/garantii"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/garantii</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/garanzie"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/garantii"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Contatti -->
+  <url>
+    <loc>https://thermodmr.com/contatti</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/contatti"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/contact"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/contact</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/contatti"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/contact"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Diventa Rivenditore -->
+  <url>
+    <loc>https://thermodmr.com/diventa-rivenditore</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/diventa-rivenditore"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/devino-distribuitor"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/devino-distribuitor</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/diventa-rivenditore"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/devino-distribuitor"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Blog IT -->
+  <url>
+    <loc>https://thermodmr.com/blog</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/blog</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog"/>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Blog posts IT -->
+  <url>
+    <loc>https://thermodmr.com/blog/finestre-pvc-profilo-tedesco-guida-completa</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/finestre-pvc-profilo-tedesco-guida-completa"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/ferestre-pvc-profil-german-ghid-complet"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/blog/risparmio-energetico-finestre-pvc-quanto-si-risparmia</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/risparmio-energetico-finestre-pvc-quanto-si-risparmia"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/economie-energie-ferestre-pvc-calcul-real"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/blog/tapparelle-coibentate-vs-tradizionali-differenze</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/tapparelle-coibentate-vs-tradizionali-differenze"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/jaluzele-termoizolante-vs-standard-diferente"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Blog posts RO -->
+  <url>
+    <loc>https://thermodmr.com/ro/blog/ferestre-pvc-profil-german-ghid-complet</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/finestre-pvc-profilo-tedesco-guida-completa"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/ferestre-pvc-profil-german-ghid-complet"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/blog/economie-energie-ferestre-pvc-calcul-real</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/risparmio-energetico-finestre-pvc-quanto-si-risparmia"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/economie-energie-ferestre-pvc-calcul-real"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/blog/jaluzele-termoizolante-vs-standard-diferente</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/tapparelle-coibentate-vs-tradizionali-differenze"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/jaluzele-termoizolante-vs-standard-diferente"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+</urlset>
