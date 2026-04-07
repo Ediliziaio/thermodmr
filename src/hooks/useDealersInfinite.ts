@@ -72,6 +72,6 @@ export const useDealersInfinite = (filters: DealerFilters = {}) => {
     },
     getNextPageParam: (lastPage) => lastPage.nextPage,
     initialPageParam: 0,
-    staleTime: 2 * 60 * 1000,
+    staleTime: 5 * 60 * 1000,
   });
 };

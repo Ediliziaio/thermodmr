@@ -30,7 +30,7 @@ export function DealerCard({ dealer }: DealerCardProps) {
   };
 
   return (
-    <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={handleCardClick}>
+    <Card className="hover:shadow-md transition-all cursor-pointer active:scale-[0.98]" onClick={handleCardClick}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="space-y-1 flex-1">
@@ -42,7 +42,7 @@ export function DealerCard({ dealer }: DealerCardProps) {
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Button variant="ghost" size="icon" className="h-8 w-8" aria-label={`Azioni per ${dealer.ragione_sociale}`}>
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -142,6 +142,7 @@ export function DealerCard({ dealer }: DealerCardProps) {
 
         <Button
           className="w-full mt-3"
+          aria-label={`Accedi all'Area Rivenditore di ${dealer.ragione_sociale}`}
           onClick={(e) => {
             e.stopPropagation();
             navigate(`/rivenditori/${dealer.id}/area`);

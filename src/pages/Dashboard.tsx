@@ -122,27 +122,7 @@ export default function Dashboard({ commercialeId }: DashboardProps = {}) {
     ? formatDateRange() || "Periodo personalizzato"
     : "Tutto il periodo";
 
-  if (kpisLoading) {
-    return (
-      <div className="space-y-8 p-4 md:p-6">
-        <div>
-          <Skeleton className="h-10 w-64" />
-          <Skeleton className="h-4 w-96 mt-2" />
-        </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {[...Array(4)].map((_, i) => (
-            <Skeleton key={i} className="h-32" />
-          ))}
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          <Skeleton className="h-[400px]" />
-          <Skeleton className="h-[400px]" />
-        </div>
-      </div>
-    );
-  }
-
-  if (kpisError || !kpis) {
+  if (kpisError || !kpis && !kpisLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px] p-4 md:p-6">
         <Card className="max-w-md w-full">
@@ -164,9 +144,9 @@ export default function Dashboard({ commercialeId }: DashboardProps = {}) {
     );
   }
 
-  const daSaldare = Math.max(0, kpis.daSaldare ?? 0);
-  const daSaldarePercent = kpis.totalRevenue > 0
-    ? Math.min(100, (daSaldare / kpis.totalRevenue) * 100).toFixed(1)
+  const daSaldare = Math.max(0, kpis?.daSaldare ?? 0);
+  const daSaldarePercent = (kpis?.totalRevenue ?? 0) > 0
+    ? Math.min(100, (daSaldare / kpis!.totalRevenue) * 100).toFixed(1)
     : "0.0";
 
   return (
@@ -243,10 +223,20 @@ export default function Dashboard({ commercialeId }: DashboardProps = {}) {
             <Euro className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(kpis.totalRevenue)}</div>
+            {kpisLoading ? (
+              <Skeleton className="h-8 w-24 mt-1" />
+            ) : (
+              <div className="text-2xl font-bold">{formatCurrency(kpis!.totalRevenue)}</div>
+            )}
             <div className="flex items-center justify-between mt-1">
-              <p className="text-xs text-muted-foreground">{kpis.totalOrders} {t.area.dashboard.ordiniTotali_subtitle}</p>
-              <DeltaIndicator value={kpis.deltas?.revenue ?? 0} />
+              {kpisLoading ? (
+                <Skeleton className="h-4 w-32" />
+              ) : (
+                <>
+                  <p className="text-xs text-muted-foreground">{kpis!.totalOrders} {t.area.dashboard.ordiniTotali_subtitle}</p>
+                  <DeltaIndicator value={kpis!.deltas?.revenue ?? 0} />
+                </>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -257,10 +247,20 @@ export default function Dashboard({ commercialeId }: DashboardProps = {}) {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(kpis.totalAcconti)}</div>
+            {kpisLoading ? (
+              <Skeleton className="h-8 w-24 mt-1" />
+            ) : (
+              <div className="text-2xl font-bold">{formatCurrency(kpis!.totalAcconti)}</div>
+            )}
             <div className="flex items-center justify-between mt-1">
-              <p className="text-xs text-muted-foreground">{t.area.dashboard.daOrdini}</p>
-              <DeltaIndicator value={kpis.deltas?.acconti ?? 0} />
+              {kpisLoading ? (
+                <Skeleton className="h-4 w-24" />
+              ) : (
+                <>
+                  <p className="text-xs text-muted-foreground">{t.area.dashboard.daOrdini}</p>
+                  <DeltaIndicator value={kpis!.deltas?.acconti ?? 0} />
+                </>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -271,10 +271,20 @@ export default function Dashboard({ commercialeId }: DashboardProps = {}) {
             <CheckCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(kpis.totalIncassato)}</div>
+            {kpisLoading ? (
+              <Skeleton className="h-8 w-24 mt-1" />
+            ) : (
+              <div className="text-2xl font-bold">{formatCurrency(kpis!.totalIncassato)}</div>
+            )}
             <div className="flex items-center justify-between mt-1">
-              <p className="text-xs text-muted-foreground">{t.area.dashboard.pagamentiRicevuti}</p>
-              <DeltaIndicator value={kpis.deltas?.incassato ?? 0} />
+              {kpisLoading ? (
+                <Skeleton className="h-4 w-28" />
+              ) : (
+                <>
+                  <p className="text-xs text-muted-foreground">{t.area.dashboard.pagamentiRicevuti}</p>
+                  <DeltaIndicator value={kpis!.deltas?.incassato ?? 0} />
+                </>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -282,27 +292,37 @@ export default function Dashboard({ commercialeId }: DashboardProps = {}) {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">{t.area.dashboard.daSaldare}</CardTitle>
-            <AlertCircle className={cn("h-4 w-4", parseFloat(daSaldarePercent) > 50 ? "text-destructive" : "text-muted-foreground")} />
+            <AlertCircle className={cn("h-4 w-4", !kpisLoading && parseFloat(daSaldarePercent) > 50 ? "text-destructive" : "text-muted-foreground")} />
           </CardHeader>
           <CardContent>
-            <div className={cn("text-2xl font-bold", parseFloat(daSaldarePercent) > 50 && "text-destructive")}>
-              {formatCurrency(daSaldare)}
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              {daSaldarePercent}{t.area.dashboard.percentualeTotale}
-            </p>
+            {kpisLoading ? (
+              <Skeleton className="h-8 w-24 mt-1" />
+            ) : (
+              <div className={cn("text-2xl font-bold", parseFloat(daSaldarePercent) > 50 && "text-destructive")}>
+                {formatCurrency(daSaldare)}
+              </div>
+            )}
+            {kpisLoading ? (
+              <Skeleton className="h-4 w-20 mt-1" />
+            ) : (
+              <p className="text-xs text-muted-foreground mt-1">
+                {daSaldarePercent}{t.area.dashboard.percentualeTotale}
+              </p>
+            )}
           </CardContent>
         </Card>
       </div>
 
       {/* Status Badges Row */}
-      <StatusBadgesRow ordersByStatus={kpis.ordersByStatus} />
+      {kpis && <StatusBadgesRow ordersByStatus={kpis.ordersByStatus} />}
 
       {/* Collection Progress Bar */}
-      <CollectionProgressBar
-        totalIncassato={kpis.totalIncassato}
-        totalRevenue={kpis.totalRevenue}
-      />
+      {kpis && (
+        <CollectionProgressBar
+          totalIncassato={kpis.totalIncassato}
+          totalRevenue={kpis.totalRevenue}
+        />
+      )}
 
       {/* Charts Section */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -318,7 +338,7 @@ export default function Dashboard({ commercialeId }: DashboardProps = {}) {
 
       {/* Order Status Chart - Full Width */}
       <OrderStatusPieChart
-        data={Object.entries(kpis.ordersByStatus).map(([status, count]) => ({
+        data={Object.entries(kpis?.ordersByStatus ?? {}).map(([status, count]) => ({
           name: getStatusLabel(status),
           value: count,
           color: STATUS_CHART_COLORS[status] || "hsl(var(--chart-5))",
@@ -336,9 +356,9 @@ export default function Dashboard({ commercialeId }: DashboardProps = {}) {
             <CardDescription className="text-xs md:text-sm">{t.area.dashboard.top5Desc}</CardDescription>
           </CardHeader>
           <CardContent>
-            {kpis.topDealers.length > 0 ? (
+            {(kpis?.topDealers?.length ?? 0) > 0 ? (
               <div className="space-y-4">
-                {kpis.topDealers.map((dealer) => (
+                {kpis!.topDealers.map((dealer) => (
                   <div
                     key={dealer.id}
                     onClick={() => navigate(`/rivenditori/${dealer.id}`)}

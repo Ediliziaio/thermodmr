@@ -1,6 +1,7 @@
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import EmailEditor, { EditorRef } from "react-email-editor";
+
+const EmailEditor = lazy(() => import("react-email-editor"));
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -75,71 +76,101 @@ const TEMPLATE_CONFIGS: Record<string, TemplateConfig> = {
 };
 
 // ─── Default starter design for a blank template ─────────────────────────────
-const makeStarterDesign = (config: TemplateConfig) => ({
-  counters: { u_row: 3, u_column: 3, u_content_text: 3, u_content_button: 1, u_content_divider: 1 },
-  body: {
-    rows: [
-      {
-        cells: [1],
-        columns: [{
-          contents: [{
-            type: "text",
-            values: {
-              text: `<div style="background:#111;padding:32px;text-align:center;border-radius:8px 8px 0 0"><h1 style="color:#fff;margin:0;font-size:22px;font-family:sans-serif">ThermoDMR</h1></div>`,
-              containerPadding: "0px",
-            },
+const makeStarterDesign = (config: TemplateConfig) => {
+  const varList = config.mergeTags.map((t) => `<code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;font-family:monospace;font-size:12px;">${t.value}</code> → ${t.name}`).join("<br/>");
+  return {
+    counters: { u_row: 4, u_column: 4, u_content_text: 4, u_content_button: 1, u_content_divider: 1 },
+    body: {
+      rows: [
+        {
+          cells: [1],
+          columns: [{
+            contents: [{
+              type: "text",
+              values: {
+                text: `<div style="text-align:center;"><span style="color:#ffffff;font-size:24px;font-weight:700;letter-spacing:-0.5px;font-family:sans-serif;">ThermoDMR</span><br/><span style="color:#9ca3af;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-family:sans-serif;">Gestione Rivenditori</span></div>`,
+                containerPadding: "32px 40px",
+              },
+            }],
+            values: { backgroundColor: "#111111", padding: "0px", border: {} },
           }],
-          values: { backgroundColor: "#111", padding: "0px", border: {} },
-        }],
-        values: { backgroundColor: "#ffffff", padding: "0px", columnsBackgroundColor: "#111" },
-      },
-      {
-        cells: [1],
-        columns: [{
-          contents: [{
-            type: "text",
-            values: {
-              text: `<p style="font-family:sans-serif;font-size:15px;color:#374151;">Gentile <strong>{{clientName}}</strong>,</p><p style="font-family:sans-serif;font-size:15px;color:#374151;">questo è il tuo template <strong>${config.name}</strong>. Personalizzalo con i blocchi a sinistra.</p><p style="font-family:sans-serif;font-size:13px;color:#9ca3af;">Numero ordine: {{orderNumber}}</p>`,
-              containerPadding: "32px",
-              color: "#374151",
-            },
+          values: { backgroundColor: "#111111", padding: "0px", columnsBackgroundColor: "#111111" },
+        },
+        {
+          cells: [1],
+          columns: [{
+            contents: [{
+              type: "text",
+              values: {
+                text: `<p style="font-family:sans-serif;font-size:13px;color:#6b7280;margin:0 0 16px;">Template: <strong style="color:#111;">${config.name}</strong></p><p style="font-family:sans-serif;font-size:15px;color:#374151;margin:0 0 16px;">Personalizza questo template con i blocchi nella barra a sinistra. Usa le variabili seguenti nel testo per inserire dati dinamici:</p><p style="font-family:sans-serif;font-size:13px;color:#374151;line-height:2;margin:0;">${varList}</p>`,
+                containerPadding: "32px 40px 24px",
+                color: "#374151",
+              },
+            }],
+            values: { padding: "0px", border: {}, borderRadius: "0px" },
           }],
-          values: { padding: "0px", border: {}, borderRadius: "0px" },
-        }],
-        values: { backgroundColor: "#ffffff", padding: "0px" },
-      },
-      {
-        cells: [1],
-        columns: [{
-          contents: [{
-            type: "text",
-            values: {
-              text: `<p style="font-family:sans-serif;font-size:12px;color:#9ca3af;text-align:center;">© ThermoDMR · <a href="https://thermodmr.com" style="color:#6b7280;">thermodmr.com</a></p>`,
-              containerPadding: "16px 32px",
-            },
+          values: { backgroundColor: "#ffffff", padding: "0px" },
+        },
+        {
+          cells: [1],
+          columns: [{
+            contents: [{
+              type: "button",
+              values: {
+                text: "Azione principale",
+                href: { name: "web", values: { href: "https://thermodmr.com", target: "_blank" } },
+                buttonColors: { color: "#ffffff", backgroundColor: "#111111", hoverColor: "#ffffff", hoverBackgroundColor: "#333333" },
+                padding: "12px 30px",
+                border: { borderRadius: "8px" },
+                textAlign: "center",
+                containerPadding: "0px 40px 32px",
+                fontFamily: { url: "", label: "Arial" },
+                fontSize: "14px",
+                fontWeight: 600,
+              },
+            }],
+            values: { padding: "0px", border: {} },
           }],
-          values: { backgroundColor: "#f9fafb", padding: "0px", border: { borderTop: "1px solid #e5e7eb" } },
-        }],
-        values: { backgroundColor: "#f9fafb", padding: "0px" },
+          values: { backgroundColor: "#ffffff", padding: "0px" },
+        },
+        {
+          cells: [1],
+          columns: [{
+            contents: [{
+              type: "text",
+              values: {
+                text: `<p style="font-family:sans-serif;font-size:12px;color:#9ca3af;text-align:center;margin:0;">© ${new Date().getFullYear()} ThermoDMR &nbsp;·&nbsp; <a href="https://thermodmr.com" style="color:#6b7280;text-decoration:none;">thermodmr.com</a></p>`,
+                containerPadding: "20px 32px",
+              },
+            }],
+            values: { backgroundColor: "#f9fafb", padding: "0px", border: { borderTop: "1px solid #e5e7eb" } },
+          }],
+          values: { backgroundColor: "#f9fafb", padding: "0px" },
+        },
+      ],
+      values: {
+        backgroundColor: "#f3f4f6",
+        defaultFontFamily: { url: "", label: "Arial" },
+        fontFamily: { url: "", label: "Arial" },
+        textColor: "#374151",
+        linkColor: "#111827",
+        contentWidth: "600px",
       },
-    ],
-    values: {
-      backgroundColor: "#f3f4f6",
-      defaultFontFamily: { url: "", label: "Arial" },
-      fontFamily: { url: "", label: "Arial" },
-      textColor: "#374151",
-      linkColor: "#111827",
-      contentWidth: "600px",
     },
-  },
-});
+  };
+};
+
+// ─── Merge tag validation helper ─────────────────────────────────────────────
+const extractMergeTags = (html: string) =>
+  [...html.matchAll(/\{\{(\w+)\}\}/g)].map((m) => m[1]);
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function EmailTemplateEditor() {
   const { key } = useParams<{ key: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const emailEditorRef = useRef<EditorRef>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const emailEditorRef = useRef<any>(null);
 
   const config = key ? TEMPLATE_CONFIGS[key] : null;
 
@@ -184,8 +215,22 @@ export default function EmailTemplateEditor() {
     if (!emailEditorRef.current?.editor || !config) return;
     setIsSaving(true);
 
-    emailEditorRef.current.editor.exportHtml(async ({ design, html }) => {
+    emailEditorRef.current.editor.exportHtml(async ({ design, html }: { design: object; html: string }) => {
       try {
+        // Validate merge tags before saving
+        const usedTags = extractMergeTags(html);
+        const allowedTags = config.mergeTags.map((t) => t.value.replace(/[{}]/g, ""));
+        const unknownTags = usedTags.filter((t) => !allowedTags.includes(t));
+        if (unknownTags.length > 0) {
+          toast({
+            variant: "destructive",
+            title: "Variabili non riconosciute",
+            description: `{{${unknownTags.join("}}, {{")}}} non sono variabili valide per questo template.`,
+          });
+          setIsSaving(false);
+          return;
+        }
+
         await supabase.from("email_templates").upsert(
           {
             template_key: config.key,
@@ -258,6 +303,18 @@ export default function EmailTemplateEditor() {
               placeholder="Oggetto email…"
               className="h-8 text-sm"
             />
+            <div className="flex flex-wrap gap-1 mt-1.5">
+              {config.mergeTags.map((tag) => (
+                <button
+                  key={tag.value}
+                  type="button"
+                  onClick={() => setSubject((prev) => prev + tag.value)}
+                  className="text-xs bg-muted hover:bg-muted/80 px-2 py-0.5 rounded border font-mono transition-colors"
+                >
+                  {tag.value}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Merge tags pill */}
@@ -312,6 +369,7 @@ export default function EmailTemplateEditor() {
             </div>
           )}
 
+          <Suspense fallback={null}>
           <EmailEditor
             ref={emailEditorRef}
             onReady={handleEditorReady}
@@ -347,6 +405,7 @@ export default function EmailTemplateEditor() {
               },
             }}
           />
+          </Suspense>
         </div>
       </div>
     </TooltipProvider>

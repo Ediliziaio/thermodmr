@@ -99,8 +99,8 @@ export const useDashboardKPIs = (startDate?: Date, endDate?: Date, commercialeId
         deltas,
       };
     },
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
+    staleTime: 15 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
   });
 };
 
@@ -124,8 +124,8 @@ export const useRevenueData = (startDate?: Date, endDate?: Date, commercialeId?:
         incassato: number;
       }>;
     },
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
+    staleTime: 15 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
   });
 };
 
