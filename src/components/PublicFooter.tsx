@@ -54,9 +54,13 @@ const PublicFooter = () => {
           <div className="space-y-4">
             <h4 className="text-sm font-bold text-white/80 uppercase tracking-wider">{t.footer.contattiTitle}</h4>
             <div className="space-y-3">
-              <a href="tel:+390000000000" className="flex items-center gap-2 text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors">
+              <a href="tel:+393483467567" className="flex items-center gap-2 text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors">
                 <Phone className="h-4 w-4 shrink-0" />
-                +39 000 000 0000
+                +39 348 346 7567
+              </a>
+              <a href="tel:+40744139565" className="flex items-center gap-2 text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors">
+                <Phone className="h-4 w-4 shrink-0" />
+                +40 744 139 565
               </a>
               <a href="mailto:info@thermodmr.it" className="flex items-center gap-2 text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors">
                 <Mail className="h-4 w-4 shrink-0" />
