@@ -17,9 +17,9 @@ const itPosts: BlogPost[] = [
   {
     slug: "finestre-pvc-profilo-tedesco-guida-completa",
     lang: "it",
-    title: "Finestre in PVC con Profilo Tedesco: Guida Completa 2025",
-    description: "Cosa sono le finestre PVC con profilo tedesco? Vantaggi, camere, certificazioni e perché costano meno di quanto pensi. Guida aggiornata 2025.",
-    date: "2025-03-10",
+    title: "Finestre in PVC con Profilo Tedesco: Guida Completa 2026",
+    description: "Cosa sono le finestre PVC con profilo tedesco? Vantaggi, camere, certificazioni e perché costano meno di quanto pensi. Guida aggiornata 2026.",
+    date: "2026-03-10",
     category: "Guide",
     readingTime: 8,
     content: `
@@ -79,7 +79,7 @@ const itPosts: BlogPost[] = [
     lang: "it",
     title: "Risparmio Energetico con Finestre in PVC: Cifre Reali",
     description: "Quanto si risparmia in bolletta sostituendo le finestre con PVC Classe A? Calcoli reali, percentuali e tempi di ritorno dell'investimento.",
-    date: "2025-03-20",
+    date: "2026-03-20",
     category: "Risparmio Energetico",
     readingTime: 6,
     content: `
@@ -112,7 +112,7 @@ const itPosts: BlogPost[] = [
 </table>
 <p><em>Stima basata su consumo medio riscaldamento 100 kWh/m²anno, costo gas 0,12 €/kWh. I valori reali variano in base all'isolamento dell'edificio, zona climatica e abitudini di utilizzo.</em></p>
 
-<h2>Incentivi fiscali 2025</h2>
+<h2>Incentivi fiscali 2026</h2>
 <p>La sostituzione di finestre e infissi rientra nel <strong>Bonus Ristrutturazioni (50% Irpef)</strong>, con massimale di spesa di €96.000 per unità abitativa. La detrazione è ripartita in 10 anni. Per accedere al bonus è necessario che le nuove finestre rispettino i requisiti minimi di trasmittanza previsti dal decreto del Ministero dell'Ambiente.</p>
 <p>Le finestre ThermoDMR rispettano tutti i requisiti richiesti. Per informazioni sui documenti necessari per accedere al bonus, <a href="/contatti">contattaci</a>.</p>
 
@@ -129,7 +129,7 @@ const itPosts: BlogPost[] = [
     lang: "it",
     title: "Tapparelle Coibentate vs Tradizionali: Differenze e Quando Conviene",
     description: "Tapparelle coibentate o normali? Differenze tecniche, risparmio energetico reale e quando vale la pena spendere di più. Guida pratica ThermoDMR.",
-    date: "2025-04-01",
+    date: "2026-04-01",
     category: "Prodotti",
     readingTime: 5,
     content: `
@@ -168,14 +168,14 @@ const itPosts: BlogPost[] = [
   {
     slug: "finestre-pvc-prezzi-2025",
     lang: "it",
-    title: "Finestre PVC Prezzi 2025: Quanto Costano Davvero e Come Non Pagare Troppo",
-    description: "Prezzi reali delle finestre in PVC nel 2025: dal doppio al triplo vetro. Cosa incide sul costo, come confrontare preventivi e risparmiare senza rinunciare alla qualità.",
-    date: "2025-04-07",
+    title: "Finestre PVC Prezzi 2026: Quanto Costano Davvero e Come Non Pagare Troppo",
+    description: "Prezzi reali delle finestre in PVC nel 2026: dal doppio al triplo vetro. Cosa incide sul costo, come confrontare preventivi e risparmiare senza rinunciare alla qualità.",
+    date: "2026-04-07",
     category: "Prezzi & Preventivi",
     readingTime: 12,
     content: `
 <h2>Perché i prezzi delle finestre PVC sono così diversi?</h2>
-<p>Cerchi <strong>finestre PVC prezzi 2025</strong> e trovi preventivi che vanno da €150 a €900 per finestra. Come è possibile una differenza del genere? La risposta sta in quattro variabili: qualità del profilo, tipo di vetro, ferramenta e provenienza della produzione.</p>
+<p>Cerchi <strong>finestre PVC prezzi 2026</strong> e trovi preventivi che vanno da €150 a €900 per finestra. Come è possibile una differenza del genere? La risposta sta in quattro variabili: qualità del profilo, tipo di vetro, ferramenta e provenienza della produzione.</p>
 <p>Capire queste variabili ti permette di confrontare preventivi in modo intelligente — e di non cadere nella trappola del prezzo basso che nasconde costi di manutenzione alti nel lungo periodo.</p>
 
 <h2>Fattori che determinano il prezzo di una finestra PVC</h2>
@@ -184,7 +184,7 @@ const itPosts: BlogPost[] = [
 <p>ThermoDMR utilizza profili tedeschi a 5 camere come standard su tutta la gamma, con opzione 6 camere per la linea DMR Passive.</p>
 
 <h3>2. Il vetro: doppio o triplo?</h3>
-<p>Il vetrocamera (o vetro isolante) è dove si gioca la partita energetica. Le opzioni principali per il 2025:</p>
+<p>Il vetrocamera (o vetro isolante) è dove si gioca la partita energetica. Le opzioni principali per il 2026:</p>
 <ul>
   <li><strong>Doppio vetro 4/16/4 con gas argon e coating low-e</strong> — Ug ≈ 1,0 W/m²K — standard ThermoDMR, ottimo per zone climatiche B-D</li>
   <li><strong>Doppio vetro 4/20/4 con krypton</strong> — Ug ≈ 0,7 W/m²K — prestazioni da triplo vetro a costo inferiore</li>
@@ -197,7 +197,7 @@ const itPosts: BlogPost[] = [
 <h3>4. Produzione diretta vs intermediari</h3>
 <p>Un serramento acquistato da un rivenditore ha già subito due o tre margini di markup. Acquistare direttamente dal produttore — come ThermoDMR — elimina questi intermediari e riduce il prezzo finale del 20-35%.</p>
 
-<h2>Prezzi indicativi finestre PVC 2025 (per misura standard 120×140 cm)</h2>
+<h2>Prezzi indicativi finestre PVC 2026 (per misura standard 120×140 cm)</h2>
 <table>
   <thead>
     <tr><th>Tipologia</th><th>Fascia entry</th><th>Fascia media</th><th>Fascia premium</th></tr>
@@ -248,14 +248,14 @@ const itPosts: BlogPost[] = [
   {
     slug: "bonus-finestre-2025-detrazione-fiscale",
     lang: "it",
-    title: "Bonus Finestre 2025: Detrazione 50% Irpef — Come Funziona e Come Ottenerla",
-    description: "Guida completa al Bonus Finestre 2025: detrazione 50% Irpef per sostituzione serramenti. Requisiti, documenti, procedure e massimale di spesa aggiornati.",
-    date: "2025-04-05",
+    title: "Bonus Finestre 2026: Detrazione 50% Irpef — Come Funziona e Come Ottenerla",
+    description: "Guida completa al Bonus Finestre 2026: detrazione 50% Irpef per sostituzione serramenti. Requisiti, documenti, procedure e massimale di spesa aggiornati.",
+    date: "2026-04-05",
     category: "Incentivi & Bonus",
     readingTime: 10,
     content: `
-<h2>Cos'è il Bonus Finestre 2025?</h2>
-<p>Il <strong>Bonus Finestre 2025</strong> è un incentivo fiscale che permette di detrarre il <strong>50% della spesa</strong> sostenuta per la sostituzione di finestre, portefinestre e infissi. Rientra nel perimetro del Bonus Ristrutturazioni (art. 16-bis del TUIR) ed è confermato anche per l'anno in corso dalla Legge di Bilancio.</p>
+<h2>Cos'è il Bonus Finestre 2026?</h2>
+<p>Il <strong>Bonus Finestre 2026</strong> è un incentivo fiscale che permette di detrarre il <strong>50% della spesa</strong> sostenuta per la sostituzione di finestre, portefinestre e infissi. Rientra nel perimetro del Bonus Ristrutturazioni (art. 16-bis del TUIR) ed è confermato anche per l'anno in corso dalla Legge di Bilancio.</p>
 <p>La detrazione del 50% si applica su un massimale di spesa di <strong>€96.000 per unità immobiliare</strong> ed è ripartita in <strong>10 quote annuali uguali</strong>.</p>
 
 <h2>Chi può accedere al Bonus Finestre?</h2>
@@ -340,9 +340,9 @@ const itPosts: BlogPost[] = [
   {
     slug: "doppio-vetro-vs-triplo-vetro-quale-scegliere",
     lang: "it",
-    title: "Doppio Vetro vs Triplo Vetro: Quale Scegliere nel 2025?",
-    description: "Confronto tecnico tra finestre a doppio e triplo vetro: differenze di isolamento, costi, peso e quando vale davvero la pena scegliere il triplo. Guida 2025.",
-    date: "2025-04-03",
+    title: "Doppio Vetro vs Triplo Vetro: Quale Scegliere nel 2026?",
+    description: "Confronto tecnico tra finestre a doppio e triplo vetro: differenze di isolamento, costi, peso e quando vale davvero la pena scegliere il triplo. Guida 2026.",
+    date: "2026-04-03",
     category: "Guide Tecniche",
     readingTime: 10,
     content: `
@@ -414,9 +414,9 @@ const itPosts: BlogPost[] = [
   {
     slug: "sostituzione-finestre-ristrutturazione-guida",
     lang: "it",
-    title: "Sostituzione Finestre in Ristrutturazione: Guida Completa 2025",
+    title: "Sostituzione Finestre in Ristrutturazione: Guida Completa 2026",
     description: "Come sostituire le finestre durante una ristrutturazione: tempistiche, ordine dei lavori, scelta del serramento giusto e come evitare gli errori più comuni.",
-    date: "2025-04-01",
+    date: "2026-04-01",
     category: "Ristrutturazione",
     readingTime: 11,
     content: `
@@ -480,7 +480,7 @@ const itPosts: BlogPost[] = [
 </ul>
 
 <h2>Come scegliere il serramento giusto per la ristrutturazione</h2>
-<p>Per una ristrutturazione in zona climatica D-E (tutta l'Italia settentrionale e centrale), la scelta ottimale nel 2025 è:</p>
+<p>Per una ristrutturazione in zona climatica D-E (tutta l'Italia settentrionale e centrale), la scelta ottimale nel 2026 è:</p>
 <ul>
   <li><strong>Profilo PVC a 5 camere</strong> (es. DMR Confort o DMR Domus)</li>
   <li><strong>Doppio vetro low-e con argon</strong>, Ug ≈ 1,0 W/m²K</li>
@@ -497,9 +497,9 @@ const itPosts: BlogPost[] = [
   {
     slug: "come-scegliere-le-finestre-guida-acquisto-2025",
     lang: "it",
-    title: "Come Scegliere le Finestre: Guida all'Acquisto 2025 Senza Errori",
-    description: "Guida completa per scegliere le finestre giuste nel 2025: materiali, vetri, aperture, colori e certificazioni. Tutto quello che devi sapere prima di comprare.",
-    date: "2025-03-28",
+    title: "Come Scegliere le Finestre: Guida all'Acquisto 2026 Senza Errori",
+    description: "Guida completa per scegliere le finestre giuste nel 2026: materiali, vetri, aperture, colori e certificazioni. Tutto quello che devi sapere prima di comprare.",
+    date: "2026-03-28",
     category: "Guide",
     readingTime: 13,
     content: `
@@ -560,7 +560,7 @@ const itPosts: BlogPost[] = [
 <h2>Colori e finiture: personalizzazione senza limiti</h2>
 <p>Le finestre PVC moderne non sono solo bianche. La tecnologia di coestrusione e laminazione permette di avere:</p>
 <ul>
-  <li><strong>Colori RAL</strong> (grigio antracite 7016, beige, marrone) — i più richiesti nel 2024-2025</li>
+  <li><strong>Colori RAL</strong> (grigio antracite 7016, beige, marrone) — i più richiesti nel 2025-2026</li>
   <li><strong>Effetto legno</strong> (golden oak, noce, mogano) — ideale per i palazzi storici o gli ambienti rustici</li>
   <li><strong>Bicolore</strong> — colore diverso all'interno e all'esterno</li>
   <li><strong>Finitura lucida o opaca</strong></li>
@@ -601,9 +601,9 @@ const roPosts: BlogPost[] = [
   {
     slug: "ferestre-pvc-profil-german-ghid-complet",
     lang: "ro",
-    title: "Ferestre PVC cu Profil German: Ghid Complet 2025",
-    description: "Ce sunt ferestrele PVC cu profil german? Avantaje, camere, certificări și de ce costă mai puțin decât crezi. Ghid actualizat 2025.",
-    date: "2025-03-10",
+    title: "Ferestre PVC cu Profil German: Ghid Complet 2026",
+    description: "Ce sunt ferestrele PVC cu profil german? Avantaje, camere, certificări și de ce costă mai puțin decât crezi. Ghid actualizat 2026.",
+    date: "2026-03-10",
     category: "Ghiduri",
     readingTime: 8,
     content: `
@@ -660,7 +660,7 @@ const roPosts: BlogPost[] = [
     lang: "ro",
     title: "Economie de Energie cu Ferestre PVC: Cifre Reale pentru România",
     description: "Cât economisești la factură înlocuind ferestrele cu PVC Clasa A? Calcule reale, procente și timp de recuperare a investiției.",
-    date: "2025-03-20",
+    date: "2026-03-20",
     category: "Economie Energie",
     readingTime: 6,
     content: `
@@ -708,7 +708,7 @@ const roPosts: BlogPost[] = [
     lang: "ro",
     title: "Jaluzele Termoizolante vs Standard: Diferențe și Când Merită",
     description: "Jaluzele termoizolante sau standard? Diferențe tehnice, economie reală de energie și când merită să plătești mai mult. Ghid practic ThermoDMR.",
-    date: "2025-04-01",
+    date: "2026-04-01",
     category: "Produse",
     readingTime: 5,
     content: `
@@ -746,14 +746,14 @@ const roPosts: BlogPost[] = [
   {
     slug: "ferestre-pvc-preturi-2025",
     lang: "ro",
-    title: "Ferestre PVC Prețuri 2025: Cât Costă și Cum Eviți să Plătești Prea Mult",
-    description: "Prețuri reale ferestre PVC 2025: de la geam dublu la triplu. Ce influențează costul, cum compari ofertele și cum economisești fără să sacrifici calitatea.",
-    date: "2025-04-07",
+    title: "Ferestre PVC Prețuri 2026: Cât Costă și Cum Eviți să Plătești Prea Mult",
+    description: "Prețuri reale ferestre PVC 2026: de la geam dublu la triplu. Ce influențează costul, cum compari ofertele și cum economisești fără să sacrifici calitatea.",
+    date: "2026-04-07",
     category: "Prețuri & Oferte",
     readingTime: 12,
     content: `
 <h2>De ce prețurile ferestrelor PVC variază atât de mult?</h2>
-<p>Cauți <strong>ferestre PVC prețuri 2025</strong> și găsești oferte între 300 lei și 2.500 lei pe fereastră. Cum este posibilă o diferență atât de mare? Răspunsul stă în patru variabile: calitatea profilului, tipul de geam, feroneria și proveniența producției.</p>
+<p>Cauți <strong>ferestre PVC prețuri 2026</strong> și găsești oferte între 300 lei și 2.500 lei pe fereastră. Cum este posibilă o diferență atât de mare? Răspunsul stă în patru variabile: calitatea profilului, tipul de geam, feroneria și proveniența producției.</p>
 <p>Înțelegând aceste variabile poți compara ofertele în mod inteligent — și să nu cazi în capcana prețului mic care ascunde costuri de întreținere ridicate pe termen lung.</p>
 
 <h2>Factorii care determină prețul unei ferestre PVC</h2>
@@ -762,7 +762,7 @@ const roPosts: BlogPost[] = [
 <p>ThermoDMR utilizează profile germane cu 5 camere ca standard pe toată gama, cu opțiunea de 6 camere pentru linia DMR Passive.</p>
 
 <h3>2. Geamul: dublu sau triplu?</h3>
-<p>Termopanul este locul unde se câștigă sau se pierde bătălia energetică. Opțiunile principale pentru 2025:</p>
+<p>Termopanul este locul unde se câștigă sau se pierde bătălia energetică. Opțiunile principale pentru 2026:</p>
 <ul>
   <li><strong>Geam dublu 4/16/4 cu argon și coating low-e</strong> — Ug ≈ 1,0 W/m²K — standard ThermoDMR</li>
   <li><strong>Geam dublu 4/20/4 cu kripton</strong> — Ug ≈ 0,7 W/m²K — performanță de triplu vitraj la cost inferior</li>
@@ -775,7 +775,7 @@ const roPosts: BlogPost[] = [
 <h3>4. Producție directă vs intermediari</h3>
 <p>O fereastră cumpărată de la un distribuitor a trecut deja prin două-trei marje de adaos. Cumpărând direct de la producător — ca ThermoDMR — elimini acești intermediari și reduci prețul final cu 20-35%.</p>
 
-<h2>Prețuri orientative ferestre PVC 2025 (pentru dimensiune standard 120×140 cm)</h2>
+<h2>Prețuri orientative ferestre PVC 2026 (pentru dimensiune standard 120×140 cm)</h2>
 <table>
   <thead>
     <tr><th>Tip</th><th>Gamă intrare</th><th>Gamă medie</th><th>Gamă premium</th></tr>
@@ -818,14 +818,14 @@ const roPosts: BlogPost[] = [
   {
     slug: "program-reabilitare-termica-finantare-ferestre-2025",
     lang: "ro",
-    title: "Finanțare Ferestre PVC 2025: Programe și Fonduri pentru Renovare Termică",
-    description: "Ghid complet programe finanțare renovare termică România 2025: Casa Verde, fonduri europene, deduceri fiscale. Condiții, documente și cum accesezi ajutoarele.",
-    date: "2025-04-05",
+    title: "Finanțare Ferestre PVC 2026: Programe și Fonduri pentru Renovare Termică",
+    description: "Ghid complet programe finanțare renovare termică România 2026: Casa Verde, fonduri europene, deduceri fiscale. Condiții, documente și cum accesezi ajutoarele.",
+    date: "2026-04-05",
     category: "Finanțare & Subvenții",
     readingTime: 10,
     content: `
 <h2>De ce să nu aștepți pentru a-ți schimba ferestrele</h2>
-<p>Schimbarea ferestrelor vechi cu unele PVC de înaltă eficiență nu este un lux — este o investiție cu returnare măsurabilă. Iar în 2025, există mai multe programe de finanțare disponibile în România care pot acoperi o parte semnificativă din cost.</p>
+<p>Schimbarea ferestrelor vechi cu unele PVC de înaltă eficiență nu este un lux — este o investiție cu returnare măsurabilă. Iar în 2026, există mai multe programe de finanțare disponibile în România care pot acoperi o parte semnificativă din cost.</p>
 <p>Această ghid îți explică ce programe există, cine poate accesa, ce documente sunt necesare și cum poți combina sursele de finanțare.</p>
 
 <h2>Programul Casa Verde Plus — reabilitare termică</h2>
@@ -839,7 +839,7 @@ const roPosts: BlogPost[] = [
 </ul>
 <p><strong>Important:</strong> Sesiunile de înscriere sunt limitate. <a href="/ro/contact">Contactează-ne</a> pentru informații despre sesiunile active în prezent.</p>
 
-<h2>Fonduri europene pentru renovare energetică 2025</h2>
+<h2>Fonduri europene pentru renovare energetică 2026</h2>
 <p>Prin Planul Național de Redresare și Reziliență (PNRR) și prin programele operaționale regionale co-finanțate de UE, sunt disponibile în România fonduri pentru renovarea energetică a clădirilor rezidențiale.</p>
 <p>Componentele relevante pentru înlocuirea ferestrelor:</p>
 <ul>
@@ -889,9 +889,9 @@ const roPosts: BlogPost[] = [
   {
     slug: "geam-dublu-vs-geam-triplu-care-alegi",
     lang: "ro",
-    title: "Geam Dublu vs Geam Triplu: Care Alegi în 2025?",
-    description: "Comparație tehnică completă geam dublu vs triplu: izolare, costuri, greutate și când merită cu adevărat să alegi termopanul triplu. Ghid 2025.",
-    date: "2025-04-03",
+    title: "Geam Dublu vs Geam Triplu: Care Alegi în 2026?",
+    description: "Comparație tehnică completă geam dublu vs triplu: izolare, costuri, greutate și când merită cu adevărat să alegi termopanul triplu. Ghid 2026.",
+    date: "2026-04-03",
     category: "Ghiduri Tehnice",
     readingTime: 10,
     content: `
@@ -962,9 +962,9 @@ const roPosts: BlogPost[] = [
   {
     slug: "inlocuire-ferestre-renovare-casa-ghid-complet",
     lang: "ro",
-    title: "Înlocuire Ferestre la Renovare: Ghid Complet 2025 pentru România",
-    description: "Cum înlocuiești ferestrele în timpul unei renovări: etape, ordinea lucrărilor, alegerea tâmplăriei potrivite și cum eviți greșelile cele mai frecvente. Ghid 2025.",
-    date: "2025-04-01",
+    title: "Înlocuire Ferestre la Renovare: Ghid Complet 2026 pentru România",
+    description: "Cum înlocuiești ferestrele în timpul unei renovări: etape, ordinea lucrărilor, alegerea tâmplăriei potrivite și cum eviți greșelile cele mai frecvente. Ghid 2026.",
+    date: "2026-04-01",
     category: "Renovare",
     readingTime: 11,
     content: `
@@ -1024,7 +1024,7 @@ const roPosts: BlogPost[] = [
 </ul>
 
 <h2>Cum alegi tâmplăria potrivită pentru renovare în România</h2>
-<p>Pentru o renovare în zone climatice temperate-reci (Transilvania, Moldova, Bucovina, nordul Munteniei), alegerea optimă în 2025 este:</p>
+<p>Pentru o renovare în zone climatice temperate-reci (Transilvania, Moldova, Bucovina, nordul Munteniei), alegerea optimă în 2026 este:</p>
 <ul>
   <li><strong>Profil PVC cu 5 camere</strong> (ex. DMR Confort sau DMR Domus)</li>
   <li><strong>Geam dublu low-e cu argon</strong>, Ug ≈ 1,0 W/m²K</li>
@@ -1041,9 +1041,9 @@ const roPosts: BlogPost[] = [
   {
     slug: "cum-alegi-ferestrele-ghid-cumparaturi-2025",
     lang: "ro",
-    title: "Cum Alegi Ferestrele: Ghid Complet de Cumpărare 2025 Fără Greșeli",
-    description: "Ghid complet pentru alegerea ferestrelor potrivite în 2025: materiale, geamuri, tipuri de deschidere, culori și certificări. Tot ce trebuie să știi înainte să cumperi.",
-    date: "2025-03-28",
+    title: "Cum Alegi Ferestrele: Ghid Complet de Cumpărare 2026 Fără Greșeli",
+    description: "Ghid complet pentru alegerea ferestrelor potrivite în 2026: materiale, geamuri, tipuri de deschidere, culori și certificări. Tot ce trebuie să știi înainte să cumperi.",
+    date: "2026-03-28",
     category: "Ghiduri",
     readingTime: 13,
     content: `
@@ -1104,7 +1104,7 @@ const roPosts: BlogPost[] = [
 <h2>Culori și finisaje: personalizare fără limite</h2>
 <p>Ferestrele PVC moderne nu sunt doar albe. Tehnologia de co-extrudare și laminare permite:</p>
 <ul>
-  <li><strong>Culori RAL</strong> (gri antracit 7016, bej, maro) — cele mai solicitate în 2024-2025</li>
+  <li><strong>Culori RAL</strong> (gri antracit 7016, bej, maro) — cele mai solicitate în 2025-2026</li>
   <li><strong>Efect lemn</strong> (golden oak, nuc, mahon) — ideal pentru imobile vechi sau ambianțe rustice</li>
   <li><strong>Bicolor</strong> — culoare diferită interior și exterior</li>
   <li><strong>Finisaj lucios sau mat</strong></li>

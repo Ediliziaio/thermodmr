@@ -84,7 +84,11 @@ const BlogPost = () => {
         {/* Header */}
         <section className="bg-[hsl(0,0%,8%)] pt-28 pb-14">
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
-            <motion.div {...fadeUp}>
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              animate="visible"
+            >
               <Link
                 to={blogBase}
                 className="inline-flex items-center gap-1 text-white/40 hover:text-white/70 text-sm mb-6 transition-colors"
@@ -119,7 +123,10 @@ const BlogPost = () => {
         {/* Article body */}
         <section className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
           <motion.div
-            {...fadeUp}
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
             className="prose prose-lg prose-gray max-w-none
               prose-headings:font-bold prose-headings:text-gray-900
               prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
