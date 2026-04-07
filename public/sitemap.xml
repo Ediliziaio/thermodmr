@@ -266,6 +266,41 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://thermodmr.com/blog/finestre-pvc-prezzi-2025</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/finestre-pvc-prezzi-2025"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/ferestre-pvc-preturi-2025"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/blog/bonus-finestre-2025-detrazione-fiscale</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/bonus-finestre-2025-detrazione-fiscale"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/program-reabilitare-termica-finantare-ferestre-2025"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/blog/doppio-vetro-vs-triplo-vetro-quale-scegliere</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/doppio-vetro-vs-triplo-vetro-quale-scegliere"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/geam-dublu-vs-geam-triplu-care-alegi"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/blog/sostituzione-finestre-ristrutturazione-guida</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/sostituzione-finestre-ristrutturazione-guida"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/inlocuire-ferestre-renovare-casa-ghid-complet"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/blog/come-scegliere-le-finestre-guida-acquisto-2025</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/come-scegliere-le-finestre-guida-acquisto-2025"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/cum-alegi-ferestrele-ghid-cumparaturi-2025"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 
   <!-- Blog posts RO -->
   <url>
@@ -288,6 +323,41 @@
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/jaluzele-termoizolante-vs-standard-diferente"/>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/blog/ferestre-pvc-preturi-2025</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/finestre-pvc-prezzi-2025"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/ferestre-pvc-preturi-2025"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/blog/program-reabilitare-termica-finantare-ferestre-2025</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/bonus-finestre-2025-detrazione-fiscale"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/program-reabilitare-termica-finantare-ferestre-2025"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/blog/geam-dublu-vs-geam-triplu-care-alegi</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/doppio-vetro-vs-triplo-vetro-quale-scegliere"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/geam-dublu-vs-geam-triplu-care-alegi"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/blog/inlocuire-ferestre-renovare-casa-ghid-complet</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/sostituzione-finestre-ristrutturazione-guida"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/inlocuire-ferestre-renovare-casa-ghid-complet"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/blog/cum-alegi-ferestrele-ghid-cumparaturi-2025</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/come-scegliere-le-finestre-guida-acquisto-2025"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/cum-alegi-ferestrele-ghid-cumparaturi-2025"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 
 </urlset>
