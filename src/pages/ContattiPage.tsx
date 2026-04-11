@@ -64,6 +64,24 @@ const ContattiPage = () => {
         lang={lang}
         hreflangIt="/contatti"
         hreflangRo="/ro/contact"
+        keywords={isRo
+          ? "contact ThermoDMR, ofertă ferestre PVC, preventiv gratuit, telefon ThermoDMR"
+          : "contatti ThermoDMR, preventivo finestre PVC, preventivo gratuito, richiesta offerta serramenti"
+        }
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "ContactPage",
+          "name": isRo ? "Contact ThermoDMR" : "Contatti ThermoDMR",
+          "url": isRo ? "https://thermodmr.com/ro/contact" : "https://thermodmr.com/contatti",
+          "description": isRo ? "Pagina de contact ThermoDMR pentru oferte gratuite pe ferestre și tâmplărie PVC." : "Pagina contatti ThermoDMR per preventivi gratuiti su finestre e serramenti PVC.",
+          "mainEntity": {
+            "@type": "Organization",
+            "name": "ThermoDMR",
+            "telephone": isRo ? "+40-744-139-565" : "+39-348-346-7567",
+            "email": "info@thermodmr.it",
+            "url": "https://thermodmr.com"
+          }
+        }}
       />
       <PublicNavbar />
 

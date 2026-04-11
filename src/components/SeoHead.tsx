@@ -8,7 +8,8 @@ interface SeoHeadProps {
   ogType?: "website" | "article";
   ogImage?: string;
   noindex?: boolean;
-  jsonLd?: object;
+  jsonLd?: object | object[];
+  keywords?: string;
   // Percorsi alternativi per hreflang (se diversi da canonical)
   hreflangIt?: string;
   hreflangRo?: string;
@@ -27,6 +28,7 @@ const SeoHead = ({
   ogImage = DEFAULT_OG_IMAGE,
   noindex = false,
   jsonLd,
+  keywords,
   hreflangIt,
   hreflangRo,
 }: SeoHeadProps) => {
@@ -52,6 +54,7 @@ const SeoHead = ({
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
+      {keywords && <meta name="keywords" content={keywords} />}
       <link rel="canonical" href={canonicalUrl} />
 
       {/* Hreflang */}
@@ -77,7 +80,7 @@ const SeoHead = ({
       {/* JSON-LD structured data */}
       {jsonLd && (
         <script type="application/ld+json">
-          {JSON.stringify(jsonLd)}
+          {JSON.stringify(Array.isArray(jsonLd) ? { "@context": "https://schema.org", "@graph": jsonLd } : jsonLd)}
         </script>
       )}
     </Helmet>

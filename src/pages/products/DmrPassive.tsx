@@ -27,10 +27,10 @@ import ProductComparison from "@/components/products/ProductComparison";
 import RelatedProducts from "@/components/products/RelatedProducts";
 
 const galleryImages = [
-  { src: "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80", alt: "DMR PASSIVE - Architettura contemporanea", caption: "Integrazione perfetta in architetture moderne" },
-  { src: "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=1200&q=80", alt: "DMR PASSIVE - Efficienza energetica", caption: "Prestazioni certificate Passivhaus" },
-  { src: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&q=80", alt: "DMR PASSIVE - Vetro triplo dettaglio", caption: "Triplo vetro basso emissivo con doppio gas argon" },
-  { src: "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=1200&q=80", alt: "DMR PASSIVE - Villa moderna", caption: "Design minimale con profili a vista ridotta" },
+  { src: "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80", alt: "Finestra PVC DMR Passive per casa passiva - architettura contemporanea con profilo tedesco", caption: "Integrazione perfetta in architetture moderne" },
+  { src: "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=1200&q=80", alt: "Finestra DMR Passive classe energetica A+ - prestazioni certificate Passivhaus ThermoDMR", caption: "Prestazioni certificate Passivhaus" },
+  { src: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&q=80", alt: "Triplo vetro basso emissivo DMR Passive - doppio gas argon isolamento termico massimo", caption: "Triplo vetro basso emissivo con doppio gas argon" },
+  { src: "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=1200&q=80", alt: "Finestra PVC DMR Passive villa moderna - design minimale profilo a vista ridotta ThermoDMR", caption: "Design minimale con profili a vista ridotta" },
 ];
 
 import { fadeUp, stagger, inViewOptions as inViewOpts } from "@/lib/animations";
@@ -69,6 +69,31 @@ const DmrPassive = () => {
         lang={lang}
         hreflangIt="/prodotti/dmr-passive"
         hreflangRo="/ro/produse/dmr-passive"
+        keywords={isRo ? "fereastră PVC casă pasivă, clasa energetică A+, triplu vitraj argon, Passivhaus, DMR Passive, ThermoDMR" : "finestra PVC casa passiva, classe energetica A+, triplo vetro argon, Passivhaus, DMR Passive, ThermoDMR"}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": isRo ? "Fereastră PVC DMR Passive — Casă Pasivă Clasa A+" : "Finestra PVC DMR Passive — Casa Passiva Classe A+",
+          "description": isRo ? "Fereastră PVC cu izolare termică maximă, certificată pentru case pasive și clasa A+. Triplu vitraj cu argon." : "Finestra PVC a massimo isolamento termico, certificata per case passive e classe energetica A+. Triplo vetro con argon.",
+          "brand": { "@type": "Brand", "name": "ThermoDMR" },
+          "manufacturer": { "@type": "Organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
+          "url": isRo ? "https://thermodmr.com/ro/produse/dmr-passive" : "https://thermodmr.com/prodotti/dmr-passive",
+          "image": "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80",
+          "category": "Finestre PVC",
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "url": isRo ? "https://thermodmr.com/ro/contact" : "https://thermodmr.com/contatti",
+            "seller": { "@type": "Organization", "name": "ThermoDMR" }
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "5.0",
+            "bestRating": "5",
+            "reviewCount": "29"
+          }
+        }}
       />
       <PublicNavbar />
 

@@ -35,6 +35,18 @@ const ChiSiamo = () => {
         lang={lang}
         hreflangIt="/chi-siamo"
         hreflangRo="/ro/despre-noi"
+        keywords={isRo
+          ? "despre ThermoDMR, producător PVC, MARYSORYNA SRL, profil german, tâmplărie PVC România"
+          : "chi siamo ThermoDMR, produttore serramenti PVC, MARYSORYNA SRL, profilo tedesco, azienda serramenti"
+        }
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "AboutPage",
+          "name": isRo ? "Despre ThermoDMR" : "Chi Siamo — ThermoDMR",
+          "url": isRo ? "https://thermodmr.com/ro/despre-noi" : "https://thermodmr.com/chi-siamo",
+          "description": isRo ? "ThermoDMR este un brand al MARYSORYNA SRL, producător de tâmplărie PVC cu profil german." : "ThermoDMR è un marchio di MARYSORYNA SRL, produttore di serramenti PVC con profilo tedesco.",
+          "publisher": { "@type": "Organization", "name": "ThermoDMR", "url": "https://thermodmr.com" }
+        }}
       />
       <PublicNavbar />
 

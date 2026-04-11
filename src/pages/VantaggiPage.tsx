@@ -30,6 +30,22 @@ const VantaggiPage = () => {
         lang={lang}
         hreflangIt="/vantaggi"
         hreflangRo="/ro/avantaje"
+        keywords={isRo
+          ? "avantaje ferestre PVC, economie energie, producție directă, prețuri fabrică, ThermoDMR"
+          : "vantaggi finestre PVC, risparmio energetico, produzione diretta, prezzi fabbrica, certificazione, ThermoDMR"
+        }
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": isRo ? [
+            { "@type": "Question", "name": "Cât se economisește cu ferestre PVC ThermoDMR?", "acceptedAnswer": { "@type": "Answer", "text": "Cu ferestre PVC ThermoDMR puteți economisi până la 35% din costurile de încălzire și răcire datorită izolării termice de clasă A." } },
+            { "@type": "Question", "name": "Cum funcționează producția directă ThermoDMR?", "acceptedAnswer": { "@type": "Answer", "text": "ThermoDMR produce direct fără intermediari, eliminând comisioanele și oferind prețuri de fabrică cu marje competitive pentru distribuitori." } }
+          ] : [
+            { "@type": "Question", "name": "Quanto si risparmia con le finestre PVC ThermoDMR?", "acceptedAnswer": { "@type": "Answer", "text": "Con le finestre PVC ThermoDMR puoi risparmiare fino al 35% sui costi di riscaldamento e raffrescamento grazie all'isolamento termico di Classe A." } },
+            { "@type": "Question", "name": "Come funziona la produzione diretta ThermoDMR?", "acceptedAnswer": { "@type": "Answer", "text": "ThermoDMR produce direttamente senza intermediari, eliminando le commissioni e offrendo prezzi di fabbrica con margini competitivi per i rivenditori." } },
+            { "@type": "Question", "name": "Quali certificazioni hanno le finestre ThermoDMR?", "acceptedAnswer": { "@type": "Answer", "text": "Le finestre ThermoDMR sono certificate con profilo tedesco Tecnolegno, classe energetica A e Passivhaus per la linea DMR Passive." } }
+          ]
+        }}
       />
       <PublicNavbar />
 

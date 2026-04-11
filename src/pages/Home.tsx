@@ -800,12 +800,16 @@ const Home = () => {
   <div className="min-h-screen bg-white">
     <SeoHead
       title={isRo ? "Ferestre PVC cu Profil German | Producție Proprie" : "Finestre in PVC con Profilo Tedesco | Produzione Diretta"}
-      description={isRo ? "Ferestre PVC cu profil german 5 camere. Producție directă, fără intermediari. Izolare Clasa A, garanție 15 ani. Descoperă tâmplăria ThermoDMR." : "Finestre PVC con profilo tedesco a5 camere. Produzione diretta, nessun intermediario. Isolamento Classe A, garanzia 15 anni. Scopri i serramenti ThermoDMR."}
+      description={isRo ? "Ferestre PVC cu profil german 5 camere. Producție directă, fără intermediari. Izolare Clasa A, garanție 15 ani. Descoperă tâmplăria ThermoDMR." : "Finestre PVC con profilo tedesco 5 camere. Produzione diretta, nessun intermediario. Isolamento Classe A, garanzia 15 anni. Scopri i serramenti ThermoDMR."}
       canonical={isRo ? "/ro" : "/"}
       lang={lang}
       hreflangIt="/"
       hreflangRo="/ro"
-      jsonLd={!isRo ? {"@context":"https://schema.org","@type":"WebSite","name":"ThermoDMR","url":"https://thermodmr.com","potentialAction":{"@type":"SearchAction","target":"https://thermodmr.com/prodotti-pubblico?q={search_term_string}","query-input":"required name=search_term_string"}} : undefined}
+      keywords={isRo
+        ? "ferestre PVC, profil german, producție directă, izolare clasa A, garanție 15 ani, ThermoDMR"
+        : "finestre PVC, profilo tedesco, produzione diretta, isolamento classe A, garanzia 15 anni, serramenti, ThermoDMR"
+      }
+      ogImage="https://thermodmr.com/images/hero-bg.jpg"
     />
     <PublicNavbar />
     <Hero />

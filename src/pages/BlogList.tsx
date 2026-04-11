@@ -211,6 +211,26 @@ const BlogList = () => {
         lang={lang}
         hreflangIt="/blog"
         hreflangRo="/ro/blog"
+        keywords={isRo
+          ? "blog ferestre PVC, ghid ferestre, izolare termică, economie energie, ThermoDMR"
+          : "blog finestre PVC, guida finestre, isolamento termico, risparmio energetico, prezzi finestre 2025, ThermoDMR"
+        }
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Blog",
+          "name": isRo ? "Blog ThermoDMR — Ferestre PVC" : "Blog ThermoDMR — Finestre PVC",
+          "description": isRo
+            ? "Ghiduri practice și articole tehnice despre ferestre PVC, izolare termică și economie de energie."
+            : "Guide pratiche e articoli tecnici su finestre PVC, isolamento termico e risparmio energetico.",
+          "url": isRo ? "https://thermodmr.com/ro/blog" : "https://thermodmr.com/blog",
+          "publisher": {
+            "@type": "Organization",
+            "name": "ThermoDMR",
+            "url": "https://thermodmr.com",
+            "logo": { "@type": "ImageObject", "url": "https://thermodmr.com/logo_Thermodmr.png" }
+          },
+          "inLanguage": isRo ? "ro-RO" : "it-IT"
+        }}
       />
       <PublicNavbar />
 

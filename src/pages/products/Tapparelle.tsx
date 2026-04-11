@@ -13,9 +13,9 @@ import ProductGallery from "@/components/products/ProductGallery";
 import RelatedProducts from "@/components/products/RelatedProducts";
 
 const galleryImages = [
-  { src: imgTapparella, alt: "Tapparella in alluminio coibentato", caption: "Tapparella in alluminio coibentato ad alta resistenza" },
-  { src: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&q=80", alt: "Tapparelle - Dettaglio lamella", caption: "Lamelle in alluminio coibentato ad alta resistenza" },
-  { src: "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=1200&q=80", alt: "Tapparelle - Facciata moderna", caption: "Integrazione estetica con facciate contemporanee" },
+  { src: imgTapparella, alt: "Tapparella coibentata in alluminio ThermoDMR - risparmio energetico fino al 30% e oscuramento totale", caption: "Tapparella in alluminio coibentato ad alta resistenza" },
+  { src: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&q=80", alt: "Lamella tapparella coibentata ThermoDMR - dettaglio profilo alluminio con schiuma poliuretanica", caption: "Lamelle in alluminio coibentato ad alta resistenza" },
+  { src: "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=1200&q=80", alt: "Tapparelle ThermoDMR su facciata moderna - integrazione estetica e protezione anti-intrusione", caption: "Integrazione estetica con facciate contemporanee" },
 ];
 
 import { fadeUp, stagger, inViewOptions as inViewOpts } from "@/lib/animations";
@@ -39,6 +39,31 @@ const Tapparelle = () => {
         lang={lang}
         hreflangIt="/prodotti/tapparelle"
         hreflangRo="/ro/produse/jaluzele"
+        keywords={isRo ? "jaluzele termoizolante, aluminiu PVC, economie energie, oscurare totală, ThermoDMR" : "tapparelle coibentate, alluminio PVC, risparmio energetico, oscuramento totale, anti-intrusione, ThermoDMR"}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": isRo ? "Jaluzele Termoizolante ThermoDMR" : "Tapparelle Coibentate ThermoDMR",
+          "description": isRo ? "Jaluzele termoizolante: economie de energie până la 30%, oscurare totală, rezistente la efracție. Disponibile în aluminiu și PVC." : "Tapparelle coibentate: risparmio energetico fino al 30%, oscuramento totale, anti-intrusione. In alluminio e PVC.",
+          "brand": { "@type": "Brand", "name": "ThermoDMR" },
+          "manufacturer": { "@type": "Organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
+          "url": isRo ? "https://thermodmr.com/ro/produse/jaluzele" : "https://thermodmr.com/prodotti/tapparelle",
+          "image": "https://thermodmr.com/images/thermodmr-tapparella-coibentata.webp",
+          "category": "Tapparelle",
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "url": isRo ? "https://thermodmr.com/ro/contact" : "https://thermodmr.com/contatti",
+            "seller": { "@type": "Organization", "name": "ThermoDMR" }
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "bestRating": "5",
+            "reviewCount": "31"
+          }
+        }}
       />
       <PublicNavbar />
 

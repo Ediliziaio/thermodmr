@@ -14,10 +14,10 @@ import ProductGallery from "@/components/products/ProductGallery";
 import RelatedProducts from "@/components/products/RelatedProducts";
 
 const galleryImages = [
-  { src: imgPersianaVerde, alt: "Persiana in alluminio verde", caption: "Persiane in alluminio con finitura classica" },
-  { src: imgPersianaLegno, alt: "Persiane effetto legno", caption: "Lamelle in alluminio con sublimazione effetto legno" },
-  { src: "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=1200&q=80", alt: "Persiane - Colori RAL", caption: "Ampia scelta di colori dalla gamma RAL" },
-  { src: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&q=80", alt: "Persiane - Facciata mediterranea", caption: "Eleganza senza tempo per ogni facciata" },
+  { src: imgPersianaVerde, alt: "Persiana in alluminio verde ThermoDMR - resistente agli agenti atmosferici con finitura classica", caption: "Persiane in alluminio con finitura classica" },
+  { src: imgPersianaLegno, alt: "Persiana in alluminio effetto legno ThermoDMR - sublimazione alta fedeltà con colori naturali", caption: "Lamelle in alluminio con sublimazione effetto legno" },
+  { src: "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=1200&q=80", alt: "Persiane ThermoDMR disponibili in oltre 200 colori RAL - personalizzazione completa per ogni abitazione", caption: "Ampia scelta di colori dalla gamma RAL" },
+  { src: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&q=80", alt: "Persiane in alluminio ThermoDMR su facciata mediterranea - design classico e durabilità garantita", caption: "Eleganza senza tempo per ogni facciata" },
 ];
 
 import { fadeUp, stagger, inViewOptions as inViewOpts } from "@/lib/animations";
@@ -41,6 +41,25 @@ const Persiane = () => {
         lang={lang}
         hreflangIt="/prodotti/persiane"
         hreflangRo="/ro/produse/obloane"
+        keywords={isRo ? "obloane aluminiu PVC, persiane efect lemn, culori RAL, rezistente intemperii, ThermoDMR" : "persiane alluminio PVC, effetto legno, colori RAL, resistenti agenti atmosferici, ThermoDMR"}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": isRo ? "Obloane PVC și Aluminiu ThermoDMR" : "Persiane PVC e Alluminio ThermoDMR",
+          "description": isRo ? "Obloane din PVC și aluminiu, design tradițional și modern, rezistente la intemperii, disponibile în culori RAL. Garanție 15 ani." : "Persiane in PVC e alluminio, design tradizionale e moderno, resistenti agli agenti atmosferici, disponibili in colori RAL. Garanzia 15 anni.",
+          "brand": { "@type": "Brand", "name": "ThermoDMR" },
+          "manufacturer": { "@type": "Organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
+          "url": isRo ? "https://thermodmr.com/ro/produse/obloane" : "https://thermodmr.com/prodotti/persiane",
+          "image": "https://thermodmr.com/images/thermodmr-persiana-verde.webp",
+          "category": "Persiane",
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "url": isRo ? "https://thermodmr.com/ro/contact" : "https://thermodmr.com/contatti",
+            "seller": { "@type": "Organization", "name": "ThermoDMR" }
+          }
+        }}
       />
       <PublicNavbar />
 

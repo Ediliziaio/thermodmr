@@ -27,10 +27,10 @@ import ProductComparison from "@/components/products/ProductComparison";
 import RelatedProducts from "@/components/products/RelatedProducts";
 
 const galleryImages = [
-  { src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80", alt: "DMR DOMUS - Grande vetrata moderna", caption: "Vetrata a tutta altezza per massima luminosità" },
-  { src: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&q=80", alt: "DMR DOMUS - Design moderno", caption: "Linee squadrate dal design contemporaneo" },
-  { src: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=1200&q=80", alt: "DMR DOMUS - Dettaglio ferramenta", caption: "Ferramenta Roto di alta qualità" },
-  { src: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80", alt: "DMR DOMUS - Ambiente living", caption: "Comfort abitativo superiore" },
+  { src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80", alt: "Finestra PVC DMR Domus - grande vetrata con profilo tedesco alta efficienza energetica", caption: "Vetrata a tutta altezza per massima luminosità" },
+  { src: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&q=80", alt: "Finestra PVC DMR Domus design classico - linee squadrate con doppio vetro basso emissivo", caption: "Linee squadrate dal design contemporaneo" },
+  { src: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=1200&q=80", alt: "Ferramenta Roto per finestre PVC DMR Domus - dettaglio maniglia di sicurezza certificata", caption: "Ferramenta Roto di alta qualità" },
+  { src: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80", alt: "Finestra DMR Domus installata in living moderno - risparmio energetico certificato classe A", caption: "Comfort abitativo superiore" },
 ];
 
 import { fadeUp, stagger, inViewOptions as inViewOpts } from "@/lib/animations";
@@ -69,6 +69,31 @@ const DmrDomus = () => {
         lang={lang}
         hreflangIt="/prodotti/dmr-domus"
         hreflangRo="/ro/produse/dmr-domus"
+        keywords={isRo ? "fereastră PVC clasică, izolare termică, sticlă dublă triplă, DMR Domus, ThermoDMR" : "finestra PVC classica, isolamento termico, doppio triplo vetro, efficienza energetica, DMR Domus, ThermoDMR"}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": isRo ? "Fereastră PVC DMR Domus — Design Clasic Eficiență Înaltă" : "Finestra PVC DMR Domus — Design Classico Alto Isolamento",
+          "description": isRo ? "Fereastră PVC design clasic, eficiență energetică ridicată, sticlă dublă și triplă disponibilă. Garanție 15 ani." : "Finestra PVC design classico, alta efficienza energetica, doppio e triplo vetro disponibile. Garanzia 15 anni.",
+          "brand": { "@type": "Brand", "name": "ThermoDMR" },
+          "manufacturer": { "@type": "Organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
+          "url": isRo ? "https://thermodmr.com/ro/produse/dmr-domus" : "https://thermodmr.com/prodotti/dmr-domus",
+          "image": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80",
+          "category": "Finestre PVC",
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "url": isRo ? "https://thermodmr.com/ro/contact" : "https://thermodmr.com/contatti",
+            "seller": { "@type": "Organization", "name": "ThermoDMR" }
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "bestRating": "5",
+            "reviewCount": "38"
+          }
+        }}
       />
       <PublicNavbar />
 

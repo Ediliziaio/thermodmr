@@ -14,10 +14,10 @@ import ProductGallery from "@/components/products/ProductGallery";
 import RelatedProducts from "@/components/products/RelatedProducts";
 
 const galleryImages = [
-  { src: imgCassonettoInstallato, alt: "Cassonetto installato", caption: "Cassonetto integrato nella muratura" },
-  { src: imgCassonettoSezione, alt: "Cassonetto sezione tecnica", caption: "Coibentazione in EPS ad alta densità" },
-  { src: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=1200&q=80", alt: "Cassonetto - Sezione tecnica", caption: "Ispezione frontale facilitata" },
-  { src: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=80", alt: "Cassonetto - Facciata moderna", caption: "Finitura a filo muro per estetica pulita" },
+  { src: imgCassonettoInstallato, alt: "Cassonetto coibentato ThermoDMR installato a filo muro - eliminazione ponti termici certificata", caption: "Cassonetto integrato nella muratura" },
+  { src: imgCassonettoSezione, alt: "Sezione tecnica cassonetto coibentato ThermoDMR - EPS ad alta densità per isolamento superiore", caption: "Coibentazione in EPS ad alta densità" },
+  { src: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=1200&q=80", alt: "Cassonetto tapparella ThermoDMR - ispezione frontale facilitata per manutenzione semplice", caption: "Ispezione frontale facilitata" },
+  { src: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=80", alt: "Facciata moderna con cassonetto a filo muro ThermoDMR - estetica pulita e risparmio energetico", caption: "Finitura a filo muro per estetica pulita" },
 ];
 
 import { fadeUp, stagger, inViewOptions as inViewOpts } from "@/lib/animations";
@@ -41,6 +41,25 @@ const Cassonetti = () => {
         lang={lang}
         hreflangIt="/prodotti/cassonetti"
         hreflangRo="/ro/produse/casete-rulou"
+        keywords={isRo ? "casete rulou termoizolate, punți termice, izolare EPS, economie energie, ThermoDMR" : "cassonetti coibentati, ponti termici, isolamento EPS, risparmio energetico, tapparelle, ThermoDMR"}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": isRo ? "Casete Rulou Termoizolate ThermoDMR" : "Cassonetti Coibentati ThermoDMR",
+          "description": isRo ? "Casete rulou termoizolate care elimină punții termice și reduc consumul energetic. Fabricate din EPS de înaltă densitate." : "Cassonetti coibentati in EPS ad alta densità che eliminano i ponti termici e riducono i consumi energetici.",
+          "brand": { "@type": "Brand", "name": "ThermoDMR" },
+          "manufacturer": { "@type": "Organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
+          "url": isRo ? "https://thermodmr.com/ro/produse/casete-rulou" : "https://thermodmr.com/prodotti/cassonetti",
+          "image": "https://thermodmr.com/images/thermodmr-cassonetto-installato.jpg",
+          "category": "Cassonetti",
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "url": isRo ? "https://thermodmr.com/ro/contact" : "https://thermodmr.com/contatti",
+            "seller": { "@type": "Organization", "name": "ThermoDMR" }
+          }
+        }}
       />
       <PublicNavbar />
 

@@ -44,13 +44,30 @@ const BlogPost = () => {
     headline: post.title,
     description: post.description,
     datePublished: post.date,
-    author: { "@type": "Organization", name: "ThermoDMR", url: "https://thermodmr.com" },
+    dateModified: post.date,
+    inLanguage: lang === "ro" ? "ro-RO" : "it-IT",
+    image: {
+      "@type": "ImageObject",
+      url: heroImage.startsWith("http") ? heroImage : `https://thermodmr.com${heroImage}`,
+      width: 1200,
+      height: 630,
+    },
+    author: {
+      "@type": "Organization",
+      name: "ThermoDMR",
+      url: "https://thermodmr.com",
+      logo: { "@type": "ImageObject", url: "https://thermodmr.com/logo_Thermodmr.png" },
+    },
     publisher: {
       "@type": "Organization",
       name: "ThermoDMR",
-      logo: { "@type": "ImageObject", url: "https://thermodmr.com/images/logo_Thermodmr.png" },
+      url: "https://thermodmr.com",
+      logo: { "@type": "ImageObject", url: "https://thermodmr.com/logo_Thermodmr.png" },
     },
     mainEntityOfPage: { "@type": "WebPage", "@id": `https://thermodmr.com${canonicalPath}` },
+    keywords: post.category,
+    articleSection: post.category,
+    wordCount: (post.readingTime ?? 5) * 200,
   };
 
   const heroImage = post.heroImage ?? "/images/hero-bg.jpg";

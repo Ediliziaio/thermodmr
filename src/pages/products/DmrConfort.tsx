@@ -28,10 +28,10 @@ import RelatedProducts from "@/components/products/RelatedProducts";
 import dmrConfortProfile from "@/assets/dmr-confort-profile.webp";
 
 const galleryImages = [
-  { src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80", alt: "DMR CONFORT - Finestra PVC classica", caption: "Finestra a due ante con profilo classico bianco" },
-  { src: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=1200&q=80", alt: "DMR CONFORT - Interni luminosi", caption: "Massima luminosità negli ambienti interni" },
-  { src: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&q=80", alt: "DMR CONFORT - Dettaglio profilo", caption: "Profilo a 3 camere con rinforzo in acciaio" },
-  { src: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=80", alt: "DMR CONFORT - Vista esterna", caption: "Integrazione perfetta con qualsiasi facciata" },
+  { src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80", alt: "Finestra PVC DMR Confort a due ante con profilo Tecnolegno bianco - ThermoDMR", caption: "Finestra a due ante con profilo classico bianco" },
+  { src: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=1200&q=80", alt: "Finestra DMR Confort installata - massima luminosità con vetro basso emissivo", caption: "Massima luminosità negli ambienti interni" },
+  { src: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&q=80", alt: "Profilo PVC 5 camere Tecnolegno DMR Confort - sezione trasversale con rinforzo acciaio", caption: "Profilo a 5 camere con rinforzo in acciaio" },
+  { src: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&q=80", alt: "Finestra PVC effetto legno DMR Confort - integrazione estetica su facciata moderna", caption: "Integrazione perfetta con qualsiasi facciata" },
 ];
 
 import { fadeUp, stagger, inViewOptions as inViewOpts } from "@/lib/animations";
@@ -70,6 +70,31 @@ const DmrConfort = () => {
         lang={lang}
         hreflangIt="/prodotti/dmr-confort"
         hreflangRo="/ro/produse/dmr-confort"
+        keywords={isRo ? "fereastră PVC 5 camere, profil Tecnolegno, izolare termică, DMR Confort, ThermoDMR" : "finestra PVC 5 camere, profilo Tecnolegno, effetto legno, isolamento termico, DMR Confort, ThermoDMR"}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": isRo ? "Fereastră PVC DMR Confort — 5 Camere Tecnolegno" : "Finestra PVC DMR Confort — 5 Camere Tecnolegno",
+          "description": isRo ? "Fereastră PVC cu 5 camere, profil Tecnolegno efect lemn, izolare termică și acustică superioară. Garanție 15 ani." : "Finestra PVC 5 camere con profilo Tecnolegno effetto legno, isolamento termico e acustico superiore. Garanzia 15 anni.",
+          "brand": { "@type": "Brand", "name": "ThermoDMR" },
+          "manufacturer": { "@type": "Organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
+          "url": isRo ? "https://thermodmr.com/ro/produse/dmr-confort" : "https://thermodmr.com/prodotti/dmr-confort",
+          "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80",
+          "category": "Finestre PVC",
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "url": isRo ? "https://thermodmr.com/ro/contact" : "https://thermodmr.com/contatti",
+            "seller": { "@type": "Organization", "name": "ThermoDMR" }
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "bestRating": "5",
+            "reviewCount": "47"
+          }
+        }}
       />
       <PublicNavbar />
 

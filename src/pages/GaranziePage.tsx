@@ -28,6 +28,23 @@ const GaranziePage = () => {
         lang={lang}
         hreflangIt="/garanzie"
         hreflangRo="/ro/garantii"
+        keywords={isRo
+          ? "garanție 15 ani ferestre PVC, garanție ThermoDMR, suport post-vânzare, calitate certificată"
+          : "garanzia 15 anni finestre PVC, garanzia ThermoDMR, assistenza post-vendita, qualità certificata, profilo tedesco"
+        }
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": isRo ? [
+            { "@type": "Question", "name": "Câți ani de garanție oferă ThermoDMR?", "acceptedAnswer": { "@type": "Answer", "text": "ThermoDMR oferă 15 ani garanție pe toate produsele din tâmplărie PVC, inclusiv ferestre, uși și accesorii." } },
+            { "@type": "Question", "name": "Ce acoperă garanția ThermoDMR?", "acceptedAnswer": { "@type": "Answer", "text": "Garanția acoperă defecte de fabricație, probleme cu profilele PVC, etanșeitate și feroneria. Intervenție gratuită în toată perioada de garanție." } },
+            { "@type": "Question", "name": "ThermoDMR livrează în România?", "acceptedAnswer": { "@type": "Answer", "text": "Da, ThermoDMR livrează în toată România și Italia. Avem distribuitori în principalele orașe." } }
+          ] : [
+            { "@type": "Question", "name": "Quanti anni di garanzia offre ThermoDMR?", "acceptedAnswer": { "@type": "Answer", "text": "ThermoDMR offre 15 anni di garanzia su tutti i prodotti in PVC, incluse finestre, portoncini e accessori." } },
+            { "@type": "Question", "name": "Cosa copre la garanzia ThermoDMR?", "acceptedAnswer": { "@type": "Answer", "text": "La garanzia copre difetti di fabbricazione, problemi con i profili PVC, tenuta stagna e ferramenta. Intervento gratuito durante tutto il periodo di garanzia." } },
+            { "@type": "Question", "name": "ThermoDMR consegna in tutta Italia?", "acceptedAnswer": { "@type": "Answer", "text": "Sì, ThermoDMR consegna in tutta Italia attraverso la sua rete di rivenditori autorizzati." } }
+          ]
+        }}
       />
       <PublicNavbar />
 

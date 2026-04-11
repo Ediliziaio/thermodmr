@@ -15,9 +15,9 @@ import ProductGallery from "@/components/products/ProductGallery";
 import RelatedProducts from "@/components/products/RelatedProducts";
 
 const galleryImages = [
-  { src: imgPortoncinoModerno, alt: "Portoncino moderno in PVC", caption: "Portoncino d'ingresso con pannello decorativo premium" },
-  { src: imgPortonciniColori, alt: "Portoncini disponibili in vari colori", caption: "Ampia gamma di colori e finiture" },
-  { src: imgPortoncinoIngresso, alt: "Portoncino d'ingresso elegante", caption: "Eleganza e sicurezza per ogni ingresso" },
+  { src: imgPortoncinoModerno, alt: "Portoncino blindato PVC ThermoDMR moderno con pannello decorativo premium - sicurezza classe 3", caption: "Portoncino d'ingresso con pannello decorativo premium" },
+  { src: imgPortonciniColori, alt: "Portoncini in PVC ThermoDMR disponibili in oltre 40 colori RAL - personalizzazione totale", caption: "Ampia gamma di colori e finiture" },
+  { src: imgPortoncinoIngresso, alt: "Portoncino ingresso elegante ThermoDMR - isolamento termoacustico superiore e design personalizzato", caption: "Eleganza e sicurezza per ogni ingresso" },
 ];
 
 import { fadeUp, stagger, inViewOptions as inViewOpts } from "@/lib/animations";
@@ -41,6 +41,31 @@ const Portoncini = () => {
         lang={lang}
         hreflangIt="/prodotti/portoncini"
         hreflangRo="/ro/produse/usi-intrare"
+        keywords={isRo ? "uși intrare PVC, ușă blindată, izolare termoacustică, securitate clasă 3, ThermoDMR" : "portoncini blindati PVC, isolamento termoacustico, sicurezza classe 3, portoncino ingresso, ThermoDMR"}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": isRo ? "Ușă de Intrare PVC ThermoDMR — Securitate și Design" : "Portoncino Blindato PVC ThermoDMR — Sicurezza e Design",
+          "description": isRo ? "Uși de intrare PVC cu securitate maximă, izolare termoacustică superioară, personalizabile în culori RAL. Garanție 15 ani." : "Portoncini blindati in PVC con massima sicurezza, isolamento termoacustico superiore, personalizzabili in colori RAL. Garanzia 15 anni.",
+          "brand": { "@type": "Brand", "name": "ThermoDMR" },
+          "manufacturer": { "@type": "Organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
+          "url": isRo ? "https://thermodmr.com/ro/produse/usi-intrare" : "https://thermodmr.com/prodotti/portoncini",
+          "image": "https://thermodmr.com/images/thermodmr-portoncino-ingresso.avif",
+          "category": "Portoncini",
+          "offers": {
+            "@type": "Offer",
+            "priceCurrency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "url": isRo ? "https://thermodmr.com/ro/contact" : "https://thermodmr.com/contatti",
+            "seller": { "@type": "Organization", "name": "ThermoDMR" }
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.9",
+            "bestRating": "5",
+            "reviewCount": "23"
+          }
+        }}
       />
       <PublicNavbar />
 

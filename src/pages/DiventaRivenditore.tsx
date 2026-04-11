@@ -46,6 +46,10 @@ const DiventaRivenditore = () => {
         lang={lang}
         hreflangIt="/diventa-rivenditore"
         hreflangRo="/ro/devino-distribuitor"
+        keywords={isRo
+          ? "distribuitor ThermoDMR, partener ferestre PVC, marje distribuitor, rețea ThermoDMR"
+          : "rivenditore ThermoDMR, partner serramenti PVC, margini rivenditore, franchising finestre, rete ThermoDMR"
+        }
       />
       <PublicNavbar />
 

@@ -27,41 +27,130 @@
     <meta name="twitter:description" content="Finestre PVC con profilo tedesco, portoncini, tapparelle e cassonetti. Qualità certificata, garanzia 15 anni." />
     <meta name="twitter:image" content="https://thermodmr.com/images/hero-bg.jpg" />
 
+    <!-- Canonical -->
+    <link rel="canonical" href="https://thermodmr.com/" />
+
     <!-- Hreflang base -->
     <link rel="alternate" hreflang="it" href="https://thermodmr.com/" />
     <link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro" />
     <link rel="alternate" hreflang="x-default" href="https://thermodmr.com/" />
 
-    <!-- JSON-LD Organization -->
+    <!-- Keywords -->
+    <meta name="keywords" content="finestre PVC, serramenti PVC, profilo tedesco, finestre isolamento termico, portoncini PVC, tapparelle coibentate, cassonetti, persiane alluminio, ThermoDMR, preventivo finestre" />
+
+    <!-- JSON-LD Organization + LocalBusiness + WebSite -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "ThermoDMR",
-      "legalName": "MARYSORYNA SRL",
-      "url": "https://thermodmr.com",
-      "logo": "https://thermodmr.com/images/logo_Thermodmr.png",
-      "contactPoint": [
+      "@graph": [
         {
-          "@type": "ContactPoint",
-          "telephone": "+39-348-346-7567",
-          "contactType": "customer service",
-          "availableLanguage": "Italian"
+          "@type": "Organization",
+          "@id": "https://thermodmr.com/#organization",
+          "name": "ThermoDMR",
+          "legalName": "MARYSORYNA SRL",
+          "url": "https://thermodmr.com",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://thermodmr.com/logo_Thermodmr.png",
+            "width": 200,
+            "height": 60
+          },
+          "contactPoint": [
+            {
+              "@type": "ContactPoint",
+              "telephone": "+39-348-346-7567",
+              "contactType": "customer service",
+              "availableLanguage": "Italian",
+              "areaServed": "IT"
+            },
+            {
+              "@type": "ContactPoint",
+              "telephone": "+40-744-139-565",
+              "contactType": "customer service",
+              "availableLanguage": "Romanian",
+              "areaServed": "RO"
+            }
+          ],
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Sat Bilca Com. Bilca, Nr. 45",
+            "addressLocality": "Bilca",
+            "addressRegion": "Suceava",
+            "addressCountry": "RO"
+          },
+          "sameAs": [
+            "https://thermodmr.com"
+          ]
         },
         {
-          "@type": "ContactPoint",
-          "telephone": "+40-744-139-565",
-          "contactType": "customer service",
-          "availableLanguage": "Romanian"
+          "@type": "LocalBusiness",
+          "@id": "https://thermodmr.com/#localbusiness",
+          "name": "ThermoDMR — Finestre e Serramenti PVC",
+          "legalName": "MARYSORYNA SRL",
+          "description": "Produttore di finestre e serramenti in PVC con profilo tedesco. Portoncini, tapparelle coibentate, cassonetti e persiane. Qualità certificata, garanzia 15 anni.",
+          "url": "https://thermodmr.com",
+          "telephone": ["+39-348-346-7567", "+40-744-139-565"],
+          "email": "info@thermodmr.it",
+          "logo": "https://thermodmr.com/logo_Thermodmr.png",
+          "image": "https://thermodmr.com/images/hero-bg.jpg",
+          "priceRange": "€€",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Sat Bilca Com. Bilca, Nr. 45",
+            "addressLocality": "Bilca",
+            "addressRegion": "Suceava",
+            "postalCode": "727025",
+            "addressCountry": "RO"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "47.7419",
+            "longitude": "25.9178"
+          },
+          "openingHoursSpecification": [
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+              "opens": "08:00",
+              "closes": "18:00"
+            }
+          ],
+          "areaServed": [
+            { "@type": "Country", "name": "Italy" },
+            { "@type": "Country", "name": "Romania" }
+          ],
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Catalogo Finestre e Serramenti PVC ThermoDMR",
+            "itemListElement": [
+              { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Finestra DMR Confort" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Finestra DMR Domus" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Finestra DMR Passive" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Portoncini PVC" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Tapparelle Coibentate" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Cassonetti Coibentati" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Persiane PVC Alluminio" } }
+            ]
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://thermodmr.com/#website",
+          "url": "https://thermodmr.com",
+          "name": "ThermoDMR",
+          "description": "Finestre e serramenti PVC con profilo tedesco",
+          "publisher": { "@id": "https://thermodmr.com/#organization" },
+          "inLanguage": ["it-IT", "ro-RO"],
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://thermodmr.com/blog?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
         }
-      ],
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Sat Bilca Com. Bilca, Nr. 45",
-        "addressLocality": "Bilca",
-        "addressRegion": "Suceava",
-        "addressCountry": "RO"
-      }
+      ]
     }
     </script>
   </head>
