@@ -592,6 +592,201 @@ const itPosts: BlogPost[] = [
 <p><a href="/contatti">Inizia con una consulenza gratuita →</a> — senza impegno, con risposta entro 24 ore.</p>
     `.trim(),
   },
+
+  // ── NUOVI ARTICOLI 2026 ──────────────────────────────────────────────────
+
+  {
+    slug: "bonus-infissi-2026-detrazioni-finestre-pvc",
+    lang: "it",
+    title: "Bonus Infissi 2026: Detrazioni Finestre PVC e Serramenti",
+    description: "Bonus infissi 2026: detrazioni 50% e 65% per finestre PVC e serramenti. Requisiti, documentazione ENEA, come richiedere il rimborso fiscale.",
+    date: "2026-04-07",
+    category: "Incentivi",
+    readingTime: 7,
+    heroImage: "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80",
+    content: `
+<h2>Cosa si intende per bonus infissi nel 2026?</h2>
+<p>Il <strong>bonus infissi 2026</strong> è la detrazione fiscale riconosciuta a chi sostituisce o installa finestre, portoncini e serramenti in abitazioni esistenti. Non è un singolo incentivo: in Italia esistono <strong>due canali principali</strong>, ciascuno con aliquota, requisiti tecnici e procedura diversi.</p>
+<p>Conoscere la differenza tra i due è fondamentale per massimizzare il risparmio fiscale prima di commissionare i lavori.</p>
+
+<h2>Detrazione 50% IRPEF — Bonus Ristrutturazione</h2>
+<p>La detrazione del <strong>50% sull'IRPEF</strong> per ristrutturazioni edilizie si applica alla sostituzione di finestre e serramenti su edifici esistenti. In vigore e confermata per il 2026, prevede:</p>
+<ul>
+  <li>Spesa massima detraibile: <strong>96.000 € per unità immobiliare</strong></li>
+  <li>Rimborso in <strong>10 rate annuali uguali</strong></li>
+  <li>Applicabile su abitazioni principali, seconde case e parti comuni condominiali</li>
+  <li>Non richiede il rispetto di specifici valori Uw minimi per le finestre (a differenza dell'Ecobonus)</li>
+</ul>
+<p>Per accedervi è sufficiente pagare con <strong>bonifico parlante</strong> (con causale specifica che richiama l'art. 16-bis TUIR), conservare la fattura del fornitore e presentare la dichiarazione dei redditi nel modello 730 o Redditi PF.</p>
+
+<h2>Ecobonus 50-65% — Detrazione per Riqualificazione Energetica</h2>
+<p>L'<strong>Ecobonus</strong> prevede una detrazione dal 50% al 65% per interventi finalizzati al miglioramento dell'efficienza energetica. Per le finestre, la percentuale applicabile dipende dalla tipologia dell'intervento:</p>
+<ul>
+  <li><strong>50%</strong> per la sola sostituzione di infissi senza altri lavori</li>
+  <li><strong>65%</strong> se l'intervento fa parte di una ristrutturazione più ampia che include anche cappotto o impianto termico</li>
+</ul>
+<p>La spesa massima per le finestre all'Ecobonus è di <strong>60.000 € per unità immobiliare</strong>, con rimborso in 10 rate annuali.</p>
+
+<h2>Requisiti tecnici 2026: i valori Uw per zona climatica</h2>
+<p>A differenza del bonus ristrutturazione, l'Ecobonus richiede che le nuove finestre rispettino precisi <strong>valori limite di trasmittanza termica Uw</strong>, definiti per zona climatica dal Decreto Ministeriale 26/06/2015 (aggiornato con il decreto riqualificazione energetica):</p>
+<ul>
+  <li><strong>Zona A/B</strong> (Sud, isole): Uw ≤ 3,0 W/m²K</li>
+  <li><strong>Zona C</strong> (parte del Centro e Sud): Uw ≤ 2,6 W/m²K</li>
+  <li><strong>Zona D</strong> (parte del Centro): Uw ≤ 2,0 W/m²K</li>
+  <li><strong>Zona E</strong> (Nord, pianura padana, zone appenniniche): Uw ≤ 1,8 W/m²K</li>
+  <li><strong>Zona F</strong> (alta montagna): Uw ≤ 1,4 W/m²K</li>
+</ul>
+<p>La gamma <a href="/prodotti-pubblico">ThermoDMR</a> copre tutte le zone climatiche: la <a href="/prodotti/dmr-confort">DMR Confort</a> raggiunge Uw = 1,1 W/m²K, ampiamente sotto i requisiti della zona E; la <a href="/prodotti/dmr-passive">DMR Passive</a> scende sotto Uw = 0,8 W/m²K per la zona F e le case passive.</p>
+
+<h2>Documentazione necessaria: cosa preparare</h2>
+<p>Per accedere all'Ecobonus per le finestre nel 2026 è obbligatoria la trasmissione telematica all'<strong>ENEA</strong> entro 90 giorni dalla fine dei lavori. I documenti da raccogliere sono:</p>
+<ol>
+  <li><strong>Scheda tecnica del serramento</strong> con valore Uw certificato dal produttore</li>
+  <li><strong>Fattura</strong> intestata all'intestatario della detrazione con descrizione dei lavori</li>
+  <li><strong>Bonifico parlante</strong> con causale conforme (art. 1 della L. 449/97 o richiamo al Decreto MiSE)</li>
+  <li><strong>Scheda ENEA infissi</strong> compilata e trasmessa online sul portale ENEA</li>
+</ol>
+<p>ThermoDMR fornisce tutta la documentazione tecnica certificata (valori Uw, dichiarazione di conformità CE) insieme alla fornitura, semplificando la pratica.</p>
+
+<h2>Cessione del credito e sconto in fattura nel 2026</h2>
+<p>A partire dal 2024, le opzioni di cessione del credito e sconto in fattura sono state significativamente ridotte dalla normativa (Decreto-Legge 11/2023, confermato in Legge di Bilancio 2025). Per il <strong>2026</strong>:</p>
+<ul>
+  <li>La cessione del credito è ancora praticabile <strong>solo per interventi trainanti</strong> (cappotto, impianto termico) e per contribuenti con basso reddito (sotto i 15.000 €)</li>
+  <li>Per la semplice sostituzione di finestre la regola generale è il <strong>rimborso nella dichiarazione dei redditi</strong></li>
+  <li>Lo sconto in fattura non è più applicabile ai serramenti come intervento autonomo</li>
+</ul>
+<p>Prima di procedere, è sempre consigliabile verificare con un CAF o commercialista la situazione fiscale specifica.</p>
+
+<h2>Quanto si risparmia concretamente?</h2>
+<p>Su un'abitazione media da 100 m² con 8 finestre e 1 portoncino, il costo di sostituzione con serramenti ThermoDMR si aggira tra i <strong>4.000 e 8.000 €</strong> (IVA inclusa, a seconda del modello e delle misure). Con la detrazione al 50%:</p>
+<ul>
+  <li>Risparmio fiscale immediato: <strong>2.000 – 4.000 €</strong> sulle imposte dovute (in 10 anni)</li>
+  <li>Risparmio energetico annuo stimato: <strong>200 – 600 €</strong> in bolletta</li>
+  <li>Tempo di ritorno sull'investimento netto: <strong>5 – 8 anni</strong></li>
+</ul>
+
+<h2>Come richiedere il preventivo con documentazione per la detrazione</h2>
+<p>ThermoDMR prepara preventivi completi con indicazione dei valori Uw per zona climatica e la documentazione tecnica necessaria per la pratica ENEA. Compila il <a href="/contatti">modulo di contatto</a> specificando la tua zona climatica e il numero di aperture: ricevi risposta entro 24 ore.</p>
+    `.trim(),
+  },
+
+  {
+    slug: "classe-energetica-casa-2026-finestre-pvc",
+    lang: "it",
+    title: "Classe Energetica A con Finestre PVC: Guida 2026 — ThermoDMR",
+    description: "Come migliorare la classe energetica della tua casa con finestre PVC nel 2026. Valori Uw, trasmittanza, dispersioni termiche: tutto quello che devi sapere.",
+    date: "2026-04-10",
+    category: "Risparmio Energetico",
+    readingTime: 7,
+    heroImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
+    content: `
+<h2>Classe energetica e serramenti: il legame che in pochi conoscono</h2>
+<p>Quando si parla di <strong>classe energetica della casa</strong>, si pensa subito al cappotto termico o alla caldaia. Eppure, secondo i dati del Politecnico di Milano, <strong>il 25-35% delle dispersioni termiche di un'abitazione avviene attraverso le finestre</strong>. Un dato che spiega perché la sostituzione dei serramenti sia spesso il modo più rapido — e meno invasivo — per migliorare la classe energetica.</p>
+
+<h2>Come si calcola la classe energetica di un edificio</h2>
+<p>La classe energetica di un'abitazione è determinata dall'<strong>Attestato di Prestazione Energetica (APE)</strong>, redatto da un tecnico abilitato. Si basa sull'indice EPgl (energia primaria globale non rinnovabile), espresso in kWh/m²/anno:</p>
+<ul>
+  <li><strong>Classe A4</strong>: EPgl ≤ 0,40 × EPgl,rif (edifici nZEB)</li>
+  <li><strong>Classe A3</strong>: 0,40 – 0,60 × EPgl,rif</li>
+  <li><strong>Classe A2</strong>: 0,60 – 0,80 × EPgl,rif</li>
+  <li><strong>Classe A1</strong>: 0,80 – 1,00 × EPgl,rif</li>
+  <li><strong>Classe B</strong>: 1,00 – 1,20 × EPgl,rif</li>
+  <li><strong>Classi C-G</strong>: edifici meno efficienti</li>
+</ul>
+<p>La maggior parte delle abitazioni italiane costruite prima del 2000 si trova in <strong>classe F o G</strong>. Passare da classe G a classe C o B — un obiettivo realistico con cappotto + serramenti — può significare un risparmio di 800-1.500 € annui in bolletta.</p>
+
+<h2>Il valore Uw: trasmittanza termica delle finestre</h2>
+<p>Il parametro chiave delle finestre nell'APE è il <strong>valore Uw</strong> (trasmittanza termica totale del serramento), misurato in W/m²K. Rappresenta quanta energia termica attraversa 1 m² di finestra per ogni grado di differenza tra interno ed esterno:</p>
+<ul>
+  <li><strong>Uw = 5,0 W/m²K</strong> — finestra singolo vetro anni '70: come avere un buco nel muro</li>
+  <li><strong>Uw = 2,8 W/m²K</strong> — doppio vetro standard anni '90: ancora molto dispersivo</li>
+  <li><strong>Uw = 1,4 W/m²K</strong> — buono: standard per nuove costruzioni</li>
+  <li><strong>Uw = 1,1 W/m²K</strong> — ottimo: finestre di qualità come <a href="/prodotti/dmr-confort">DMR Confort</a> e <a href="/prodotti/dmr-domus">DMR Domus</a></li>
+  <li><strong>Uw = 0,8 W/m²K</strong> — eccellente: casa passiva con <a href="/prodotti/dmr-passive">DMR Passive</a></li>
+</ul>
+
+<h2>Quanto migliora la classe energetica con nuove finestre?</h2>
+<p>La risposta dipende dalla situazione di partenza e dall'involucro complessivo. Un'analisi tipica su un appartamento da 80 m² a Milano (zona E) con 6 finestre anni '90 (Uw = 2,8) che passa a Uw = 1,1 mostra:</p>
+<ul>
+  <li>Riduzione del fabbisogno di riscaldamento: <strong>15-22%</strong></li>
+  <li>Miglioramento dell'indice EPh: circa <strong>12-18 kWh/m²/anno</strong></li>
+  <li>Passaggio di classe energetica: tipicamente da 1 a 2 classi (es. da E a C)</li>
+</ul>
+<p>Se abbinato a un intervento di coibentazione delle pareti, il salto di classe può essere di 3-4 livelli in un colpo solo.</p>
+
+<h2>Finestre e valore immobiliare nel 2026</h2>
+<p>Dal 2023, l'APE è obbligatorio non solo per la compravendita ma anche per molte locazioni. Una <strong>classe energetica più alta vale denaro</strong>: secondo dati Nomisma 2025, la differenza di valore tra un immobile in classe G e uno in classe B nella stessa zona può essere del <strong>15-20%</strong>.</p>
+<p>Nel 2026, con le direttive europee che spingono verso la ristrutturazione degli edifici a bassa efficienza (Case Green — Direttiva EPBD 2023), investire in serramenti performanti è anche una scelta di protezione del valore patrimoniale.</p>
+
+<h2>Evitare i ponti termici: cassonetti e persiane</h2>
+<p>Sostituire solo le finestre senza affrontare i cassonetti e le guarnizioni perimetrali può limitare il beneficio. I <strong>ponti termici</strong> — zone di elevata dispersione termica — si formano proprio intorno al serramento, soprattutto in corrispondenza dei cassonetti non coibentati.</p>
+<p>I <a href="/prodotti/cassonetti">cassonetti coibentati ThermoDMR</a> eliminano questo problema con un sistema integrato che completa l'isolamento dell'involucro finestra. Abbinati alle <a href="/prodotti/tapparelle">tapparelle coibentate</a>, permettono di raggiungere i massimi risultati energetici senza interventi strutturali.</p>
+
+<h2>Come verificare la situazione attuale della tua abitazione</h2>
+<p>Prima di procedere con la sostituzione, è utile richiedere un sopralluogo tecnico per:</p>
+<ol>
+  <li>Misurare i valori Uw delle finestre esistenti con termoigrometro</li>
+  <li>Verificare la presenza di muffa o condensa (sintomo di ponti termici)</li>
+  <li>Stimare il risparmio atteso con i nuovi serramenti</li>
+  <li>Individuare la zona climatica e i requisiti per l'Ecobonus</li>
+</ol>
+<p>ThermoDMR offre <strong>sopralluogo e consulenza gratuiti</strong>. <a href="/contatti">Richiedi il tuo appuntamento →</a></p>
+    `.trim(),
+  },
+
+  {
+    slug: "triplo-vetro-o-doppio-vetro-guida-2026",
+    lang: "it",
+    title: "Triplo Vetro o Doppio Vetro? La Scelta Giusta nel 2026",
+    description: "Triplo vetro o doppio vetro? Confronto completo per il 2026: costi, isolamento termico, risparmio energetico. Quando vale davvero la pena investire.",
+    date: "2026-04-12",
+    category: "Guide",
+    readingTime: 6,
+    heroImage: "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80",
+    content: `
+<h2>La domanda che si fanno tutti: triplo o doppio vetro?</h2>
+<p>Quando si devono sostituire le finestre, la scelta tra <strong>doppio vetro</strong> e <strong>triplo vetro</strong> è spesso la più dibattuta. Costano di più le finestre con triplo vetro — ma quanto di più? E il risparmio in bolletta giustifica davvero la differenza di prezzo? Risposta breve: <strong>dipende dalla tua situazione</strong>. Questa guida ti aiuta a capire quando il triplo vetro ha senso — e quando no.</p>
+
+<h2>Come funziona il doppio vetro</h2>
+<p>Una finestra a <strong>doppio vetro</strong> è composta da due lastre di vetro separate da un'intercapedine riempita con aria deumidificata o, nelle versioni migliori, con gas argon. Il gas argon ha una conducibilità termica inferiore all'aria del 34%, migliorando sensibilmente l'isolamento.</p>
+<p>Un doppio vetro con argon e rivestimento basso emissivo (Low-E) può raggiungere un valore Ug (trasmittanza del solo vetro) di <strong>1,0 – 1,1 W/m²K</strong>. Il valore Uw della finestra completa (comprensivo del profilo) arriva tipicamente a <strong>1,1 – 1,4 W/m²K</strong>.</p>
+
+<h2>Come funziona il triplo vetro</h2>
+<p>Il <strong>triplo vetro</strong> aggiunge una terza lastra, creando due intercapedini con gas argon o krypton. Questo permette di raggiungere valori Ug di <strong>0,5 – 0,7 W/m²K</strong>, con la finestra completa che scende a <strong>Uw = 0,7 – 0,9 W/m²K</strong>.</p>
+<p>La finestra <a href="/prodotti/dmr-passive">DMR Passive</a> di ThermoDMR utilizza triplo vetro con gas argon e profilo a 6 camere per raggiungere Uw ≤ 0,8 W/m²K — il valore richiesto per le <strong>case passive certificate Passivhaus</strong>.</p>
+
+<h2>Confronto prestazioni: i numeri</h2>
+<ul>
+  <li><strong>Doppio vetro standard</strong> (anni '90): Uw ≈ 2,8 W/m²K → inefficiente</li>
+  <li><strong>Doppio vetro Low-E + argon</strong>: Uw ≈ 1,1 – 1,4 W/m²K → ottimo per la maggior parte dei climi</li>
+  <li><strong>Triplo vetro + argon</strong>: Uw ≈ 0,8 – 0,9 W/m²K → eccellente per climi freddi e nZEB</li>
+  <li><strong>Triplo vetro + krypton</strong>: Uw ≈ 0,6 – 0,7 W/m²K → massimo performance, case passive</li>
+</ul>
+<p>La differenza tra doppio vetro moderno (Uw 1,1) e triplo vetro (Uw 0,8) è reale, ma in termini di risparmio energetico annuo su un appartamento medio vale tra i <strong>50 e 150 €/anno aggiuntivi</strong> rispetto al doppio vetro moderno. Non tra il vecchio doppio vetro — con quello la differenza è molto più grande.</p>
+
+<h2>Quando scegliere il triplo vetro nel 2026</h2>
+<p>Il triplo vetro ha senso quando:</p>
+<ul>
+  <li><strong>Vivi in zona F o in alta montagna</strong> (inverni rigidi con temperature sotto -10°C frequenti)</li>
+  <li><strong>Stai costruendo o ristrutturando una casa passiva</strong> (Uw ≤ 0,8 richiesto da Passivhaus)</li>
+  <li><strong>Le finestre sono esposte a nord</strong> e perdono calore senza guadagni solari</li>
+  <li><strong>Vuoi massimizzare il comfort</strong>: il triplo vetro ha superfici interne più calde (meno correnti fredde vicino alla finestra)</li>
+  <li><strong>Stai facendo un intervento globale</strong> con cappotto e pompa di calore, e vuoi l'edificio nZEB</li>
+</ul>
+
+<h2>Quando il doppio vetro moderno è sufficiente</h2>
+<p>Per la <strong>maggior parte delle abitazioni italiane in zone C, D ed E</strong>, un doppio vetro con argon, Low-E e profilo a 5 camere — come la <a href="/prodotti/dmr-confort">DMR Confort</a> e la <a href="/prodotti/dmr-domus">DMR Domus</a> — è la scelta migliore per rapporto qualità/prezzo/risparmio energetico. Il triplo vetro aggiunge un incremento di costo del 20-35% per guadagni termici che, in clima temperato, richiedono 15-20 anni per ammortizzarsi.</p>
+
+<h2>Differenza di peso e struttura</h2>
+<p>Il triplo vetro pesa mediamente il <strong>30-40% in più</strong> del doppio vetro. Questo richiede ferramenta più robusta e profili più strutturati. Su finestre di grandi dimensioni (oltre 120 × 180 cm), è fondamentale che il profilo supporti il peso senza cedimenti della guarnizione. I profili ThermoDMR sono dimensionati per entrambe le configurazioni.</p>
+
+<h2>Isolamento acustico: triplo vetro è meglio?</h2>
+<p>Non necessariamente. L'isolamento acustico dipende principalmente dalla <strong>massa e dalla configurazione degli spessori</strong> delle lastre, non solo dal numero. Un doppio vetro asimmetrico (es. 6/16/8 mm) può avere un Rw superiore a un triplo vetro standard. Per il massimo isolamento acustico, chiedi una configurazione specifica acustica.</p>
+
+<h2>La scelta giusta per la tua casa</h2>
+<p>Non esiste una risposta universale. La scelta corretta dipende da: zona climatica, esposizione dell'edificio, budget, obiettivi energetici e tipologia di intervento. ThermoDMR offre <strong>consulenza tecnica gratuita</strong> per aiutarti a scegliere il serramento giusto per la tua situazione. <a href="/contatti">Compila il modulo →</a> e ricevi una proposta personalizzata entro 24 ore.</p>
+    `.trim(),
+  },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1134,6 +1329,194 @@ const roPosts: BlogPost[] = [
 <h2>Serviciul ThermoDMR: de la consultanță la montaj</h2>
 <p>Cu ThermoDMR ai un singur interlocutor de la primul contact până la instalare: vizită gratuită, ofertă detaliată cu materiale certificate, producție directă, termene garantate.</p>
 <p><a href="/ro/contact">Începe cu o consultanță gratuită →</a> — fără obligații, răspuns în 24 de ore.</p>
+    `.trim(),
+  },
+
+  // ── ARTICOLE NOI 2026 ────────────────────────────────────────────────────
+
+  {
+    slug: "bonus-tamplarie-2026-deduceri-ferestre-pvc",
+    lang: "ro",
+    title: "Bonus Tâmplărie 2026: Deduceri Ferestre PVC România",
+    description: "Bonus tâmplărie 2026 în România: programe de finanțare, deduceri fiscale și subvenții pentru ferestre PVC. Condiții, documente și cum să aplici.",
+    date: "2026-04-07",
+    category: "Finanțare",
+    readingTime: 7,
+    heroImage: "https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80",
+    content: `
+<h2>Cum poți finanța schimbarea ferestrelor în 2026</h2>
+<p>În 2026, proprietarii de locuințe din România au la dispoziție mai multe programe de <strong>finanțare și subvenții pentru înlocuirea ferestrelor PVC</strong>. Fie că vorbim despre fonduri europene, programe naționale sau deduceri fiscale, există soluții atât pentru casele individuale cât și pentru blocurile de apartamente.</p>
+<p>Această ghid prezintă principalele opțiuni disponibile în 2026, cu condiții de eligibilitate și pași practici.</p>
+
+<h2>Programul Casa Verde Plus — ANRSC 2026</h2>
+<p><strong>Casa Verde Plus</strong> (administrat de Administrația Fondului pentru Mediu — AFM) este principalul program național prin care persoanele fizice pot obține finanțare nerambursabilă pentru lucrări de eficiență energetică, inclusiv <strong>înlocuirea ferestrelor cu tâmplărie performantă</strong>.</p>
+<p>Principalele caracteristici pentru sesiunea 2026:</p>
+<ul>
+  <li>Finanțare de până la <strong>50% din valoarea lucrărilor</strong>, cu un plafon de 20.000 lei per dosar</li>
+  <li>Eligibil pentru locuințe unifamiliale și apartamente</li>
+  <li>Ferestrele trebuie să aibă valoarea Uw certificată ≤ 1,4 W/m²K</li>
+  <li>Instalatorul trebuie să fie autorizat și înscris în registrul AFM</li>
+  <li>Depunerea dosarelor se face online pe platforma AFM</li>
+</ul>
+<p>ThermoDMR poate furniza toată documentația tehnică necesară dosarului AFM: fișe tehnice cu valori Uw certificate, declarații de conformitate CE și factura de achiziție.</p>
+
+<h2>Programul de Reabilitare Termică a Blocurilor</h2>
+<p>Pentru locuitorii din blocuri de apartamente, <strong>Programul Național de Reabilitare Termică</strong>, cofinanțat din fonduri europene (PNRR și Fondul de Coeziune), permite reabilitarea întregului anvelopă a blocului, inclusiv:</p>
+<ul>
+  <li>Înlocuirea ferestrelor comune și a tâmplăriei exterioare</li>
+  <li>Izolarea termică a fațadelor</li>
+  <li>Reabilitarea acoperișului și a subsolului</li>
+</ul>
+<p>Finanțarea poate acoperi <strong>60-90% din costul total</strong> al reabilitării, în funcție de clasa energetică a blocului și de zona geografică. Inițiativa trebuie luată la nivel de asociație de proprietari.</p>
+
+<h2>Deducerea TVA pentru lucrări la locuință principală</h2>
+<p>O facilitate fiscală directă, aplicabilă în 2026: TVA redusă la <strong>5%</strong> (față de 19% standard) pentru livrarea și instalarea de tâmplărie PVC, geamuri și uși blindate la locuința principală, în cadrul lucrărilor de reabilitare termică și renovare.</p>
+<p>Condiții:</p>
+<ul>
+  <li>Locuința trebuie să fie proprietatea sau reședința principală a cumpărătorului</li>
+  <li>Lucrările trebuie efectuate de o firmă autorizată cu factură</li>
+  <li>Aplicabilă atât la case individuale cât și la apartamente</li>
+</ul>
+
+<h2>Valori tehnice obligatorii pentru eligibilitate</h2>
+<p>Indiferent de programul ales, ferestrele trebuie să respecte valorile minime de performanță termică conform normativelor românești (C107/2005 și actualizările 2022):</p>
+<ul>
+  <li><strong>Zone climatice I-II</strong> (sudul și vestul României): Uw ≤ 1,6 W/m²K</li>
+  <li><strong>Zona climatică III</strong> (centru, nord-vest): Uw ≤ 1,4 W/m²K</li>
+  <li><strong>Zona climatică IV</strong> (Moldova, nordul Transilvaniei, zone montane): Uw ≤ 1,2 W/m²K</li>
+</ul>
+<p>Toată <a href="/ro/produse">gama ThermoDMR</a> respectă și depășește aceste valori. <a href="/ro/produse/dmr-confort">DMR Confort</a> atinge Uw = 1,1 W/m²K, ideal pentru toate zonele climatice din România.</p>
+
+<h2>Documente necesare pentru dosar</h2>
+<ol>
+  <li>Cerere tip (descărcată de pe platforma AFM)</li>
+  <li>Act de proprietate sau extras de carte funciară</li>
+  <li>Fișa tehnică a ferestrelor cu valoarea Uw certificată</li>
+  <li>Ofertă sau factură proformă de la furnizorul autorizat</li>
+  <li>Certificat energetic al clădirii (înainte de lucrări)</li>
+</ol>
+
+<h2>Cât economisești pe factură?</h2>
+<p>O casă individuală din zona III (Cluj, Brașov) cu 8 ferestre vechi (Uw ≈ 2,8) care trece la ThermoDMR (Uw = 1,1) poate reduce <strong>consumul de energie pentru încălzire cu 20-30%</strong>. La prețurile actuale ale energiei din România (medie 0,65 lei/kWh la gaz, sau 0,95 lei/kWh electric), aceasta reprezintă o economie de <strong>700 – 1.400 lei anual</strong> pentru o locuință medie de 100 m².</p>
+
+<h2>Cum soliciți o ofertă cu documentație pentru finanțare</h2>
+<p>ThermoDMR pregătește oferte complete cu fișele tehnice necesare pentru dosarul AFM și toate documentele de conformitate. <a href="/ro/contact">Contactează-ne →</a> cu detalii despre locuința ta și primești o ofertă în 24 de ore, inclusiv estimarea economiei anuale și ajutor pentru completarea documentelor.</p>
+    `.trim(),
+  },
+
+  {
+    slug: "clasa-energetica-casa-2026-ferestre-pvc",
+    lang: "ro",
+    title: "Clasa Energetică A cu Ferestre PVC: Ghid 2026 — ThermoDMR",
+    description: "Cum îmbunătățești clasa energetică a casei cu ferestre PVC în 2026. Valori Uw, transmitanță termică, pierderile de căldură: tot ce trebuie să știi.",
+    date: "2026-04-10",
+    category: "Economie Energie",
+    readingTime: 7,
+    heroImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80",
+    content: `
+<h2>De ce contează clasa energetică în 2026</h2>
+<p>Directiva europeană EPBD (Energy Performance of Buildings Directive), revizuită în 2023 și în curs de implementare în România, obligă statele membre să îmbunătățească eficiența energetică a fondului imobiliar existent. Până în 2033, clădirile rezidențiale din categoria energetică G trebuie să atingă cel puțin clasa F, cu termene progressive pentru atingerea clasei D până în 2040.</p>
+<p>În practică, aceasta înseamnă că <strong>investiția în ferestre performante nu mai este opțională pe termen lung</strong> — ci o condiție pentru menținerea valorii imobiliare și accesul la finanțare.</p>
+
+<h2>Cum se calculează clasa energetică a locuinței</h2>
+<p>Clasa energetică a unui imobil se determină prin <strong>Certificatul Energetic</strong>, eliberat de un auditor energetic acreditat ANRE. Se bazează pe indicele de consum de energie primară (EP), exprimat în kWh/m²/an:</p>
+<ul>
+  <li><strong>Clasa A+</strong>: EP ≤ 11,4 kWh/m²/an — clădire aproape zero energie (nZEB)</li>
+  <li><strong>Clasa A</strong>: EP ≤ 33 kWh/m²/an</li>
+  <li><strong>Clasa B</strong>: EP ≤ 66 kWh/m²/an</li>
+  <li><strong>Clasa C</strong>: EP ≤ 99 kWh/m²/an</li>
+  <li><strong>Clasele D – G</strong>: clădiri mai puțin eficiente, EP până la 600+ kWh/m²/an</li>
+</ul>
+<p>Marea majoritate a locuințelor construite înainte de 2000 în România se află în <strong>clasele E, F sau G</strong>. Trecerea de la clasa F la C, realizabilă cu termoizolare + ferestre noi, poate reprezenta o economie de 60-70% din factura de energie.</p>
+
+<h2>Rolul ferestrelor în bilanțul energetic al casei</h2>
+<p>Conform studiilor efectuate de Institutul Național de Cercetare-Dezvoltare în Construcții (INCERC), <strong>26-34% din pierderile de căldură ale unei locuințe tipice românești</strong> se produc prin ferestre și uși. Aceasta face din înlocuirea tâmplăriei una dintre intervențiile cu cel mai rapid timp de recuperare a investiției.</p>
+<p>Comparație practică pentru o casă de 100 m² cu 8 ferestre (suprafață totală ~18 m²) în zona climatică III (Brașov, Cluj):</p>
+<ul>
+  <li>Ferestre vechi (Uw = 2,8 W/m²K): pierdere anuală ~3.200 kWh prin tâmplărie</li>
+  <li>Ferestre <a href="/ro/produse/dmr-confort">DMR Confort</a> (Uw = 1,1 W/m²K): pierdere anuală ~1.250 kWh</li>
+  <li><strong>Economie: ~1.950 kWh/an</strong>, echivalent cu ~1.200-1.800 lei la prețurile actuale</li>
+</ul>
+
+<h2>Valoarea Uw: parametrul esențial</h2>
+<p>Valoarea <strong>Uw</strong> (transmitanța termică a ferestrei complete, cadru inclus) este criteriul principal pentru evaluarea performanței energetice a unui serament. Cu cât este mai mică, cu atât fereastra izolează mai bine:</p>
+<ul>
+  <li>Uw ≤ 1,4 W/m²K — cerința minimă pentru construcții noi în România (zona III-IV)</li>
+  <li>Uw = 1,1 W/m²K — standard ThermoDMR <a href="/ro/produse/dmr-confort">DMR Confort</a> și <a href="/ro/produse/dmr-domus">DMR Domus</a></li>
+  <li>Uw ≤ 0,8 W/m²K — casă pasivă certificată, standard <a href="/ro/produse/dmr-passive">DMR Passive</a></li>
+</ul>
+
+<h2>Poduri termice: problema ignorată</h2>
+<p>Schimbarea ferestrelor fără rezolvarea <strong>podurilor termice</strong> limitează semnificativ beneficiile. Podurile termice apar la marginile ferestrei, în jurul căsuțelor de rulouri și la rosturile cu peretele. Soluțiile ThermoDMR includ:</p>
+<ul>
+  <li><a href="/ro/produse/cassonetti">Casete termoizolante</a> din EPS care elimină puntea termică a glafului superior</li>
+  <li><a href="/ro/produse/tapparelle">Rulouri termoizolante</a> care completează izolarea pe timp de noapte</li>
+  <li>Montaj cu garnituri perimetrale etanșe în 3 straturi (interior-mijloc-exterior)</li>
+</ul>
+
+<h2>Impactul asupra valorii imobiliare</h2>
+<p>Datele din piața imobiliară românească (sursa: Imobiliare.ro și Coldwell Banker Romania, 2025) arată că diferența de valoare între un imobil în clasa G și unul în clasa C în același cartier este de <strong>8-15%</strong>. Pe un apartament de 70.000 € aceasta înseamnă 5.600 – 10.500 €. Tâmplăria performantă contribuie direct la acest salt de clasă.</p>
+
+<h2>Pasul următor: consultanță gratuită</h2>
+<p>ThermoDMR oferă <strong>vizită tehnică gratuită</strong> pentru evaluarea situației actuale și estimarea îmbunătățirii clasei energetice după montaj. <a href="/ro/contact">Solicită consultanța →</a> și primește în 24 de ore o ofertă detaliată cu valori Uw certificate și estimarea economiei anuale.</p>
+    `.trim(),
+  },
+
+  {
+    slug: "geam-triplu-sau-dublu-ghid-2026",
+    lang: "ro",
+    title: "Geam Triplu sau Dublu? Alegerea Corectă în 2026",
+    description: "Geam triplu sau dublu pentru ferestre PVC? Comparație completă 2026: costuri, izolare termică, economie energie. Când merită cu adevărat investiția.",
+    date: "2026-04-12",
+    category: "Ghiduri",
+    readingTime: 6,
+    heroImage: "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80",
+    content: `
+<h2>Geam dublu sau triplu: de ce contează în 2026</h2>
+<p>Dacă ești pe punctul de a schimba ferestrele, întrebarea despre <strong>geamul dublu vs geamul triplu</strong> apare inevitabil. Diferența de preț poate fi de 20-35%, dar nu tot ceea ce plătești în plus se traduce neapărat în economii reale pe factură. Această ghid te ajută să iei decizia corectă pentru situația ta.</p>
+
+<h2>Cum funcționează geamul dublu</h2>
+<p>Un geam dublu termopan standard este compus din <strong>două foi de sticlă</strong> separate de un spațiu (intercapedine) umplut cu aer uscat sau gaz argon. Geamul cu argon și acoperire Low-E (emisivitate redusă) poate atinge valori Ug (transmitanța termică a sticlei) de <strong>1,0 – 1,1 W/m²K</strong>.</p>
+<p>Fereastra completă (cadru + sticlă) ajunge la valori Uw de <strong>1,1 – 1,4 W/m²K</strong> — performanță excelentă pentru marea majoritate a locuințelor din România.</p>
+
+<h2>Cum funcționează geamul triplu</h2>
+<p>Geamul triplu adaugă o a treia foaie de sticlă, creând <strong>două spații cu gaz argon sau kripton</strong>. Rezultatul:</p>
+<ul>
+  <li>Ug al sticlei: <strong>0,5 – 0,7 W/m²K</strong></li>
+  <li>Uw fereastra completă: <strong>0,7 – 0,9 W/m²K</strong></li>
+</ul>
+<p>Fereastra <a href="/ro/produse/dmr-passive">DMR Passive</a> de la ThermoDMR folosește geam triplu cu argon și profil cu 6 camere pentru a atinge Uw ≤ 0,8 W/m²K — valoarea cerută pentru <strong>casele pasive certificate Passivhaus</strong>.</p>
+
+<h2>Comparație numerică: ce câștigă real geamul triplu</h2>
+<p>Să luăm un apartament de 80 m² în Cluj (zona climatică III) cu 6 ferestre de dimensiuni medii (1,2 × 1,4 m fiecare = ~10 m² total de suprafață vitrată):</p>
+<ul>
+  <li><strong>Geam dublu modern</strong> (Uw 1,1): pierdere anuală prin ferestre ≈ 990 kWh</li>
+  <li><strong>Geam triplu</strong> (Uw 0,8): pierdere anuală ≈ 720 kWh</li>
+  <li><strong>Diferență</strong>: ~270 kWh/an → economie suplimentară: <strong>160 – 260 lei/an</strong></li>
+</ul>
+<p>Dacă diferența de preț pentru geam triplu față de geam dublu de calitate este de 1.500 – 2.500 lei, perioada de recuperare a investiției suplimentare este de <strong>6 – 15 ani</strong>. Rentabil doar în condiții specifice.</p>
+
+<h2>Când să alegi geamul triplu în 2026</h2>
+<p>Geamul triplu are sens dacă:</p>
+<ul>
+  <li><strong>Locuiești în zona climatică IV</strong> (Moldova, nordul Transilvaniei, zone montane peste 600 m) — ierni cu temperaturi frecvent sub -15°C</li>
+  <li><strong>Construiești sau renovezi o casă pasivă</strong> (Uw ≤ 0,8 cerut de standardul Passivhaus)</li>
+  <li><strong>Ferestrele sunt orientate spre nord</strong> — fără câștig solar care să compenseze pierderile</li>
+  <li><strong>Vrei confort termic maxim</strong>: cu geam triplu, suprafața interioară a sticlei rămâne mai caldă, eliminând senzația de curent rece lângă fereastră</li>
+  <li><strong>Faci un proiect nZEB complet</strong> — pompa de căldură + izolație + panouri fotovoltaice — și vrei toate elementele la nivel maxim</li>
+</ul>
+
+<h2>Când geamul dublu modern este alegerea mai bună</h2>
+<p>Pentru <strong>majoritatea apartamentelor și caselor din România</strong> situate în zonele climatice I-III, un geam dublu cu argon, Low-E și profil cu 5 camere — cum este <a href="/ro/produse/dmr-confort">DMR Confort</a> sau <a href="/ro/produse/dmr-domus">DMR Domus</a> — oferă cel mai bun raport calitate/preț/economie. Bugetul suplimentar al geamului triplu poate fi investit mai eficient în izolarea acoperișului sau a pardoselii.</p>
+
+<h2>Izolarea fonică: geamul triplu e mai bun?</h2>
+<p>Nu neapărat. Izolarea acustică depinde de <strong>configurația asimetrică a grosimilor</strong> (ex. 4/16/6 mm) și de masa foilor de sticlă, nu doar de numărul lor. Un geam dublu asimetric cu sticlă laminată acustică poate depăși performanțele acustice ale unui geam triplu standard. Dacă zgomotul este prioritatea principală, solicită o configurație specială fonică.</p>
+
+<h2>Greutate și structura cadrului</h2>
+<p>Geamul triplu cântărește cu <strong>30-40% mai mult</strong> decât dublul. Acest lucru necesită feronerie mai robustă și verificarea că profilul suportă greutatea fără deformare în timp. Profilele ThermoDMR sunt dimensionate pentru ambele configurații.</p>
+
+<h2>Concluzie: cum alegi corect</h2>
+<p>Nu există un răspuns universal. Alegerea depinde de zona climatică, orientarea casei, buget și obiectivele energetice. ThermoDMR oferă <strong>consultanță tehnică gratuită</strong> pentru a-ți recomanda configurația optimă. <a href="/ro/contact">Completează formularul →</a> și primești o ofertă personalizată în 24 de ore.</p>
     `.trim(),
   },
 ];
