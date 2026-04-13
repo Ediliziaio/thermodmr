@@ -1,4 +1,4 @@
-import { Helmet } from "react-helmet-async";
+import { useEffect } from "react";
 
 interface SeoHeadProps {
   title: string;           // senza "— ThermoDMR", viene aggiunto automaticamente
@@ -19,6 +19,30 @@ const BASE_URL = "https://thermodmr.com";
 const DEFAULT_OG_IMAGE = `${BASE_URL}/images/thermodmr-og.jpg`;
 const SITE_NAME = "ThermoDMR";
 
+const setMeta = (selector: string, attrName: string, attrValue: string, content: string) => {
+  let el = document.querySelector(selector) as HTMLMetaElement | null;
+  if (!el) {
+    el = document.createElement("meta");
+    el.setAttribute(attrName, attrValue);
+    document.head.appendChild(el);
+  }
+  el.setAttribute("content", content);
+};
+
+const setLink = (rel: string, extraAttr?: string, extraVal?: string): HTMLLinkElement => {
+  const selector = extraAttr
+    ? `link[rel="${rel}"][${extraAttr}="${extraVal}"]`
+    : `link[rel="${rel}"]`;
+  let el = document.querySelector(selector) as HTMLLinkElement | null;
+  if (!el) {
+    el = document.createElement("link");
+    el.rel = rel;
+    if (extraAttr && extraVal) el.setAttribute(extraAttr, extraVal);
+    document.head.appendChild(el);
+  }
+  return el;
+};
+
 const SeoHead = ({
   title,
   description,
@@ -35,7 +59,6 @@ const SeoHead = ({
   const fullTitle = `${title} — ${SITE_NAME}`;
   const canonicalUrl = `${BASE_URL}${canonical}`;
 
-  // hreflang: se non passati esplicitamente, inferisce it↔ro
   const itUrl = hreflangIt
     ? `${BASE_URL}${hreflangIt}`
     : lang === "it"
@@ -48,43 +71,61 @@ const SeoHead = ({
     ? canonicalUrl
     : `${BASE_URL}/ro${canonical === "/" ? "" : canonical}`;
 
-  return (
-    <Helmet>
-      <html lang={lang} />
-      <title>{fullTitle}</title>
-      <meta name="description" content={description} />
-      <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
-      {keywords && <meta name="keywords" content={keywords} />}
-      <link rel="canonical" href={canonicalUrl} />
+  useEffect(() => {
+    // Title + lang
+    document.title = fullTitle;
+    document.documentElement.lang = lang;
 
-      {/* Hreflang */}
-      <link rel="alternate" hreflang="it" href={itUrl} />
-      <link rel="alternate" hreflang="ro" href={roUrl} />
-      <link rel="alternate" hreflang="x-default" href={itUrl} />
+    // Description + robots + keywords
+    setMeta('meta[name="description"]', "name", "description", description);
+    setMeta('meta[name="robots"]', "name", "robots", noindex ? "noindex, nofollow" : "index, follow");
+    if (keywords) {
+      setMeta('meta[name="keywords"]', "name", "keywords", keywords);
+    }
 
-      {/* Open Graph */}
-      <meta property="og:title" content={fullTitle} />
-      <meta property="og:description" content={description} />
-      <meta property="og:type" content={ogType} />
-      <meta property="og:url" content={canonicalUrl} />
-      <meta property="og:image" content={ogImage} />
-      <meta property="og:site_name" content={SITE_NAME} />
-      <meta property="og:locale" content={lang === "it" ? "it_IT" : "ro_RO"} />
+    // Canonical
+    const canonicalEl = setLink("canonical");
+    canonicalEl.href = canonicalUrl;
 
-      {/* Twitter Card */}
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={fullTitle} />
-      <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={ogImage} />
+    // Hreflang
+    const itEl = setLink("alternate", "hreflang", "it");
+    itEl.href = itUrl;
+    const roEl = setLink("alternate", "hreflang", "ro");
+    roEl.href = roUrl;
+    const xdefEl = setLink("alternate", "hreflang", "x-default");
+    xdefEl.href = itUrl;
 
-      {/* JSON-LD structured data */}
-      {jsonLd && (
-        <script type="application/ld+json">
-          {JSON.stringify(Array.isArray(jsonLd) ? { "@context": "https://schema.org", "@graph": jsonLd } : jsonLd)}
-        </script>
-      )}
-    </Helmet>
-  );
+    // Open Graph
+    setMeta('meta[property="og:title"]', "property", "og:title", fullTitle);
+    setMeta('meta[property="og:description"]', "property", "og:description", description);
+    setMeta('meta[property="og:type"]', "property", "og:type", ogType);
+    setMeta('meta[property="og:url"]', "property", "og:url", canonicalUrl);
+    setMeta('meta[property="og:image"]', "property", "og:image", ogImage);
+    setMeta('meta[property="og:site_name"]', "property", "og:site_name", SITE_NAME);
+    setMeta('meta[property="og:locale"]', "property", "og:locale", lang === "it" ? "it_IT" : "ro_RO");
+
+    // Twitter Card
+    setMeta('meta[name="twitter:card"]', "name", "twitter:card", "summary_large_image");
+    setMeta('meta[name="twitter:title"]', "name", "twitter:title", fullTitle);
+    setMeta('meta[name="twitter:description"]', "name", "twitter:description", description);
+    setMeta('meta[name="twitter:image"]', "name", "twitter:image", ogImage);
+
+    // JSON-LD: remove previous page-specific script, add new one
+    document.querySelector('script[data-seoh="true"]')?.remove();
+    if (jsonLd) {
+      const script = document.createElement("script");
+      script.type = "application/ld+json";
+      script.setAttribute("data-seoh", "true");
+      script.textContent = JSON.stringify(
+        Array.isArray(jsonLd)
+          ? { "@context": "https://schema.org", "@graph": jsonLd }
+          : jsonLd
+      );
+      document.head.appendChild(script);
+    }
+  }, [fullTitle, description, canonicalUrl, lang, ogType, ogImage, noindex, jsonLd, keywords, itUrl, roUrl]);
+
+  return null;
 };
 
 export default SeoHead;
