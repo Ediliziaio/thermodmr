@@ -46,13 +46,14 @@ const Tapparelle = () => {
           "name": isRo ? "Jaluzele Termoizolante ThermoDMR" : "Tapparelle Coibentate ThermoDMR",
           "description": isRo ? "Jaluzele termoizolante: economie de energie până la 30%, oscurare totală, rezistente la efracție. Disponibile în aluminiu și PVC." : "Tapparelle coibentate: risparmio energetico fino al 30%, oscuramento totale, anti-intrusione. In alluminio e PVC.",
           "brand": { "@type": "Brand", "name": "ThermoDMR" },
-          "manufacturer": { "@type": "Organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
+          "manufacturer": { "@type": "Organization", "@id": "https://thermodmr.com/#organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
           "url": isRo ? "https://thermodmr.com/ro/produse/jaluzele" : "https://thermodmr.com/prodotti/tapparelle",
           "image": "https://thermodmr.com/images/thermodmr-tapparella-coibentata.webp",
           "category": "Tapparelle",
           "offers": {
             "@type": "Offer",
             "priceCurrency": "EUR",
+            "priceRange": "Su richiesta",
             "availability": "https://schema.org/InStock",
             "url": isRo ? "https://thermodmr.com/ro/contact" : "https://thermodmr.com/contatti",
             "seller": { "@type": "Organization", "name": "ThermoDMR" }

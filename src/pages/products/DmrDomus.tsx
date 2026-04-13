@@ -76,13 +76,14 @@ const DmrDomus = () => {
           "name": isRo ? "Fereastră PVC DMR Domus — Design Clasic Eficiență Înaltă" : "Finestra PVC DMR Domus — Design Classico Alto Isolamento",
           "description": isRo ? "Fereastră PVC design clasic, eficiență energetică ridicată, sticlă dublă și triplă disponibilă. Garanție 15 ani." : "Finestra PVC design classico, alta efficienza energetica, doppio e triplo vetro disponibile. Garanzia 15 anni.",
           "brand": { "@type": "Brand", "name": "ThermoDMR" },
-          "manufacturer": { "@type": "Organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
+          "manufacturer": { "@type": "Organization", "@id": "https://thermodmr.com/#organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
           "url": isRo ? "https://thermodmr.com/ro/produse/dmr-domus" : "https://thermodmr.com/prodotti/dmr-domus",
           "image": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80",
           "category": "Finestre PVC",
           "offers": {
             "@type": "Offer",
             "priceCurrency": "EUR",
+            "priceRange": "Su richiesta",
             "availability": "https://schema.org/InStock",
             "url": isRo ? "https://thermodmr.com/ro/contact" : "https://thermodmr.com/contatti",
             "seller": { "@type": "Organization", "name": "ThermoDMR" }

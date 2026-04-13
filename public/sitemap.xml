@@ -7,6 +7,7 @@
     <loc>https://thermodmr.com/</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -16,6 +17,7 @@
     <loc>https://thermodmr.com/ro</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -25,6 +27,7 @@
     <loc>https://thermodmr.com/chi-siamo</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/chi-siamo"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/despre-noi"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -32,6 +35,7 @@
     <loc>https://thermodmr.com/ro/despre-noi</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/chi-siamo"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/despre-noi"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -41,6 +45,7 @@
     <loc>https://thermodmr.com/prodotti-pubblico</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti-pubblico"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -48,6 +53,7 @@
     <loc>https://thermodmr.com/ro/produse</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti-pubblico"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -57,6 +63,7 @@
     <loc>https://thermodmr.com/prodotti/dmr-confort</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/dmr-confort"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/dmr-confort"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -64,6 +71,7 @@
     <loc>https://thermodmr.com/ro/produse/dmr-confort</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/dmr-confort"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/dmr-confort"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -73,6 +81,7 @@
     <loc>https://thermodmr.com/prodotti/dmr-domus</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/dmr-domus"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/dmr-domus"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -80,6 +89,7 @@
     <loc>https://thermodmr.com/ro/produse/dmr-domus</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/dmr-domus"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/dmr-domus"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -89,6 +99,7 @@
     <loc>https://thermodmr.com/prodotti/dmr-passive</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/dmr-passive"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/dmr-passive"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -96,6 +107,7 @@
     <loc>https://thermodmr.com/ro/produse/dmr-passive</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/dmr-passive"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/dmr-passive"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -105,6 +117,7 @@
     <loc>https://thermodmr.com/prodotti/portoncini</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/portoncini"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/usi-intrare"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -112,6 +125,7 @@
     <loc>https://thermodmr.com/ro/produse/usi-intrare</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/portoncini"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/usi-intrare"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -121,6 +135,7 @@
     <loc>https://thermodmr.com/prodotti/cassonetti</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/cassonetti"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/casete-rulou"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -128,6 +143,7 @@
     <loc>https://thermodmr.com/ro/produse/casete-rulou</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/cassonetti"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/casete-rulou"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -137,6 +153,7 @@
     <loc>https://thermodmr.com/prodotti/tapparelle</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/tapparelle"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/jaluzele"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -144,6 +161,7 @@
     <loc>https://thermodmr.com/ro/produse/jaluzele</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/tapparelle"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/jaluzele"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -153,6 +171,7 @@
     <loc>https://thermodmr.com/prodotti/persiane</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/persiane"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/obloane"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -160,6 +179,7 @@
     <loc>https://thermodmr.com/ro/produse/obloane</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/prodotti/persiane"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/produse/obloane"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -169,6 +189,7 @@
     <loc>https://thermodmr.com/vantaggi</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/vantaggi"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/avantaje"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -176,6 +197,7 @@
     <loc>https://thermodmr.com/ro/avantaje</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/vantaggi"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/avantaje"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -185,6 +207,7 @@
     <loc>https://thermodmr.com/garanzie</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/garanzie"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/garantii"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -192,6 +215,7 @@
     <loc>https://thermodmr.com/ro/garantii</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/garanzie"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/garantii"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -201,6 +225,7 @@
     <loc>https://thermodmr.com/contatti</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/contatti"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/contact"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -208,6 +233,7 @@
     <loc>https://thermodmr.com/ro/contact</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/contatti"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/contact"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -217,6 +243,7 @@
     <loc>https://thermodmr.com/diventa-rivenditore</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/diventa-rivenditore"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/devino-distribuitor"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -224,6 +251,7 @@
     <loc>https://thermodmr.com/ro/devino-distribuitor</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/diventa-rivenditore"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/devino-distribuitor"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -233,6 +261,7 @@
     <loc>https://thermodmr.com/blog</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -240,6 +269,7 @@
     <loc>https://thermodmr.com/ro/blog</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -249,6 +279,7 @@
     <loc>https://thermodmr.com/blog/finestre-pvc-profilo-tedesco-guida-completa</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/finestre-pvc-profilo-tedesco-guida-completa"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/ferestre-pvc-profil-german-ghid-complet"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -256,6 +287,7 @@
     <loc>https://thermodmr.com/blog/risparmio-energetico-finestre-pvc-quanto-si-risparmia</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/risparmio-energetico-finestre-pvc-quanto-si-risparmia"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/economie-energie-ferestre-pvc-calcul-real"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -263,6 +295,7 @@
     <loc>https://thermodmr.com/blog/tapparelle-coibentate-vs-tradizionali-differenze</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/tapparelle-coibentate-vs-tradizionali-differenze"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/jaluzele-termoizolante-vs-standard-diferente"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -270,6 +303,7 @@
     <loc>https://thermodmr.com/blog/finestre-pvc-prezzi-2025</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/finestre-pvc-prezzi-2025"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/ferestre-pvc-preturi-2025"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -277,6 +311,7 @@
     <loc>https://thermodmr.com/blog/bonus-finestre-2025-detrazione-fiscale</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/bonus-finestre-2025-detrazione-fiscale"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/program-reabilitare-termica-finantare-ferestre-2025"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -284,6 +319,7 @@
     <loc>https://thermodmr.com/blog/doppio-vetro-vs-triplo-vetro-quale-scegliere</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/doppio-vetro-vs-triplo-vetro-quale-scegliere"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/geam-dublu-vs-geam-triplu-care-alegi"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -291,6 +327,7 @@
     <loc>https://thermodmr.com/blog/sostituzione-finestre-ristrutturazione-guida</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/sostituzione-finestre-ristrutturazione-guida"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/inlocuire-ferestre-renovare-casa-ghid-complet"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -298,6 +335,7 @@
     <loc>https://thermodmr.com/blog/come-scegliere-le-finestre-guida-acquisto-2025</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/come-scegliere-le-finestre-guida-acquisto-2025"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/cum-alegi-ferestrele-ghid-cumparaturi-2025"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -307,6 +345,7 @@
     <loc>https://thermodmr.com/ro/blog/ferestre-pvc-profil-german-ghid-complet</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/finestre-pvc-profilo-tedesco-guida-completa"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/ferestre-pvc-profil-german-ghid-complet"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -314,6 +353,7 @@
     <loc>https://thermodmr.com/ro/blog/economie-energie-ferestre-pvc-calcul-real</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/risparmio-energetico-finestre-pvc-quanto-si-risparmia"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/economie-energie-ferestre-pvc-calcul-real"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -321,6 +361,7 @@
     <loc>https://thermodmr.com/ro/blog/jaluzele-termoizolante-vs-standard-diferente</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/tapparelle-coibentate-vs-tradizionali-differenze"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/jaluzele-termoizolante-vs-standard-diferente"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -328,6 +369,7 @@
     <loc>https://thermodmr.com/ro/blog/ferestre-pvc-preturi-2025</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/finestre-pvc-prezzi-2025"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/ferestre-pvc-preturi-2025"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -335,6 +377,7 @@
     <loc>https://thermodmr.com/ro/blog/program-reabilitare-termica-finantare-ferestre-2025</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/bonus-finestre-2025-detrazione-fiscale"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/program-reabilitare-termica-finantare-ferestre-2025"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -342,6 +385,7 @@
     <loc>https://thermodmr.com/ro/blog/geam-dublu-vs-geam-triplu-care-alegi</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/doppio-vetro-vs-triplo-vetro-quale-scegliere"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/geam-dublu-vs-geam-triplu-care-alegi"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -349,6 +393,7 @@
     <loc>https://thermodmr.com/ro/blog/inlocuire-ferestre-renovare-casa-ghid-complet</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/sostituzione-finestre-ristrutturazione-guida"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/inlocuire-ferestre-renovare-casa-ghid-complet"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -356,6 +401,7 @@
     <loc>https://thermodmr.com/ro/blog/cum-alegi-ferestrele-ghid-cumparaturi-2025</loc>
     <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/come-scegliere-le-finestre-guida-acquisto-2025"/>
     <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/cum-alegi-ferestrele-ghid-cumparaturi-2025"/>
+    <lastmod>2026-04-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

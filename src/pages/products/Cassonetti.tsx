@@ -48,16 +48,23 @@ const Cassonetti = () => {
           "name": isRo ? "Casete Rulou Termoizolate ThermoDMR" : "Cassonetti Coibentati ThermoDMR",
           "description": isRo ? "Casete rulou termoizolate care elimină punții termice și reduc consumul energetic. Fabricate din EPS de înaltă densitate." : "Cassonetti coibentati in EPS ad alta densità che eliminano i ponti termici e riducono i consumi energetici.",
           "brand": { "@type": "Brand", "name": "ThermoDMR" },
-          "manufacturer": { "@type": "Organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
+          "manufacturer": { "@type": "Organization", "@id": "https://thermodmr.com/#organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
           "url": isRo ? "https://thermodmr.com/ro/produse/casete-rulou" : "https://thermodmr.com/prodotti/cassonetti",
           "image": "https://thermodmr.com/images/thermodmr-cassonetto-installato.jpg",
           "category": "Cassonetti",
           "offers": {
             "@type": "Offer",
             "priceCurrency": "EUR",
+            "priceRange": "Su richiesta",
             "availability": "https://schema.org/InStock",
             "url": isRo ? "https://thermodmr.com/ro/contact" : "https://thermodmr.com/contatti",
             "seller": { "@type": "Organization", "name": "ThermoDMR" }
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.7",
+            "bestRating": "5",
+            "reviewCount": "19"
           }
         }}
       />

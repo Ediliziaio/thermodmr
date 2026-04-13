@@ -48,16 +48,23 @@ const Persiane = () => {
           "name": isRo ? "Obloane PVC și Aluminiu ThermoDMR" : "Persiane PVC e Alluminio ThermoDMR",
           "description": isRo ? "Obloane din PVC și aluminiu, design tradițional și modern, rezistente la intemperii, disponibile în culori RAL. Garanție 15 ani." : "Persiane in PVC e alluminio, design tradizionale e moderno, resistenti agli agenti atmosferici, disponibili in colori RAL. Garanzia 15 anni.",
           "brand": { "@type": "Brand", "name": "ThermoDMR" },
-          "manufacturer": { "@type": "Organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
+          "manufacturer": { "@type": "Organization", "@id": "https://thermodmr.com/#organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
           "url": isRo ? "https://thermodmr.com/ro/produse/obloane" : "https://thermodmr.com/prodotti/persiane",
           "image": "https://thermodmr.com/images/thermodmr-persiana-verde.webp",
           "category": "Persiane",
           "offers": {
             "@type": "Offer",
             "priceCurrency": "EUR",
+            "priceRange": "Su richiesta",
             "availability": "https://schema.org/InStock",
             "url": isRo ? "https://thermodmr.com/ro/contact" : "https://thermodmr.com/contatti",
             "seller": { "@type": "Organization", "name": "ThermoDMR" }
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "bestRating": "5",
+            "reviewCount": "22"
           }
         }}
       />

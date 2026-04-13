@@ -77,13 +77,14 @@ const DmrConfort = () => {
           "name": isRo ? "Fereastră PVC DMR Confort — 5 Camere Tecnolegno" : "Finestra PVC DMR Confort — 5 Camere Tecnolegno",
           "description": isRo ? "Fereastră PVC cu 5 camere, profil Tecnolegno efect lemn, izolare termică și acustică superioară. Garanție 15 ani." : "Finestra PVC 5 camere con profilo Tecnolegno effetto legno, isolamento termico e acustico superiore. Garanzia 15 anni.",
           "brand": { "@type": "Brand", "name": "ThermoDMR" },
-          "manufacturer": { "@type": "Organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
+          "manufacturer": { "@type": "Organization", "@id": "https://thermodmr.com/#organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
           "url": isRo ? "https://thermodmr.com/ro/produse/dmr-confort" : "https://thermodmr.com/prodotti/dmr-confort",
           "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80",
           "category": "Finestre PVC",
           "offers": {
             "@type": "Offer",
             "priceCurrency": "EUR",
+            "priceRange": "Su richiesta",
             "availability": "https://schema.org/InStock",
             "url": isRo ? "https://thermodmr.com/ro/contact" : "https://thermodmr.com/contatti",
             "seller": { "@type": "Organization", "name": "ThermoDMR" }

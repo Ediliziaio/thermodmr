@@ -48,13 +48,14 @@ const Portoncini = () => {
           "name": isRo ? "Ușă de Intrare PVC ThermoDMR — Securitate și Design" : "Portoncino Blindato PVC ThermoDMR — Sicurezza e Design",
           "description": isRo ? "Uși de intrare PVC cu securitate maximă, izolare termoacustică superioară, personalizabile în culori RAL. Garanție 15 ani." : "Portoncini blindati in PVC con massima sicurezza, isolamento termoacustico superiore, personalizzabili in colori RAL. Garanzia 15 anni.",
           "brand": { "@type": "Brand", "name": "ThermoDMR" },
-          "manufacturer": { "@type": "Organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
+          "manufacturer": { "@type": "Organization", "@id": "https://thermodmr.com/#organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
           "url": isRo ? "https://thermodmr.com/ro/produse/usi-intrare" : "https://thermodmr.com/prodotti/portoncini",
           "image": "https://thermodmr.com/images/thermodmr-portoncino-ingresso.avif",
           "category": "Portoncini",
           "offers": {
             "@type": "Offer",
             "priceCurrency": "EUR",
+            "priceRange": "Su richiesta",
             "availability": "https://schema.org/InStock",
             "url": isRo ? "https://thermodmr.com/ro/contact" : "https://thermodmr.com/contatti",
             "seller": { "@type": "Organization", "name": "ThermoDMR" }

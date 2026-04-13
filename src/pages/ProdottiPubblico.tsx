@@ -95,6 +95,24 @@ const ProdottiPubblico = () => {
         lang={lang}
         hreflangIt="/prodotti-pubblico"
         hreflangRo="/ro/produse"
+        keywords={isRo ? "catalog ferestre PVC, DMR Confort, DMR Domus, DMR Passive, uși intrare, jaluzele, ThermoDMR" : "catalogo finestre PVC, DMR Confort, DMR Domus, DMR Passive, portoncini, tapparelle, cassonetti, persiane, ThermoDMR"}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": isRo ? "Catalog Ferestre și Tâmplărie PVC ThermoDMR" : "Catalogo Finestre e Serramenti PVC ThermoDMR",
+          "url": isRo ? "https://thermodmr.com/ro/produse" : "https://thermodmr.com/prodotti-pubblico",
+          "description": isRo ? "Catalogul complet de ferestre și tâmplărie PVC ThermoDMR." : "Il catalogo completo di finestre e serramenti PVC ThermoDMR.",
+          "publisher": { "@type": "Organization", "@id": "https://thermodmr.com/#organization", "name": "ThermoDMR" },
+          "hasPart": [
+            { "@type": "Product", "name": isRo ? "Fereastră DMR Confort" : "Finestra DMR Confort", "url": isRo ? "https://thermodmr.com/ro/produse/dmr-confort" : "https://thermodmr.com/prodotti/dmr-confort", "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80", "brand": { "@type": "Brand", "name": "ThermoDMR" }, "offers": { "@type": "Offer", "availability": "https://schema.org/InStock", "priceCurrency": "EUR" } },
+            { "@type": "Product", "name": isRo ? "Fereastră DMR Domus" : "Finestra DMR Domus", "url": isRo ? "https://thermodmr.com/ro/produse/dmr-domus" : "https://thermodmr.com/prodotti/dmr-domus", "image": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80", "brand": { "@type": "Brand", "name": "ThermoDMR" }, "offers": { "@type": "Offer", "availability": "https://schema.org/InStock", "priceCurrency": "EUR" } },
+            { "@type": "Product", "name": isRo ? "Fereastră DMR Passive" : "Finestra DMR Passive", "url": isRo ? "https://thermodmr.com/ro/produse/dmr-passive" : "https://thermodmr.com/prodotti/dmr-passive", "image": "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=800&q=80", "brand": { "@type": "Brand", "name": "ThermoDMR" }, "offers": { "@type": "Offer", "availability": "https://schema.org/InStock", "priceCurrency": "EUR" } },
+            { "@type": "Product", "name": isRo ? "Uși de Intrare PVC" : "Portoncini Blindati PVC", "url": isRo ? "https://thermodmr.com/ro/produse/usi-intrare" : "https://thermodmr.com/prodotti/portoncini", "image": "https://thermodmr.com/images/thermodmr-portoncino-ingresso.avif", "brand": { "@type": "Brand", "name": "ThermoDMR" }, "offers": { "@type": "Offer", "availability": "https://schema.org/InStock", "priceCurrency": "EUR" } },
+            { "@type": "Product", "name": isRo ? "Jaluzele Termoizolante" : "Tapparelle Coibentate", "url": isRo ? "https://thermodmr.com/ro/produse/jaluzele" : "https://thermodmr.com/prodotti/tapparelle", "image": "https://thermodmr.com/images/thermodmr-tapparella-coibentata.webp", "brand": { "@type": "Brand", "name": "ThermoDMR" }, "offers": { "@type": "Offer", "availability": "https://schema.org/InStock", "priceCurrency": "EUR" } },
+            { "@type": "Product", "name": isRo ? "Casete Rulou Termoizolate" : "Cassonetti Coibentati", "url": isRo ? "https://thermodmr.com/ro/produse/casete-rulou" : "https://thermodmr.com/prodotti/cassonetti", "image": "https://thermodmr.com/images/thermodmr-cassonetto-installato.jpg", "brand": { "@type": "Brand", "name": "ThermoDMR" }, "offers": { "@type": "Offer", "availability": "https://schema.org/InStock", "priceCurrency": "EUR" } },
+            { "@type": "Product", "name": isRo ? "Obloane PVC și Aluminiu" : "Persiane PVC e Alluminio", "url": isRo ? "https://thermodmr.com/ro/produse/obloane" : "https://thermodmr.com/prodotti/persiane", "image": "https://thermodmr.com/images/thermodmr-persiana-verde.webp", "brand": { "@type": "Brand", "name": "ThermoDMR" }, "offers": { "@type": "Offer", "availability": "https://schema.org/InStock", "priceCurrency": "EUR" } }
+          ]
+        }}
       />
       <PublicNavbar />
 

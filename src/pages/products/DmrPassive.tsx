@@ -76,13 +76,14 @@ const DmrPassive = () => {
           "name": isRo ? "Fereastră PVC DMR Passive — Casă Pasivă Clasa A+" : "Finestra PVC DMR Passive — Casa Passiva Classe A+",
           "description": isRo ? "Fereastră PVC cu izolare termică maximă, certificată pentru case pasive și clasa A+. Triplu vitraj cu argon." : "Finestra PVC a massimo isolamento termico, certificata per case passive e classe energetica A+. Triplo vetro con argon.",
           "brand": { "@type": "Brand", "name": "ThermoDMR" },
-          "manufacturer": { "@type": "Organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
+          "manufacturer": { "@type": "Organization", "@id": "https://thermodmr.com/#organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
           "url": isRo ? "https://thermodmr.com/ro/produse/dmr-passive" : "https://thermodmr.com/prodotti/dmr-passive",
           "image": "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80",
           "category": "Finestre PVC",
           "offers": {
             "@type": "Offer",
             "priceCurrency": "EUR",
+            "priceRange": "Su richiesta",
             "availability": "https://schema.org/InStock",
             "url": isRo ? "https://thermodmr.com/ro/contact" : "https://thermodmr.com/contatti",
             "seller": { "@type": "Organization", "name": "ThermoDMR" }
