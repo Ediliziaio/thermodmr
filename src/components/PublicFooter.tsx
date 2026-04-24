@@ -63,9 +63,9 @@ const PublicFooter = () => {
                 <Phone className="h-4 w-4 shrink-0" />
                 +40 744 139 565
               </a>
-              <a href="mailto:info@thermodmr.it" className="flex items-center gap-2 text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors">
+              <a href="mailto:office.marysoryna@gmail.com" className="flex items-center gap-2 text-sm text-white/40 hover:text-[hsl(195,85%,55%)] transition-colors">
                 <Mail className="h-4 w-4 shrink-0" />
-                info@thermodmr.it
+                office.marysoryna@gmail.com
               </a>
               <div className="flex items-start gap-2 text-sm text-white/40">
                 <MapPin className="h-4 w-4 shrink-0 mt-0.5" />

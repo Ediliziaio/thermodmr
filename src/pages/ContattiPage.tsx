@@ -78,7 +78,7 @@ const ContattiPage = () => {
             "@type": "Organization",
             "name": "ThermoDMR",
             "telephone": isRo ? "+40-744-139-565" : "+39-348-346-7567",
-            "email": "info@thermodmr.it",
+            "email": "office.marysoryna@gmail.com",
             "url": "https://thermodmr.com"
           }
         }}
@@ -167,13 +167,13 @@ const ContattiPage = () => {
                       <p className="font-semibold">{t.contatti.telefono}</p>
                     </div>
                   </a>
-                  <a href="mailto:info@thermodmr.it" className="flex items-center gap-4 text-[hsl(0,0%,35%)] hover:text-[hsl(195,85%,45%)] transition-colors">
+                  <a href="mailto:office.marysoryna@gmail.com" className="flex items-center gap-4 text-[hsl(0,0%,35%)] hover:text-[hsl(195,85%,45%)] transition-colors">
                     <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[hsl(195,85%,45%)]/10 text-[hsl(195,85%,45%)]">
                       <Mail className="h-5 w-5" />
                     </div>
                     <div>
                       <p className="text-xs text-[hsl(0,0%,55%)] uppercase tracking-wider font-medium">{t.contatti.emailLabel}</p>
-                      <p className="font-semibold">info@thermodmr.it</p>
+                      <p className="font-semibold">office.marysoryna@gmail.com</p>
                     </div>
                   </a>
                   <div className="flex items-center gap-4 text-[hsl(0,0%,35%)]">
