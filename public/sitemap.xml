@@ -406,4 +406,56 @@
     <priority>0.8</priority>
   </url>
 
+  <!-- Blog 2026 IT — nuovi articoli -->
+  <url>
+    <loc>https://thermodmr.com/blog/bonus-infissi-2026-detrazioni-finestre-pvc</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/bonus-infissi-2026-detrazioni-finestre-pvc"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/bonus-tamplarie-2026-deduceri-ferestre-pvc"/>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/blog/classe-energetica-casa-2026-finestre-pvc</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/classe-energetica-casa-2026-finestre-pvc"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/clasa-energetica-casa-2026-ferestre-pvc"/>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/blog/triplo-vetro-o-doppio-vetro-guida-2026</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/triplo-vetro-o-doppio-vetro-guida-2026"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/geam-triplu-sau-dublu-ghid-2026"/>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Blog 2026 RO — nuovi articoli -->
+  <url>
+    <loc>https://thermodmr.com/ro/blog/bonus-tamplarie-2026-deduceri-ferestre-pvc</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/bonus-infissi-2026-detrazioni-finestre-pvc"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/bonus-tamplarie-2026-deduceri-ferestre-pvc"/>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/blog/clasa-energetica-casa-2026-ferestre-pvc</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/classe-energetica-casa-2026-finestre-pvc"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/clasa-energetica-casa-2026-ferestre-pvc"/>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://thermodmr.com/ro/blog/geam-triplu-sau-dublu-ghid-2026</loc>
+    <xhtml:link rel="alternate" hreflang="it" href="https://thermodmr.com/blog/triplo-vetro-o-doppio-vetro-guida-2026"/>
+    <xhtml:link rel="alternate" hreflang="ro" href="https://thermodmr.com/ro/blog/geam-triplu-sau-dublu-ghid-2026"/>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
 </urlset>
