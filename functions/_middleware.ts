@@ -12,7 +12,7 @@
 import { allBlogPosts, type BlogPost } from "../src/data/blogPosts";
 
 const BASE_URL = "https://thermodmr.com";
-const DEFAULT_OG_IMAGE = `${BASE_URL}/images/hero-bg.jpg`;
+const DEFAULT_OG_IMAGE = `${BASE_URL}/og-image.jpg`;
 
 interface PageMeta {
   title: string;
@@ -97,7 +97,6 @@ const PAGES: Record<string, PageMeta> = {
       "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80",
       "category": "Finestre PVC",
       "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "Su richiesta", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
-      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "bestRating": "5", "reviewCount": "47" },
     },
   },
   "/prodotti/dmr-domus": {
@@ -125,7 +124,6 @@ const PAGES: Record<string, PageMeta> = {
       "image": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80",
       "category": "Finestre PVC",
       "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "Su richiesta", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
-      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "bestRating": "5", "reviewCount": "35" },
     },
   },
   "/prodotti/dmr-passive": {
@@ -153,7 +151,6 @@ const PAGES: Record<string, PageMeta> = {
       "image": "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80",
       "category": "Finestre PVC Casa Passiva",
       "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "Su richiesta", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
-      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "bestRating": "5", "reviewCount": "28" },
     },
   },
   "/prodotti/portoncini": {
@@ -181,7 +178,6 @@ const PAGES: Record<string, PageMeta> = {
       "image": `${B}/images/thermodmr-portoncino-ingresso.avif`,
       "category": "Portoncini PVC",
       "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "Su richiesta", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
-      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "bestRating": "5", "reviewCount": "31" },
     },
   },
   "/prodotti/tapparelle": {
@@ -209,7 +205,6 @@ const PAGES: Record<string, PageMeta> = {
       "image": `${B}/images/thermodmr-tapparella-coibentata.webp`,
       "category": "Tapparelle",
       "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "Su richiesta", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
-      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.7", "bestRating": "5", "reviewCount": "24" },
     },
   },
   "/prodotti/cassonetti": {
@@ -237,7 +232,6 @@ const PAGES: Record<string, PageMeta> = {
       "image": `${B}/images/thermodmr-cassonetto-installato.jpg`,
       "category": "Cassonetti",
       "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "Su richiesta", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
-      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.7", "bestRating": "5", "reviewCount": "19" },
     },
   },
   "/prodotti/persiane": {
@@ -265,7 +259,6 @@ const PAGES: Record<string, PageMeta> = {
       "image": `${B}/images/thermodmr-persiana-verde.webp`,
       "category": "Persiane",
       "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "Su richiesta", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
-      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "bestRating": "5", "reviewCount": "22" },
     },
   },
   "/blog": {
@@ -361,7 +354,6 @@ const PAGES: Record<string, PageMeta> = {
       "url": `${B}/ro/produse/dmr-confort`,
       "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80",
       "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "La cerere", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
-      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "bestRating": "5", "reviewCount": "47" },
     },
   },
   "/ro/produse/dmr-domus": {
@@ -381,7 +373,6 @@ const PAGES: Record<string, PageMeta> = {
       "url": `${B}/ro/produse/dmr-domus`,
       "image": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80",
       "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "La cerere", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
-      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "bestRating": "5", "reviewCount": "35" },
     },
   },
   "/ro/produse/dmr-passive": {
@@ -401,7 +392,6 @@ const PAGES: Record<string, PageMeta> = {
       "url": `${B}/ro/produse/dmr-passive`,
       "image": "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80",
       "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "La cerere", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
-      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "bestRating": "5", "reviewCount": "28" },
     },
   },
   "/ro/produse/usi-intrare": {
@@ -421,7 +411,6 @@ const PAGES: Record<string, PageMeta> = {
       "url": `${B}/ro/produse/usi-intrare`,
       "image": `${B}/images/thermodmr-portoncino-ingresso.avif`,
       "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "La cerere", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
-      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "bestRating": "5", "reviewCount": "31" },
     },
   },
   "/ro/produse/jaluzele": {
@@ -441,7 +430,6 @@ const PAGES: Record<string, PageMeta> = {
       "url": `${B}/ro/produse/jaluzele`,
       "image": `${B}/images/thermodmr-tapparella-coibentata.webp`,
       "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "La cerere", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
-      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.7", "bestRating": "5", "reviewCount": "24" },
     },
   },
   "/ro/produse/casete-rulou": {
@@ -461,7 +449,6 @@ const PAGES: Record<string, PageMeta> = {
       "url": `${B}/ro/produse/casete-rulou`,
       "image": `${B}/images/thermodmr-cassonetto-installato.jpg`,
       "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "La cerere", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
-      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.7", "bestRating": "5", "reviewCount": "19" },
     },
   },
   "/ro/produse/obloane": {
@@ -481,7 +468,6 @@ const PAGES: Record<string, PageMeta> = {
       "url": `${B}/ro/produse/obloane`,
       "image": `${B}/images/thermodmr-persiana-verde.webp`,
       "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "La cerere", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
-      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "bestRating": "5", "reviewCount": "22" },
     },
   },
   "/ro/blog": {
@@ -627,19 +613,19 @@ const PAGES: Record<string, PageMeta> = {
     lang: "it", alternateIt: `${B}/blog/tapparelle-coibentate-vs-tradizionali-differenze`, alternateRo: `${B}/ro/blog/jaluzele-termoizolante-vs-standard-diferente`,
     breadcrumb: [{name:"Home",url:`${B}/`},{name:"Blog",url:`${B}/blog`},{name:"Tapparelle Coibentate vs Tradizionali",url:`${B}/blog/tapparelle-coibentate-vs-tradizionali-differenze`}],
   },
-  "/blog/finestre-pvc-prezzi-2025": {
+  "/blog/finestre-pvc-prezzi": {
     title: "Finestre PVC Prezzi 2026: Quanto Costano e Come Non Pagare Troppo",
     description: "Prezzi reali finestre PVC 2026: dal doppio al triplo vetro. Cosa incide sul costo, come confrontare offerte e dove risparmiare senza rinunciare.",
-    canonical: `${B}/blog/finestre-pvc-prezzi-2025`,
-    lang: "it", alternateIt: `${B}/blog/finestre-pvc-prezzi-2025`, alternateRo: `${B}/ro/blog/ferestre-pvc-preturi-2025`,
-    breadcrumb: [{name:"Home",url:`${B}/`},{name:"Blog",url:`${B}/blog`},{name:"Finestre PVC Prezzi 2026",url:`${B}/blog/finestre-pvc-prezzi-2025`}],
+    canonical: `${B}/blog/finestre-pvc-prezzi`,
+    lang: "it", alternateIt: `${B}/blog/finestre-pvc-prezzi`, alternateRo: `${B}/ro/blog/ferestre-pvc-preturi`,
+    breadcrumb: [{name:"Home",url:`${B}/`},{name:"Blog",url:`${B}/blog`},{name:"Finestre PVC Prezzi 2026",url:`${B}/blog/finestre-pvc-prezzi`}],
   },
-  "/blog/bonus-finestre-2025-detrazione-fiscale": {
+  "/blog/bonus-finestre-detrazione-fiscale": {
     title: "Bonus Finestre 2026: Detrazione 50% Irpef — Come Funziona",
     description: "Guida completa al Bonus Finestre 2026: detrazione 50% Irpef per sostituzione serramenti. Requisiti, documentazione ENEA e come richiedere.",
-    canonical: `${B}/blog/bonus-finestre-2025-detrazione-fiscale`,
-    lang: "it", alternateIt: `${B}/blog/bonus-finestre-2025-detrazione-fiscale`, alternateRo: `${B}/ro/blog/program-reabilitare-termica-finantare-ferestre-2025`,
-    breadcrumb: [{name:"Home",url:`${B}/`},{name:"Blog",url:`${B}/blog`},{name:"Bonus Finestre 2026",url:`${B}/blog/bonus-finestre-2025-detrazione-fiscale`}],
+    canonical: `${B}/blog/bonus-finestre-detrazione-fiscale`,
+    lang: "it", alternateIt: `${B}/blog/bonus-finestre-detrazione-fiscale`, alternateRo: `${B}/ro/blog/program-reabilitare-termica-finantare-ferestre`,
+    breadcrumb: [{name:"Home",url:`${B}/`},{name:"Blog",url:`${B}/blog`},{name:"Bonus Finestre 2026",url:`${B}/blog/bonus-finestre-detrazione-fiscale`}],
   },
   "/blog/doppio-vetro-vs-triplo-vetro-quale-scegliere": {
     title: "Doppio Vetro vs Triplo Vetro: Quale Scegliere nel 2026?",
@@ -655,12 +641,12 @@ const PAGES: Record<string, PageMeta> = {
     lang: "it", alternateIt: `${B}/blog/sostituzione-finestre-ristrutturazione-guida`, alternateRo: `${B}/ro/blog/inlocuire-ferestre-renovare-casa-ghid-complet`,
     breadcrumb: [{name:"Home",url:`${B}/`},{name:"Blog",url:`${B}/blog`},{name:"Sostituzione Finestre Ristrutturazione",url:`${B}/blog/sostituzione-finestre-ristrutturazione-guida`}],
   },
-  "/blog/come-scegliere-le-finestre-guida-acquisto-2025": {
+  "/blog/come-scegliere-le-finestre-guida-acquisto": {
     title: "Come Scegliere le Finestre: Guida all'Acquisto 2026",
     description: "Guida completa per scegliere le finestre giuste nel 2026: materiali, vetri, aperture, colori e certificazioni. Evita gli errori più comuni.",
-    canonical: `${B}/blog/come-scegliere-le-finestre-guida-acquisto-2025`,
-    lang: "it", alternateIt: `${B}/blog/come-scegliere-le-finestre-guida-acquisto-2025`, alternateRo: `${B}/ro/blog/cum-alegi-ferestrele-ghid-cumparaturi-2025`,
-    breadcrumb: [{name:"Home",url:`${B}/`},{name:"Blog",url:`${B}/blog`},{name:"Come Scegliere le Finestre 2026",url:`${B}/blog/come-scegliere-le-finestre-guida-acquisto-2025`}],
+    canonical: `${B}/blog/come-scegliere-le-finestre-guida-acquisto`,
+    lang: "it", alternateIt: `${B}/blog/come-scegliere-le-finestre-guida-acquisto`, alternateRo: `${B}/ro/blog/cum-alegi-ferestrele-ghid-cumparaturi`,
+    breadcrumb: [{name:"Home",url:`${B}/`},{name:"Blog",url:`${B}/blog`},{name:"Come Scegliere le Finestre 2026",url:`${B}/blog/come-scegliere-le-finestre-guida-acquisto`}],
   },
   "/blog/bonus-infissi-2026-detrazioni-finestre-pvc": {
     title: "Bonus Infissi 2026: Detrazioni Finestre PVC e Serramenti",
@@ -706,19 +692,19 @@ const PAGES: Record<string, PageMeta> = {
     lang: "ro", alternateIt: `${B}/blog/tapparelle-coibentate-vs-tradizionali-differenze`, alternateRo: `${B}/ro/blog/jaluzele-termoizolante-vs-standard-diferente`,
     breadcrumb: [{name:"Acasă",url:`${B}/ro`},{name:"Blog",url:`${B}/ro/blog`},{name:"Jaluzele Termoizolante vs Standard",url:`${B}/ro/blog/jaluzele-termoizolante-vs-standard-diferente`}],
   },
-  "/ro/blog/ferestre-pvc-preturi-2025": {
+  "/ro/blog/ferestre-pvc-preturi": {
     title: "Ferestre PVC Prețuri 2026: Cât Costă și Cum Eviți să Plătești Prea Mult",
     description: "Prețuri reale ferestre PVC 2026: de la geam dublu la triplu. Ce influențează costul, cum compari ofertele și unde economisești fără compromisuri.",
-    canonical: `${B}/ro/blog/ferestre-pvc-preturi-2025`,
-    lang: "ro", alternateIt: `${B}/blog/finestre-pvc-prezzi-2025`, alternateRo: `${B}/ro/blog/ferestre-pvc-preturi-2025`,
-    breadcrumb: [{name:"Acasă",url:`${B}/ro`},{name:"Blog",url:`${B}/ro/blog`},{name:"Ferestre PVC Prețuri 2026",url:`${B}/ro/blog/ferestre-pvc-preturi-2025`}],
+    canonical: `${B}/ro/blog/ferestre-pvc-preturi`,
+    lang: "ro", alternateIt: `${B}/blog/finestre-pvc-prezzi`, alternateRo: `${B}/ro/blog/ferestre-pvc-preturi`,
+    breadcrumb: [{name:"Acasă",url:`${B}/ro`},{name:"Blog",url:`${B}/ro/blog`},{name:"Ferestre PVC Prețuri 2026",url:`${B}/ro/blog/ferestre-pvc-preturi`}],
   },
-  "/ro/blog/program-reabilitare-termica-finantare-ferestre-2025": {
+  "/ro/blog/program-reabilitare-termica-finantare-ferestre": {
     title: "Finanțare Ferestre PVC 2026: Programe și Fonduri Renovare Termică",
     description: "Ghid complet programe finanțare renovare termică România 2026: Casa Verde, fonduri europene, deduceri fiscale și cum obții subvenția.",
-    canonical: `${B}/ro/blog/program-reabilitare-termica-finantare-ferestre-2025`,
-    lang: "ro", alternateIt: `${B}/blog/bonus-finestre-2025-detrazione-fiscale`, alternateRo: `${B}/ro/blog/program-reabilitare-termica-finantare-ferestre-2025`,
-    breadcrumb: [{name:"Acasă",url:`${B}/ro`},{name:"Blog",url:`${B}/ro/blog`},{name:"Finanțare Ferestre 2026",url:`${B}/ro/blog/program-reabilitare-termica-finantare-ferestre-2025`}],
+    canonical: `${B}/ro/blog/program-reabilitare-termica-finantare-ferestre`,
+    lang: "ro", alternateIt: `${B}/blog/bonus-finestre-detrazione-fiscale`, alternateRo: `${B}/ro/blog/program-reabilitare-termica-finantare-ferestre`,
+    breadcrumb: [{name:"Acasă",url:`${B}/ro`},{name:"Blog",url:`${B}/ro/blog`},{name:"Finanțare Ferestre 2026",url:`${B}/ro/blog/program-reabilitare-termica-finantare-ferestre`}],
   },
   "/ro/blog/geam-dublu-vs-geam-triplu-care-alegi": {
     title: "Geam Dublu vs Geam Triplu: Care Alegi în 2026?",
@@ -734,12 +720,12 @@ const PAGES: Record<string, PageMeta> = {
     lang: "ro", alternateIt: `${B}/blog/sostituzione-finestre-ristrutturazione-guida`, alternateRo: `${B}/ro/blog/inlocuire-ferestre-renovare-casa-ghid-complet`,
     breadcrumb: [{name:"Acasă",url:`${B}/ro`},{name:"Blog",url:`${B}/ro/blog`},{name:"Înlocuire Ferestre Renovare",url:`${B}/ro/blog/inlocuire-ferestre-renovare-casa-ghid-complet`}],
   },
-  "/ro/blog/cum-alegi-ferestrele-ghid-cumparaturi-2025": {
+  "/ro/blog/cum-alegi-ferestrele-ghid-cumparaturi": {
     title: "Cum Alegi Ferestrele: Ghid Complet de Cumpărare 2026",
     description: "Ghid complet pentru alegerea ferestrelor în 2026: materiale, geamuri, tipuri de deschidere, culori și certificări. Evită greșelile frecvente.",
-    canonical: `${B}/ro/blog/cum-alegi-ferestrele-ghid-cumparaturi-2025`,
-    lang: "ro", alternateIt: `${B}/blog/come-scegliere-le-finestre-guida-acquisto-2025`, alternateRo: `${B}/ro/blog/cum-alegi-ferestrele-ghid-cumparaturi-2025`,
-    breadcrumb: [{name:"Acasă",url:`${B}/ro`},{name:"Blog",url:`${B}/ro/blog`},{name:"Cum Alegi Ferestrele 2026",url:`${B}/ro/blog/cum-alegi-ferestrele-ghid-cumparaturi-2025`}],
+    canonical: `${B}/ro/blog/cum-alegi-ferestrele-ghid-cumparaturi`,
+    lang: "ro", alternateIt: `${B}/blog/come-scegliere-le-finestre-guida-acquisto`, alternateRo: `${B}/ro/blog/cum-alegi-ferestrele-ghid-cumparaturi`,
+    breadcrumb: [{name:"Acasă",url:`${B}/ro`},{name:"Blog",url:`${B}/ro/blog`},{name:"Cum Alegi Ferestrele 2026",url:`${B}/ro/blog/cum-alegi-ferestrele-ghid-cumparaturi`}],
   },
   "/ro/blog/bonus-tamplarie-2026-deduceri-ferestre-pvc": {
     title: "Bonus Tâmplărie 2026: Deduceri Ferestre PVC România",
@@ -840,6 +826,31 @@ function buildArticleHtml(post: BlogPost): string {
   );
 }
 
+/** Pagine non-blog: snapshot di contenuto per crawler costruito dai meta già dichiarati. */
+function buildPageHtml(meta: PageMeta): string {
+  let html =
+    `<main style="max-width:760px;margin:0 auto;padding:24px;font-family:system-ui,-apple-system,sans-serif;line-height:1.65">` +
+    `<h1>${esc(meta.title)}</h1><p>${esc(meta.description)}</p>`;
+  const j = meta.jsonLd as Record<string, unknown> | null | undefined;
+  if (j && j["@type"] === "FAQPage" && Array.isArray(j.mainEntity)) {
+    for (const q of j.mainEntity as Array<{ name: string; acceptedAnswer?: { text?: string } }>) {
+      html += `<h2>${esc(q.name)}</h2><p>${esc(q.acceptedAnswer?.text || "")}</p>`;
+    }
+  }
+  if (j && j["@type"] === "Product" && typeof j.description === "string") {
+    html += `<p>${esc(j.description)}</p>`;
+  }
+  const links: Array<[string, string]> =
+    meta.lang === "ro"
+      ? [["/ro/produse", "Catalog produse"], ["/ro/avantaje", "Avantaje"], ["/ro/garantii", "Garanții"], ["/ro/blog", "Blog"], ["/ro/contact", "Contact"], ["/ro/devino-distribuitor", "Devino distribuitor"]]
+      : [["/prodotti-pubblico", "Catalogo prodotti"], ["/vantaggi", "Vantaggi"], ["/garanzie", "Garanzie"], ["/blog", "Blog"], ["/contatti", "Contatti"], ["/diventa-rivenditore", "Diventa rivenditore"]];
+  html +=
+    `<nav><ul>` +
+    links.map(([href, label]) => `<li><a href="${href}">${label}</a></li>`).join("") +
+    `</ul></nav></main>`;
+  return html;
+}
+
 function esc(str: string): string {
   return str
     .replace(/&/g, "&amp;")
@@ -888,7 +899,8 @@ export const onRequest = async (context: {
   const post = getBlogPost(pathname);
   const ogType = meta.ogType || (post ? "article" : "website");
   const ua = context.request.headers.get("user-agent") || "";
-  const botArticleHtml = post && BOT_UA.test(ua) ? buildArticleHtml(post) : "";
+  const isBot = BOT_UA.test(ua);
+  const botHtml = isBot ? (post ? buildArticleHtml(post) : buildPageHtml(meta)) : "";
 
   // Build extra <head> scripts to inject
   let extraHead = "";
@@ -999,12 +1011,12 @@ export const onRequest = async (context: {
           }
         },
       })
-      // Crawler senza JS: servi il contenuto articolo dentro #root
+      // Crawler senza JS: servi il contenuto pre-renderizzato dentro #root
       // (React lo sostituisce al mount per gli utenti reali)
       .on("div#root", {
         element(el) {
-          if (botArticleHtml) {
-            el.setInnerContent(botArticleHtml, { html: true });
+          if (botHtml) {
+            el.setInnerContent(botHtml, { html: true });
           }
         },
       })

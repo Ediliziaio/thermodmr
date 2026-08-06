@@ -1,5 +1,13 @@
 # www → apex redirect (301 permanente)
 https://www.thermodmr.com/* https://thermodmr.com/:splat 301
 
+# 301 slug evergreen — vecchi URL con anno
+/blog/finestre-pvc-prezzi-2025 /blog/finestre-pvc-prezzi 301
+/blog/bonus-finestre-2025-detrazione-fiscale /blog/bonus-finestre-detrazione-fiscale 301
+/blog/come-scegliere-le-finestre-guida-acquisto-2025 /blog/come-scegliere-le-finestre-guida-acquisto 301
+/ro/blog/ferestre-pvc-preturi-2025 /ro/blog/ferestre-pvc-preturi 301
+/ro/blog/program-reabilitare-termica-finantare-ferestre-2025 /ro/blog/program-reabilitare-termica-finantare-ferestre 301
+/ro/blog/cum-alegi-ferestrele-ghid-cumparaturi-2025 /ro/blog/cum-alegi-ferestrele-ghid-cumparaturi 301
+
 # SPA fallback — tutte le route vanno a index.html
 /* /index.html 200

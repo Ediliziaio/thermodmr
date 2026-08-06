@@ -166,7 +166,7 @@ const itPosts: BlogPost[] = [
   // ── NUOVI 5 ARTICOLI IT ──────────────────────────────────────────────────
 
   {
-    slug: "finestre-pvc-prezzi-2025",
+    slug: "finestre-pvc-prezzi",
     lang: "it",
     title: "Finestre PVC Prezzi 2026: Quanto Costano Davvero e Come Non Pagare Troppo",
     description: "Prezzi reali delle finestre in PVC nel 2026: dal doppio al triplo vetro. Cosa incide sul costo, come confrontare preventivi e risparmiare senza rinunciare alla qualità.",
@@ -246,7 +246,7 @@ const itPosts: BlogPost[] = [
   },
 
   {
-    slug: "bonus-finestre-2025-detrazione-fiscale",
+    slug: "bonus-finestre-detrazione-fiscale",
     lang: "it",
     title: "Bonus Finestre 2026: Detrazione 50% Irpef — Come Funziona e Come Ottenerla",
     description: "Guida completa al Bonus Finestre 2026: detrazione 50% Irpef per sostituzione serramenti. Requisiti, documenti, procedure e massimale di spesa aggiornati.",
@@ -495,7 +495,7 @@ const itPosts: BlogPost[] = [
   },
 
   {
-    slug: "come-scegliere-le-finestre-guida-acquisto-2025",
+    slug: "come-scegliere-le-finestre-guida-acquisto",
     lang: "it",
     title: "Come Scegliere le Finestre: Guida all'Acquisto 2026 Senza Errori",
     description: "Guida completa per scegliere le finestre giuste nel 2026: materiali, vetri, aperture, colori e certificazioni. Tutto quello che devi sapere prima di comprare.",
@@ -1673,7 +1673,7 @@ const roPosts: BlogPost[] = [
   // ── NOI 5 ARTICOLE RO ────────────────────────────────────────────────────
 
   {
-    slug: "ferestre-pvc-preturi-2025",
+    slug: "ferestre-pvc-preturi",
     lang: "ro",
     title: "Ferestre PVC Prețuri 2026: Cât Costă și Cum Eviți să Plătești Prea Mult",
     description: "Prețuri reale ferestre PVC 2026: de la geam dublu la triplu. Ce influențează costul, cum compari ofertele și cum economisești fără să sacrifici calitatea.",
@@ -1745,7 +1745,7 @@ const roPosts: BlogPost[] = [
   },
 
   {
-    slug: "program-reabilitare-termica-finantare-ferestre-2025",
+    slug: "program-reabilitare-termica-finantare-ferestre",
     lang: "ro",
     title: "Finanțare Ferestre PVC 2026: Programe și Fonduri pentru Renovare Termică",
     description: "Ghid complet programe finanțare renovare termică România 2026: Casa Verde, fonduri europene, deduceri fiscale. Condiții, documente și cum accesezi ajutoarele.",
@@ -1968,7 +1968,7 @@ const roPosts: BlogPost[] = [
   },
 
   {
-    slug: "cum-alegi-ferestrele-ghid-cumparaturi-2025",
+    slug: "cum-alegi-ferestrele-ghid-cumparaturi",
     lang: "ro",
     title: "Cum Alegi Ferestrele: Ghid Complet de Cumpărare 2026 Fără Greșeli",
     description: "Ghid complet pentru alegerea ferestrelor potrivite în 2026: materiale, geamuri, tipuri de deschidere, culori și certificări. Tot ce trebuie să știi înainte să cumperi.",
