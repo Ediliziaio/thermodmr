@@ -936,12 +936,16 @@ function faqPageSchema(items: ProductFaqItem[]) {
   };
 }
 
-/** Estrae le FAQ presenti negli articoli (formato <li><strong>Domanda?</strong> risposta</li>). */
+/** Estrae le FAQ presenti negli articoli (formato <li><strong>Domanda?</strong> risposta</li>).
+ *  Limitata alla sezione che inizia con <h2>FAQ/Domande/Întrebări per non includere
+ *  altre liste domanda-risposta sparse nell'articolo. */
 function extractBlogFaqs(post: BlogPost): ProductFaqItem[] {
   const items: ProductFaqItem[] = [];
+  const faqStart = post.content.search(/<h2>(FAQ|Domande frequenti|Întrebări frecvente)/);
+  const scope = faqStart >= 0 ? post.content.slice(faqStart) : post.content;
   const re = /<li><strong>([^<]+\?)<\/strong>\s*([\s\S]*?)<\/li>/g;
   let m: RegExpExecArray | null;
-  while ((m = re.exec(post.content))) {
+  while ((m = re.exec(scope))) {
     const a = m[2].replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
     if (a.length > 30) items.push({ q: m[1].trim(), a });
   }
