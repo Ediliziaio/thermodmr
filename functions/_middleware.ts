@@ -10,6 +10,7 @@
  */
 
 import { allBlogPosts, type BlogPost } from "../src/data/blogPosts";
+import { productFaqs, type ProductFaqItem } from "../src/data/productFaqs";
 
 const BASE_URL = "https://thermodmr.com";
 const DEFAULT_OG_IMAGE = `${BASE_URL}/og-image.jpg`;
@@ -70,6 +71,7 @@ const PAGES: Record<string, PageMeta> = {
       "name": "Catalogo Finestre e Serramenti PVC ThermoDMR",
       "description": "Finestre DMR Confort, Domus, Passive, portoncini, tapparelle coibentate, cassonetti e persiane in PVC.",
       "publisher": { "@id": `${B}/#organization` },
+      "mainEntity": {"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"name":"Finestra DMR Confort","url":"https://thermodmr.com/prodotti/dmr-confort"},{"@type":"ListItem","position":2,"name":"Finestra DMR Domus","url":"https://thermodmr.com/prodotti/dmr-domus"},{"@type":"ListItem","position":3,"name":"Finestra DMR Passive","url":"https://thermodmr.com/prodotti/dmr-passive"},{"@type":"ListItem","position":4,"name":"Portoncini Blindati PVC","url":"https://thermodmr.com/prodotti/portoncini"},{"@type":"ListItem","position":5,"name":"Tapparelle Coibentate","url":"https://thermodmr.com/prodotti/tapparelle"},{"@type":"ListItem","position":6,"name":"Cassonetti Coibentati","url":"https://thermodmr.com/prodotti/cassonetti"},{"@type":"ListItem","position":7,"name":"Persiane PVC e Alluminio","url":"https://thermodmr.com/prodotti/persiane"}]},
     },
   },
   "/prodotti/dmr-confort": {
@@ -96,7 +98,7 @@ const PAGES: Record<string, PageMeta> = {
       "url": `${B}/prodotti/dmr-confort`,
       "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80",
       "category": "Finestre PVC",
-      "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "Su richiesta", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
+      "offers": { "@type": "Offer", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
     },
   },
   "/prodotti/dmr-domus": {
@@ -123,7 +125,7 @@ const PAGES: Record<string, PageMeta> = {
       "url": `${B}/prodotti/dmr-domus`,
       "image": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80",
       "category": "Finestre PVC",
-      "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "Su richiesta", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
+      "offers": { "@type": "Offer", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
     },
   },
   "/prodotti/dmr-passive": {
@@ -150,7 +152,7 @@ const PAGES: Record<string, PageMeta> = {
       "url": `${B}/prodotti/dmr-passive`,
       "image": "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80",
       "category": "Finestre PVC Casa Passiva",
-      "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "Su richiesta", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
+      "offers": { "@type": "Offer", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
     },
   },
   "/prodotti/portoncini": {
@@ -177,7 +179,7 @@ const PAGES: Record<string, PageMeta> = {
       "url": `${B}/prodotti/portoncini`,
       "image": `${B}/images/thermodmr-portoncino-ingresso.avif`,
       "category": "Portoncini PVC",
-      "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "Su richiesta", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
+      "offers": { "@type": "Offer", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
     },
   },
   "/prodotti/tapparelle": {
@@ -204,7 +206,7 @@ const PAGES: Record<string, PageMeta> = {
       "url": `${B}/prodotti/tapparelle`,
       "image": `${B}/images/thermodmr-tapparella-coibentata.webp`,
       "category": "Tapparelle",
-      "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "Su richiesta", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
+      "offers": { "@type": "Offer", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
     },
   },
   "/prodotti/cassonetti": {
@@ -231,7 +233,7 @@ const PAGES: Record<string, PageMeta> = {
       "url": `${B}/prodotti/cassonetti`,
       "image": `${B}/images/thermodmr-cassonetto-installato.jpg`,
       "category": "Cassonetti",
-      "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "Su richiesta", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
+      "offers": { "@type": "Offer", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
     },
   },
   "/prodotti/persiane": {
@@ -258,7 +260,7 @@ const PAGES: Record<string, PageMeta> = {
       "url": `${B}/prodotti/persiane`,
       "image": `${B}/images/thermodmr-persiana-verde.webp`,
       "category": "Persiane",
-      "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "Su richiesta", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
+      "offers": { "@type": "Offer", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": `${B}/contatti`, "seller": { "@type": "Organization", "name": "ThermoDMR" } },
     },
   },
   "/blog": {
@@ -328,7 +330,15 @@ const PAGES: Record<string, PageMeta> = {
     lang: "ro",
     alternateIt: `${B}/prodotti-pubblico`,
     alternateRo: `${B}/ro/produse`,
-    jsonLd: null,
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "url": `${B}/ro/produse`,
+      "name": "Catalog Ferestre și Tâmplărie PVC ThermoDMR",
+      "inLanguage": "ro-RO",
+      "publisher": { "@id": `${B}/#organization` },
+      "mainEntity": {"@type":"ItemList","itemListElement":[{"@type":"ListItem","position":1,"name":"Fereastră DMR Confort","url":"https://thermodmr.com/ro/produse/dmr-confort"},{"@type":"ListItem","position":2,"name":"Fereastră DMR Domus","url":"https://thermodmr.com/ro/produse/dmr-domus"},{"@type":"ListItem","position":3,"name":"Fereastră DMR Passive","url":"https://thermodmr.com/ro/produse/dmr-passive"},{"@type":"ListItem","position":4,"name":"Uși Blindate PVC","url":"https://thermodmr.com/ro/produse/usi-intrare"},{"@type":"ListItem","position":5,"name":"Rulouri Termoizolante","url":"https://thermodmr.com/ro/produse/jaluzele"},{"@type":"ListItem","position":6,"name":"Casete Termoizolante","url":"https://thermodmr.com/ro/produse/casete-rulou"},{"@type":"ListItem","position":7,"name":"Obloane PVC și Aluminiu","url":"https://thermodmr.com/ro/produse/obloane"}]},
+    },
   },
   "/ro/produse/dmr-confort": {
     title: "DMR Confort — Fereastră PVC 5 Camere Tecnolegno — ThermoDMR",
@@ -353,7 +363,7 @@ const PAGES: Record<string, PageMeta> = {
       "manufacturer": { "@type": "Organization", "@id": `${B}/#organization`, "name": "MARYSORYNA SRL", "url": B },
       "url": `${B}/ro/produse/dmr-confort`,
       "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=80",
-      "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "La cerere", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
+      "offers": { "@type": "Offer", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
     },
   },
   "/ro/produse/dmr-domus": {
@@ -364,6 +374,11 @@ const PAGES: Record<string, PageMeta> = {
     alternateIt: `${B}/prodotti/dmr-domus`,
     alternateRo: `${B}/ro/produse/dmr-domus`,
     ogType: "product",
+    breadcrumb: [
+      { name: "Acasă", url: `${B}/ro` },
+      { name: "Produse", url: `${B}/ro/produse` },
+      { name: "DMR Domus", url: `${B}/ro/produse/dmr-domus` },
+    ],
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "Product",
@@ -372,7 +387,7 @@ const PAGES: Record<string, PageMeta> = {
       "brand": { "@type": "Brand", "name": "ThermoDMR" },
       "url": `${B}/ro/produse/dmr-domus`,
       "image": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80",
-      "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "La cerere", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
+      "offers": { "@type": "Offer", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
     },
   },
   "/ro/produse/dmr-passive": {
@@ -383,6 +398,11 @@ const PAGES: Record<string, PageMeta> = {
     alternateIt: `${B}/prodotti/dmr-passive`,
     alternateRo: `${B}/ro/produse/dmr-passive`,
     ogType: "product",
+    breadcrumb: [
+      { name: "Acasă", url: `${B}/ro` },
+      { name: "Produse", url: `${B}/ro/produse` },
+      { name: "DMR Passive", url: `${B}/ro/produse/dmr-passive` },
+    ],
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "Product",
@@ -391,7 +411,7 @@ const PAGES: Record<string, PageMeta> = {
       "brand": { "@type": "Brand", "name": "ThermoDMR" },
       "url": `${B}/ro/produse/dmr-passive`,
       "image": "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80",
-      "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "La cerere", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
+      "offers": { "@type": "Offer", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
     },
   },
   "/ro/produse/usi-intrare": {
@@ -402,6 +422,11 @@ const PAGES: Record<string, PageMeta> = {
     alternateIt: `${B}/prodotti/portoncini`,
     alternateRo: `${B}/ro/produse/usi-intrare`,
     ogType: "product",
+    breadcrumb: [
+      { name: "Acasă", url: `${B}/ro` },
+      { name: "Produse", url: `${B}/ro/produse` },
+      { name: "Uși Blindate", url: `${B}/ro/produse/usi-intrare` },
+    ],
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "Product",
@@ -410,7 +435,7 @@ const PAGES: Record<string, PageMeta> = {
       "brand": { "@type": "Brand", "name": "ThermoDMR" },
       "url": `${B}/ro/produse/usi-intrare`,
       "image": `${B}/images/thermodmr-portoncino-ingresso.avif`,
-      "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "La cerere", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
+      "offers": { "@type": "Offer", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
     },
   },
   "/ro/produse/jaluzele": {
@@ -421,6 +446,11 @@ const PAGES: Record<string, PageMeta> = {
     alternateIt: `${B}/prodotti/tapparelle`,
     alternateRo: `${B}/ro/produse/jaluzele`,
     ogType: "product",
+    breadcrumb: [
+      { name: "Acasă", url: `${B}/ro` },
+      { name: "Produse", url: `${B}/ro/produse` },
+      { name: "Rulouri Termoizolante", url: `${B}/ro/produse/jaluzele` },
+    ],
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "Product",
@@ -429,7 +459,7 @@ const PAGES: Record<string, PageMeta> = {
       "brand": { "@type": "Brand", "name": "ThermoDMR" },
       "url": `${B}/ro/produse/jaluzele`,
       "image": `${B}/images/thermodmr-tapparella-coibentata.webp`,
-      "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "La cerere", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
+      "offers": { "@type": "Offer", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
     },
   },
   "/ro/produse/casete-rulou": {
@@ -440,6 +470,11 @@ const PAGES: Record<string, PageMeta> = {
     alternateIt: `${B}/prodotti/cassonetti`,
     alternateRo: `${B}/ro/produse/casete-rulou`,
     ogType: "product",
+    breadcrumb: [
+      { name: "Acasă", url: `${B}/ro` },
+      { name: "Produse", url: `${B}/ro/produse` },
+      { name: "Casete Termoizolante", url: `${B}/ro/produse/casete-rulou` },
+    ],
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "Product",
@@ -448,7 +483,7 @@ const PAGES: Record<string, PageMeta> = {
       "brand": { "@type": "Brand", "name": "ThermoDMR" },
       "url": `${B}/ro/produse/casete-rulou`,
       "image": `${B}/images/thermodmr-cassonetto-installato.jpg`,
-      "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "La cerere", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
+      "offers": { "@type": "Offer", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
     },
   },
   "/ro/produse/obloane": {
@@ -459,6 +494,11 @@ const PAGES: Record<string, PageMeta> = {
     alternateIt: `${B}/prodotti/persiane`,
     alternateRo: `${B}/ro/produse/obloane`,
     ogType: "product",
+    breadcrumb: [
+      { name: "Acasă", url: `${B}/ro` },
+      { name: "Produse", url: `${B}/ro/produse` },
+      { name: "Jaluzele Exterioare", url: `${B}/ro/produse/obloane` },
+    ],
     jsonLd: {
       "@context": "https://schema.org",
       "@type": "Product",
@@ -467,7 +507,7 @@ const PAGES: Record<string, PageMeta> = {
       "brand": { "@type": "Brand", "name": "ThermoDMR" },
       "url": `${B}/ro/produse/obloane`,
       "image": `${B}/images/thermodmr-persiana-verde.webp`,
-      "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "La cerere", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
+      "offers": { "@type": "Offer", "priceCurrency": "EUR", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
     },
   },
   "/ro/blog": {
@@ -670,7 +710,22 @@ const PAGES: Record<string, PageMeta> = {
     breadcrumb: [{name:"Home",url:`${B}/`},{name:"Blog",url:`${B}/blog`},{name:"Triplo Vetro o Doppio 2026",url:`${B}/blog/triplo-vetro-o-doppio-vetro-guida-2026`}],
   },
 
+  "/blog/finestre-pvc-o-alluminio-quale-scegliere": {
+    title: "Finestre PVC o Alluminio: Quale Scegliere? Confronto 2026",
+    description: "PVC o alluminio per le finestre? Confronto completo su isolamento, prezzi, durata e manutenzione. La guida per scegliere senza errori nel 2026.",
+    canonical: `${B}/blog/finestre-pvc-o-alluminio-quale-scegliere`,
+    lang: "it", alternateIt: `${B}/blog/finestre-pvc-o-alluminio-quale-scegliere`, alternateRo: `${B}/ro/blog/ferestre-pvc-sau-aluminiu-care-alegi`,
+    breadcrumb: [{name:"Home",url:`${B}/`},{name:"Blog",url:`${B}/blog`},{name:"Finestre PVC o Alluminio",url:`${B}/blog/finestre-pvc-o-alluminio-quale-scegliere`}],
+  },
+
   // ─── Blog post RO ───────────────────────────────────────────────────────────
+  "/ro/blog/ferestre-pvc-sau-aluminiu-care-alegi": {
+    title: "Ferestre PVC sau Aluminiu: Ce Alegi? Comparație 2026",
+    description: "PVC sau aluminiu pentru ferestre? Comparație completă: izolare, prețuri, durabilitate și întreținere. Ghidul pentru alegerea corectă în 2026.",
+    canonical: `${B}/ro/blog/ferestre-pvc-sau-aluminiu-care-alegi`,
+    lang: "ro", alternateIt: `${B}/blog/finestre-pvc-o-alluminio-quale-scegliere`, alternateRo: `${B}/ro/blog/ferestre-pvc-sau-aluminiu-care-alegi`,
+    breadcrumb: [{name:"Acasă",url:`${B}/ro`},{name:"Blog",url:`${B}/ro/blog`},{name:"Ferestre PVC sau Aluminiu",url:`${B}/ro/blog/ferestre-pvc-sau-aluminiu-care-alegi`}],
+  },
   "/ro/blog/ferestre-pvc-profil-german-ghid-complet": {
     title: "Ferestre PVC cu Profil German: Ghid Complet 2026",
     description: "Ce sunt ferestrele PVC cu profil german? Avantaje, camere, certificări și de ce costă mai puțin decât crezi. Ghid actualizat 2026.",
@@ -826,8 +881,32 @@ function buildArticleHtml(post: BlogPost): string {
   );
 }
 
+function faqPageSchema(items: ProductFaqItem[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": items.map((f) => ({
+      "@type": "Question",
+      "name": f.q,
+      "acceptedAnswer": { "@type": "Answer", "text": f.a },
+    })),
+  };
+}
+
+/** Estrae le FAQ presenti negli articoli (formato <li><strong>Domanda?</strong> risposta</li>). */
+function extractBlogFaqs(post: BlogPost): ProductFaqItem[] {
+  const items: ProductFaqItem[] = [];
+  const re = /<li><strong>([^<]+\?)<\/strong>\s*([\s\S]*?)<\/li>/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(post.content))) {
+    const a = m[2].replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+    if (a.length > 30) items.push({ q: m[1].trim(), a });
+  }
+  return items.length >= 2 ? items : [];
+}
+
 /** Pagine non-blog: snapshot di contenuto per crawler costruito dai meta già dichiarati. */
-function buildPageHtml(meta: PageMeta): string {
+function buildPageHtml(meta: PageMeta, faqs: ProductFaqItem[] = []): string {
   let html =
     `<main style="max-width:760px;margin:0 auto;padding:24px;font-family:system-ui,-apple-system,sans-serif;line-height:1.65">` +
     `<h1>${esc(meta.title)}</h1><p>${esc(meta.description)}</p>`;
@@ -839,6 +918,9 @@ function buildPageHtml(meta: PageMeta): string {
   }
   if (j && j["@type"] === "Product" && typeof j.description === "string") {
     html += `<p>${esc(j.description)}</p>`;
+  }
+  for (const f of faqs) {
+    html += `<h2>${esc(f.q)}</h2><p>${esc(f.a)}</p>`;
   }
   const links: Array<[string, string]> =
     meta.lang === "ro"
@@ -900,7 +982,8 @@ export const onRequest = async (context: {
   const ogType = meta.ogType || (post ? "article" : "website");
   const ua = context.request.headers.get("user-agent") || "";
   const isBot = BOT_UA.test(ua);
-  const botHtml = isBot ? (post ? buildArticleHtml(post) : buildPageHtml(meta)) : "";
+  const pageFaqs = productFaqs[pathname] ?? [];
+  const botHtml = isBot ? (post ? buildArticleHtml(post) : buildPageHtml(meta, pageFaqs)) : "";
 
   // Build extra <head> scripts to inject
   let extraHead = "";
@@ -912,6 +995,17 @@ export const onRequest = async (context: {
   }
   if (post) {
     extraHead += `\n<script type="application/ld+json">${JSON.stringify(buildBlogPostingSchema(post, meta.canonical))}</script>`;
+    const blogFaqs = extractBlogFaqs(post);
+    if (blogFaqs.length) {
+      extraHead += `\n<script type="application/ld+json">${JSON.stringify(faqPageSchema(blogFaqs))}</script>`;
+    }
+  }
+  if (pageFaqs.length) {
+    extraHead += `\n<script type="application/ld+json">${JSON.stringify(faqPageSchema(pageFaqs))}</script>`;
+  }
+  // Preload dell'immagine LCP solo sulla home (evita spreco di banda altrove)
+  if (pathname === "/" || pathname === "/ro") {
+    extraHead += `\n<link rel="preload" as="image" href="/images/hero-bg.webp" fetchpriority="high">`;
   }
 
   return (

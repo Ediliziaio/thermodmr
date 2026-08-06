@@ -1521,6 +1521,73 @@ const itPosts: BlogPost[] = [
 <p>Non esiste una risposta universale valida per tutti, ma esiste la risposta giusta per la vostra situazione specifica. Il team tecnico di ThermoDMR è a vostra disposizione per una consulenza personalizzata gratuita, che considera zona climatica, esposizione dell'edificio, obiettivi energetici e budget. Visitate il nostro <a href="/prodotti-pubblico">catalogo prodotti</a>, scoprite la gamma completa che include anche <a href="/prodotti/cassonetti">cassonetti coibentati</a>, <a href="/prodotti/tapparelle">tapparelle coibentate</a>, <a href="/prodotti/persiane">persiane</a> e <a href="/prodotti/portoncini">portoncini</a>, e compilate il <a href="/contatti">modulo di contatto</a> per ricevere la vostra proposta personalizzata entro 24 ore.</p>
     `.trim(),
   },
+
+  {
+    slug: "finestre-pvc-o-alluminio-quale-scegliere",
+    lang: "it",
+    title: "Finestre PVC o Alluminio: Quale Scegliere? Confronto 2026",
+    description: "PVC o alluminio per le finestre? Confronto completo su isolamento, prezzi, durata e manutenzione. La guida per scegliere senza errori nel 2026.",
+    date: "2026-08-06",
+    category: "Guide",
+    readingTime: 9,
+    content: `
+<h2>PVC o alluminio: la domanda giusta da farsi</h2>
+<p>Chi deve sostituire i serramenti si trova quasi sempre davanti allo stesso bivio: <strong>finestre in PVC o in alluminio?</strong> Non esiste una risposta unica valida per tutti — esiste la risposta giusta per il tuo edificio, il tuo clima e il tuo budget. In questa guida confrontiamo i due materiali su tutti i parametri che contano davvero: isolamento termico, prezzo, durata, manutenzione, estetica e sicurezza.</p>
+
+<h2>Isolamento termico: il PVC parte in vantaggio</h2>
+<p>Il PVC è un materiale naturalmente isolante, mentre l'alluminio è un conduttore: senza accorgimenti tecnici, un telaio in alluminio disperde calore molto più velocemente. Per questo l'alluminio moderno usa il <strong>taglio termico</strong>, una barriera di poliammide inserita nel profilo che interrompe il passaggio del calore.</p>
+<ul>
+  <li><strong>PVC 5 camere</strong> — Uf da 0,95 a 1,3 W/m²K senza necessità di taglio termico</li>
+  <li><strong>Alluminio a taglio termico</strong> — Uf da 1,3 a 2,0 W/m²K, nei sistemi migliori 1,1</li>
+  <li><strong>Alluminio freddo (senza taglio)</strong> — Uf oltre 4,0 W/m²K: da evitare in climi italiani</li>
+</ul>
+<p>A parità di vetro, una finestra in PVC come la <a href="/prodotti/dmr-confort">DMR Confort</a> (Uf = 0,95 W/m²K) isola quindi meglio di gran parte dei sistemi in alluminio di pari fascia di prezzo. Per raggiungere valori da casa passiva, il PVC arriva a Uw ≤ 0,8 W/m²K con la <a href="/prodotti/dmr-passive">DMR Passive</a> a triplo vetro.</p>
+
+<h2>Prezzo: la differenza reale nel 2026</h2>
+<p>A parità di dimensioni e vetro, una finestra in alluminio a taglio termico costa mediamente il <strong>30-50% in più</strong> di una equivalente in PVC. Su un appartamento con 8 finestre la differenza complessiva supera facilmente i 3.000-5.000 euro. Il PVC con profilo tedesco offre oggi il miglior rapporto tra prestazioni energetiche e investimento, ed è il motivo per cui rappresenta oltre il 60% del mercato residenziale europeo dei serramenti.</p>
+
+<h2>Durata e manutenzione: pareggio, con sfumature</h2>
+<p>Entrambi i materiali durano decenni: un buon PVC con profilo tedesco supera i 40 anni di vita utile, l'alluminio verniciato a polvere arriva a 50. Nessuno dei due richiede verniciatura periodica — basta pulizia con acqua e detergente neutro. Le differenze pratiche:</p>
+<ul>
+  <li>L'alluminio resiste meglio a urti e graffi: indicato per grandi vetrate e uso intensivo</li>
+  <li>Il PVC di qualità con stabilizzanti moderni non ingiallisce e resiste ai raggi UV</li>
+  <li>In zone costiere con salsedine l'alluminio richiede cicli di verniciatura marina certificati; il PVC è immune alla corrosione</li>
+</ul>
+
+<h2>Estetica e dimensioni: dove l'alluminio vince</h2>
+<p>L'alluminio permette profili più sottili e ante di dimensioni maggiori: per vetrate scorrevoli oltre i 2,5 metri di altezza o facciate minimali è la scelta tecnica obbligata. Il PVC moderno però ha colmato gran parte del divario estetico: i profili <strong>Tecnolegno effetto legno</strong> e le pellicole nei colori RAL permettono di ottenere l'aspetto desiderato nella maggior parte dei progetti residenziali.</p>
+
+<h2>Sicurezza e rumore</h2>
+<p>Sulla sicurezza anti-effrazione contano più la ferramenta (nottolini a fungo, incontri in acciaio) e il vetro stratificato che il materiale del telaio: entrambi i materiali raggiungono le classi RC2 e RC3. Sull'acustica, il PVC multicamera parte avvantaggiato: la struttura a camere d'aria smorza le vibrazioni sonore meglio del metallo, con Rw fino a 44 dB nelle configurazioni asimmetriche.</p>
+
+<h2>Tabella riepilogativa: PVC vs alluminio</h2>
+<table>
+  <thead><tr><th>Parametro</th><th>PVC profilo tedesco</th><th>Alluminio taglio termico</th></tr></thead>
+  <tbody>
+    <tr><td>Isolamento termico</td><td>Ottimo (Uf 0,95-1,3)</td><td>Buono (Uf 1,1-2,0)</td></tr>
+    <tr><td>Prezzo</td><td>Base di confronto</td><td>+30-50%</td></tr>
+    <tr><td>Durata</td><td>40+ anni</td><td>50 anni</td></tr>
+    <tr><td>Manutenzione</td><td>Minima</td><td>Minima</td></tr>
+    <tr><td>Grandi dimensioni</td><td>Fino a ~2,4 m</td><td>Oltre 2,5 m</td></tr>
+    <tr><td>Isolamento acustico</td><td>Ottimo</td><td>Buono</td></tr>
+    <tr><td>Detrazione fiscale 50%</td><td>Sì (se in regola con Uw)</td><td>Sì (se in regola con Uw)</td></tr>
+  </tbody>
+</table>
+
+<h2>FAQ: le domande più frequenti su PVC e alluminio</h2>
+<ol>
+  <li><strong>Le finestre in PVC sembrano di plastica economica?</strong> No, i profili moderni con finitura Tecnolegno effetto legno o colori RAL opachi sono esteticamente paragonabili all'alluminio verniciato. La percezione di "plastica" riguarda i profili economici di vecchia generazione, non il PVC con profilo tedesco.</li>
+  <li><strong>Il PVC si deforma con il caldo?</strong> I profili di qualità con rinforzi in acciaio e stabilizzanti UV mantengono la stabilità dimensionale fino a temperature superficiali di 70°C. Nei climi italiani il PVC certificato non presenta deformazioni; per facciate esposte a sud in colori molto scuri si valuta caso per caso.</li>
+  <li><strong>Per una casa al mare meglio PVC o alluminio?</strong> Il PVC è immune alla corrosione salina ed è la scelta più tranquilla in zone costiere. L'alluminio richiede verniciatura certificata per ambienti marini, con costi aggiuntivi.</li>
+  <li><strong>Quale materiale rende di più con la detrazione fiscale?</strong> Entrambi accedono alla detrazione del 50% se rispettano i requisiti di trasmittanza. A parità di beneficio fiscale, il PVC massimizza il ritorno perché parte da un investimento inferiore con prestazioni termiche superiori.</li>
+  <li><strong>Esistono soluzioni miste PVC-alluminio?</strong> Sì, i serramenti in PVC con guscio esterno in alluminio uniscono l'isolamento del PVC alla resistenza esterna dell'alluminio, con un prezzo intermedio. Sono indicati per condomini con capitolati estetici rigidi.</li>
+</ol>
+
+<h2>Conclusione: come scegliere per la tua casa</h2>
+<p>Per la maggior parte delle abitazioni italiane — appartamenti, villette, ristrutturazioni con accesso al bonus — il <strong>PVC con profilo tedesco è la scelta razionale</strong>: isola di più, costa meno e dura decenni senza manutenzione. L'alluminio resta la scelta giusta per grandi vetrate architettoniche e progetti dal design minimale spinto.</p>
+<p>ThermoDMR produce direttamente finestre in PVC con profilo tedesco in Classe A, con <a href="/garanzie">garanzia 15 anni</a> e consegna in 2-6 settimane. <a href="/contatti">Richiedi un preventivo gratuito</a>: ricevi entro 24 ore un confronto tecnico ed economico personalizzato sulle misure delle tue finestre.</p>
+    `.trim(),
+  },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -3236,6 +3303,71 @@ Tehnic, da. Din punct de vedere estetic, recomandăm același tip de profil pent
 <h2>Impactul pe termen lung: de ce contează alegerea corectă din prima</h2>
 <p>Ferestrele nu se schimbă la fiecare 5 ani ca un telefon mobil. O fereastră de calitate durează 25-35 de ani. Alegerea greșită din start — un geam triplu pe o casă din zona I fără justificare termică, sau un geam dublu ieftin fără Low-E și argon — se plătește timp de decenii, fie prin costuri energetice mai mari, fie prin confort termic inferior. De aceea, consultanța tehnică înaintea deciziei de cumpărare nu este un lux — este investiție în certitudinea alegerii corecte.</p>
 <p>ThermoDMR pune la dispoziție această consultanță gratuit, fără obligații. Fie că ești în faza de documentare sau gata să comanzi, echipa noastră tehnică te ajută să iei decizia optimă pentru situația ta specifică — zonă climatică, tip clădire, orientare ferestre, buget disponibil și obiective energetice pe termen lung.</p>
+    `.trim(),
+  },
+
+  {
+    slug: "ferestre-pvc-sau-aluminiu-care-alegi",
+    lang: "ro",
+    title: "Ferestre PVC sau Aluminiu: Ce Alegi? Comparație 2026",
+    description: "PVC sau aluminiu pentru ferestre? Comparație completă: izolare, prețuri, durabilitate și întreținere. Ghidul pentru alegerea corectă în 2026.",
+    date: "2026-08-06",
+    category: "Ghiduri",
+    readingTime: 9,
+    content: `
+<h2>PVC sau aluminiu: întrebarea corectă</h2>
+<p>Cine trebuie să înlocuiască tâmplăria ajunge aproape întotdeauna la aceeași răscruce: <strong>ferestre din PVC sau din aluminiu?</strong> Nu există un răspuns universal — există răspunsul potrivit pentru clădirea ta, clima ta și bugetul tău. În acest ghid comparăm cele două materiale pe toți parametrii care contează: izolare termică, preț, durabilitate, întreținere, estetică și siguranță.</p>
+
+<h2>Izolare termică: PVC-ul pornește în avantaj</h2>
+<p>PVC-ul este un material izolant prin natura sa, în timp ce aluminiul este un conductor: fără soluții tehnice, o ramă din aluminiu pierde căldura mult mai repede. De aceea aluminiul modern folosește <strong>bariera termică</strong> — un profil de poliamidă care întrerupe transferul de căldură.</p>
+<ul>
+  <li><strong>PVC 5 camere</strong> — Uf între 0,95 și 1,3 W/m²K, fără barieră termică suplimentară</li>
+  <li><strong>Aluminiu cu barieră termică</strong> — Uf între 1,3 și 2,0 W/m²K, la sistemele premium 1,1</li>
+  <li><strong>Aluminiu rece (fără barieră)</strong> — Uf peste 4,0 W/m²K: de evitat</li>
+</ul>
+<p>La geam egal, o fereastră din PVC precum <a href="/ro/produse/dmr-confort">DMR Confort</a> (Uf = 0,95 W/m²K) izolează mai bine decât majoritatea sistemelor din aluminiu din aceeași categorie de preț. Pentru valori de casă pasivă, PVC-ul atinge Uw ≤ 0,8 W/m²K cu <a href="/ro/produse/dmr-passive">DMR Passive</a> cu geam triplu.</p>
+
+<h2>Preț: diferența reală în 2026</h2>
+<p>La dimensiuni și geam egale, o fereastră din aluminiu cu barieră termică costă în medie cu <strong>30-50% mai mult</strong> decât una echivalentă din PVC. La un apartament cu 8 ferestre, diferența totală depășește ușor 3.000-5.000 de euro. PVC-ul cu profil german oferă astăzi cel mai bun raport între performanța energetică și investiție — motivul pentru care reprezintă peste 60% din piața rezidențială europeană de tâmplărie.</p>
+
+<h2>Durabilitate și întreținere: egalitate, cu nuanțe</h2>
+<p>Ambele materiale durează decenii: un PVC bun cu profil german depășește 40 de ani de viață utilă, aluminiul vopsit în câmp electrostatic ajunge la 50. Niciunul nu necesită revopsire periodică — doar curățare cu apă și detergent neutru. Diferențele practice:</p>
+<ul>
+  <li>Aluminiul rezistă mai bine la lovituri și zgârieturi: indicat pentru vitraje mari și utilizare intensivă</li>
+  <li>PVC-ul de calitate cu stabilizatori moderni nu se îngălbenește și rezistă la UV</li>
+  <li>În zone de coastă cu salinitate, aluminiul necesită vopsire certificată marină; PVC-ul este imun la coroziune</li>
+</ul>
+
+<h2>Estetică și dimensiuni: unde câștigă aluminiul</h2>
+<p>Aluminiul permite profile mai subțiri și canaturi de dimensiuni mai mari: pentru glisante de peste 2,5 metri înălțime sau fațade minimaliste este alegerea tehnică obligatorie. PVC-ul modern a recuperat însă mare parte din diferența estetică: profilele <strong>Tecnolegno cu efect de lemn</strong> și foliile în culori RAL acoperă majoritatea proiectelor rezidențiale.</p>
+
+<h2>Siguranță și zgomot</h2>
+<p>La protecția anti-efracție contează mai mult feroneria (ciuperci de blocare, plăcuțe de închidere din oțel) și geamul laminat decât materialul ramei: ambele materiale ating clasele RC2 și RC3. La acustică, PVC-ul multicameral pornește avantajat: structura cu camere de aer amortizează vibrațiile sonore mai bine decât metalul, cu Rw până la 44 dB în configurații asimetrice.</p>
+
+<h2>Tabel comparativ: PVC vs aluminiu</h2>
+<table>
+  <thead><tr><th>Parametru</th><th>PVC profil german</th><th>Aluminiu cu barieră termică</th></tr></thead>
+  <tbody>
+    <tr><td>Izolare termică</td><td>Excelentă (Uf 0,95-1,3)</td><td>Bună (Uf 1,1-2,0)</td></tr>
+    <tr><td>Preț</td><td>Referință</td><td>+30-50%</td></tr>
+    <tr><td>Durabilitate</td><td>40+ ani</td><td>50 ani</td></tr>
+    <tr><td>Întreținere</td><td>Minimă</td><td>Minimă</td></tr>
+    <tr><td>Dimensiuni mari</td><td>Până la ~2,4 m</td><td>Peste 2,5 m</td></tr>
+    <tr><td>Izolare acustică</td><td>Excelentă</td><td>Bună</td></tr>
+  </tbody>
+</table>
+
+<h2>FAQ: întrebări frecvente despre PVC și aluminiu</h2>
+<ol>
+  <li><strong>Ferestrele din PVC arată ca plasticul ieftin?</strong> Nu, profilele moderne cu finisaj Tecnolegno efect lemn sau culori RAL mate sunt comparabile estetic cu aluminiul vopsit. Percepția de "plastic" ține de profilele economice de generație veche, nu de PVC-ul cu profil german.</li>
+  <li><strong>PVC-ul se deformează la căldură?</strong> Profilele de calitate cu armătură de oțel și stabilizatori UV își păstrează stabilitatea dimensională până la temperaturi de suprafață de 70°C. În climatul din România, PVC-ul certificat nu se deformează; pentru fațade sudice în culori foarte închise se evaluează de la caz la caz.</li>
+  <li><strong>Pentru o casă la mare, PVC sau aluminiu?</strong> PVC-ul este imun la coroziunea salină și este alegerea sigură în zonele de coastă. Aluminiul necesită vopsire certificată pentru mediu marin, cu costuri suplimentare.</li>
+  <li><strong>Există soluții mixte PVC-aluminiu?</strong> Da, tâmplăria din PVC cu capac exterior din aluminiu combină izolarea PVC-ului cu rezistența exterioară a aluminiului, la un preț intermediar. Este indicată pentru clădiri cu cerințe estetice stricte.</li>
+</ol>
+
+<h2>Concluzie: cum alegi pentru casa ta</h2>
+<p>Pentru majoritatea locuințelor — apartamente, case, renovări cu acces la programe de finanțare — <strong>PVC-ul cu profil german este alegerea rațională</strong>: izolează mai bine, costă mai puțin și durează decenii fără întreținere. Aluminiul rămâne alegerea corectă pentru vitraje arhitecturale mari și proiecte minimaliste.</p>
+<p>ThermoDMR produce direct ferestre din PVC cu profil german clasa A, cu <a href="/ro/garantii">garanție 15 ani</a> și livrare în 2-6 săptămâni. <a href="/ro/contact">Solicită o ofertă gratuită</a>: primești în 24 de ore o comparație tehnică și economică personalizată pe dimensiunile ferestrelor tale.</p>
     `.trim(),
   },
 ];

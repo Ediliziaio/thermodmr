@@ -83,7 +83,7 @@ const Hero = () => {
     <section className="relative min-h-screen flex items-center overflow-hidden">
       <div
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/images/hero-bg.jpg')" }}
+        style={{ backgroundImage: "url('/images/hero-bg.webp')" }}
       />
       <div className="absolute inset-0 bg-[hsl(0,0%,10%)]/60" />
       <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[hsl(0,0%,10%)]/80 to-transparent" />
@@ -809,7 +809,7 @@ const Home = () => {
         ? "ferestre PVC, profil german, producție directă, izolare clasa A, garanție 15 ani, ThermoDMR"
         : "finestre PVC, profilo tedesco, produzione diretta, isolamento classe A, garanzia 15 anni, serramenti, ThermoDMR"
       }
-      ogImage="https://thermodmr.com/images/hero-bg.jpg"
+      ogImage="https://thermodmr.com/og-image.jpg"
     />
     <PublicNavbar />
     <Hero />

@@ -13,6 +13,7 @@ import SeoHead from "@/components/SeoHead";
 import ProductHero from "@/components/products/ProductHero";
 import ProductGallery from "@/components/products/ProductGallery";
 import RelatedProducts from "@/components/products/RelatedProducts";
+import ProductFaq from "@/components/products/ProductFaq";
 
 const galleryImages = [
   { src: imgPortoncinoModerno, alt: "Portoncino blindato PVC ThermoDMR moderno con pannello decorativo premium - sicurezza classe 3", caption: "Portoncino d'ingresso con pannello decorativo premium" },
@@ -55,7 +56,6 @@ const Portoncini = () => {
           "offers": {
             "@type": "Offer",
             "priceCurrency": "EUR",
-            "priceRange": "Su richiesta",
             "availability": "https://schema.org/InStock",
             "url": isRo ? "https://thermodmr.com/ro/contact" : "https://thermodmr.com/contatti",
             "seller": { "@type": "Organization", "name": "ThermoDMR" }
@@ -141,6 +141,7 @@ const Portoncini = () => {
         </div>
       </section>
 
+      <ProductFaq />
       <RelatedProducts currentSlug="/prodotti/portoncini" />
 
       <section className="py-16 sm:py-20 bg-[hsl(195,85%,45%)]">

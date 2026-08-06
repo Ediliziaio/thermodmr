@@ -25,6 +25,7 @@ import ProductHero from "@/components/products/ProductHero";
 import ProductGallery from "@/components/products/ProductGallery";
 import ProductComparison from "@/components/products/ProductComparison";
 import RelatedProducts from "@/components/products/RelatedProducts";
+import ProductFaq from "@/components/products/ProductFaq";
 import dmrConfortProfile from "@/assets/dmr-confort-profile.webp";
 
 const galleryImages = [
@@ -84,7 +85,6 @@ const DmrConfort = () => {
           "offers": {
             "@type": "Offer",
             "priceCurrency": "EUR",
-            "priceRange": "Su richiesta",
             "availability": "https://schema.org/InStock",
             "url": isRo ? "https://thermodmr.com/ro/contact" : "https://thermodmr.com/contatti",
             "seller": { "@type": "Organization", "name": "ThermoDMR" }
@@ -246,6 +246,7 @@ const DmrConfort = () => {
 
       <ProductComparison currentSlug="/prodotti/dmr-confort" />
 
+      <ProductFaq />
       <RelatedProducts currentSlug="/prodotti/dmr-confort" />
 
       {/* CTA */}

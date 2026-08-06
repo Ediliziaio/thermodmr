@@ -25,6 +25,7 @@ import ProductHero from "@/components/products/ProductHero";
 import ProductGallery from "@/components/products/ProductGallery";
 import ProductComparison from "@/components/products/ProductComparison";
 import RelatedProducts from "@/components/products/RelatedProducts";
+import ProductFaq from "@/components/products/ProductFaq";
 
 const galleryImages = [
   { src: "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80", alt: "Finestra PVC DMR Passive per casa passiva - architettura contemporanea con profilo tedesco", caption: "Integrazione perfetta in architetture moderne" },
@@ -83,7 +84,6 @@ const DmrPassive = () => {
           "offers": {
             "@type": "Offer",
             "priceCurrency": "EUR",
-            "priceRange": "Su richiesta",
             "availability": "https://schema.org/InStock",
             "url": isRo ? "https://thermodmr.com/ro/contact" : "https://thermodmr.com/contatti",
             "seller": { "@type": "Organization", "name": "ThermoDMR" }
@@ -239,6 +239,7 @@ const DmrPassive = () => {
 
       <ProductComparison currentSlug="/prodotti/dmr-passive" />
 
+      <ProductFaq />
       <RelatedProducts currentSlug="/prodotti/dmr-passive" />
 
       <section className="py-16 sm:py-20 bg-[hsl(195,85%,45%)]">

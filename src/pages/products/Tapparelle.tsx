@@ -11,6 +11,7 @@ import SeoHead from "@/components/SeoHead";
 import ProductHero from "@/components/products/ProductHero";
 import ProductGallery from "@/components/products/ProductGallery";
 import RelatedProducts from "@/components/products/RelatedProducts";
+import ProductFaq from "@/components/products/ProductFaq";
 
 const galleryImages = [
   { src: imgTapparella, alt: "Tapparella coibentata in alluminio ThermoDMR - risparmio energetico fino al 30% e oscuramento totale", caption: "Tapparella in alluminio coibentato ad alta resistenza" },
@@ -53,7 +54,6 @@ const Tapparelle = () => {
           "offers": {
             "@type": "Offer",
             "priceCurrency": "EUR",
-            "priceRange": "Su richiesta",
             "availability": "https://schema.org/InStock",
             "url": isRo ? "https://thermodmr.com/ro/contact" : "https://thermodmr.com/contatti",
             "seller": { "@type": "Organization", "name": "ThermoDMR" }
@@ -139,6 +139,7 @@ const Tapparelle = () => {
         </div>
       </section>
 
+      <ProductFaq />
       <RelatedProducts currentSlug="/prodotti/tapparelle" />
 
       <section className="py-16 sm:py-20 bg-[hsl(195,85%,45%)]">
