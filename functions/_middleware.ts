@@ -9,6 +9,8 @@
  * makes every URL return the correct meta in the initial HTML.
  */
 
+import { allBlogPosts, type BlogPost } from "../src/data/blogPosts";
+
 const BASE_URL = "https://thermodmr.com";
 const DEFAULT_OG_IMAGE = `${BASE_URL}/images/hero-bg.jpg`;
 
@@ -160,7 +162,7 @@ const PAGES: Record<string, PageMeta> = {
     canonical: `${B}/prodotti/portoncini`,
     lang: "it",
     alternateIt: `${B}/prodotti/portoncini`,
-    alternateRo: `${B}/ro/produse/portoncini`,
+    alternateRo: `${B}/ro/produse/usi-intrare`,
     ogType: "product",
     ogImage: `${B}/images/thermodmr-portoncino-ingresso.avif`,
     breadcrumb: [
@@ -188,7 +190,7 @@ const PAGES: Record<string, PageMeta> = {
     canonical: `${B}/prodotti/tapparelle`,
     lang: "it",
     alternateIt: `${B}/prodotti/tapparelle`,
-    alternateRo: `${B}/ro/produse/tapparelle`,
+    alternateRo: `${B}/ro/produse/jaluzele`,
     ogType: "product",
     ogImage: `${B}/images/thermodmr-tapparella-coibentata.webp`,
     breadcrumb: [
@@ -216,7 +218,7 @@ const PAGES: Record<string, PageMeta> = {
     canonical: `${B}/prodotti/cassonetti`,
     lang: "it",
     alternateIt: `${B}/prodotti/cassonetti`,
-    alternateRo: `${B}/ro/produse/cassonetti`,
+    alternateRo: `${B}/ro/produse/casete-rulou`,
     ogType: "product",
     ogImage: `${B}/images/thermodmr-cassonetto-installato.jpg`,
     breadcrumb: [
@@ -244,7 +246,7 @@ const PAGES: Record<string, PageMeta> = {
     canonical: `${B}/prodotti/persiane`,
     lang: "it",
     alternateIt: `${B}/prodotti/persiane`,
-    alternateRo: `${B}/ro/produse/persiane`,
+    alternateRo: `${B}/ro/produse/obloane`,
     ogType: "product",
     ogImage: `${B}/images/thermodmr-persiana-verde.webp`,
     breadcrumb: [
@@ -402,13 +404,13 @@ const PAGES: Record<string, PageMeta> = {
       "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "bestRating": "5", "reviewCount": "28" },
     },
   },
-  "/ro/produse/portoncini": {
+  "/ro/produse/usi-intrare": {
     title: "Uși Blindate PVC — Securitate și Izolare — ThermoDMR",
     description: "Uși blindate PVC ThermoDMR: securitate maximă, izolare termoacustică superioară. Certificate, garanție 15 ani. Ofertă gratuită.",
-    canonical: `${B}/ro/produse/portoncini`,
+    canonical: `${B}/ro/produse/usi-intrare`,
     lang: "ro",
     alternateIt: `${B}/prodotti/portoncini`,
-    alternateRo: `${B}/ro/produse/portoncini`,
+    alternateRo: `${B}/ro/produse/usi-intrare`,
     ogType: "product",
     jsonLd: {
       "@context": "https://schema.org",
@@ -416,19 +418,19 @@ const PAGES: Record<string, PageMeta> = {
       "name": "Uși Blindate PVC ThermoDMR",
       "description": "Uși blindate în PVC cu securitate maximă și izolare termoacustică superioară. Garanție 15 ani.",
       "brand": { "@type": "Brand", "name": "ThermoDMR" },
-      "url": `${B}/ro/produse/portoncini`,
+      "url": `${B}/ro/produse/usi-intrare`,
       "image": `${B}/images/thermodmr-portoncino-ingresso.avif`,
       "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "La cerere", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
       "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "bestRating": "5", "reviewCount": "31" },
     },
   },
-  "/ro/produse/tapparelle": {
+  "/ro/produse/jaluzele": {
     title: "Rulouri Termoizolante PVC Aluminiu — ThermoDMR",
     description: "Rulouri termoizolante ThermoDMR: economie de energie până la 30%, izolare termoacustică. Aluminiu și PVC, garanție 15 ani. Ofertă gratuită.",
-    canonical: `${B}/ro/produse/tapparelle`,
+    canonical: `${B}/ro/produse/jaluzele`,
     lang: "ro",
     alternateIt: `${B}/prodotti/tapparelle`,
-    alternateRo: `${B}/ro/produse/tapparelle`,
+    alternateRo: `${B}/ro/produse/jaluzele`,
     ogType: "product",
     jsonLd: {
       "@context": "https://schema.org",
@@ -436,19 +438,19 @@ const PAGES: Record<string, PageMeta> = {
       "name": "Rulouri Termoizolante PVC Aluminiu ThermoDMR",
       "description": "Rulouri termoizolante în aluminiu și PVC, economie de energie până la 30%. Garanție 15 ani.",
       "brand": { "@type": "Brand", "name": "ThermoDMR" },
-      "url": `${B}/ro/produse/tapparelle`,
+      "url": `${B}/ro/produse/jaluzele`,
       "image": `${B}/images/thermodmr-tapparella-coibentata.webp`,
       "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "La cerere", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
       "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.7", "bestRating": "5", "reviewCount": "24" },
     },
   },
-  "/ro/produse/cassonetti": {
+  "/ro/produse/casete-rulou": {
     title: "Casete Termoizolante EPS — Fără Punți Termice — ThermoDMR",
     description: "Casete termoizolante ThermoDMR din EPS: elimină punțile termice, îmbunătățesc izolarea involucru. Garanție 15 ani. Ofertă gratuită.",
-    canonical: `${B}/ro/produse/cassonetti`,
+    canonical: `${B}/ro/produse/casete-rulou`,
     lang: "ro",
     alternateIt: `${B}/prodotti/cassonetti`,
-    alternateRo: `${B}/ro/produse/cassonetti`,
+    alternateRo: `${B}/ro/produse/casete-rulou`,
     ogType: "product",
     jsonLd: {
       "@context": "https://schema.org",
@@ -456,19 +458,19 @@ const PAGES: Record<string, PageMeta> = {
       "name": "Casete Termoizolante EPS ThermoDMR",
       "description": "Casete termoizolante din EPS care elimină punțile termice și îmbunătățesc izolarea. Garanție 15 ani.",
       "brand": { "@type": "Brand", "name": "ThermoDMR" },
-      "url": `${B}/ro/produse/cassonetti`,
+      "url": `${B}/ro/produse/casete-rulou`,
       "image": `${B}/images/thermodmr-cassonetto-installato.jpg`,
       "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "La cerere", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
       "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.7", "bestRating": "5", "reviewCount": "19" },
     },
   },
-  "/ro/produse/persiane": {
+  "/ro/produse/obloane": {
     title: "Jaluzele PVC și Aluminiu — Culori RAL — ThermoDMR",
     description: "Jaluzele ThermoDMR din PVC și aluminiu: rezistente la intemperii, culori RAL personalizabile. Garanție 15 ani. Ofertă gratuită.",
-    canonical: `${B}/ro/produse/persiane`,
+    canonical: `${B}/ro/produse/obloane`,
     lang: "ro",
     alternateIt: `${B}/prodotti/persiane`,
-    alternateRo: `${B}/ro/produse/persiane`,
+    alternateRo: `${B}/ro/produse/obloane`,
     ogType: "product",
     jsonLd: {
       "@context": "https://schema.org",
@@ -476,7 +478,7 @@ const PAGES: Record<string, PageMeta> = {
       "name": "Jaluzele PVC și Aluminiu ThermoDMR",
       "description": "Jaluzele din PVC și aluminiu, rezistente la intemperii, disponibile în culori RAL. Garanție 15 ani.",
       "brand": { "@type": "Brand", "name": "ThermoDMR" },
-      "url": `${B}/ro/produse/persiane`,
+      "url": `${B}/ro/produse/obloane`,
       "image": `${B}/images/thermodmr-persiana-verde.webp`,
       "offers": { "@type": "Offer", "priceCurrency": "EUR", "priceRange": "La cerere", "availability": "https://schema.org/InStock", "url": `${B}/ro/contact` },
       "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "bestRating": "5", "reviewCount": "22" },
@@ -498,6 +500,108 @@ const PAGES: Record<string, PageMeta> = {
     lang: "ro",
     alternateIt: `${B}/contatti`,
     alternateRo: `${B}/ro/contact`,
+    jsonLd: null,
+  },
+
+  // ─── Pagine istituzionali IT ────────────────────────────────────────────────
+  "/vantaggi": {
+    title: "Vantaggi Finestre PVC ThermoDMR — Produzione Diretta",
+    description: "Perché scegliere ThermoDMR? Produzione diretta senza intermediari, risparmio energetico fino al 35%, prezzi di fabbrica. Scopri tutti i vantaggi.",
+    canonical: `${B}/vantaggi`,
+    lang: "it",
+    alternateIt: `${B}/vantaggi`,
+    alternateRo: `${B}/ro/avantaje`,
+    breadcrumb: [{ name: "Home", url: `${B}/` }, { name: "Vantaggi", url: `${B}/vantaggi` }],
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "Quanto si risparmia con le finestre PVC ThermoDMR?", "acceptedAnswer": { "@type": "Answer", "text": "Con le finestre PVC ThermoDMR puoi risparmiare fino al 35% sui costi di riscaldamento e raffrescamento grazie all'isolamento termico di Classe A con profilo tedesco a 5 camere." } },
+        { "@type": "Question", "name": "Come funziona la produzione diretta ThermoDMR?", "acceptedAnswer": { "@type": "Answer", "text": "ThermoDMR produce direttamente senza intermediari, eliminando le commissioni e offrendo prezzi di fabbrica con margini competitivi per i rivenditori. Tempi di consegna medi: 2-6 settimane." } },
+        { "@type": "Question", "name": "Quali certificazioni hanno le finestre ThermoDMR?", "acceptedAnswer": { "@type": "Answer", "text": "Le finestre ThermoDMR sono certificate CE con profilo tedesco Tecnolegno, classe energetica A e standard Passivhaus per la linea DMR Passive (Uw ≤ 0,8 W/m²K)." } }
+      ]
+    },
+  },
+  "/garanzie": {
+    title: "Garanzie ThermoDMR — 15 Anni su Finestre PVC",
+    description: "ThermoDMR offre 15 anni di garanzia su finestre e serramenti in PVC. Profilo tedesco certificato, assistenza post-vendita, consegna in tutta Italia.",
+    canonical: `${B}/garanzie`,
+    lang: "it",
+    alternateIt: `${B}/garanzie`,
+    alternateRo: `${B}/ro/garantii`,
+    breadcrumb: [{ name: "Home", url: `${B}/` }, { name: "Garanzie", url: `${B}/garanzie` }],
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "Quanti anni di garanzia offre ThermoDMR?", "acceptedAnswer": { "@type": "Answer", "text": "ThermoDMR offre 15 anni di garanzia contrattuale su tutti i prodotti in PVC, incluse finestre, portoncini, tapparelle e accessori." } },
+        { "@type": "Question", "name": "Cosa copre la garanzia ThermoDMR?", "acceptedAnswer": { "@type": "Answer", "text": "La garanzia copre difetti di fabbricazione, problemi con i profili PVC, tenuta stagna e ferramenta. Intervento gratuito durante tutto il periodo di garanzia." } },
+        { "@type": "Question", "name": "ThermoDMR consegna in tutta Italia?", "acceptedAnswer": { "@type": "Answer", "text": "Sì, ThermoDMR consegna in tutta Italia attraverso la sua rete di rivenditori autorizzati, e in Romania tramite distributori nelle principali città." } }
+      ]
+    },
+  },
+  "/diventa-rivenditore": {
+    title: "Diventa Rivenditore ThermoDMR — Prezzi di Fabbrica",
+    description: "Diventa rivenditore ThermoDMR: prezzi di fabbrica su finestre PVC profilo tedesco, supporto tecnico dedicato, margini competitivi. Candidati ora.",
+    canonical: `${B}/diventa-rivenditore`,
+    lang: "it",
+    alternateIt: `${B}/diventa-rivenditore`,
+    alternateRo: `${B}/ro/devino-distribuitor`,
+    breadcrumb: [{ name: "Home", url: `${B}/` }, { name: "Diventa Rivenditore", url: `${B}/diventa-rivenditore` }],
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "url": `${B}/diventa-rivenditore`,
+      "name": "Diventa Rivenditore ThermoDMR",
+      "description": "Programma rivenditori ThermoDMR: prezzi di fabbrica, supporto tecnico e margini competitivi per serramentisti e imprese edili.",
+      "about": { "@id": `${B}/#organization` },
+    },
+  },
+
+  // ─── Pagine istituzionali RO ────────────────────────────────────────────────
+  "/ro/avantaje": {
+    title: "Avantajele Ferestrelor PVC ThermoDMR — Producție Directă",
+    description: "De ce ThermoDMR? Producție directă fără intermediari, economie de energie până la 35%, prețuri de fabrică. Descoperă toate avantajele.",
+    canonical: `${B}/ro/avantaje`,
+    lang: "ro",
+    alternateIt: `${B}/vantaggi`,
+    alternateRo: `${B}/ro/avantaje`,
+    breadcrumb: [{ name: "Acasă", url: `${B}/ro` }, { name: "Avantaje", url: `${B}/ro/avantaje` }],
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "Cât se economisește cu ferestre PVC ThermoDMR?", "acceptedAnswer": { "@type": "Answer", "text": "Cu ferestre PVC ThermoDMR puteți economisi până la 35% din costurile de încălzire și răcire datorită izolării termice de clasă A cu profil german cu 5 camere." } },
+        { "@type": "Question", "name": "Cum funcționează producția directă ThermoDMR?", "acceptedAnswer": { "@type": "Answer", "text": "ThermoDMR produce direct fără intermediari, eliminând comisioanele și oferind prețuri de fabrică cu marje competitive pentru distribuitori. Livrare medie: 2-6 săptămâni." } }
+      ]
+    },
+  },
+  "/ro/garantii": {
+    title: "Garanții ThermoDMR — 15 Ani pe Ferestre PVC",
+    description: "ThermoDMR oferă 15 ani garanție pe ferestre și tâmplărie PVC. Profil german certificat, asistență post-vânzare, livrare în România și Italia.",
+    canonical: `${B}/ro/garantii`,
+    lang: "ro",
+    alternateIt: `${B}/garanzie`,
+    alternateRo: `${B}/ro/garantii`,
+    breadcrumb: [{ name: "Acasă", url: `${B}/ro` }, { name: "Garanții", url: `${B}/ro/garantii` }],
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "Câți ani de garanție oferă ThermoDMR?", "acceptedAnswer": { "@type": "Answer", "text": "ThermoDMR oferă 15 ani garanție contractuală pe toate produsele din tâmplărie PVC, inclusiv ferestre, uși, rulouri și accesorii." } },
+        { "@type": "Question", "name": "Ce acoperă garanția ThermoDMR?", "acceptedAnswer": { "@type": "Answer", "text": "Garanția acoperă defecte de fabricație, probleme cu profilele PVC, etanșeitate și feroneria. Intervenție gratuită în toată perioada de garanție." } },
+        { "@type": "Question", "name": "ThermoDMR livrează în România?", "acceptedAnswer": { "@type": "Answer", "text": "Da, ThermoDMR livrează în toată România și Italia. Avem distribuitori în principalele orașe." } }
+      ]
+    },
+  },
+  "/ro/devino-distribuitor": {
+    title: "Devino Distribuitor ThermoDMR — Prețuri de Fabrică",
+    description: "Devino distribuitor ThermoDMR: prețuri de fabrică la ferestre PVC cu profil german, suport tehnic dedicat, marje competitive. Aplică acum.",
+    canonical: `${B}/ro/devino-distribuitor`,
+    lang: "ro",
+    alternateIt: `${B}/diventa-rivenditore`,
+    alternateRo: `${B}/ro/devino-distribuitor`,
+    breadcrumb: [{ name: "Acasă", url: `${B}/ro` }, { name: "Devino Distribuitor", url: `${B}/ro/devino-distribuitor` }],
     jsonLd: null,
   },
 
@@ -686,6 +790,56 @@ function buildBreadcrumbSchema(items: Array<{ name: string; url: string }>) {
   };
 }
 
+/** Crawler (search + AI + social): ricevono il contenuto articolo pre-renderizzato,
+ *  identico a quello che React renderizza client-side (dynamic rendering, no cloaking). */
+const BOT_UA =
+  /googlebot|bingbot|gptbot|chatgpt-user|oai-searchbot|claudebot|claude-web|anthropic-ai|perplexitybot|perplexity-user|google-extended|ccbot|amazonbot|applebot|bytespider|meta-externalagent|facebookexternalhit|twitterbot|linkedinbot|duckduckbot|yandex|baiduspider|semrushbot|ahrefsbot|petalbot|mj12bot/i;
+
+function getBlogPost(pathname: string): BlogPost | undefined {
+  let m = pathname.match(/^\/blog\/([^/]+)\/?$/);
+  if (m) {
+    const slug = m[1];
+    return allBlogPosts.find((p) => p.slug === slug && p.lang === "it");
+  }
+  m = pathname.match(/^\/ro\/blog\/([^/]+)\/?$/);
+  if (m) {
+    const slug = m[1];
+    return allBlogPosts.find((p) => p.slug === slug && p.lang === "ro");
+  }
+  return undefined;
+}
+
+function buildBlogPostingSchema(post: BlogPost, canonical: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "description": post.description,
+    "datePublished": post.date,
+    "dateModified": post.date,
+    "inLanguage": post.lang === "ro" ? "ro-RO" : "it-IT",
+    "mainEntityOfPage": { "@type": "WebPage", "@id": canonical },
+    "url": canonical,
+    "image": post.heroImage || DEFAULT_OG_IMAGE,
+    "author": { "@type": "Organization", "name": "ThermoDMR", "url": BASE_URL },
+    "publisher": { "@id": `${BASE_URL}/#organization` },
+    "articleSection": post.category,
+    "timeRequired": `PT${post.readingTime}M`,
+  };
+}
+
+function buildArticleHtml(post: BlogPost): string {
+  const dateLabel = post.lang === "ro" ? "Publicat" : "Pubblicato";
+  const minLabel = "min";
+  return (
+    `<main style="max-width:760px;margin:0 auto;padding:24px;font-family:system-ui,-apple-system,sans-serif;line-height:1.65">` +
+    `<article><header><h1>${esc(post.title)}</h1>` +
+    `<p><em>${esc(post.description)}</em></p>` +
+    `<p>${dateLabel}: <time datetime="${post.date}">${post.date}</time> · ${post.readingTime} ${minLabel} · ${esc(post.category)}</p>` +
+    `</header>${post.content}</article></main>`
+  );
+}
+
 function esc(str: string): string {
   return str
     .replace(/&/g, "&amp;")
@@ -730,6 +884,12 @@ export const onRequest = async (context: {
   const ogLocale = lang === "ro" ? "ro_RO" : "it_IT";
   const ogImage = meta.ogImage || DEFAULT_OG_IMAGE;
 
+  // Blog post: schema BlogPosting + contenuto pre-renderizzato per i crawler
+  const post = getBlogPost(pathname);
+  const ogType = meta.ogType || (post ? "article" : "website");
+  const ua = context.request.headers.get("user-agent") || "";
+  const botArticleHtml = post && BOT_UA.test(ua) ? buildArticleHtml(post) : "";
+
   // Build extra <head> scripts to inject
   let extraHead = "";
   if (meta.jsonLd) {
@@ -737,6 +897,9 @@ export const onRequest = async (context: {
   }
   if (meta.breadcrumb) {
     extraHead += `\n<script type="application/ld+json">${JSON.stringify(buildBreadcrumbSchema(meta.breadcrumb))}</script>`;
+  }
+  if (post) {
+    extraHead += `\n<script type="application/ld+json">${JSON.stringify(buildBlogPostingSchema(post, meta.canonical))}</script>`;
   }
 
   return (
@@ -799,7 +962,7 @@ export const onRequest = async (context: {
       })
       .on('meta[property="og:type"]', {
         element(el) {
-          el.setAttribute("content", meta.ogType || "website");
+          el.setAttribute("content", ogType);
         },
       })
       .on('meta[property="og:image"]', {
@@ -833,6 +996,15 @@ export const onRequest = async (context: {
         element(el) {
           if (extraHead) {
             el.append(extraHead, { html: true });
+          }
+        },
+      })
+      // Crawler senza JS: servi il contenuto articolo dentro #root
+      // (React lo sostituisce al mount per gli utenti reali)
+      .on("div#root", {
+        element(el) {
+          if (botArticleHtml) {
+            el.setInnerContent(botArticleHtml, { html: true });
           }
         },
       })

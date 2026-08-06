@@ -1,3 +1,7 @@
+# robots.txt — thermodmr.com
+# Search engine + AI crawlers welcome on public pages.
+# Private app area lives on app.thermodmr.com and is excluded below.
+
 User-agent: *
 Allow: /
 Disallow: /auth
@@ -6,8 +10,53 @@ Disallow: /ordini
 Disallow: /preventivi
 Disallow: /pagamenti
 Disallow: /dealers
+Disallow: /rivenditori/
 Disallow: /impostazioni
 Disallow: /analytics
 Disallow: /assistenza
+Disallow: /kpi
+Disallow: /email-template-editor
+
+# ── AI / LLM crawlers: esplicitamente benvenuti (GEO) ──
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
 
 Sitemap: https://thermodmr.com/sitemap.xml
+
+# LLM-friendly summary of this site: https://thermodmr.com/llms.txt
