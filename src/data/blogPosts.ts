@@ -1588,6 +1588,190 @@ const itPosts: BlogPost[] = [
 <p>ThermoDMR produce direttamente finestre in PVC con profilo tedesco in Classe A, con <a href="/garanzie">garanzia 15 anni</a> e consegna in 2-6 settimane. <a href="/contatti">Richiedi un preventivo gratuito</a>: ricevi entro 24 ore un confronto tecnico ed economico personalizzato sulle misure delle tue finestre.</p>
     `.trim(),
   },
+
+  {
+    slug: "condensa-sulle-finestre-cause-rimedi",
+    lang: "it",
+    title: "Condensa sulle Finestre: Cause e Rimedi Definitivi (2026)",
+    description: "Perché si forma condensa su vetri e infissi? Cause, rimedi immediati e soluzioni definitive contro condensa e muffa intorno alle finestre.",
+    date: "2026-08-06",
+    category: "Guide",
+    readingTime: 10,
+    content: `
+<h2>Perché si forma la condensa sulle finestre</h2>
+<p>La <strong>condensa sulle finestre</strong> si forma quando l'aria calda e umida di casa incontra una superficie fredda: il vapore acqueo si trasforma in goccioline sul vetro o sul telaio. Il fenomeno si verifica quando la superficie scende sotto il <strong>punto di rugiada</strong> — con il 60% di umidità e 20°C in casa, basta che il vetro sia a 12°C perché inizi a bagnarsi.</p>
+<p>La condensa non è solo fastidiosa: è il primo segnale di uno squilibrio tra umidità interna e isolamento delle superfici. Ignorarla porta quasi sempre allo stadio successivo — la <strong>muffa intorno alle finestre</strong>.</p>
+
+<h2>Le 4 cause principali della condensa</h2>
+<h3>1. Vetri con scarso isolamento</h3>
+<p>Un vetro singolo in inverno ha una temperatura superficiale interna di 1-5°C: condensa garantita ogni mattina. Un doppio vetro basso-emissivo moderno mantiene la superficie interna a 15-17°C, sopra il punto di rugiada nella maggior parte delle condizioni domestiche.</p>
+<h3>2. Ponti termici di telaio e cassonetto</h3>
+<p>Se la condensa si forma sul perimetro del vetro, sul telaio o sulla parete sopra la finestra, il colpevole è quasi sempre un <strong>ponte termico</strong>: un punto dove il freddo attraversa la struttura. Il caso più frequente è il vecchio <a href="/prodotti/cassonetti">cassonetto della tapparella non coibentato</a>: una scatola di aria fredda direttamente collegata all'esterno, sopra la finestra.</p>
+<h3>3. Umidità interna eccessiva</h3>
+<p>Cucinare, docce, panni stesi in casa, piante e persino la respirazione producono 10-15 litri di vapore al giorno in una famiglia di 4 persone. Senza ricambio d'aria, l'umidità relativa supera il 65-70% e la condensa compare anche su finestre di buona qualità.</p>
+<h3>4. Posa in opera mal eseguita</h3>
+<p>Una finestra eccellente montata male condensa come una finestra scadente: giunti non sigillati tra telaio e muratura creano infiltrazioni di aria fredda e punti freddi localizzati. La qualità della posa vale quanto la qualità del serramento.</p>
+
+<h2>Condensa dopo la sostituzione delle finestre: è normale?</h2>
+<p>Un caso che sorprende molti: <strong>gli infissi nuovi fanno più condensa dei vecchi</strong>. È normale e ha una spiegazione precisa. Le vecchie finestre erano piene di spifferi che ventilavano casa in continuazione (sprecando energia). Le nuove finestre a tenuta ermetica trattengono il calore — e anche l'umidità. La soluzione non è rimpiangere gli spifferi, ma <strong>cambiare le abitudini di ventilazione</strong>: arieggiare in modo mirato o installare sistemi di ventilazione meccanica.</p>
+
+<h2>Rimedi immediati contro la condensa</h2>
+<ul>
+  <li><strong>Ventilazione a raffica</strong>: 5 minuti di finestre spalancate 2-3 volte al giorno ricambiano l'aria senza raffreddare le pareti (meglio di ore di finestra a vasistas)</li>
+  <li><strong>Umidità sotto il 55-60%</strong>: misurala con un igrometro da 10 euro; se serve, deumidificatore nelle stanze critiche</li>
+  <li><strong>Aspirazione in cucina e bagno</strong>: cappa accesa mentre cucini, aspiratore dopo la doccia</li>
+  <li><strong>Niente panni stesi in casa</strong> nelle stanze con condensa ricorrente</li>
+  <li><strong>Mobili staccati dalle pareti fredde</strong>: 5-10 cm di distanza permettono all'aria di circolare</li>
+</ul>
+
+<h2>Soluzioni definitive: intervenire sulle superfici fredde</h2>
+<p>I rimedi comportamentali abbassano l'umidità, ma se le superfici restano fredde il problema torna. Le soluzioni strutturali, in ordine di impatto:</p>
+<table>
+  <thead><tr><th>Intervento</th><th>Problema risolto</th><th>Impatto</th></tr></thead>
+  <tbody>
+    <tr><td>Doppio vetro basso-emissivo (Uw ≤ 1,3)</td><td>Condensa sul vetro</td><td>Alto</td></tr>
+    <tr><td>Cassonetto coibentato in EPS</td><td>Condensa e muffa sopra la finestra</td><td>Alto</td></tr>
+    <tr><td>Telaio PVC multicamera</td><td>Condensa sul perimetro</td><td>Alto</td></tr>
+    <tr><td>Posa in opera sigillata a regola d'arte</td><td>Punti freddi localizzati</td><td>Medio-alto</td></tr>
+    <tr><td>Vetro triplo (zone fredde)</td><td>Condensa residua in climi rigidi</td><td>Medio</td></tr>
+  </tbody>
+</table>
+<p>Le finestre in PVC con profilo tedesco a 5 camere come la <a href="/prodotti/dmr-confort">DMR Confort</a> mantengono la superficie interna del telaio sopra i 14°C anche con temperature esterne sotto zero: la condensa sul perimetro, tipica dei telai in alluminio freddo o dei vecchi profili, scompare.</p>
+
+<h2>Condensa tra i vetri: un caso diverso</h2>
+<p>Se la condensa si forma <strong>dentro la vetrocamera</strong> (tra le due lastre, dove non puoi asciugarla), la guarnizione perimetrale del vetro ha ceduto e il gas isolante è uscito: il vetro va sostituito. Nei serramenti ThermoDMR la vetrocamera è coperta dalla <a href="/garanzie">garanzia di 15 anni</a>.</p>
+
+<h2>FAQ: le domande più frequenti sulla condensa</h2>
+<ol>
+  <li><strong>La condensa sulle finestre è colpa degli infissi?</strong> Dipende da dove si forma. Sul centro del vetro indica vetri poco isolanti o umidità alta; sul perimetro e sul telaio indica ponti termici del profilo o della posa; sulla parete sopra la finestra indica quasi sempre il cassonetto non coibentato. Un sopralluogo tecnico identifica la causa esatta.</li>
+  <li><strong>Perché le finestre nuove fanno condensa e le vecchie no?</strong> Le vecchie finestre ventilavano casa attraverso gli spifferi, smaltendo l'umidità (e disperdendo calore). Le nuove sono a tenuta ermetica: trattengono calore e umidità. Basta adeguare la ventilazione con arieggiamenti brevi e frequenti per eliminare il fenomeno.</li>
+  <li><strong>Quanto deve essere l'umidità in casa per evitare la condensa?</strong> Tra il 40% e il 55-60% di umidità relativa a 20°C. Sopra il 65% la condensa compare anche su serramenti performanti. Un igrometro economico permette di monitorarla in ogni stanza.</li>
+  <li><strong>Il vetro triplo elimina la condensa?</strong> Riduce ulteriormente il rischio perché la superficie interna resta più calda (17-18°C). Ma se l'umidità interna è fuori controllo o il cassonetto è un ponte termico, la condensa si sposta sulle superfici fredde rimaste. Serve un approccio completo: vetro, telaio, cassonetto e ventilazione.</li>
+  <li><strong>La muffa intorno alle finestre è pericolosa?</strong> Le spore di muffa peggiorano allergie e problemi respiratori, soprattutto nei bambini. Va eliminata con prodotti specifici e, soprattutto, va rimossa la causa: finché le superfici restano fredde e l'umidità alta, la muffa torna sempre.</li>
+  <li><strong>Posso risolvere la condensa senza cambiare le finestre?</strong> Se le finestre hanno più di 20-25 anni, no: puoi solo attenuarla con la ventilazione. Se le finestre sono recenti e il problema è localizzato sopra la finestra, spesso basta sostituire il solo cassonetto con uno coibentato — un intervento rapido e molto meno costoso.</li>
+</ol>
+
+<h2>Il percorso ThermoDMR contro condensa e muffa</h2>
+<p>ThermoDMR produce direttamente i tre componenti che eliminano i ponti termici della finestra: serramenti in PVC con profilo tedesco in Classe A, <a href="/prodotti/cassonetti">cassonetti coibentati in EPS</a> e <a href="/prodotti/tapparelle">tapparelle coibentate</a>. <a href="/contatti">Richiedi un preventivo gratuito</a>: descrivi dove si forma la condensa e ricevi entro 24 ore una proposta con la soluzione tecnica mirata per il tuo caso.</p>
+    `.trim(),
+  },
+
+  {
+    slug: "finestre-insonorizzate-isolamento-acustico",
+    lang: "it",
+    title: "Finestre Insonorizzate: Guida all'Isolamento Acustico 2026",
+    description: "Finestre antirumore: come funzionano, quanti dB servono, vetri stratificati e costi. La guida completa per dormire nel silenzio anche in città.",
+    date: "2026-08-06",
+    category: "Guide",
+    readingTime: 10,
+    content: `
+<h2>Quando servono le finestre insonorizzate</h2>
+<p>Traffico sotto casa, movida notturna, ferrovia, aeroporto in zona: il rumore è la prima causa di disturbo del sonno nelle città italiane. Le <strong>finestre insonorizzate</strong> (o antirumore) sono serramenti progettati per abbattere il rumore esterno di 38-46 decibel — la differenza tra sentire il traffico "in camera" e percepirlo come un fruscio lontano.</p>
+<p>Il dato chiave: la finestra è il punto acusticamente più debole della facciata. Un muro in laterizio abbatte 50-55 dB; una vecchia finestra monovetro appena 25-28 dB. Il rumore entra da lì.</p>
+
+<h2>L'indice Rw: il numero che misura il silenzio</h2>
+<p>L'isolamento acustico di un serramento si misura con l'indice <strong>Rw</strong> (potere fonoisolante), espresso in decibel. Attenzione alla scala: è logaritmica, quindi <strong>+10 dB = rumore percepito dimezzato</strong>.</p>
+<table>
+  <thead><tr><th>Rw serramento</th><th>Prestazione</th><th>Situazione consigliata</th></tr></thead>
+  <tbody>
+    <tr><td>25-30 dB</td><td>Base (vecchi serramenti)</td><td>Insufficiente in ambito urbano</td></tr>
+    <tr><td>32-36 dB</td><td>Standard moderno</td><td>Zone residenziali tranquille</td></tr>
+    <tr><td>38-42 dB</td><td>Acustico</td><td>Strade trafficate, centri urbani</td></tr>
+    <tr><td>43-46+ dB</td><td>Acustico spinto</td><td>Ferrovia, aeroporti, movida notturna</td></tr>
+  </tbody>
+</table>
+<p>Lo standard ThermoDMR parte da <strong>Rw 38 dB</strong>, adatto alla maggior parte dei contesti urbani; per esigenze superiori si arriva oltre i 44 dB con configurazioni dedicate.</p>
+
+<h2>Come è fatta una finestra antirumore</h2>
+<h3>Vetri asimmetrici e stratificati</h3>
+<p>Il segreto non è il vetro "più spesso", ma la <strong>asimmetria</strong>: due lastre di spessore diverso (es. 6 mm esterna e 4 mm interna) vibrano a frequenze diverse e non entrano in risonanza. Per le prestazioni massime si usa il <strong>vetro stratificato acustico</strong>: due lastre unite da una pellicola in PVB acustico che smorza le vibrazioni sonore. Una configurazione 33.1/16/6 supera i 42 dB.</p>
+<h3>Telaio multicamera e guarnizioni</h3>
+<p>Il profilo PVC a 5 camere smorza le vibrazioni meglio dei materiali rigidi: le camere d'aria interne funzionano da barriere acustiche successive. Le <strong>tre guarnizioni di battuta</strong> eliminano il passaggio d'aria — e dove passa l'aria, passa il rumore.</p>
+<h3>La posa in opera: metà del risultato</h3>
+<p>Un serramento da 42 dB montato con fessure non sigillate rende come uno da 30 dB: il rumore aggira il vetro e passa dal giunto. La posa acustica prevede sigillatura elastica continua su tutto il perimetro e nastri autoespandenti tra telaio e muratura.</p>
+
+<h2>Il ruolo di tapparelle e cassonetti</h2>
+<p>Il punto debole nascosto è il <strong>cassonetto della tapparella</strong>: una scatola vuota comunicante con l'esterno sopra la finestra. Un <a href="/prodotti/cassonetti">cassonetto coibentato</a> con pannelli fonoassorbenti chiude questa via d'ingresso del rumore. Anche le <a href="/prodotti/tapparelle">tapparelle coibentate</a> abbassate aggiungono 3-5 dB di attenuazione notturna — proprio nelle ore in cui serve di più.</p>
+
+<h2>Quanto costano le finestre insonorizzate</h2>
+<p>Una finestra in PVC con vetro acustico stratificato costa mediamente il <strong>15-30% in più</strong> della versione standard equivalente. Su una camera da letto (1-2 finestre) l'investimento aggiuntivo è di poche centinaia di euro — spesso il miglior rapporto costo/beneficio per la qualità del sonno. E rientra nella detrazione fiscale del 50% se la sostituzione rispetta i requisiti di trasmittanza termica.</p>
+
+<h2>FAQ: le domande più frequenti sulle finestre antirumore</h2>
+<ol>
+  <li><strong>Quanti dB deve avere una finestra per dormire bene in città?</strong> In una strada urbana trafficata (65-70 dB notturni di picco) servono almeno 38-40 dB di abbattimento per scendere sotto i 30 dB in camera, la soglia raccomandata per il sonno. In zone con ferrovia o movida meglio 42+ dB.</li>
+  <li><strong>Il triplo vetro isola dal rumore più del doppio?</strong> No, è uno degli equivoci più comuni. Il triplo vetro simmetrico può perfino peggiorare l'acustica per effetto risonanza. Per il rumore serve il doppio vetro asimmetrico con stratificato acustico; il triplo serve per il freddo. Le due esigenze si combinano con configurazioni dedicate.</li>
+  <li><strong>Le finestre in PVC isolano dal rumore più dell'alluminio?</strong> A parità di vetro sì, leggermente: la struttura multicamera del PVC smorza le vibrazioni meglio del metallo. La differenza vera però la fanno vetro stratificato, guarnizioni e qualità della posa.</li>
+  <li><strong>Posso migliorare l'acustica senza cambiare le finestre?</strong> Parzialmente: sostituire le guarnizioni usurate e sigillare il cassonetto recupera qualche dB. Ma se il serramento ha vetri datati e telaio senza battute multiple, il limite strutturale resta: la sostituzione è l'unico intervento risolutivo.</li>
+  <li><strong>Le finestre antirumore tengono anche più caldo?</strong> Sì: il vetro stratificato acustico è anche basso-emissivo, quindi una finestra da 40+ dB è tipicamente anche in Classe A termica. Un unico intervento risolve rumore e bollette, con un'unica detrazione fiscale.</li>
+</ol>
+
+<h2>Il silenzio su misura ThermoDMR</h2>
+<p>ThermoDMR configura ogni serramento in base all'esposizione acustica reale: vetri asimmetrici o stratificati acustici, tre guarnizioni di serie, cassonetti coibentati e posa sigillata. <a href="/contatti">Richiedi un preventivo gratuito</a> indicando la fonte di rumore (strada, ferrovia, locali) e ricevi entro 24 ore la configurazione acustica consigliata con il valore Rw certificato. Scopri anche la gamma completa nel <a href="/prodotti-pubblico">catalogo prodotti</a>.</p>
+    `.trim(),
+  },
+
+  {
+    slug: "finestre-pvc-o-legno-quale-scegliere",
+    lang: "it",
+    title: "Finestre PVC o Legno: Quale Scegliere? Confronto 2026",
+    description: "PVC o legno per le finestre? Confronto su isolamento, prezzi, manutenzione e durata. Vantaggi, svantaggi e quando scegliere l'uno o l'altro.",
+    date: "2026-08-06",
+    category: "Guide",
+    readingTime: 9,
+    content: `
+<h2>PVC o legno: due filosofie a confronto</h2>
+<p>Il legno è il materiale storico dei serramenti italiani: caldo, naturale, elegante. Il PVC è il materiale che negli ultimi vent'anni lo ha superato nelle vendite: pratico, isolante, senza manutenzione. Scegliere tra <strong>finestre in PVC o legno</strong> significa pesare estetica, budget, tempo per la manutenzione e prestazioni. Vediamo ogni parametro con numeri reali.</p>
+
+<h2>Isolamento termico: sostanziale parità, con una differenza</h2>
+<p>Contrariamente a quanto si pensa, legno e PVC isolano in modo simile: entrambi sono materiali naturalmente isolanti.</p>
+<ul>
+  <li><strong>PVC 5 camere</strong> — Uf 0,95-1,3 W/m²K</li>
+  <li><strong>Legno lamellare 68-80 mm</strong> — Uf 1,1-1,4 W/m²K</li>
+</ul>
+<p>La differenza sta nella <strong>costanza nel tempo</strong>: il PVC mantiene le prestazioni per decenni senza interventi; il legno le mantiene solo se la verniciatura è integra. Crepe e vernice scrostata lasciano entrare umidità che deforma il telaio e apre spifferi.</p>
+
+<h2>Manutenzione: il vero discrimine</h2>
+<p>Qui i due materiali si separano davvero:</p>
+<table>
+  <thead><tr><th>Aspetto</th><th>PVC</th><th>Legno</th></tr></thead>
+  <tbody>
+    <tr><td>Verniciatura</td><td>Mai</td><td>Ogni 5-8 anni (2-4 esposto a sud/mare)</td></tr>
+    <tr><td>Pulizia</td><td>Acqua e detergente neutro</td><td>Prodotti specifici per legno</td></tr>
+    <tr><td>Costo manutenzione 30 anni</td><td>~0 €</td><td>1.500-4.000 € (8 finestre)</td></tr>
+    <tr><td>Rischio se trascurato</td><td>Nessuno</td><td>Marcescenza, deformazioni, spifferi</td></tr>
+  </tbody>
+</table>
+<p>Il costo reale del legno non è (solo) il prezzo d'acquisto: è il ciclo di riverniciature per tutta la vita del serramento. Chi non ha tempo o non vuole pensarci sceglie il PVC per questo motivo prima che per ogni altro.</p>
+
+<h2>Prezzo: il PVC costa il 30-40% in meno</h2>
+<p>A parità di dimensioni e vetro, una finestra in legno di qualità costa il <strong>30-40% in più</strong> dell'equivalente in PVC; il legno-alluminio anche il 50-70% in più. Su un appartamento da 8 finestre la differenza supera i 3.000-6.000 euro, a cui si aggiunge la manutenzione periodica. Con il PVC a <a href="/vantaggi">produzione diretta</a> il divario aumenta ulteriormente, perché si eliminano anche i ricarichi della distribuzione.</p>
+
+<h2>Estetica: il punto forte del legno, ma il divario si è chiuso</h2>
+<p>Le venature naturali del legno restano ineguagliate al tatto e nei dettagli. Ma la distanza si è ridotta drasticamente: i profili PVC con <strong>finitura Tecnolegno effetto legno</strong> — come quelli della <a href="/prodotti/dmr-confort">DMR Confort</a> — riproducono essenze e venature con pellicole strutturate in rilievo, difficili da distinguere a un metro di distanza. Per i centri storici con vincoli, molti regolamenti oggi accettano il PVC effetto legno; conviene verificare il regolamento edilizio comunale prima di decidere.</p>
+
+<h2>Durata: dipende da chi se ne prende cura</h2>
+<ul>
+  <li><strong>PVC con profilo tedesco</strong>: 40-50 anni senza interventi, non teme umidità, salsedine o insetti</li>
+  <li><strong>Legno ben mantenuto</strong>: 30-50 anni, ma solo con riverniciature regolari</li>
+  <li><strong>Legno trascurato</strong>: 15-20 anni, poi marcescenza e sostituzione</li>
+</ul>
+
+<h2>Sostenibilità: più equilibrata di quanto sembri</h2>
+<p>Il legno è rinnovabile e ha un'impronta di produzione bassa — se certificato FSC/PEFC. Il PVC moderno però è <strong>riciclabile al 100%</strong> e i profili europei contengono quote crescenti di materiale riciclato; la durata superiore senza manutenzione chimica (vernici, solventi ogni pochi anni) riequilibra il bilancio ambientale complessivo.</p>
+
+<h2>FAQ: le domande più frequenti su PVC e legno</h2>
+<ol>
+  <li><strong>Le finestre in PVC svalutano un immobile di pregio?</strong> No, se la finitura è coerente con il contesto: i profili effetto legno di fascia alta mantengono l'estetica tradizionale con prestazioni superiori. In immobili storici vincolati va verificato il regolamento: alcuni impongono il legno sui prospetti principali.</li>
+  <li><strong>Il legno isola più del PVC?</strong> No, le prestazioni termiche sono equivalenti a parità di sezione e vetro. Il PVC multicamera moderno raggiunge valori Uf perfino migliori di molti serramenti in legno standard, e li mantiene nel tempo senza manutenzione.</li>
+  <li><strong>Quanto dura una finestra in PVC rispetto a una in legno?</strong> Il PVC con profilo tedesco dura 40-50 anni senza riverniciature. Il legno può durare altrettanto, ma solo con manutenzione regolare ogni 5-8 anni; se trascurato, il degrado inizia dopo 10-15 anni.</li>
+  <li><strong>Esiste una via di mezzo tra PVC e legno?</strong> Sì, due: il PVC con finitura Tecnolegno effetto legno (prestazioni e prezzo del PVC, estetica del legno) e il legno-alluminio (legno interno, guscio esterno in alluminio), che però costa il 50-70% in più del PVC.</li>
+  <li><strong>PVC o legno per una casa in montagna?</strong> Il PVC multicamera gestisce senza problemi i climi rigidi (con triplo vetro come la <a href="/prodotti/dmr-passive">DMR Passive</a> si arriva a standard casa passiva). Il legno resta popolare in montagna per tradizione estetica, ma richiede manutenzione più frequente proprio nei climi con forti escursioni.</li>
+</ol>
+
+<h2>La scelta razionale per la maggior parte delle case</h2>
+<p>Se cerchi il miglior rapporto tra prestazioni, prezzo e zero manutenzione, il <strong>PVC con profilo tedesco è la scelta razionale</strong>; il legno resta la scelta del cuore per chi ne ama l'autenticità ed è disposto a curarla nel tempo. ThermoDMR produce direttamente finestre in PVC in Classe A anche con finitura effetto legno, con <a href="/garanzie">garanzia 15 anni</a>. <a href="/contatti">Richiedi un preventivo gratuito</a> e confronta i numeri sul tuo caso reale — risposta entro 24 ore. Leggi anche il confronto <a href="/blog/finestre-pvc-o-alluminio-quale-scegliere">PVC vs alluminio</a> per completare il quadro.</p>
+    `.trim(),
+  },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -3368,6 +3552,184 @@ Tehnic, da. Din punct de vedere estetic, recomandăm același tip de profil pent
 <h2>Concluzie: cum alegi pentru casa ta</h2>
 <p>Pentru majoritatea locuințelor — apartamente, case, renovări cu acces la programe de finanțare — <strong>PVC-ul cu profil german este alegerea rațională</strong>: izolează mai bine, costă mai puțin și durează decenii fără întreținere. Aluminiul rămâne alegerea corectă pentru vitraje arhitecturale mari și proiecte minimaliste.</p>
 <p>ThermoDMR produce direct ferestre din PVC cu profil german clasa A, cu <a href="/ro/garantii">garanție 15 ani</a> și livrare în 2-6 săptămâni. <a href="/ro/contact">Solicită o ofertă gratuită</a>: primești în 24 de ore o comparație tehnică și economică personalizată pe dimensiunile ferestrelor tale.</p>
+    `.trim(),
+  },
+
+  {
+    slug: "condens-pe-ferestre-cauze-remedii",
+    lang: "ro",
+    title: "Condens pe Ferestre: Cauze și Remedii Definitive (2026)",
+    description: "De ce apare condens pe geamuri și tâmplărie? Cauze, remedii imediate și soluții definitive împotriva condensului și mucegaiului la ferestre.",
+    date: "2026-08-06",
+    category: "Ghiduri",
+    readingTime: 10,
+    content: `
+<h2>De ce apare condensul pe ferestre</h2>
+<p><strong>Condensul pe ferestre</strong> apare când aerul cald și umed din casă întâlnește o suprafață rece: vaporii de apă se transformă în picături pe geam sau pe ramă. Fenomenul se produce când suprafața coboară sub <strong>punctul de rouă</strong> — la 60% umiditate și 20°C în casă, este suficient ca geamul să fie la 12°C ca să înceapă să se aburească.</p>
+<p>Condensul nu este doar neplăcut: este primul semnal al unui dezechilibru între umiditatea interioară și izolarea suprafețelor. Ignorat, duce aproape întotdeauna la stadiul următor — <strong>mucegaiul din jurul ferestrelor</strong>.</p>
+
+<h2>Cele 4 cauze principale ale condensului</h2>
+<h3>1. Geamuri cu izolare slabă</h3>
+<p>Un geam simplu are iarna o temperatură a suprafeței interioare de 1-5°C: condens garantat în fiecare dimineață. Un geam dublu Low-E modern menține suprafața interioară la 15-17°C, peste punctul de rouă în majoritatea condițiilor domestice.</p>
+<h3>2. Punți termice la ramă și caseta ruloului</h3>
+<p>Dacă condensul se formează pe perimetrul geamului, pe ramă sau pe peretele de deasupra ferestrei, vinovata este aproape întotdeauna o <strong>punte termică</strong>. Cazul cel mai frecvent este vechea <a href="/ro/produse/casete-rulou">casetă de rulou netermoizolată</a>: o cutie de aer rece conectată direct cu exteriorul, chiar deasupra ferestrei.</p>
+<h3>3. Umiditate interioară excesivă</h3>
+<p>Gătitul, dușurile, rufele uscate în casă, plantele și chiar respirația produc 10-15 litri de vapori pe zi într-o familie de 4 persoane. Fără schimb de aer, umiditatea relativă depășește 65-70% și condensul apare chiar și pe ferestre de calitate.</p>
+<h3>4. Montaj executat greșit</h3>
+<p>O fereastră excelentă montată prost condensează ca una slabă: rosturile nesigilate dintre ramă și zidărie creează infiltrații de aer rece și puncte reci localizate. Calitatea montajului valorează cât calitatea tâmplăriei.</p>
+
+<h2>Condens după înlocuirea ferestrelor: este normal?</h2>
+<p>Un caz care surprinde: <strong>ferestrele noi fac mai mult condens decât cele vechi</strong>. Este normal și are o explicație precisă. Ferestrele vechi ventilau casa continuu prin neetanșeități (risipind energie). Cele noi, etanșe, rețin căldura — și umiditatea. Soluția nu este regretarea curentului, ci <strong>schimbarea obiceiurilor de aerisire</strong>: aerisire scurtă și intensă de 2-3 ori pe zi.</p>
+
+<h2>Remedii imediate împotriva condensului</h2>
+<ul>
+  <li><strong>Aerisire intensă</strong>: 5 minute cu ferestrele larg deschise de 2-3 ori pe zi schimbă aerul fără a răci pereții</li>
+  <li><strong>Umiditate sub 55-60%</strong>: măsoar-o cu un higrometru; la nevoie, dezumidificator în camerele critice</li>
+  <li><strong>Hotă în bucătărie și ventilator în baie</strong>: pornite în timpul și după utilizare</li>
+  <li><strong>Fără rufe uscate în casă</strong> în camerele cu condens recurent</li>
+  <li><strong>Mobila la 5-10 cm de pereții reci</strong>, ca aerul să circule</li>
+</ul>
+
+<h2>Soluții definitive: intervenția asupra suprafețelor reci</h2>
+<table>
+  <thead><tr><th>Intervenție</th><th>Problema rezolvată</th><th>Impact</th></tr></thead>
+  <tbody>
+    <tr><td>Geam dublu Low-E (Uw ≤ 1,3)</td><td>Condens pe geam</td><td>Ridicat</td></tr>
+    <tr><td>Casetă termoizolată din EPS</td><td>Condens și mucegai deasupra ferestrei</td><td>Ridicat</td></tr>
+    <tr><td>Ramă PVC multicameral</td><td>Condens pe perimetru</td><td>Ridicat</td></tr>
+    <tr><td>Montaj sigilat corect</td><td>Puncte reci localizate</td><td>Mediu-ridicat</td></tr>
+    <tr><td>Geam triplu (zone reci)</td><td>Condens rezidual în climat rece</td><td>Mediu</td></tr>
+  </tbody>
+</table>
+<p>Ferestrele din PVC cu profil german cu 5 camere precum <a href="/ro/produse/dmr-confort">DMR Confort</a> mențin suprafața interioară a ramei peste 14°C chiar și la temperaturi negative afară: condensul de pe perimetru, tipic ramelor reci, dispare.</p>
+
+<h2>Condens între geamuri: un caz diferit</h2>
+<p>Dacă condensul se formează <strong>în interiorul geamului termopan</strong> (între foi, unde nu îl poți șterge), garnitura perimetrală a cedat și gazul izolant a ieșit: geamul trebuie înlocuit. La tâmplăria ThermoDMR, geamul termopan este acoperit de <a href="/ro/garantii">garanția de 15 ani</a>.</p>
+
+<h2>FAQ: întrebări frecvente despre condens</h2>
+<ol>
+  <li><strong>Condensul pe ferestre este vina tâmplăriei?</strong> Depinde unde se formează. Pe centrul geamului indică geamuri slab izolante sau umiditate mare; pe perimetru și pe ramă indică punți termice ale profilului sau montajului; pe peretele de deasupra ferestrei indică aproape întotdeauna caseta netermoizolată. O evaluare tehnică identifică exact cauza.</li>
+  <li><strong>De ce ferestrele noi fac condens și cele vechi nu făceau?</strong> Ferestrele vechi ventilau casa prin neetanșeități, eliminând umiditatea (și căldura). Cele noi sunt etanșe: rețin căldura și umiditatea. Este suficient să adaptezi aerisirea — scurtă și frecventă — pentru ca fenomenul să dispară.</li>
+  <li><strong>Cât trebuie să fie umiditatea în casă pentru a evita condensul?</strong> Între 40% și 55-60% umiditate relativă la 20°C. Peste 65%, condensul apare chiar și pe tâmplărie performantă. Un higrometru ieftin permite monitorizarea în fiecare cameră.</li>
+  <li><strong>Geamul triplu elimină condensul?</strong> Reduce suplimentar riscul pentru că suprafața interioară rămâne mai caldă (17-18°C). Dar dacă umiditatea interioară este scăpată de sub control sau caseta ruloului este punte termică, condensul se mută pe suprafețele reci rămase. Este nevoie de o abordare completă: geam, ramă, casetă și aerisire.</li>
+  <li><strong>Mucegaiul din jurul ferestrelor este periculos?</strong> Sporii de mucegai agravează alergiile și problemele respiratorii, mai ales la copii. Trebuie eliminat cu produse specifice și, mai ales, trebuie eliminată cauza: cât timp suprafețele rămân reci și umiditatea mare, mucegaiul revine.</li>
+  <li><strong>Pot rezolva condensul fără să schimb ferestrele?</strong> Dacă ferestrele au peste 20-25 de ani, nu: îl poți doar atenua prin aerisire. Dacă ferestrele sunt recente și problema este localizată deasupra ferestrei, adesea este suficientă înlocuirea doar a casetei cu una termoizolată — o intervenție rapidă și mult mai ieftină.</li>
+</ol>
+
+<h2>Soluția ThermoDMR împotriva condensului și mucegaiului</h2>
+<p>ThermoDMR produce direct cele trei componente care elimină punțile termice ale ferestrei: tâmplărie PVC cu profil german clasa A, <a href="/ro/produse/casete-rulou">casete termoizolate din EPS</a> și <a href="/ro/produse/jaluzele">rulouri termoizolante</a>. <a href="/ro/contact">Solicită o ofertă gratuită</a>: descrie unde se formează condensul și primești în 24 de ore o propunere cu soluția tehnică potrivită cazului tău.</p>
+    `.trim(),
+  },
+
+  {
+    slug: "ferestre-fonoizolante-izolare-fonica",
+    lang: "ro",
+    title: "Ferestre Fonoizolante: Ghid Izolare Fonică 2026",
+    description: "Ferestre antizgomot: cum funcționează, câți dB sunt necesari, geamuri laminate și costuri. Ghidul complet pentru liniște chiar și la oraș.",
+    date: "2026-08-06",
+    category: "Ghiduri",
+    readingTime: 10,
+    content: `
+<h2>Când sunt necesare ferestrele fonoizolante</h2>
+<p>Trafic sub geam, terase zgomotoase, cale ferată, aeroport în zonă: zgomotul este prima cauză a tulburărilor de somn în orașele mari. <strong>Ferestrele fonoizolante</strong> sunt tâmplărie proiectată să atenueze zgomotul exterior cu 38-46 de decibeli — diferența dintre a auzi traficul "în cameră" și a-l percepe ca un foșnet îndepărtat.</p>
+<p>Cifra cheie: fereastra este punctul acustic cel mai slab al fațadei. Un zid de cărămidă atenuează 50-55 dB; o fereastră veche cu geam simplu doar 25-28 dB. Zgomotul intră pe acolo.</p>
+
+<h2>Indicele Rw: numărul care măsoară liniștea</h2>
+<p>Izolarea fonică a tâmplăriei se măsoară cu indicele <strong>Rw</strong>, exprimat în decibeli. Atenție la scară: este logaritmică, deci <strong>+10 dB = zgomot perceput înjumătățit</strong>.</p>
+<table>
+  <thead><tr><th>Rw tâmplărie</th><th>Performanță</th><th>Situație recomandată</th></tr></thead>
+  <tbody>
+    <tr><td>25-30 dB</td><td>De bază (tâmplărie veche)</td><td>Insuficient în mediu urban</td></tr>
+    <tr><td>32-36 dB</td><td>Standard modern</td><td>Zone rezidențiale liniștite</td></tr>
+    <tr><td>38-42 dB</td><td>Acustic</td><td>Străzi circulate, centre urbane</td></tr>
+    <tr><td>43-46+ dB</td><td>Acustic avansat</td><td>Cale ferată, aeroporturi, zone de noapte</td></tr>
+  </tbody>
+</table>
+<p>Standardul ThermoDMR pornește de la <strong>Rw 38 dB</strong>, potrivit pentru majoritatea contextelor urbane; pentru cerințe superioare se depășesc 44 dB cu configurații dedicate.</p>
+
+<h2>Cum este construită o fereastră antizgomot</h2>
+<h3>Geamuri asimetrice și laminate</h3>
+<p>Secretul nu este geamul "mai gros", ci <strong>asimetria</strong>: două foi de grosimi diferite (ex. 6 mm exterior și 4 mm interior) vibrează la frecvențe diferite și nu intră în rezonanță. Pentru performanțe maxime se folosește <strong>geamul laminat acustic</strong>: două foi unite de o folie PVB acustică ce amortizează vibrațiile sonore. O configurație 33.1/16/6 depășește 42 dB.</p>
+<h3>Profil multicameral și garnituri</h3>
+<p>Profilul PVC cu 5 camere amortizează vibrațiile mai bine decât materialele rigide: camerele de aer interioare funcționează ca bariere acustice succesive. Cele <strong>trei garnituri de etanșare</strong> elimină trecerea aerului — iar pe unde trece aerul, trece și zgomotul.</p>
+<h3>Montajul: jumătate din rezultat</h3>
+<p>O tâmplărie de 42 dB montată cu rosturi nesigilate performează ca una de 30 dB: zgomotul ocolește geamul și trece prin rost. Montajul acustic prevede sigilare elastică continuă pe tot perimetrul și benzi autoexpandante între ramă și zidărie.</p>
+
+<h2>Rolul rulourilor și al casetelor</h2>
+<p>Punctul slab ascuns este <strong>caseta ruloului</strong>: o cutie goală care comunică cu exteriorul, chiar deasupra ferestrei. O <a href="/ro/produse/casete-rulou">casetă termoizolată</a> cu panouri fonoabsorbante închide această cale de intrare a zgomotului. Și <a href="/ro/produse/jaluzele">rulourile termoizolante</a> coborâte adaugă 3-5 dB de atenuare nocturnă — exact în orele în care contează cel mai mult.</p>
+
+<h2>Cât costă ferestrele fonoizolante</h2>
+<p>O fereastră PVC cu geam acustic laminat costă în medie cu <strong>15-30% mai mult</strong> decât versiunea standard echivalentă. Pentru un dormitor (1-2 ferestre), investiția suplimentară este de câteva sute de euro — adesea cel mai bun raport cost/beneficiu pentru calitatea somnului.</p>
+
+<h2>FAQ: întrebări frecvente despre ferestrele antizgomot</h2>
+<ol>
+  <li><strong>Câți dB trebuie să aibă o fereastră pentru somn liniștit la oraș?</strong> Pe o stradă urbană circulată (65-70 dB vârfuri nocturne) sunt necesari cel puțin 38-40 dB de atenuare pentru a coborî sub 30 dB în cameră, pragul recomandat pentru somn. În zone cu cale ferată sau viață de noapte, mai bine 42+ dB.</li>
+  <li><strong>Geamul triplu izolează fonic mai bine decât cel dublu?</strong> Nu, este una dintre cele mai frecvente confuzii. Geamul triplu simetric poate chiar înrăutăți acustica prin rezonanță. Pentru zgomot este nevoie de geam dublu asimetric cu laminat acustic; geamul triplu este pentru frig. Cele două cerințe se combină în configurații dedicate.</li>
+  <li><strong>Ferestrele PVC izolează fonic mai bine decât aluminiul?</strong> La geam egal, da, ușor: structura multicamerală a PVC-ului amortizează vibrațiile mai bine decât metalul. Diferența reală o fac însă geamul laminat, garniturile și calitatea montajului.</li>
+  <li><strong>Pot îmbunătăți acustica fără să schimb ferestrele?</strong> Parțial: înlocuirea garniturilor uzate și sigilarea casetei recuperează câțiva dB. Dar dacă tâmplăria are geamuri vechi și profil fără etanșări multiple, limita structurală rămâne: înlocuirea este singura intervenție cu adevărat eficientă.</li>
+  <li><strong>Ferestrele antizgomot țin și de cald?</strong> Da: geamul laminat acustic este și Low-E, deci o fereastră de 40+ dB este de regulă și clasa A termică. O singură intervenție rezolvă zgomotul și facturile.</li>
+</ol>
+
+<h2>Liniștea la comandă, de la ThermoDMR</h2>
+<p>ThermoDMR configurează fiecare tâmplărie în funcție de expunerea acustică reală: geamuri asimetrice sau laminate acustic, trei garnituri standard, casete termoizolate și montaj sigilat. <a href="/ro/contact">Solicită o ofertă gratuită</a> indicând sursa de zgomot (stradă, cale ferată, localuri) și primești în 24 de ore configurația acustică recomandată, cu valoarea Rw certificată. Vezi și <a href="/ro/produse">catalogul complet de produse</a>.</p>
+    `.trim(),
+  },
+
+  {
+    slug: "ferestre-pvc-sau-lemn-care-alegi",
+    lang: "ro",
+    title: "Ferestre PVC sau Lemn: Ce Alegi? Comparație 2026",
+    description: "PVC sau lemn pentru ferestre? Comparație pe izolare, prețuri, întreținere și durabilitate. Avantaje, dezavantaje și când să alegi fiecare.",
+    date: "2026-08-06",
+    category: "Ghiduri",
+    readingTime: 9,
+    content: `
+<h2>PVC sau lemn: două filozofii față în față</h2>
+<p>Lemnul este materialul istoric al tâmplăriei: cald, natural, elegant. PVC-ul este materialul care l-a depășit în vânzări în ultimii douăzeci de ani: practic, izolant, fără întreținere. Alegerea între <strong>ferestre din PVC sau lemn</strong> înseamnă să cântărești estetica, bugetul, timpul pentru întreținere și performanțele. Analizăm fiecare parametru cu cifre reale.</p>
+
+<h2>Izolare termică: egalitate substanțială, cu o diferență</h2>
+<ul>
+  <li><strong>PVC 5 camere</strong> — Uf 0,95-1,3 W/m²K</li>
+  <li><strong>Lemn stratificat 68-80 mm</strong> — Uf 1,1-1,4 W/m²K</li>
+</ul>
+<p>Diferența stă în <strong>constanța în timp</strong>: PVC-ul își menține performanțele decenii întregi fără intervenții; lemnul doar dacă lăcuirea este intactă. Crăpăturile și lacul exfoliat lasă umiditatea să intre, deformând rama și deschizând neetanșeități.</p>
+
+<h2>Întreținerea: adevăratul criteriu decisiv</h2>
+<table>
+  <thead><tr><th>Aspect</th><th>PVC</th><th>Lemn</th></tr></thead>
+  <tbody>
+    <tr><td>Relăcuire</td><td>Niciodată</td><td>La 5-8 ani (2-4 expus la sud/mare)</td></tr>
+    <tr><td>Curățare</td><td>Apă și detergent neutru</td><td>Produse dedicate pentru lemn</td></tr>
+    <tr><td>Cost întreținere 30 ani</td><td>~0 €</td><td>1.500-4.000 € (8 ferestre)</td></tr>
+    <tr><td>Risc dacă este neglijat</td><td>Niciunul</td><td>Putrezire, deformări, neetanșeități</td></tr>
+  </tbody>
+</table>
+<p>Costul real al lemnului nu este (doar) prețul de achiziție: este ciclul de relăcuiri pe toată durata de viață. Cine nu are timp alege PVC-ul din acest motiv înaintea oricărui altul.</p>
+
+<h2>Preț: PVC-ul costă cu 30-40% mai puțin</h2>
+<p>La dimensiuni și geam egale, o fereastră din lemn de calitate costă cu <strong>30-40% mai mult</strong> decât echivalentul din PVC; lemn-aluminiu chiar cu 50-70% mai mult. La un apartament cu 8 ferestre, diferența depășește 3.000-6.000 de euro, la care se adaugă întreținerea periodică. Cu PVC-ul în <a href="/ro/avantaje">producție directă</a>, diferența crește și mai mult.</p>
+
+<h2>Estetică: punctul forte al lemnului, dar distanța s-a închis</h2>
+<p>Fibra naturală a lemnului rămâne de neegalat la atingere. Dar distanța s-a redus drastic: profilele PVC cu <strong>finisaj Tecnolegno efect lemn</strong> — precum cele ale <a href="/ro/produse/dmr-confort">DMR Confort</a> — reproduc esențele și fibra cu folii texturate în relief, greu de deosebit de la un metru distanță.</p>
+
+<h2>Durabilitate: depinde cine are grijă de ele</h2>
+<ul>
+  <li><strong>PVC cu profil german</strong>: 40-50 de ani fără intervenții, nu se teme de umiditate, salinitate sau insecte</li>
+  <li><strong>Lemn bine întreținut</strong>: 30-50 de ani, dar numai cu relăcuiri regulate</li>
+  <li><strong>Lemn neglijat</strong>: 15-20 de ani, apoi putrezire și înlocuire</li>
+</ul>
+
+<h2>FAQ: întrebări frecvente despre PVC și lemn</h2>
+<ol>
+  <li><strong>Ferestrele din PVC devalorizează un imobil de valoare?</strong> Nu, dacă finisajul este coerent cu contextul: profilele efect lemn de gamă înaltă păstrează estetica tradițională cu performanțe superioare. La imobilele istorice protejate trebuie verificat regulamentul local.</li>
+  <li><strong>Lemnul izolează mai bine decât PVC-ul?</strong> Nu, performanțele termice sunt echivalente la secțiune și geam egale. PVC-ul multicameral modern atinge valori Uf chiar mai bune decât multe tâmplării din lemn standard — și le menține în timp fără întreținere.</li>
+  <li><strong>Cât durează o fereastră PVC față de una din lemn?</strong> PVC-ul cu profil german durează 40-50 de ani fără relăcuiri. Lemnul poate dura la fel, dar numai cu întreținere regulată la 5-8 ani; neglijat, degradarea începe după 10-15 ani.</li>
+  <li><strong>Există o cale de mijloc între PVC și lemn?</strong> Da, două: PVC-ul cu finisaj Tecnolegno efect lemn (performanțele și prețul PVC-ului, estetica lemnului) și lemn-aluminiu (lemn la interior, capac exterior de aluminiu), care însă costă cu 50-70% mai mult decât PVC-ul.</li>
+  <li><strong>PVC sau lemn pentru o casă la munte?</strong> PVC-ul multicameral gestionează fără probleme climatul rece (cu geam triplu precum <a href="/ro/produse/dmr-passive">DMR Passive</a> se atinge standardul de casă pasivă). Lemnul rămâne popular la munte din tradiție estetică, dar cere întreținere mai frecventă exact în climatul cu variații mari.</li>
+</ol>
+
+<h2>Alegerea rațională pentru majoritatea caselor</h2>
+<p>Dacă vrei cel mai bun raport între performanțe, preț și zero întreținere, <strong>PVC-ul cu profil german este alegerea rațională</strong>; lemnul rămâne alegerea inimii pentru cine îi iubește autenticitatea și este dispus să o îngrijească. ThermoDMR produce direct ferestre PVC clasa A inclusiv cu finisaj efect lemn, cu <a href="/ro/garantii">garanție 15 ani</a>. <a href="/ro/contact">Solicită o ofertă gratuită</a> — răspuns în 24 de ore. Citește și comparația <a href="/ro/blog/ferestre-pvc-sau-aluminiu-care-alegi">PVC vs aluminiu</a> pentru imaginea completă.</p>
     `.trim(),
   },
 ];

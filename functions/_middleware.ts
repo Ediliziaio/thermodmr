@@ -718,7 +718,50 @@ const PAGES: Record<string, PageMeta> = {
     breadcrumb: [{name:"Home",url:`${B}/`},{name:"Blog",url:`${B}/blog`},{name:"Finestre PVC o Alluminio",url:`${B}/blog/finestre-pvc-o-alluminio-quale-scegliere`}],
   },
 
+  "/blog/condensa-sulle-finestre-cause-rimedi": {
+    title: "Condensa sulle Finestre: Cause e Rimedi Definitivi (2026)",
+    description: "Perché si forma condensa su vetri e infissi? Cause, rimedi immediati e soluzioni definitive contro condensa e muffa intorno alle finestre.",
+    canonical: `${B}/blog/condensa-sulle-finestre-cause-rimedi`,
+    lang: "it", alternateIt: `${B}/blog/condensa-sulle-finestre-cause-rimedi`, alternateRo: `${B}/ro/blog/condens-pe-ferestre-cauze-remedii`,
+    breadcrumb: [{name:"Home",url:`${B}/`},{name:"Blog",url:`${B}/blog`},{name:"Condensa sulle Finestre",url:`${B}/blog/condensa-sulle-finestre-cause-rimedi`}],
+  },
+  "/blog/finestre-insonorizzate-isolamento-acustico": {
+    title: "Finestre Insonorizzate: Guida all'Isolamento Acustico 2026",
+    description: "Finestre antirumore: come funzionano, quanti dB servono, vetri stratificati e costi. La guida completa per dormire nel silenzio anche in città.",
+    canonical: `${B}/blog/finestre-insonorizzate-isolamento-acustico`,
+    lang: "it", alternateIt: `${B}/blog/finestre-insonorizzate-isolamento-acustico`, alternateRo: `${B}/ro/blog/ferestre-fonoizolante-izolare-fonica`,
+    breadcrumb: [{name:"Home",url:`${B}/`},{name:"Blog",url:`${B}/blog`},{name:"Finestre Insonorizzate",url:`${B}/blog/finestre-insonorizzate-isolamento-acustico`}],
+  },
+  "/blog/finestre-pvc-o-legno-quale-scegliere": {
+    title: "Finestre PVC o Legno: Quale Scegliere? Confronto 2026",
+    description: "PVC o legno per le finestre? Confronto su isolamento, prezzi, manutenzione e durata. Vantaggi, svantaggi e quando scegliere l'uno o l'altro.",
+    canonical: `${B}/blog/finestre-pvc-o-legno-quale-scegliere`,
+    lang: "it", alternateIt: `${B}/blog/finestre-pvc-o-legno-quale-scegliere`, alternateRo: `${B}/ro/blog/ferestre-pvc-sau-lemn-care-alegi`,
+    breadcrumb: [{name:"Home",url:`${B}/`},{name:"Blog",url:`${B}/blog`},{name:"Finestre PVC o Legno",url:`${B}/blog/finestre-pvc-o-legno-quale-scegliere`}],
+  },
+
   // ─── Blog post RO ───────────────────────────────────────────────────────────
+  "/ro/blog/condens-pe-ferestre-cauze-remedii": {
+    title: "Condens pe Ferestre: Cauze și Remedii Definitive (2026)",
+    description: "De ce apare condens pe geamuri și tâmplărie? Cauze, remedii imediate și soluții definitive împotriva condensului și mucegaiului la ferestre.",
+    canonical: `${B}/ro/blog/condens-pe-ferestre-cauze-remedii`,
+    lang: "ro", alternateIt: `${B}/blog/condensa-sulle-finestre-cause-rimedi`, alternateRo: `${B}/ro/blog/condens-pe-ferestre-cauze-remedii`,
+    breadcrumb: [{name:"Acasă",url:`${B}/ro`},{name:"Blog",url:`${B}/ro/blog`},{name:"Condens pe Ferestre",url:`${B}/ro/blog/condens-pe-ferestre-cauze-remedii`}],
+  },
+  "/ro/blog/ferestre-fonoizolante-izolare-fonica": {
+    title: "Ferestre Fonoizolante: Ghid Izolare Fonică 2026",
+    description: "Ferestre antizgomot: cum funcționează, câți dB sunt necesari, geamuri laminate și costuri. Ghidul complet pentru liniște chiar și la oraș.",
+    canonical: `${B}/ro/blog/ferestre-fonoizolante-izolare-fonica`,
+    lang: "ro", alternateIt: `${B}/blog/finestre-insonorizzate-isolamento-acustico`, alternateRo: `${B}/ro/blog/ferestre-fonoizolante-izolare-fonica`,
+    breadcrumb: [{name:"Acasă",url:`${B}/ro`},{name:"Blog",url:`${B}/ro/blog`},{name:"Ferestre Fonoizolante",url:`${B}/ro/blog/ferestre-fonoizolante-izolare-fonica`}],
+  },
+  "/ro/blog/ferestre-pvc-sau-lemn-care-alegi": {
+    title: "Ferestre PVC sau Lemn: Ce Alegi? Comparație 2026",
+    description: "PVC sau lemn pentru ferestre? Comparație pe izolare, prețuri, întreținere și durabilitate. Avantaje, dezavantaje și când să alegi fiecare.",
+    canonical: `${B}/ro/blog/ferestre-pvc-sau-lemn-care-alegi`,
+    lang: "ro", alternateIt: `${B}/blog/finestre-pvc-o-legno-quale-scegliere`, alternateRo: `${B}/ro/blog/ferestre-pvc-sau-lemn-care-alegi`,
+    breadcrumb: [{name:"Acasă",url:`${B}/ro`},{name:"Blog",url:`${B}/ro/blog`},{name:"Ferestre PVC sau Lemn",url:`${B}/ro/blog/ferestre-pvc-sau-lemn-care-alegi`}],
+  },
   "/ro/blog/ferestre-pvc-sau-aluminiu-care-alegi": {
     title: "Ferestre PVC sau Aluminiu: Ce Alegi? Comparație 2026",
     description: "PVC sau aluminiu pentru ferestre? Comparație completă: izolare, prețuri, durabilitate și întreținere. Ghidul pentru alegerea corectă în 2026.",
