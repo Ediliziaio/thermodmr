@@ -11,6 +11,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import { LanguageProvider, DynamicLanguageProvider } from "./i18n/LanguageContext";
 import { Loader2 } from "lucide-react";
 import { isAppDomain, isWwwDomain, isDev, APP_URL, WWW_URL, redirectTo } from "./utils/subdomain";
+import { captureUtm } from "./lib/leadNotify";
 
 // Import immediati per pagine critiche
 import Auth from "./pages/Auth";
@@ -32,6 +33,7 @@ const ContattiPage = lazy(() => import("./pages/ContattiPage"));
 const DiventaRivenditore = lazy(() => import("./pages/DiventaRivenditore"));
 const BlogList = lazy(() => import("./pages/BlogList"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
+const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
 
 // Lazy loading — area riservata
 const Analytics = lazy(() => import("./pages/Analytics"));
@@ -99,6 +101,7 @@ const PublicRoutes = () => (
     <Route path="/diventa-rivenditore" element={<LanguageProvider lang="it"><DiventaRivenditore /></LanguageProvider>} />
     <Route path="/blog" element={<LanguageProvider lang="it"><BlogList /></LanguageProvider>} />
     <Route path="/blog/:slug" element={<LanguageProvider lang="it"><BlogPost /></LanguageProvider>} />
+    <Route path="/privacy" element={<LanguageProvider lang="it"><PrivacyPage /></LanguageProvider>} />
 
     {/* ---- Română /ro/* ---- */}
     <Route path="/ro" element={<LanguageProvider lang="ro"><HomeRouter publicOnly /></LanguageProvider>} />
@@ -117,6 +120,7 @@ const PublicRoutes = () => (
     <Route path="/ro/devino-distribuitor" element={<LanguageProvider lang="ro"><DiventaRivenditore /></LanguageProvider>} />
     <Route path="/ro/blog" element={<LanguageProvider lang="ro"><BlogList /></LanguageProvider>} />
     <Route path="/ro/blog/:slug" element={<LanguageProvider lang="ro"><BlogPost /></LanguageProvider>} />
+    <Route path="/ro/confidentialitate" element={<LanguageProvider lang="ro"><PrivacyPage /></LanguageProvider>} />
 
     <Route path="*" element={<NotFound />} />
   </Routes>
@@ -224,12 +228,19 @@ const DevRoutes = () => (
     <Route path="/blog/:slug" element={<LanguageProvider lang="it"><BlogPost /></LanguageProvider>} />
     <Route path="/ro/blog" element={<LanguageProvider lang="ro"><BlogList /></LanguageProvider>} />
     <Route path="/ro/blog/:slug" element={<LanguageProvider lang="ro"><BlogPost /></LanguageProvider>} />
+    <Route path="/privacy" element={<LanguageProvider lang="it"><PrivacyPage /></LanguageProvider>} />
+    <Route path="/ro/confidentialitate" element={<LanguageProvider lang="ro"><PrivacyPage /></LanguageProvider>} />
 
     <Route path="*" element={<NotFound />} />
   </Routes>
 );
 
 const App = () => {
+  // Attribuzione lead: memorizza gli UTM della prima visita
+  useEffect(() => {
+    captureUtm();
+  }, []);
+
   // Scegli il set di route in base al dominio
   const ActiveRoutes = isDev
     ? DevRoutes

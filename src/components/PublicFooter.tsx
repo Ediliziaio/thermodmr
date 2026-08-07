@@ -122,9 +122,14 @@ const PublicFooter = () => {
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-6 text-center">
+        <div className="border-t border-white/10 pt-6 text-center space-y-2">
           <p className="text-sm text-white/30">
             © {new Date().getFullYear()} ThermoDMR — MARYSORYNA SRL. {t.footer.allRights}
+          </p>
+          <p className="text-xs text-white/25">
+            <Link to={lang === "ro" ? "/ro/confidentialitate" : "/privacy"} className="hover:text-white/60 underline transition-colors">
+              {lang === "ro" ? "Politica de confidențialitate" : "Informativa privacy"}
+            </Link>
           </p>
         </div>
       </div>

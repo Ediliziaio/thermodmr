@@ -631,6 +631,25 @@ const PAGES: Record<string, PageMeta> = {
     jsonLd: null,
   },
 
+  "/privacy": {
+    title: "Informativa Privacy — ThermoDMR",
+    description: "Come ThermoDMR (MARYSORYNA SRL) tratta i dati personali inviati tramite i moduli del sito: finalità, conservazione e i tuoi diritti GDPR.",
+    canonical: `${B}/privacy`,
+    lang: "it",
+    alternateIt: `${B}/privacy`,
+    alternateRo: `${B}/ro/confidentialitate`,
+    jsonLd: null,
+  },
+  "/ro/confidentialitate": {
+    title: "Politica de Confidențialitate — ThermoDMR",
+    description: "Cum tratează ThermoDMR (MARYSORYNA SRL) datele personale trimise prin formularele site-ului: scopuri, păstrare și drepturile tale GDPR.",
+    canonical: `${B}/ro/confidentialitate`,
+    lang: "ro",
+    alternateIt: `${B}/privacy`,
+    alternateRo: `${B}/ro/confidentialitate`,
+    jsonLd: null,
+  },
+
   // ─── Blog post IT ───────────────────────────────────────────────────────────
   "/blog/finestre-pvc-profilo-tedesco-guida-completa": {
     title: "Finestre in PVC con Profilo Tedesco: Guida Completa 2026",

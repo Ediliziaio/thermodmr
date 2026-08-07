@@ -43,6 +43,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { notifyNewLead, leadSource } from "@/lib/leadNotify";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 import { fadeUp, stagger, inViewOptions } from "@/lib/animations";
@@ -681,14 +682,25 @@ const ContactForm = () => {
         ? `[${tipoUtente}] ${formData.azienda.trim()}`.trim()
         : formData.azienda.trim() || null;
 
+      const fonte = leadSource();
       const { error } = await supabase.from("contact_requests").insert({
         nome: formData.nome.trim(),
         azienda: aziendaValue,
         email: formData.email.trim(),
         telefono: formData.telefono.trim() || null,
-        messaggio: formData.messaggio.trim(),
+        messaggio: `${formData.messaggio.trim()}\n\n— Fonte: ${fonte} | Lingua: ${lang.toUpperCase()}`,
       });
       if (error) throw error;
+      notifyNewLead({
+        nome: formData.nome.trim(),
+        email: formData.email.trim(),
+        telefono: formData.telefono.trim() || undefined,
+        azienda: aziendaValue || undefined,
+        messaggio: formData.messaggio.trim(),
+        tipo: tipoUtente || undefined,
+        fonte,
+        lingua: lang,
+      });
       toast({ title: t.contatti.toastSuccess, description: t.contatti.toastSuccessDesc });
       setFormData({ nome: "", azienda: "", email: "", telefono: "", messaggio: "" });
       setTipoUtente("");

@@ -60,6 +60,7 @@ function rules(p) {
   if (p.includes("/prodotti/") || p.includes("/ro/produse/")) return { pri: "0.8", freq: "monthly" };
   if (p === "/blog" || p === "/ro/blog") return { pri: "0.8", freq: "weekly" };
   if (p.includes("/blog/")) return { pri: "0.7", freq: "monthly" };
+  if (p.includes("privacy") || p.includes("confidentialitate")) return { pri: "0.3", freq: "yearly" };
   if (p.includes("contatti") || p.includes("contact") || p.includes("rivenditore") || p.includes("distribuitor"))
     return { pri: "0.8", freq: "monthly" };
   return { pri: "0.7", freq: "monthly" };

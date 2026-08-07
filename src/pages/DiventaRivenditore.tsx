@@ -35,7 +35,7 @@ const DiventaRivenditore = () => {
   const [ctaRef, ctaInView] = useInView(inViewOptions);
 
   const isRo = lang === "ro";
-  const contattiLink = lang === "ro" ? "/ro/contact" : "/contatti";
+  const contattiLink = lang === "ro" ? "/ro/contact?tipo=rivenditore" : "/contatti?tipo=rivenditore";
 
   return (
     <div className="min-h-screen bg-white">
