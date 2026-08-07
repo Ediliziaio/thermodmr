@@ -871,7 +871,7 @@ const PAGES: Record<string, PageMeta> = {
 const STATIC_EXTS = new Set([
   ".js", ".css", ".png", ".jpg", ".jpeg", ".webp", ".avif",
   ".svg", ".ico", ".woff", ".woff2", ".ttf", ".map",
-  ".json", ".xml", ".txt",
+  ".json", ".xml", ".txt", ".webmanifest",
 ]);
 
 function isStaticAsset(pathname: string): boolean {
@@ -1012,11 +1012,29 @@ export const onRequest = async (context: {
   next: () => Promise<Response>;
 }) => {
   const url = new URL(context.request.url);
-  const pathname = url.pathname;
+  let pathname = url.pathname;
+  const isPublicHost = url.hostname === "thermodmr.com" || url.hostname === "www.thermodmr.com";
 
   // Skip static assets immediately
   if (isStaticAsset(pathname)) {
     return context.next();
+  }
+
+  // Portale privato (app.*): mai indicizzato dai motori
+  if (!isPublicHost && url.hostname.startsWith("app.")) {
+    const response = await context.next();
+    const res = new Response(response.body, response);
+    res.headers.set("X-Robots-Tag", "noindex, nofollow");
+    return res;
+  }
+
+  // Trailing slash → 301 verso l'URL canonico senza slash
+  if (isPublicHost && pathname.length > 1 && pathname.endsWith("/")) {
+    const clean = pathname.replace(/\/+$/, "");
+    if (PAGES[clean]) {
+      return Response.redirect(`${BASE_URL}${clean}${url.search}`, 301);
+    }
+    pathname = clean;
   }
 
   // Only handle text/html requests
@@ -1035,7 +1053,15 @@ export const onRequest = async (context: {
 
   const meta = PAGES[pathname];
   if (!meta) {
-    // Unknown page — serve as-is (fallback to index.html defaults)
+    // URL sconosciuto sul dominio pubblico: la SPA mostra la pagina 404,
+    // ma serve anche lo status 404 reale (altrimenti Google indicizza soft-404)
+    if (isPublicHost) {
+      return new Response(response.body, {
+        status: 404,
+        statusText: "Not Found",
+        headers: response.headers,
+      });
+    }
     return response;
   }
 
