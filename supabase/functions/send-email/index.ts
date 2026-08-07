@@ -1,4 +1,9 @@
 import { corsHeaders, handleCors } from '../_shared/cors.ts';
+import { createSupabaseClient, getAuthenticatedUser } from '../_shared/auth.ts';
+
+/** Non-staff callers (public site forms) can only notify the office inbox. */
+const OFFICE_EMAIL = 'office.marysoryna@gmail.com';
+const STAFF_ROLES = ['super_admin', 'commerciale'];
 
 Deno.serve(async (req) => {
   const corsResponse = handleCors(req);
@@ -6,9 +11,20 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { to, apiKey, html: customHtml, subject: customSubject, template, data } = body;
+    const { to: requestedTo, apiKey, html: customHtml, subject: customSubject, template, data } = body;
 
-    const resendKey = apiKey || Deno.env.get('RESEND_API_KEY');
+    // Anti-abuso: senza utente staff autenticato, destinatario bloccato
+    // sull'ufficio e apiKey del client ignorata (niente spam relay).
+    let isStaff = false;
+    try {
+      const user = await getAuthenticatedUser(createSupabaseClient(req));
+      isStaff = user.roles.some((r) => STAFF_ROLES.includes(r));
+    } catch {
+      // chiamante anonimo (form pubblico): resta isStaff = false
+    }
+
+    const to = isStaff ? requestedTo : OFFICE_EMAIL;
+    const resendKey = (isStaff ? apiKey : undefined) || Deno.env.get('RESEND_API_KEY');
     if (!resendKey) {
       return new Response(
         JSON.stringify({ error: 'Resend API key non configurata' }),

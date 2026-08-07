@@ -279,6 +279,39 @@ export type Database = {
         }
         Relationships: []
       }
+      email_templates: {
+        Row: {
+          created_at: string | null
+          design: Json | null
+          html: string | null
+          id: string
+          name: string
+          subject: string
+          template_key: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          design?: Json | null
+          html?: string | null
+          id?: string
+          name: string
+          subject?: string
+          template_key: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          design?: Json | null
+          html?: string | null
+          id?: string
+          name?: string
+          subject?: string
+          template_key?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       dealers: {
         Row: {
           cap: string

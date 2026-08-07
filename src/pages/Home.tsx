@@ -653,7 +653,7 @@ const BecomeDealer = () => {
    10. CONTACT FORM
    ═══════════════════════════════════════════ */
 const ContactForm = () => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [ref, inView] = useInView(inViewOptions);
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);

@@ -241,7 +241,7 @@ const BlogList = () => {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[hsl(195,85%,45%)] opacity-[0.07] blur-[120px] pointer-events-none" />
 
           <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
-            <motion.div {...fadeUp} className="text-center">
+            <motion.div variants={fadeUp} initial="hidden" animate="visible" className="text-center">
               <span className="inline-flex items-center gap-2 text-[hsl(195,85%,55%)] text-xs font-bold uppercase tracking-[3px] mb-5">
                 <BookOpen className="h-3.5 w-3.5" />
                 {l.tag}

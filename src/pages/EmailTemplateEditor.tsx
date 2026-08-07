@@ -236,7 +236,7 @@ export default function EmailTemplateEditor() {
             template_key: config.key,
             name: config.name,
             subject: subject.trim() || config.defaultSubject,
-            design,
+            design: design as import("@/integrations/supabase/types").Json,
             html,
           },
           { onConflict: "template_key" }

@@ -5,6 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 interface PasswordInputProps {
   id: string;
+  className?: string;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
@@ -19,6 +20,7 @@ export const PasswordInput = ({
   placeholder = "",
   required = false,
   disabled = false,
+  className = "",
 }: PasswordInputProps) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -32,7 +34,7 @@ export const PasswordInput = ({
         placeholder={placeholder}
         required={required}
         disabled={disabled}
-        className="pr-10"
+        className={`pr-10 ${className}`.trim()}
       />
       <Button
         type="button"

@@ -38,6 +38,8 @@ const BlogPost = () => {
     by: isRo ? "di" : "di",
   };
 
+  const heroImage = post.heroImage ?? "/images/hero-bg.jpg";
+
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -70,7 +72,6 @@ const BlogPost = () => {
     wordCount: (post.readingTime ?? 5) * 200,
   };
 
-  const heroImage = post.heroImage ?? "/images/hero-bg.jpg";
 
   return (
     <>

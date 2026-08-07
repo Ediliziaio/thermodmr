@@ -42,12 +42,12 @@ export type OrderFormCategory = (typeof ORDER_FORM_CATEGORIES)[number];
  * Unica fonte di verità per evitare divergenze tra creazione ordine e preventivo.
  */
 export const calcLineTotal = (line: {
-  quantita: number;
-  prezzo_unitario: number;
-  sconto: number;
-  iva: number;
+  quantita?: number;
+  prezzo_unitario?: number;
+  sconto?: number;
+  iva?: number;
 }): number => {
-  const subtotal = line.quantita * line.prezzo_unitario;
-  const afterDiscount = subtotal * (1 - line.sconto / 100);
-  return afterDiscount * (1 + line.iva / 100);
+  const subtotal = (line.quantita ?? 0) * (line.prezzo_unitario ?? 0);
+  const afterDiscount = subtotal * (1 - (line.sconto ?? 0) / 100);
+  return afterDiscount * (1 + (line.iva ?? 0) / 100);
 };
