@@ -45,6 +45,13 @@ test('edge routes redirect broken language URLs and preserve real unknown-page 4
   const missing = await onRequest({ request: new Request('https://thermodmr.com/blog/not-a-post'), next: async () => new Response('<html></html>', { headers: { 'content-type': 'text/html' } }) });
   assert.equal(missing.status, 404);
   assert.equal(missing.headers.get('x-robots-tag'), 'noindex, follow');
+  const htmlAsset = await onRequest({ request: new Request('https://thermodmr.com/images/missing.webp'), next: async () => new Response('<html></html>', { headers: { 'content-type': 'text/html', 'cache-control': 'public,max-age=604800' } }) });
+  assert.equal(htmlAsset.status, 404);
+  assert.equal(htmlAsset.headers.get('cache-control'), 'no-store');
+  const realImage = new Response('image bytes', { headers: { 'content-type': 'image/webp' } });
+  assert.equal(await onRequest({ request: new Request('https://thermodmr.com/images/real.webp'), next: async () => realImage }), realImage);
+  const denied = new Response('private', { status: 403 });
+  assert.equal(await onRequest({ request: new Request('https://thermodmr.com/images/private.webp'), next: async () => denied }), denied);
 });
 
 test('all edge metadata images resolve to public image files', () => {

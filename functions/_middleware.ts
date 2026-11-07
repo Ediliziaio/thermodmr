@@ -1021,9 +1021,18 @@ export const onRequest = async (context: {
     return Response.redirect(`${BASE_URL}${correctedBlogPath}${url.search}`, 301);
   }
 
-  // Skip static assets immediately
+  // Never cache the SPA document as an image when a public file is missing.
   if (isStaticAsset(pathname)) {
-    return context.next();
+    const asset = await context.next();
+    if (isPublicHost && /\.(?:png|jpe?g|webp|avif|gif|svg|ico)$/i.test(pathname)
+      && asset.status === 200 && asset.headers.get("content-type")?.includes("text/html")) {
+      return new Response("Immagine non trovata", { status: 404, headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-store",
+        "X-Robots-Tag": "noindex",
+      } });
+    }
+    return asset;
   }
 
   // Portale privato (app.*): mai indicizzato dai motori
