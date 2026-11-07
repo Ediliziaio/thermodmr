@@ -6,6 +6,8 @@ import PublicFooter from "@/components/PublicFooter";
 import SeoHead from "@/components/SeoHead";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { getBlogPostBySlug, getBlogPostsByLang } from "@/data/blogPosts";
+import { canonicalBlogPath, translatedBlogPath } from "@/data/blogTranslations";
+import NotFound from "./NotFound";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -14,7 +16,10 @@ const BlogPost = () => {
 
   const post = slug ? getBlogPostBySlug(slug, lang) : undefined;
 
-  if (!post) return <Navigate to={isRo ? "/ro/blog" : "/blog"} replace />;
+  if (!post) {
+    const corrected = canonicalBlogPath(`${isRo ? "/ro/blog" : "/blog"}/${slug}`);
+    return corrected ? <Navigate to={corrected} replace /> : <NotFound />;
+  }
 
   const relatedPosts = getBlogPostsByLang(lang)
     .filter((p) => p.slug !== slug)
@@ -22,7 +27,7 @@ const BlogPost = () => {
 
   const blogBase = isRo ? "/ro/blog" : "/blog";
   const canonicalPath = `${blogBase}/${post.slug}`;
-  const hreflangOther = isRo ? `/blog/${post.slug}` : `/ro/blog/${post.slug}`;
+  const hreflangOther = translatedBlogPath(canonicalPath, isRo ? "it" : "ro");
 
   const labels = {
     back: isRo ? "Înapoi la blog" : "Torna al blog",

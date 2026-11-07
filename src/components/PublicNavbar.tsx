@@ -1,3 +1,4 @@
+import { translatedBlogPath } from "@/data/blogTranslations";
 import { Link, useLocation } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { Menu, X, ChevronDown, ArrowRight } from "lucide-react";
@@ -54,6 +55,8 @@ const PublicNavbar = () => {
   // Language switcher: map current IT path to RO and vice versa
   const getAltLangHref = () => {
     const path = location.pathname;
+    const blogTranslation = translatedBlogPath(path, lang === "it" ? "ro" : "it");
+    if (blogTranslation) return blogTranslation;
     if (lang === "it") {
       // Map IT paths to RO equivalents
       const map: Record<string, string> = {

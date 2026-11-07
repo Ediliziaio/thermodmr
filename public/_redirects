@@ -1,5 +1,4 @@
-# www → apex redirect (301 permanente)
-https://www.thermodmr.com/* https://thermodmr.com/:splat 301
+# www → apex is handled in functions/_middleware.ts.
 
 # 301 slug evergreen — vecchi URL con anno
 /blog/finestre-pvc-prezzi-2025 /blog/finestre-pvc-prezzi 301
@@ -9,5 +8,37 @@ https://www.thermodmr.com/* https://thermodmr.com/:splat 301
 /ro/blog/program-reabilitare-termica-finantare-ferestre-2025 /ro/blog/program-reabilitare-termica-finantare-ferestre 301
 /ro/blog/cum-alegi-ferestrele-ghid-cumparaturi-2025 /ro/blog/cum-alegi-ferestrele-ghid-cumparaturi 301
 
-# SPA fallback — tutte le route vanno a index.html
-/* /index.html 200
+# Correct cross-language URLs emitted by the old hreflang generator
+/ro/blog/finestre-pvc-profilo-tedesco-guida-completa /ro/blog/ferestre-pvc-profil-german-ghid-complet 301
+/blog/ferestre-pvc-profil-german-ghid-complet /blog/finestre-pvc-profilo-tedesco-guida-completa 301
+/ro/blog/risparmio-energetico-finestre-pvc-quanto-si-risparmia /ro/blog/economie-energie-ferestre-pvc-calcul-real 301
+/blog/economie-energie-ferestre-pvc-calcul-real /blog/risparmio-energetico-finestre-pvc-quanto-si-risparmia 301
+/ro/blog/tapparelle-coibentate-vs-tradizionali-differenze /ro/blog/jaluzele-termoizolante-vs-standard-diferente 301
+/blog/jaluzele-termoizolante-vs-standard-diferente /blog/tapparelle-coibentate-vs-tradizionali-differenze 301
+/ro/blog/finestre-pvc-prezzi /ro/blog/ferestre-pvc-preturi 301
+/blog/ferestre-pvc-preturi /blog/finestre-pvc-prezzi 301
+/ro/blog/bonus-finestre-detrazione-fiscale /ro/blog/program-reabilitare-termica-finantare-ferestre 301
+/blog/program-reabilitare-termica-finantare-ferestre /blog/bonus-finestre-detrazione-fiscale 301
+/ro/blog/doppio-vetro-vs-triplo-vetro-quale-scegliere /ro/blog/geam-dublu-vs-geam-triplu-care-alegi 301
+/blog/geam-dublu-vs-geam-triplu-care-alegi /blog/doppio-vetro-vs-triplo-vetro-quale-scegliere 301
+/ro/blog/sostituzione-finestre-ristrutturazione-guida /ro/blog/inlocuire-ferestre-renovare-casa-ghid-complet 301
+/blog/inlocuire-ferestre-renovare-casa-ghid-complet /blog/sostituzione-finestre-ristrutturazione-guida 301
+/ro/blog/come-scegliere-le-finestre-guida-acquisto /ro/blog/cum-alegi-ferestrele-ghid-cumparaturi 301
+/blog/cum-alegi-ferestrele-ghid-cumparaturi /blog/come-scegliere-le-finestre-guida-acquisto 301
+/ro/blog/bonus-infissi-2026-detrazioni-finestre-pvc /ro/blog/bonus-tamplarie-2026-deduceri-ferestre-pvc 301
+/blog/bonus-tamplarie-2026-deduceri-ferestre-pvc /blog/bonus-infissi-2026-detrazioni-finestre-pvc 301
+/ro/blog/classe-energetica-casa-2026-finestre-pvc /ro/blog/clasa-energetica-casa-2026-ferestre-pvc 301
+/blog/clasa-energetica-casa-2026-ferestre-pvc /blog/classe-energetica-casa-2026-finestre-pvc 301
+/ro/blog/triplo-vetro-o-doppio-vetro-guida-2026 /ro/blog/geam-triplu-sau-dublu-ghid-2026 301
+/blog/geam-triplu-sau-dublu-ghid-2026 /blog/triplo-vetro-o-doppio-vetro-guida-2026 301
+/ro/blog/finestre-pvc-o-alluminio-quale-scegliere /ro/blog/ferestre-pvc-sau-aluminiu-care-alegi 301
+/blog/ferestre-pvc-sau-aluminiu-care-alegi /blog/finestre-pvc-o-alluminio-quale-scegliere 301
+/ro/blog/condensa-sulle-finestre-cause-rimedi /ro/blog/condens-pe-ferestre-cauze-remedii 301
+/blog/condens-pe-ferestre-cauze-remedii /blog/condensa-sulle-finestre-cause-rimedi 301
+/ro/blog/finestre-insonorizzate-isolamento-acustico /ro/blog/ferestre-fonoizolante-izolare-fonica 301
+/blog/ferestre-fonoizolante-izolare-fonica /blog/finestre-insonorizzate-isolamento-acustico 301
+/ro/blog/finestre-pvc-o-legno-quale-scegliere /ro/blog/ferestre-pvc-sau-lemn-care-alegi 301
+/blog/ferestre-pvc-sau-lemn-care-alegi /blog/finestre-pvc-o-legno-quale-scegliere 301
+
+# Cloudflare Pages supplies the native SPA fallback (no top-level 404.html).
+# The middleware sets a real 404 for unknown public routes.

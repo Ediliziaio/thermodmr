@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { catalogueStructuredData } from "@/lib/catalogueStructuredData";
 
 interface SeoHeadProps {
   title: string;           // senza "— ThermoDMR", viene aggiunto automaticamente
@@ -116,11 +117,11 @@ const SeoHead = ({
       const script = document.createElement("script");
       script.type = "application/ld+json";
       script.setAttribute("data-seoh", "true");
-      script.textContent = JSON.stringify(
+      script.textContent = JSON.stringify(catalogueStructuredData(
         Array.isArray(jsonLd)
           ? { "@context": "https://schema.org", "@graph": jsonLd }
           : jsonLd
-      );
+      ));
       document.head.appendChild(script);
     }
   }, [fullTitle, description, canonicalUrl, lang, ogType, ogImage, noindex, jsonLd, keywords, itUrl, roUrl]);

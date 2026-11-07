@@ -10,6 +10,8 @@
  */
 
 import { allBlogPosts, type BlogPost } from "../src/data/blogPosts";
+import { catalogueStructuredData } from "../src/lib/catalogueStructuredData";
+import { canonicalBlogPath } from "../src/data/blogTranslations";
 import { productFaqs, type ProductFaqItem } from "../src/data/productFaqs";
 
 const BASE_URL = "https://thermodmr.com";
@@ -893,11 +895,6 @@ function buildBreadcrumbSchema(items: Array<{ name: string; url: string }>) {
   };
 }
 
-/** Crawler (search + AI + social): ricevono il contenuto articolo pre-renderizzato,
- *  identico a quello che React renderizza client-side (dynamic rendering, no cloaking). */
-const BOT_UA =
-  /googlebot|bingbot|gptbot|chatgpt-user|oai-searchbot|claudebot|claude-web|anthropic-ai|perplexitybot|perplexity-user|google-extended|ccbot|amazonbot|applebot|bytespider|meta-externalagent|facebookexternalhit|twitterbot|linkedinbot|duckduckbot|yandex|baiduspider|semrushbot|ahrefsbot|petalbot|mj12bot/i;
-
 function getBlogPost(pathname: string): BlogPost | undefined {
   let m = pathname.match(/^\/blog\/([^/]+)\/?$/);
   if (m) {
@@ -1015,6 +1012,15 @@ export const onRequest = async (context: {
   let pathname = url.pathname;
   const isPublicHost = url.hostname === "thermodmr.com" || url.hostname === "www.thermodmr.com";
 
+  if (url.hostname === "www.thermodmr.com") {
+    return Response.redirect(`${BASE_URL}${pathname}${url.search}`, 301);
+  }
+
+  const correctedBlogPath = canonicalBlogPath(pathname);
+  if (isPublicHost && correctedBlogPath && correctedBlogPath !== pathname) {
+    return Response.redirect(`${BASE_URL}${correctedBlogPath}${url.search}`, 301);
+  }
+
   // Skip static assets immediately
   if (isStaticAsset(pathname)) {
     return context.next();
@@ -1056,10 +1062,12 @@ export const onRequest = async (context: {
     // URL sconosciuto sul dominio pubblico: la SPA mostra la pagina 404,
     // ma serve anche lo status 404 reale (altrimenti Google indicizza soft-404)
     if (isPublicHost) {
+      const headers = new Headers(response.headers);
+      headers.set("X-Robots-Tag", "noindex, follow");
       return new Response(response.body, {
         status: 404,
         statusText: "Not Found",
-        headers: response.headers,
+        headers,
       });
     }
     return response;
@@ -1072,15 +1080,15 @@ export const onRequest = async (context: {
   // Blog post: schema BlogPosting + contenuto pre-renderizzato per i crawler
   const post = getBlogPost(pathname);
   const ogType = meta.ogType || (post ? "article" : "website");
-  const ua = context.request.headers.get("user-agent") || "";
-  const isBot = BOT_UA.test(ua);
   const pageFaqs = productFaqs[pathname] ?? [];
-  const botHtml = isBot ? (post ? buildArticleHtml(post) : buildPageHtml(meta, pageFaqs)) : "";
+  // The same initial content is available to every visitor before React mounts.
+  // No user-agent detection: ordinary crawlers can discover the page as well.
+  const initialHtml = post ? buildArticleHtml(post) : buildPageHtml(meta, pageFaqs);
 
   // Build extra <head> scripts to inject
   let extraHead = "";
   if (meta.jsonLd) {
-    extraHead += `\n<script type="application/ld+json">${JSON.stringify(meta.jsonLd)}</script>`;
+    extraHead += `\n<script type="application/ld+json">${JSON.stringify(catalogueStructuredData(meta.jsonLd))}</script>`;
   }
   if (meta.breadcrumb) {
     extraHead += `\n<script type="application/ld+json">${JSON.stringify(buildBreadcrumbSchema(meta.breadcrumb))}</script>`;
@@ -1201,8 +1209,8 @@ export const onRequest = async (context: {
       // (React lo sostituisce al mount per gli utenti reali)
       .on("div#root", {
         element(el) {
-          if (botHtml) {
-            el.setInnerContent(botHtml, { html: true });
+          if (initialHtml) {
+            el.setInnerContent(initialHtml, { html: true });
           }
         },
       })
