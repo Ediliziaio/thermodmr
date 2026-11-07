@@ -18,7 +18,7 @@ interface Product {
 const allProducts: Product[] = [
   { name: "DMR CONFORT", slugIt: "/prodotti/dmr-confort", slugRo: "/ro/produse/dmr-confort", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80", shortIt: "3 camere · Miglior prezzo", shortRo: "3 camere · Cel mai bun preț" },
   { name: "DMR DOMUS", slugIt: "/prodotti/dmr-domus", slugRo: "/ro/produse/dmr-domus", image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80", shortIt: "5 camere · Best seller", shortRo: "5 camere · Best seller" },
-  { name: "DMR PASSIVE", slugIt: "/prodotti/dmr-passive", slugRo: "/ro/produse/dmr-passive", image: "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=600&q=80", shortIt: "7 camere · Passivhaus", shortRo: "7 camere · Passivhaus" },
+  { name: "DMR PASSIVE", slugIt: "/prodotti/dmr-passive", slugRo: "/ro/produse/dmr-passive", image: "https://thermodmr.com/images/thermodmr-finestre-pvc-interni.webp", shortIt: "7 camere · Passivhaus", shortRo: "7 camere · Passivhaus" },
   { name: "Portoncini", slugIt: "/prodotti/portoncini", slugRo: "/ro/produse/usi-intrare", image: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&q=80", shortIt: "Sicurezza RC2", shortRo: "Securitate RC2" },
   { name: "Tapparelle", slugIt: "/prodotti/tapparelle", slugRo: "/ro/produse/jaluzele", image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600&q=80", shortIt: "Motorizzate smart", shortRo: "Motorizate smart" },
   { name: "Persiane", slugIt: "/prodotti/persiane", slugRo: "/ro/produse/obloane", image: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=600&q=80", shortIt: "Alluminio zero manutenzione", shortRo: "Aluminiu zero întreținere" },

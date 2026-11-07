@@ -28,7 +28,7 @@ import RelatedProducts from "@/components/products/RelatedProducts";
 import ProductFaq from "@/components/products/ProductFaq";
 
 const galleryImages = [
-  { src: "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80", alt: "Finestra PVC DMR Passive per casa passiva - architettura contemporanea con profilo tedesco", caption: "Integrazione perfetta in architetture moderne" },
+  { src: "https://thermodmr.com/images/thermodmr-finestre-pvc-interni.webp", alt: "Ambiente interno con finestre in PVC", caption: "Finestre in un ambiente interno" },
   { src: "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=1200&q=80", alt: "Finestra DMR Passive classe energetica A+ - prestazioni certificate Passivhaus ThermoDMR", caption: "Prestazioni certificate Passivhaus" },
   { src: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&q=80", alt: "Triplo vetro basso emissivo DMR Passive - doppio gas argon isolamento termico massimo", caption: "Triplo vetro basso emissivo con doppio gas argon" },
   { src: "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?w=1200&q=80", alt: "Finestra PVC DMR Passive villa moderna - design minimale profilo a vista ridotta ThermoDMR", caption: "Design minimale con profili a vista ridotta" },
@@ -79,7 +79,7 @@ const DmrPassive = () => {
           "brand": { "@type": "Brand", "name": "ThermoDMR" },
           "manufacturer": { "@type": "Organization", "@id": "https://thermodmr.com/#organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
           "url": isRo ? "https://thermodmr.com/ro/produse/dmr-passive" : "https://thermodmr.com/prodotti/dmr-passive",
-          "image": "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80",
+          "image": "https://thermodmr.com/images/thermodmr-finestre-pvc-interni.webp",
           "category": "Finestre PVC",
           "offers": {
             "@type": "Offer",
@@ -97,7 +97,7 @@ const DmrPassive = () => {
         title="DMR"
         titleAccent="PASSIVE"
         description={p.description}
-        heroImage="https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1600&q=80"
+        heroImage="https://thermodmr.com/images/thermodmr-finestre-pvc-interni.webp"
         badge={{ label: t.prodottiPubblico.badgeLabels.passive, color: "purple" }}
       />
 
@@ -105,7 +105,7 @@ const DmrPassive = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
             <div className="relative rounded-3xl overflow-hidden shadow-xl">
-              <img src="https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=800&q=80" alt="DMR PASSIVE - Edificio contemporaneo" className="w-full aspect-[4/3] object-cover" loading="lazy" />
+              <img src="https://thermodmr.com/images/thermodmr-finestre-pvc-interni.webp" alt="Ambiente interno con finestre in PVC" className="w-full aspect-[4/3] object-cover" loading="lazy" />
               <div className="absolute bottom-4 left-4 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-[hsl(195,85%,45%)] text-white shadow-lg">
                 <Crown className="h-6 w-6" />
               </div>

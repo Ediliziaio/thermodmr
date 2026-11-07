@@ -1212,7 +1212,7 @@ const itPosts: BlogPost[] = [
     date: "2026-04-12",
     category: "Guide",
     readingTime: 17,
-    heroImage: "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80",
+    heroImage: "https://thermodmr.com/images/thermodmr-finestre-pvc-interni.webp",
     content: `
 <h2>Introduzione: una scelta che vale migliaia di euro</h2>
 <p>Quando si pianifica la sostituzione delle finestre, la scelta tra <strong>doppio vetro</strong> e <strong>triplo vetro</strong> è probabilmente la decisione tecnica con il maggiore impatto economico di tutto l'intervento. Non si tratta di una differenza marginale: a parità di dimensioni e profilo, una finestra con triplo vetro costa mediamente il 20-40% in più rispetto alla versione con doppio vetro. Su un'abitazione con 8-10 finestre, questa differenza può valere 1.500-4.000 euro in più.</p>
@@ -3384,7 +3384,7 @@ Tehnic, da. Din punct de vedere estetic, recomandăm același tip de profil pent
     date: "2026-04-12",
     category: "Ghiduri",
     readingTime: 18,
-    heroImage: "https://images.unsplash.com/photo-1600566753376-12c8ab7c5a38?w=1200&q=80",
+    heroImage: "https://thermodmr.com/images/thermodmr-finestre-pvc-interni.webp",
     content: `
 <h2>O decizie care poate valora mii de lei: geam dublu sau triplu?</h2>
 <p>Când vine momentul să schimbi ferestrele, una dintre cele mai frecvente întrebări pe care și le pun proprietarii este: <strong>merită să plătesc mai mult pentru geamul triplu?</strong> Diferența de preț poate varia între 20% și 40% față de un geam dublu de calitate, ceea ce pe o casă cu 8-10 ferestre înseamnă 3.000 – 6.000 lei în plus.</p>
