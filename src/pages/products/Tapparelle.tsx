@@ -49,7 +49,7 @@ const Tapparelle = () => {
           "brand": { "@type": "Brand", "name": "ThermoDMR" },
           "manufacturer": { "@type": "Organization", "@id": "https://thermodmr.com/#organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
           "url": isRo ? "https://thermodmr.com/ro/produse/jaluzele" : "https://thermodmr.com/prodotti/tapparelle",
-          "image": "https://thermodmr.com/images/thermodmr-tapparella-coibentata.webp",
+          "image": "https://thermodmr.com/images/thermodmr-tapparella-coibentata.webp?v=7b0a29701b",
           "category": "Tapparelle",
           "offers": {
             "@type": "Offer",

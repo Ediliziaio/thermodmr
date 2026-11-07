@@ -51,7 +51,7 @@ const Cassonetti = () => {
           "brand": { "@type": "Brand", "name": "ThermoDMR" },
           "manufacturer": { "@type": "Organization", "@id": "https://thermodmr.com/#organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
           "url": isRo ? "https://thermodmr.com/ro/produse/casete-rulou" : "https://thermodmr.com/prodotti/cassonetti",
-          "image": "https://thermodmr.com/images/thermodmr-cassonetto-installato.jpg",
+          "image": "https://thermodmr.com/images/thermodmr-cassonetto-installato.jpg?v=6ea77dc592",
           "category": "Cassonetti",
           "offers": {
             "@type": "Offer",

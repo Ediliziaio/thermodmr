@@ -49,7 +49,7 @@ test('edge routes redirect broken language URLs and preserve real unknown-page 4
 
 test('all edge metadata images resolve to public image files', () => {
   const source = readFileSync(new URL('../functions/_middleware.ts', import.meta.url), 'utf8');
-  const paths = new Set([...source.matchAll(/\$\{B\}(\/images\/[^`"\s]+)/g)].map(match => match[1]));
+  const paths = new Set([...source.matchAll(/\$\{B\}(\/images\/[^`"\s]+)/g)].map(match => match[1].split("?")[0]));
   assert.ok(paths.size >= 4);
   for (const path of paths) {
     const data = readFileSync(new URL('../public' + path, import.meta.url));

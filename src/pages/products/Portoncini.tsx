@@ -51,7 +51,7 @@ const Portoncini = () => {
           "brand": { "@type": "Brand", "name": "ThermoDMR" },
           "manufacturer": { "@type": "Organization", "@id": "https://thermodmr.com/#organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
           "url": isRo ? "https://thermodmr.com/ro/produse/usi-intrare" : "https://thermodmr.com/prodotti/portoncini",
-          "image": "https://thermodmr.com/images/thermodmr-portoncino-ingresso.avif",
+          "image": "https://thermodmr.com/images/thermodmr-portoncino-ingresso.avif?v=1ee30b0c2c",
           "category": "Portoncini",
           "offers": {
             "@type": "Offer",

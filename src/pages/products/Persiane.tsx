@@ -51,7 +51,7 @@ const Persiane = () => {
           "brand": { "@type": "Brand", "name": "ThermoDMR" },
           "manufacturer": { "@type": "Organization", "@id": "https://thermodmr.com/#organization", "name": "MARYSORYNA SRL", "url": "https://thermodmr.com" },
           "url": isRo ? "https://thermodmr.com/ro/produse/obloane" : "https://thermodmr.com/prodotti/persiane",
-          "image": "https://thermodmr.com/images/thermodmr-persiana-verde.webp",
+          "image": "https://thermodmr.com/images/thermodmr-persiana-verde.webp?v=ecf8bdbc29",
           "category": "Persiane",
           "offers": {
             "@type": "Offer",
