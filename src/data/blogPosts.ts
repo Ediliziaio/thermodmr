@@ -2541,7 +2541,7 @@ const roPosts: BlogPost[] = [
 <p>Pentru tâmplărie PVC, programul acoperă:</p>
 <ul>
   <li>Ferestre exterioare cu geam dublu sau triplu Low-E cu argon, cu Uw ≤ 1,4 W/m²K</li>
-  <li>Uși exterioare termoizolante cu Uw ≤ 1,4 W/m²K (inclusiv <a href="/ro/produse/portoncini">uși de intrare blindate termoizolante</a>)</li>
+  <li>Uși exterioare termoizolante cu Uw ≤ 1,4 W/m²K (inclusiv <a href="/ro/produse/usi-intrare">uși de intrare blindate termoizolante</a>)</li>
   <li>Casete termoizolante și accesorii direct legate de montajul tâmplăriei</li>
   <li>Manopera de montaj la firme autorizate AFM</li>
 </ul>
@@ -3153,7 +3153,7 @@ Da, pentru a demonstra îmbunătățirea clasei energetice și a justifica chelt
 <p>Investiție suplimentară: 40.000–70.000 lei față de pachetul minim</p>
 <ul>
   <li>Izolație fațade 10 cm EPS sau vată: reducere consum suplimentar cu 20–25%</li>
-  <li>Casete termoizolante la glafuri ferestre (<a href="/ro/produse/cassonetti">cassonetti ThermoDMR</a>): eliminare punți termice</li>
+  <li>Casete termoizolante la glafuri ferestre (<a href="/ro/produse/casete-rulou">cassonetti ThermoDMR</a>): eliminare punți termice</li>
   <li>Modernizare sistem încălzire (centrală condensare, termostate pe zone): reducere cu 15%</li>
   <li>Rezultat estimat: 60–100 kWh/m²/an — Clasa B</li>
 </ul>
@@ -3225,8 +3225,8 @@ Da, pentru a demonstra îmbunătățirea clasei energetice și a justifica chelt
 <h3>Cum elimini punțile termice cu soluțiile ThermoDMR</h3>
 <p>ThermoDMR oferă un sistem integrat pentru eliminarea punților termice:</p>
 <ul>
-  <li><a href="/ro/produse/cassonetti">Casete termoizolante ThermoDMR</a> — înlocuiesc cutiile de rulou neizolate cu sisteme din EPS expandat, reducând pierderile prin glaf superior cu 70–80%</li>
-  <li><a href="/ro/produse/tapparelle">Rulouri termoizolante</a> cu lamele alveolare umplute cu spumă poliuretanică — adaugă un strat suplimentar pe timp de noapte</li>
+  <li><a href="/ro/produse/casete-rulou">Casete termoizolante ThermoDMR</a> — înlocuiesc cutiile de rulou neizolate cu sisteme din EPS expandat, reducând pierderile prin glaf superior cu 70–80%</li>
+  <li><a href="/ro/produse/jaluzele">Rulouri termoizolante</a> cu lamele alveolare umplute cu spumă poliuretanică — adaugă un strat suplimentar pe timp de noapte</li>
   <li>Montaj în sistem cu 3 straturi — benzi de etanșare la interior (vapori), compresibil la mijloc (spumă) și bandă difuzie la exterior; recomandat de norma RAL GZ 695</li>
   <li>Distanțier warm edge integrat în toate geamurile ThermoDMR</li>
 </ul>
@@ -3336,7 +3336,7 @@ Tehnic, da. Din punct de vedere estetic, recomandăm același tip de profil pent
   <li>Documentele tehnice necesare pentru dosarul de finanțare AFM</li>
   <li>Ofertă comercială detaliată, fără obligații</li>
 </ul>
-<p>Fie că ești la începutul procesului de documentare sau gata să semnezi contractul de montaj, suntem alături de tine cu expertiză și transparență. Poți consulta și <a href="/ro/produse">întreaga gamă de produse ThermoDMR</a> sau afla mai multe despre <a href="/ro/produse/persiane">persioanele exterioare</a> și <a href="/ro/produse/portoncini">ușile de intrare</a> pentru un sistem complet de protecție și izolare.</p>
+<p>Fie că ești la începutul procesului de documentare sau gata să semnezi contractul de montaj, suntem alături de tine cu expertiză și transparență. Poți consulta și <a href="/ro/produse">întreaga gamă de produse ThermoDMR</a> sau afla mai multe despre <a href="/ro/produse/obloane">persioanele exterioare</a> și <a href="/ro/produse/usi-intrare">ușile de intrare</a> pentru un sistem complet de protecție și izolare.</p>
 <p style="text-align:center; margin-top:2rem;">
   <a href="/ro/contact" style="background:#1a56db;color:#fff;padding:14px 32px;border-radius:6px;text-decoration:none;font-weight:bold;font-size:1.1rem;">Solicită consultanță gratuită →</a>
 </p>

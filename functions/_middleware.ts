@@ -1004,6 +1004,25 @@ function esc(str: string): string {
     .replace(/"/g, "&quot;");
 }
 
+const legacyProductPaths = new Map<string, string>([
+  [
+    "/ro/produse/portoncini",
+    "/ro/produse/usi-intrare"
+  ],
+  [
+    "/ro/produse/cassonetti",
+    "/ro/produse/casete-rulou"
+  ],
+  [
+    "/ro/produse/tapparelle",
+    "/ro/produse/jaluzele"
+  ],
+  [
+    "/ro/produse/persiane",
+    "/ro/produse/obloane"
+  ]
+]);
+
 export const onRequest = async (context: {
   request: Request;
   next: () => Promise<Response>;
@@ -1011,6 +1030,11 @@ export const onRequest = async (context: {
   const url = new URL(context.request.url);
   let pathname = url.pathname;
   const isPublicHost = url.hostname === "thermodmr.com" || url.hostname === "www.thermodmr.com";
+
+  const correctedProductPath = legacyProductPaths.get(pathname.replace(/\/+$/, ""));
+  if (isPublicHost && correctedProductPath) {
+    return Response.redirect(`${BASE_URL}${correctedProductPath}${url.search}`, 301);
+  }
 
   if (url.hostname === "www.thermodmr.com") {
     return Response.redirect(`${BASE_URL}${pathname}${url.search}`, 301);

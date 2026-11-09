@@ -42,6 +42,16 @@ test('edge routes redirect broken language URLs and preserve real unknown-page 4
   const corrected = await onRequest({ request: new Request('https://thermodmr.com/ro/blog/finestre-pvc-prezzi?utm_source=test'), next: () => { throw new Error('should redirect before loading assets'); } });
   assert.equal(corrected.status, 301);
   assert.equal(corrected.headers.get('location'), 'https://thermodmr.com/ro/blog/ferestre-pvc-preturi?utm_source=test');
+  for (const [legacy, current] of [
+    ["portoncini", "usi-intrare"], ["cassonetti", "casete-rulou"],
+    ["tapparelle", "jaluzele"], ["persiane", "obloane"],
+  ]) {
+    for (const host of ["thermodmr.com", "www.thermodmr.com"]) {
+      const response = await onRequest({ request: new Request(`https://${host}/ro/produse/${legacy}/?utm_source=test`), next: () => { throw new Error("legacy product must redirect"); } });
+      assert.equal(response.status, 301);
+      assert.equal(response.headers.get("location"), `https://thermodmr.com/ro/produse/${current}?utm_source=test`);
+    }
+  }
   const missing = await onRequest({ request: new Request('https://thermodmr.com/blog/not-a-post'), next: async () => new Response('<html></html>', { headers: { 'content-type': 'text/html' } }) });
   assert.equal(missing.status, 404);
   assert.equal(missing.headers.get('x-robots-tag'), 'noindex, follow');
